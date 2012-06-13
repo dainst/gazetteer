@@ -7,6 +7,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
@@ -48,7 +49,7 @@ public class Place {
 		this.uris = uris;
 	}
 
-	@OneToMany(mappedBy="place", cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="place", cascade=CascadeType.ALL, fetch=FetchType.EAGER)
 	public Set<PlaceName> getNames() {
 		return names;
 	}
@@ -62,7 +63,7 @@ public class Place {
 		name.setPlace(this);
 	}
 
-	@OneToMany(mappedBy="place", cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="place", cascade=CascadeType.ALL, fetch=FetchType.EAGER)
 	public Set<Location> getLocations() {
 		return locations;
 	}

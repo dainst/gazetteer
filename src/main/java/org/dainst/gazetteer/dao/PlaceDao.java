@@ -18,4 +18,8 @@ public class PlaceDao {
         em.persist(place);
     }
 
+	public Place get(long placeId) {
+		return em.find(Place.class, placeId);		
+	}
+
 }

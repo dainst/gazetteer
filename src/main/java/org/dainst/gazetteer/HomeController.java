@@ -43,7 +43,10 @@ public class HomeController {
 
 		Place place = new Place();
 		place.addName(new PlaceName("Timbuktu"));
-		place.addLocation(new Location(50f, 50f));
+		place.addName(new PlaceName("Timbuctoo"));
+		place.addLocation(new Location(50.0, 50.0));
+		place.addLocation(new Location(-50.0, -50.0));
+		place.addLocation(new Location(0, 0));
 
 		placeDao.save(place);
 		

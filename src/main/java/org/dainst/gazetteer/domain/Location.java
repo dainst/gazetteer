@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 
 import org.hibernate.annotations.Type;
@@ -31,9 +32,9 @@ public class Location {
 		created = new Date();
 	}
 	
-	public Location(float x, float y) {
-		PackedCoordinateSequenceFactory factory = new PackedCoordinateSequenceFactory(PackedCoordinateSequenceFactory.FLOAT);
-		CoordinateSequence coordinates = factory.create(new float[]{x, y}, 2);
+	public Location(double lat, double lng) {
+		PackedCoordinateSequenceFactory factory = new PackedCoordinateSequenceFactory(PackedCoordinateSequenceFactory.DOUBLE);
+		CoordinateSequence coordinates = factory.create(new double[]{lat, lng}, 2);
 		point = new Point(coordinates, new GeometryFactory(factory));
 		created = new Date();
 	}
@@ -90,6 +91,16 @@ public class Location {
 
 	public void setCreated(Date created) {
 		this.created = created;
+	}
+	
+	@Transient
+	public double getLat() {
+		return point.getCoordinateSequence().getX(0);
+	}
+	
+	@Transient
+	public double getLng() {
+		return point.getCoordinateSequence().getY(0);
 	}
 
 }
