@@ -23,8 +23,9 @@ public class PlaceName {
 		created = new Date();
 	}
 	
-	public PlaceName(String title) {
+	public PlaceName(String title, String language) {
 		this.title = title;
+		this.language = language;
 		created = new Date();
 	}
 	

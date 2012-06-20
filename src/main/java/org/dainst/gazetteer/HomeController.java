@@ -42,8 +42,8 @@ public class HomeController {
 		model.addAttribute("serverTime", formattedDate );
 
 		Place place = new Place();
-		place.addName(new PlaceName("Timbuktu"));
-		place.addName(new PlaceName("Timbuctoo"));
+		place.addName(new PlaceName("Timbuktu","de"));
+		place.addName(new PlaceName("Timbuctoo","en"));
 		place.addLocation(new Location(50.0, 50.0));
 		place.addLocation(new Location(-50.0, -50.0));
 		place.addLocation(new Location(0, 0));

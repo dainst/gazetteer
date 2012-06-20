@@ -1,5 +1,7 @@
 package org.dainst.gazetteer.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.dainst.gazetteer.dao.PlaceDao;
 import org.dainst.gazetteer.domain.Place;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +20,11 @@ public class PlaceController {
 	private PlaceDao placeDao;
 	
 	@RequestMapping(value="/{placeId}", method=RequestMethod.GET)
-	public ModelAndView getPlace(@PathVariable long placeId) {
+	public ModelAndView getPlace(@PathVariable long placeId,
+			HttpServletRequest request) {
 		
 		Place place = placeDao.get(placeId);
+		place.setMainUri(request.getRequestURL().toString());
 		return new ModelAndView("place/get", "place", place);
 		
 	}

@@ -12,12 +12,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 
 @Entity
 public class Place {
 
 	private long id;
+	private String description;
 	private Set<String> uris;
 	private Set<PlaceName> names = new HashSet<PlaceName>();
 	private Set<Location> locations = new HashSet<Location>();
@@ -25,6 +27,8 @@ public class Place {
 	private Set<Place> children = new HashSet<Place>();
 	private Date lastModified;
 	private Date created;
+	
+	private String mainUri;
 	
 	public Place() {
 		created = new Date();
@@ -40,7 +44,15 @@ public class Place {
 		this.id = id;
 	}
 
-	@ElementCollection
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	@ElementCollection(fetch=FetchType.EAGER)
 	public Set<String> getUris() {
 		return uris;
 	}
@@ -86,7 +98,7 @@ public class Place {
 		this.parent = parent;
 	}
 
-	@OneToMany(mappedBy="parent")
+	@OneToMany(mappedBy="parent", fetch=FetchType.EAGER)
 	public Set<Place> getChildren() {
 		return children;
 	}
@@ -115,6 +127,15 @@ public class Place {
 
 	public void setCreated(Date created) {
 		this.created = created;
+	}
+
+	@Transient
+	public String getMainUri() {
+		return mainUri;
+	}
+
+	public void setMainUri(String mainUri) {
+		this.mainUri = mainUri;
 	}
 	
 }

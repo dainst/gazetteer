@@ -22,6 +22,7 @@ import com.vividsolutions.jts.geom.impl.PackedCoordinateSequenceFactory;
 public class Location {
 	
 	private long id;
+	private String description;
 	private Point point;
 	private Polygon polygon;
 	private Place place;
@@ -101,6 +102,14 @@ public class Location {
 	@Transient
 	public double getLng() {
 		return point.getCoordinateSequence().getY(0);
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 }
