@@ -8,10 +8,14 @@
 		<c:forEach var="placename" items="${place.names}">
 			<name xml:lang="${placename.language}"><c:out value="${placename.title}" /></name>
 		</c:forEach>
-		<description><c:out value="${place.description}" /></description>
+		<c:forEach var="description" items="${place.descriptions}">
+			<description xml:lang="${description.language}"><c:out value="${description.description}" /></description>
+		</c:forEach>
 		<c:forEach var="location" items="${place.locations}">
 			<Placemark id="${place.mainUri}/location/${location.id}">
-				<description><c:out value="${location.description}" /></description>
+				<c:forEach var="description" items="${location.descriptions}">
+					<description xml:lang="${description.language}"><c:out value="${description.description}" /></description>
+				</c:forEach>
 				<Point>
 					<coordinates><c:out value="${location.lat}" />,<c:out value="${location.lng}" />,0</coordinates>
 				</Point>

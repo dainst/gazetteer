@@ -34,13 +34,8 @@ body {
 			mapTypeId : google.maps.MapTypeId.ROADMAP
 		};
 		var map = new google.maps.Map(document.getElementById("map_canvas"), options);
-		<c:forEach var="location" items="${place.locations}">
-			new google.maps.Marker({
-			    position: new google.maps.LatLng(${location.lat}, ${location.lng}), 
-			    map: map, 
-			    title:"Hello World!"
-			});  
-		</c:forEach>
+		var kmlLayer = new google.maps.KmlLayer("${place.mainUri}.kml");
+		kmlLayer.setMap(map);
 	}
 </script>
 </head>
@@ -50,6 +45,13 @@ body {
 	<ul>
 		<c:forEach var="placename" items="${place.names}">
 			<li>${placename.title}</li>
+		</c:forEach>
+	</ul>
+	
+	<h1><s:message code="domain.placename.title" text="Beschreibung" />:</h1>
+	<ul>
+		<c:forEach var="description" items="${place.descriptions}">
+			<li>${description.description}</li>
 		</c:forEach>
 	</ul>
 

@@ -1,12 +1,15 @@
 package org.dainst.gazetteer.domain;
 
 import java.util.Date;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
@@ -22,7 +25,7 @@ import com.vividsolutions.jts.geom.impl.PackedCoordinateSequenceFactory;
 public class Location {
 	
 	private long id;
-	private String description;
+	private Set<Description> descriptions;
 	private Point point;
 	private Polygon polygon;
 	private Place place;
@@ -104,12 +107,17 @@ public class Location {
 		return point.getCoordinateSequence().getY(0);
 	}
 
-	public String getDescription() {
-		return description;
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+	public Set<Description> getDescriptions() {
+		return descriptions;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setDescriptions(Set<Description> descriptions) {
+		this.descriptions = descriptions;
+	}
+	
+	public void addDescription(Description description) {
+		descriptions.add(description);
 	}
 
 }

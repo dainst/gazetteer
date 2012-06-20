@@ -19,7 +19,7 @@ import javax.persistence.Version;
 public class Place {
 
 	private long id;
-	private String description;
+	private Set<Description> descriptions;
 	private Set<String> uris;
 	private Set<PlaceName> names = new HashSet<PlaceName>();
 	private Set<Location> locations = new HashSet<Location>();
@@ -44,12 +44,17 @@ public class Place {
 		this.id = id;
 	}
 
-	public String getDescription() {
-		return description;
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+	public Set<Description> getDescriptions() {
+		return descriptions;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public void setDescriptions(Set<Description> descriptions) {
+		this.descriptions = descriptions;
+	}
+	
+	public void addDescription(Description description) {
+		descriptions.add(description);
 	}
 
 	@ElementCollection(fetch=FetchType.EAGER)
