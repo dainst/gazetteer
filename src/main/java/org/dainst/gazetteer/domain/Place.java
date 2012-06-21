@@ -12,30 +12,44 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Transient;
 import javax.persistence.Version;
 
 @Entity
 public class Place {
 
+	@Id
+	@GeneratedValue
 	private long id;
+
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
 	private Set<Description> descriptions;
+
+	@ElementCollection(fetch=FetchType.EAGER)
 	private Set<String> uris;
+
+	@OneToMany(mappedBy="place", cascade=CascadeType.ALL, fetch=FetchType.EAGER)
 	private Set<PlaceName> names = new HashSet<PlaceName>();
+
+	@OneToMany(mappedBy="place", cascade=CascadeType.ALL, fetch=FetchType.EAGER)
 	private Set<Location> locations = new HashSet<Location>();
+
+	@ManyToOne
 	private Place parent;
+
+	@OneToMany(mappedBy="parent", fetch=FetchType.EAGER)
 	private Set<Place> children = new HashSet<Place>();
+
+	@Version
 	private Date lastModified;
+	
 	private Date created;
 	
-	private String mainUri;
+	private boolean deleted = false;
 	
 	public Place() {
 		created = new Date();
 	}
-
-	@Id
-	@GeneratedValue
+	
 	public long getId() {
 		return id;
 	}
@@ -44,7 +58,6 @@ public class Place {
 		this.id = id;
 	}
 
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
 	public Set<Description> getDescriptions() {
 		return descriptions;
 	}
@@ -57,7 +70,6 @@ public class Place {
 		descriptions.add(description);
 	}
 
-	@ElementCollection(fetch=FetchType.EAGER)
 	public Set<String> getUris() {
 		return uris;
 	}
@@ -66,7 +78,6 @@ public class Place {
 		this.uris = uris;
 	}
 
-	@OneToMany(mappedBy="place", cascade=CascadeType.ALL, fetch=FetchType.EAGER)
 	public Set<PlaceName> getNames() {
 		return names;
 	}
@@ -80,7 +91,6 @@ public class Place {
 		name.setPlace(this);
 	}
 
-	@OneToMany(mappedBy="place", cascade=CascadeType.ALL, fetch=FetchType.EAGER)
 	public Set<Location> getLocations() {
 		return locations;
 	}
@@ -94,7 +104,6 @@ public class Place {
 		location.setPlace(this);
 	}
 
-	@ManyToOne
 	public Place getParent() {
 		return parent;
 	}
@@ -102,8 +111,7 @@ public class Place {
 	public void setParent(Place parent) {
 		this.parent = parent;
 	}
-
-	@OneToMany(mappedBy="parent", fetch=FetchType.EAGER)
+	
 	public Set<Place> getChildren() {
 		return children;
 	}
@@ -117,7 +125,6 @@ public class Place {
 		child.setParent(this);
 	}
 
-	@Version
 	public Date getLastModified() {
 		return lastModified;
 	}
@@ -134,13 +141,12 @@ public class Place {
 		this.created = created;
 	}
 
-	@Transient
-	public String getMainUri() {
-		return mainUri;
+	public boolean isDeleted() {
+		return deleted;
 	}
 
-	public void setMainUri(String mainUri) {
-		this.mainUri = mainUri;
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
 	}
 	
 }

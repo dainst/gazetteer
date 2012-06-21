@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.dainst.gazetteer.dao.PlaceDao;
 import org.dainst.gazetteer.domain.Place;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +19,9 @@ public class PlaceController {
 
 	@Autowired
 	private PlaceDao placeDao;
+	
+	@Value("${baseUri}")
+	private String baseUri;
 
 	@RequestMapping(value="/place/{placeId}", method=RequestMethod.GET)
 	public ModelAndView getPlace(@PathVariable long placeId,
@@ -26,13 +30,10 @@ public class PlaceController {
 
 		Place place = placeDao.get(placeId);
 		if (place != null) {
-			String mainUri = request.getScheme() + "://" 
-					+ request.getServerName()
-					+ ":" + request.getServerPort()
-					+ request.getContextPath() 
-					+ "/place/" + String.valueOf(placeId);
-			place.setMainUri(mainUri);
-			return new ModelAndView("place/get", "place", place);
+			ModelAndView mav = new ModelAndView("place/get");
+			mav.addObject(place);
+			mav.addObject("baseUri", baseUri);
+			return mav;
 		}
 		
 		response.setStatus(404);

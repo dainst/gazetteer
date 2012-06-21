@@ -23,13 +23,26 @@ import com.vividsolutions.jts.geom.impl.PackedCoordinateSequenceFactory;
 
 @Entity
 public class Location {
-	
+
+	@Id
+	@GeneratedValue
 	private long id;
+
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
 	private Set<Description> descriptions;
+
+	@Type(type="org.hibernatespatial.GeometryUserType")
 	private Point point;
+
+	@Type(type="org.hibernatespatial.GeometryUserType")
 	private Polygon polygon;
+
+	@ManyToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE})
 	private Place place;
+
+	@Version
 	private Date lastModified;
+	
 	private Date created;
 	
 	public Location() {
@@ -43,8 +56,6 @@ public class Location {
 		created = new Date();
 	}
 	
-	@Id
-	@GeneratedValue
 	public long getId() {
 		return id;
 	}
@@ -53,7 +64,6 @@ public class Location {
 		this.id = id;
 	}
 
-	@Type(type="org.hibernatespatial.GeometryUserType")
 	public Point getPoint() {
 		return point;
 	}
@@ -62,7 +72,6 @@ public class Location {
 		this.point = point;
 	}
 
-	@Type(type="org.hibernatespatial.GeometryUserType")
 	public Polygon getPolygon() {
 		return polygon;
 	}
@@ -71,7 +80,6 @@ public class Location {
 		this.polygon = polygon;
 	}
 
-	@ManyToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE})
 	public Place getPlace() {
 		return place;
 	}
@@ -80,7 +88,6 @@ public class Location {
 		this.place = place;
 	}
 
-	@Version
 	public Date getLastModified() {
 		return lastModified;
 	}
@@ -98,6 +105,18 @@ public class Location {
 	}
 	
 	@Transient
+	public double[] getCoordinates() {
+		CoordinateSequence sequence = point.getCoordinateSequence();
+		return new double[]{ sequence.getY(0), sequence.getX(0) };
+	}
+	
+	public void setCoordinates(double[] coordinates) {
+		PackedCoordinateSequenceFactory factory = new PackedCoordinateSequenceFactory(PackedCoordinateSequenceFactory.DOUBLE);
+		CoordinateSequence sequence = factory.create(coordinates, 2);
+		point = new Point(sequence, new GeometryFactory(factory));
+	}
+	
+	@Transient
 	public double getLat() {
 		return point.getCoordinateSequence().getX(0);
 	}
@@ -107,7 +126,6 @@ public class Location {
 		return point.getCoordinateSequence().getY(0);
 	}
 
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
 	public Set<Description> getDescriptions() {
 		return descriptions;
 	}

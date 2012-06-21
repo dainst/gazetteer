@@ -4,7 +4,7 @@
 
 <?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
-	<Document id="${place.mainUri}">
+	<Document id="${baseUri}place/${place.id}">
 		<c:forEach var="placename" items="${place.names}">
 			<name xml:lang="${placename.language}"><c:out value="${placename.title}" /></name>
 		</c:forEach>
@@ -12,7 +12,7 @@
 			<description xml:lang="${description.language}"><c:out value="${description.description}" /></description>
 		</c:forEach>
 		<c:forEach var="location" items="${place.locations}">
-			<Placemark id="${place.mainUri}/location/${location.id}">
+			<Placemark>
 				<c:forEach var="description" items="${location.descriptions}">
 					<description xml:lang="${description.language}"><c:out value="${description.description}" /></description>
 				</c:forEach>

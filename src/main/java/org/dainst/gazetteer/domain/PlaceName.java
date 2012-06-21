@@ -9,14 +9,27 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Version;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+
 @Entity
 public class PlaceName {
 
+	@Id
+	@GeneratedValue
 	private long id;
+	
 	private String title;
+	
 	private String language;
+
+	@ManyToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE})
 	private Place place;
+
+	@Version
 	private Date lastModified;
+	
 	private Date created;
 	
 	public PlaceName() {
@@ -29,8 +42,6 @@ public class PlaceName {
 		created = new Date();
 	}
 	
-	@Id
-	@GeneratedValue
 	public long getId() {
 		return id;
 	}
@@ -55,7 +66,6 @@ public class PlaceName {
 		this.language = language;
 	}
 
-	@ManyToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE})
 	public Place getPlace() {
 		return place;
 	}
@@ -64,7 +74,6 @@ public class PlaceName {
 		this.place = place;
 	}
 
-	@Version
 	public Date getLastModified() {
 		return lastModified;
 	}

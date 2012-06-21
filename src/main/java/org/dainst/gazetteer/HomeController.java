@@ -41,18 +41,32 @@ public class HomeController {
 
 		model.addAttribute("serverTime", formattedDate );
 
-		Place place = new Place();
+		/*Place place = new Place();
 		place.addName(new PlaceName("Timbuktu","de"));
 		place.addName(new PlaceName("Timbuctoo","en"));
 		place.addLocation(new Location(50.0, 50.0));
 		place.addLocation(new Location(-50.0, -50.0));
 		place.addLocation(new Location(0, 0));
-
-		placeDao.save(place);
+		placeDao.save(place);		
+		logger.info("saved timbuktu");*/
 		
-		logger.info("saved place");
+		Place place2 = new Place();
+		place2.addName(new PlaceName("Köln","de"));
+		place2.addName(new PlaceName("Cologne","en"));
+		place2.addLocation(new Location(50.937527,6.960268));
+		placeDao.save(place2);		
+		logger.info("saved cologne");
+		
+		Place place3 = new Place();
+		place3.setParent(place2);
+		place3.addName(new PlaceName("Arbeitsstelle für digitale Archäologie","de"));
+		place3.addName(new PlaceName("Cologne Digital Archaeology Lab","en"));
+		place3.addLocation(new Location(50.925100, 6.925767));
+		placeDao.save(place3);		
+		logger.info("saved codarchlab");
 
 		return "home";
+		
 	}
 
 }

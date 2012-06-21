@@ -4,6 +4,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.dainst.gazetteer.domain.Place;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +20,8 @@ public class PlaceDao {
     }
 
 	public Place get(long placeId) {
-		return em.find(Place.class, placeId);		
+		Place place = em.find(Place.class, placeId);
+		return place;
 	}
 
 }

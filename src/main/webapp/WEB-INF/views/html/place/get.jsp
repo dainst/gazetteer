@@ -34,7 +34,7 @@ body {
 			mapTypeId : google.maps.MapTypeId.ROADMAP
 		};
 		var map = new google.maps.Map(document.getElementById("map_canvas"), options);
-		var kmlLayer = new google.maps.KmlLayer("${place.mainUri}.kml");
+		var kmlLayer = new google.maps.KmlLayer("${baseUri}place/${place.id}.kml");
 		kmlLayer.setMap(map);
 	}
 </script>

@@ -7,13 +7,22 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Version;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Description {
 
+	@Id
+	@GeneratedValue
 	private long id;
+	
 	private String description;
+	
 	private String language;
+
+	@Version
 	private Date lastModified;
+	
 	private Date created;
 	
 	public Description() {
@@ -26,8 +35,6 @@ public class Description {
 		created = new Date();
 	}
 	
-	@Id
-	@GeneratedValue
 	public long getId() {
 		return id;
 	}
@@ -52,7 +59,6 @@ public class Description {
 		this.language = language;
 	}
 
-	@Version
 	public Date getLastModified() {
 		return lastModified;
 	}
