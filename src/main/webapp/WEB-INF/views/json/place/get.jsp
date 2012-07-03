@@ -3,6 +3,8 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
 <%@ page session="false" import="org.dainst.gazetteer.domain.*" %>
 
+<% response.setHeader("Content-Type", "application/json; charset=utf-8"); %>
+
 { 
 	"@id": "${baseUri}place/${place.id}",
 	<c:if test="${place.parent != null}">

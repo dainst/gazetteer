@@ -2,6 +2,8 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s"%>
 <%@ page session="false"%>
 
+<% response.setHeader("Content-Type", "text/html; charset=utf-8"); %>
+
 <!DOCTYPE html>
 <html>
 <head>

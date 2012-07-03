@@ -2,6 +2,8 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s"%>
 <%@ page session="false" import="org.dainst.gazetteer.domain.*" %>
 
+<% response.setHeader("Content-Type", "application/vnd.google-earth.kml+xml; charset=utf-8"); %>
+
 <?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
 	<Document id="${baseUri}place/${place.id}">
