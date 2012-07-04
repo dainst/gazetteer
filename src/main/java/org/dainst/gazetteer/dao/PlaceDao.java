@@ -39,4 +39,9 @@ public class PlaceDao {
 		}
 	}
 
+	public Place getPlaceByUri(String uri) {		
+		return (Place) em.createQuery("SELECT p FROM place p, IN(p.uris) u where u = :uri")
+				.setParameter("uri", uri).getSingleResult();		
+	}
+
 }

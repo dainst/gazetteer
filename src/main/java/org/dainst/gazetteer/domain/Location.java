@@ -86,6 +86,7 @@ public class Location {
 
 	public void setPlace(Place place) {
 		this.place = place;
+		place.addLocation(this);
 	}
 
 	public Date getLastModified() {

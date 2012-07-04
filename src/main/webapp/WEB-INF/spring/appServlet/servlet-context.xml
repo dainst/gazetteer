@@ -10,12 +10,8 @@
 
 	<mvc:annotation-driven>
 		<mvc:message-converters>
-			<bean class="org.dainst.gazetteer.converter.KmlPlaceMessageConverter">
-				<property name="baseUri" value="${baseUri}"/>
-			</bean>
-			<bean class="org.dainst.gazetteer.converter.JsonPlaceMessageConverter">
-				<property name="baseUri" value="${baseUri}"/>
-			</bean>
+			<bean class="org.dainst.gazetteer.converter.KmlPlaceMessageConverter"/>
+			<bean class="org.dainst.gazetteer.converter.JsonPlaceMessageConverter"/>
 		</mvc:message-converters>
 	</mvc:annotation-driven>
 

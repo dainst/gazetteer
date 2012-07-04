@@ -110,6 +110,7 @@ public class Place {
 
 	public void setParent(Place parent) {
 		this.parent = parent;
+		parent.addChild(this);
 	}
 	
 	public Set<Place> getChildren() {

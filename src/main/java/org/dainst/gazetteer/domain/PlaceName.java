@@ -9,9 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Version;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 
 @Entity
 public class PlaceName {
@@ -72,6 +69,7 @@ public class PlaceName {
 
 	public void setPlace(Place place) {
 		this.place = place;
+		place.addName(this);
 	}
 
 	public Date getLastModified() {

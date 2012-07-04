@@ -10,19 +10,9 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 
 public class KmlPlaceMessageConverter extends AbstractHttpMessageConverter<Place> {
-	
-	private String baseUri;
 
 	public KmlPlaceMessageConverter() {
 		// TODO Auto-generated constructor stub
-	}
-
-	public String getBaseUri() {
-		return baseUri;
-	}
-
-	public void setBaseUri(String baseUri) {
-		this.baseUri = baseUri;
 	}
 
 	@Override
