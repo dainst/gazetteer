@@ -7,8 +7,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Version;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Entity
 public class Description {
 

@@ -69,7 +69,6 @@ public class PlaceName {
 
 	public void setPlace(Place place) {
 		this.place = place;
-		place.addName(this);
 	}
 
 	public Date getLastModified() {

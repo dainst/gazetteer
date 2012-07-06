@@ -43,86 +43,53 @@ public class JsonPlaceMessageConverter extends AbstractHttpMessageConverter<Plac
 			HttpInputMessage inputMessage) throws IOException,
 			HttpMessageNotReadableException {
 		
-		ObjectMapper mapper = new ObjectMapper();
-		ObjectNode objectNode = mapper.readValue(inputMessage.getBody(), ObjectNode.class);
+		try {
 		
-		Place place = new Place();
-		
-		// set parent place from URI 
-		JsonNode parentNode = objectNode.get("parent");
-		if (parentNode != null) {
-			try {
-				Place parent = getPlaceForNode(parentNode);
-				if (parent != null) place.setParent(parent);
-			} catch (InvalidIdException e) {
-				throw new HttpMessageNotReadableException("Invalid parent id in json object.", e);
-			}
-		}
-		
-		// set child places from URIs
-		JsonNode childrenNode = objectNode.get("children");
-		if (childrenNode != null) for (JsonNode childNode : childrenNode) {
-			try {
-				Place child = getPlaceForNode(childNode);
-				if (child != null) place.addChild(child);
-			} catch (InvalidIdException e) {
-				throw new HttpMessageNotReadableException("Invalid child id in json object.", e);
-			}
-		}
-		
-		// create name objects
-		JsonNode namesNode = objectNode.get("names");
-		if (namesNode != null) for (JsonNode nameNode : namesNode) {
-			JsonNode languageNode = nameNode.get("language");
-			if (languageNode == null) 
-				throw new HttpMessageNotReadableException("Invalid name object. Attribute \"language\" has to be set.");
-			JsonNode titleNode = nameNode.get("title");
-			if (titleNode == null)
-				throw new HttpMessageNotReadableException("Invalid name object. Attribute \"title\" has to be set.");
-			PlaceName name = new PlaceName();
-			name.setLanguage(languageNode.asText());
-			name.setTitle(titleNode.asText());
-			place.addName(name);
-		}
-		
-		// create descriptions
-		JsonNode descriptionsNode = objectNode.get("descriptions");
-		if (descriptionsNode != null) for (JsonNode descriptionNode : descriptionsNode) {
-			JsonNode descriptionTextNode = descriptionNode.get("description");
-			if (descriptionTextNode == null)
-				throw new HttpMessageNotReadableException("Invalid description object. Attribute \"description\" has to be set.");
-			JsonNode languageNode = descriptionNode.get("language");
-			if (languageNode == null) 
-				throw new HttpMessageNotReadableException("Invalid name object. Attribute \"language\" has to be set.");
-			Description description = new Description();
-			description.setDescription(descriptionTextNode.asText());
-			description.setLanguage(languageNode.asText());
-			place.addDescription(description);
-		}
-		
-		// create location objects
-		JsonNode locationsNode = objectNode.get("locations");
-		if (locationsNode != null) for (JsonNode locationNode : locationsNode) {
+			ObjectMapper mapper = new ObjectMapper();
+			ObjectNode objectNode = mapper.readValue(inputMessage.getBody(), ObjectNode.class);
 			
-			JsonNode coordinatesNode = locationNode.get("coordinates");
-			if (coordinatesNode == null)
-				throw new HttpMessageNotReadableException("Invalid location object. Attribute \"coordinates\" has to be set.");
-			JsonNode latNode = coordinatesNode.get(0);
-			if (latNode == null)
-				throw new HttpMessageNotReadableException("Invalid location object. Attribute \"coordinates\" cannot be read.");
-			JsonNode longNode = coordinatesNode.get(0);
-			if (longNode == null)
-				throw new HttpMessageNotReadableException("Invalid location object. Attribute \"coordinates\" cannot be read.");
-
-			double lat = latNode.asDouble();
-			double lng = longNode.asDouble();
-			if (lat == 0 || lng == 0)
-				throw new HttpMessageNotReadableException("Invalid location object. Attribute \"coordinates\" cannot be read.");
-			Location location = new Location(lat, lng);
+			Place place = new Place();
 			
-			// create descriptions for locations
-			JsonNode locDescriptionsNode = locationNode.get("descriptions");
-			if (descriptionsNode != null) for (JsonNode descriptionNode : locDescriptionsNode) {
+			// set parent place from URI 
+			JsonNode parentNode = objectNode.get("parent");
+			if (parentNode != null) {
+				try {
+					Place parent = getPlaceForNode(parentNode);
+					if (parent != null) place.setParent(parent);
+				} catch (InvalidIdException e) {
+					throw new HttpMessageNotReadableException("Invalid parent id in json object.", e);
+				}
+			}
+			
+			// set child places from URIs
+			JsonNode childrenNode = objectNode.get("children");
+			if (childrenNode != null) for (JsonNode childNode : childrenNode) {
+				try {
+					Place child = getPlaceForNode(childNode);
+					if (child != null) place.addChild(child);
+				} catch (InvalidIdException e) {
+					throw new HttpMessageNotReadableException("Invalid child id in json object.", e);
+				}
+			}
+			
+			// create name objects
+			JsonNode namesNode = objectNode.get("names");
+			if (namesNode != null) for (JsonNode nameNode : namesNode) {
+				JsonNode languageNode = nameNode.get("language");
+				if (languageNode == null) 
+					throw new HttpMessageNotReadableException("Invalid name object. Attribute \"language\" has to be set.");
+				JsonNode titleNode = nameNode.get("title");
+				if (titleNode == null)
+					throw new HttpMessageNotReadableException("Invalid name object. Attribute \"title\" has to be set.");
+				PlaceName name = new PlaceName();
+				name.setLanguage(languageNode.asText());
+				name.setTitle(titleNode.asText());
+				place.addName(name);
+			}
+			
+			// create descriptions
+			JsonNode descriptionsNode = objectNode.get("descriptions");
+			if (descriptionsNode != null) for (JsonNode descriptionNode : descriptionsNode) {
 				JsonNode descriptionTextNode = descriptionNode.get("description");
 				if (descriptionTextNode == null)
 					throw new HttpMessageNotReadableException("Invalid description object. Attribute \"description\" has to be set.");
@@ -132,14 +99,54 @@ public class JsonPlaceMessageConverter extends AbstractHttpMessageConverter<Plac
 				Description description = new Description();
 				description.setDescription(descriptionTextNode.asText());
 				description.setLanguage(languageNode.asText());
-				location.addDescription(description);
+				place.addDescription(description);
 			}
 			
-			place.addLocation(location);
-			
-		}
+			// create location objects
+			JsonNode locationsNode = objectNode.get("locations");
+			if (locationsNode != null) for (JsonNode locationNode : locationsNode) {
 				
-		return place;
+				JsonNode coordinatesNode = locationNode.get("coordinates");
+				if (coordinatesNode == null)
+					throw new HttpMessageNotReadableException("Invalid location object. Attribute \"coordinates\" has to be set.");
+				JsonNode latNode = coordinatesNode.get(0);
+				if (latNode == null)
+					throw new HttpMessageNotReadableException("Invalid location object. Attribute \"coordinates\" cannot be read.");
+				JsonNode longNode = coordinatesNode.get(0);
+				if (longNode == null)
+					throw new HttpMessageNotReadableException("Invalid location object. Attribute \"coordinates\" cannot be read.");
+	
+				double lat = latNode.asDouble();
+				double lng = longNode.asDouble();
+				if (lat == 0 || lng == 0)
+					throw new HttpMessageNotReadableException("Invalid location object. Attribute \"coordinates\" cannot be read.");
+				Location location = new Location(lat, lng);
+				
+				// create descriptions for locations
+				JsonNode locDescriptionsNode = locationNode.get("descriptions");
+				if (descriptionsNode != null) for (JsonNode descriptionNode : locDescriptionsNode) {
+					JsonNode descriptionTextNode = descriptionNode.get("description");
+					if (descriptionTextNode == null)
+						throw new HttpMessageNotReadableException("Invalid description object. Attribute \"description\" has to be set.");
+					JsonNode languageNode = descriptionNode.get("language");
+					if (languageNode == null) 
+						throw new HttpMessageNotReadableException("Invalid name object. Attribute \"language\" has to be set.");
+					Description description = new Description();
+					description.setDescription(descriptionTextNode.asText());
+					description.setLanguage(languageNode.asText());
+					location.addDescription(description);
+				}
+				
+				place.addLocation(location);
+				
+			}
+					
+			return place;
+		
+		} catch (HttpMessageNotReadableException e) {
+			logger.error(e);
+			throw e;
+		}
 		
 	}
 
@@ -156,7 +163,7 @@ public class JsonPlaceMessageConverter extends AbstractHttpMessageConverter<Plac
 		String placeUri = node.asText();
 		
 		if (placeUri.startsWith(baseUri)) {
-			String placeIdString = placeUri.replace(baseUri, "");
+			String placeIdString = placeUri.replace(baseUri + "place/", "");
 			try {
 				long placeId = Long.valueOf(placeIdString).longValue();
 				Place place = placeDao.get(placeId);
