@@ -1,5 +1,7 @@
 package org.dainst.gazetteer.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -12,7 +14,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.support.RequestContext;
 
 
 @Controller
@@ -23,17 +27,42 @@ public class PlaceController {
 	
 	@Value("${baseUri}")
 	private String baseUri;
+	
+	@RequestMapping(value="/place", method=RequestMethod.GET)
+	public ModelAndView listPlaces(@RequestParam(defaultValue="50") int limit,
+			@RequestParam(defaultValue="0") int offset,
+			HttpServletRequest request,
+			HttpServletResponse response) {
+		
+		RequestContext requestContext = new RequestContext(request);
+		String language = requestContext.getLocale().getLanguage();
+		
+		List<Place> places = placeDao.list(limit, offset);
+		ModelAndView mav = new ModelAndView("place/list");
+		mav.addObject("places", places);
+		mav.addObject("baseUri", baseUri);
+		mav.addObject("language", language);
+		return mav;
+		
+	}
+	
+	
+	// REST-Interface for single places
 
 	@RequestMapping(value="/place/{placeId}", method=RequestMethod.GET)
 	public ModelAndView getPlace(@PathVariable long placeId,
 			HttpServletRequest request,
 			HttpServletResponse response) {
+		
+		RequestContext requestContext = new RequestContext(request);
+		String language = requestContext.getLocale().getLanguage();
 
 		Place place = placeDao.get(placeId);
 		if (place != null) {
 			ModelAndView mav = new ModelAndView("place/get");
 			mav.addObject(place);
 			mav.addObject("baseUri", baseUri);
+			mav.addObject("language", language);
 			return mav;
 		}
 		

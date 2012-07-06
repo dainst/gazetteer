@@ -1,5 +1,7 @@
 package org.dainst.gazetteer.dao;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -40,8 +42,15 @@ public class PlaceDao {
 	}
 
 	public Place getPlaceByUri(String uri) {		
-		return (Place) em.createQuery("SELECT p FROM place p, IN(p.uris) u where u = :uri")
+		return (Place) em.createQuery("SELECT p FROM Place p, IN(p.uris) u where u = :uri")
 				.setParameter("uri", uri).getSingleResult();		
+	}
+
+	public List<Place> list(int limit, int offset) {		
+		return em.createQuery("SELECT p FROM Place p", Place.class)
+				.setFirstResult(offset)
+				.setMaxResults(limit)
+				.getResultList();		
 	}
 
 }

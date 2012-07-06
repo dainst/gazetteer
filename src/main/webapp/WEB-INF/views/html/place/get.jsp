@@ -56,6 +56,20 @@ body {
 			<li>${description.description}</li>
 		</c:forEach>
 	</ul>
+	
+	<c:if test="${place.parent != null}">
+		<h1><s:message code="domain.place.parent" text="Übergeordneter Ort" />:</h1>	
+		<ul><li><a href="${place.parent.id}">${place.parent.getName(language).title}</a></li></ul>
+	</c:if>
+	
+	<c:if test="${!empty(place.children)}">
+		<h1><s:message code="domain.place.children" text="Untergeordnete Orte" />:</h1>
+		<ul>
+			<c:forEach var="child" items="${place.children}">
+				<li><a href="${child.id}">${child.getName(language).title}</a></li>
+			</c:forEach>
+		</ul>
+	</c:if>
 
 	<h1><s:message code="domain.placename.title" text="Lage" />:</h1>
 	<div id="map_canvas" style="width: 400px; height: 300px"></div>

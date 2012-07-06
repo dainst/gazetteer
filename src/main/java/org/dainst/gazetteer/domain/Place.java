@@ -61,6 +61,14 @@ public class Place {
 	public Set<Description> getDescriptions() {
 		return descriptions;
 	}
+	
+	public Description getDescription(String language) {
+		for (Description description : descriptions) {
+			if (description.getLanguage().equals(language))
+				return description;
+		}
+		return null;
+	}
 
 	public void setDescriptions(Set<Description> descriptions) {
 		this.descriptions = descriptions;
@@ -80,6 +88,14 @@ public class Place {
 
 	public Set<PlaceName> getNames() {
 		return names;
+	}
+	
+	public PlaceName getName(String language) {
+		for (PlaceName name : names) {
+			if (name.getLanguage().equals(language))
+				return name;
+		}
+		return null;
 	}
 
 	public void setNames(Set<PlaceName> names) {

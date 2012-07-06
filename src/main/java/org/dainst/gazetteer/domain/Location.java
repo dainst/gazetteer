@@ -129,6 +129,14 @@ public class Location {
 	public Set<Description> getDescriptions() {
 		return descriptions;
 	}
+	
+	public Description getDescription(String language) {
+		for (Description description : descriptions) {
+			if (description.getLanguage().equals(language))
+				return description;
+		}
+		return null;
+	}
 
 	public void setDescriptions(Set<Description> descriptions) {
 		this.descriptions = descriptions;
