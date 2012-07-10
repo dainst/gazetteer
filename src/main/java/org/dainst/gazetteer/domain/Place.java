@@ -29,6 +29,8 @@ public class Place {
 
 	@OneToMany(mappedBy="place", cascade=CascadeType.ALL, fetch=FetchType.EAGER)
 	private Set<PlaceName> names = new HashSet<PlaceName>();
+	
+	private String type;
 
 	@OneToMany(mappedBy="place", cascade=CascadeType.ALL, fetch=FetchType.EAGER)
 	private Set<Location> locations = new HashSet<Location>();
@@ -163,6 +165,14 @@ public class Place {
 
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 	
 }
