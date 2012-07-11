@@ -19,7 +19,7 @@
         <constructor-arg ref="elasticSearchConfiguration"/>
     </bean>
     
-    <bean id="elasticSearchPlaceIndexer" class="org.dainst.gazetteer.search.ElasticSearchPlaceIndexer" factory-method="aspectOf">
+    <bean id="elasticSearchPlaceIndexer" class="org.dainst.gazetteer.search.ElasticSearchPlaceIndexer">
     	<property name="elasticSearchServer" ref="elasticSearchServer"/>
         <!-- this advice will execute around the transactional advice -->
     	<property name="order" value="1"/>
