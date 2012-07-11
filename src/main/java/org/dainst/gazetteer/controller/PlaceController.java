@@ -98,7 +98,7 @@ public class PlaceController {
 	public void deletePlace(@PathVariable long placeId,
 			HttpServletResponse response) {
 		
-		if(placeDao.delete(placeId)) {
+		if(placeDao.delete(placeId) != 0) {
 			response.setStatus(204);
 		} else {
 			response.setStatus(404);

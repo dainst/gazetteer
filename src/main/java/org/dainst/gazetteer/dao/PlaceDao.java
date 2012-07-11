@@ -26,7 +26,7 @@ public class PlaceDao {
 		return place;
 	}
 
-	public boolean delete(long placeId) {
+	public long delete(long placeId) {
 		
 		Place place = em.find(Place.class, placeId);
 		if (place != null) {
@@ -35,10 +35,11 @@ public class PlaceDao {
 				child.setParent(null);
 			}
 			em.remove(place);
-			return true;
+			return placeId;
 		} else {
-			return false;
+			return 0;
 		}
+		
 	}
 
 	public Place getPlaceByUri(String uri) {		

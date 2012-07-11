@@ -1,14 +1,12 @@
 package org.dainst.gazetteer.search;
 
-import javax.annotation.Resource;
 import javax.ws.rs.core.MediaType;
 
-import org.aspectj.lang.ProceedingJoinPoint;
 import org.dainst.gazetteer.domain.Place;
+import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.index.IndexResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 
 import com.sun.jersey.api.client.Client;
 
@@ -16,38 +14,25 @@ public class ElasticSearchPlaceIndexer {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(ElasticSearchPlaceIndexer.class);
 	
-	@Resource(name="elasticSearchServer")
 	private ElasticSearchServer elasticSearchServer;
 	
-	@Value("${baseUri}")
 	private String baseUri;
 	
-	public ElasticSearchPlaceIndexer() {
-		LOGGER.info("constructing");
-	}
-
-	public Place indexPlace(ProceedingJoinPoint pjp) {
-		
-		LOGGER.info("indexing place before");
-		
-		Place place;
-		try {
-			place = (Place) pjp.proceed();
-		} catch (Throwable e) {
-			LOGGER.error("Error while trying to index saved place.", e);
-			return null;
-		}
-		
-		LOGGER.info("starting indexing thread for place: " + place.getId());
-		
-		new Thread(new SinglePlaceIndexer(place, elasticSearchServer, baseUri)).start();
-		
-		return place;
-	}
-
-	public void setElasticSearchServer(ElasticSearchServer elasticSearchServer) {
-		LOGGER.info("setElasticSearchServer called");
+	public ElasticSearchPlaceIndexer(ElasticSearchServer elasticSearchServer, String baseUri) {
 		this.elasticSearchServer = elasticSearchServer;
+		this.baseUri = baseUri;
+	}
+	
+	public void deletePlaceFromIndex(long placeId) {		
+		DeleteResponse deleteResponse = elasticSearchServer.getClient()
+			.prepareDelete("gazetteer", "place", String.valueOf(placeId))
+			.execute().actionGet();		
+		LOGGER.info("deleted place from index: " + deleteResponse.getId());		
+	}
+
+	public void addPlaceToIndex(Place place) {
+		LOGGER.info("starting indexing thread for place: " + place.getId());
+		new Thread(new SinglePlaceIndexer(place, elasticSearchServer, baseUri)).start();
 	}
 	
 	private static class SinglePlaceIndexer implements Runnable {
@@ -64,11 +49,6 @@ public class ElasticSearchPlaceIndexer {
 
 		@Override
 		public void run() {
-			
-			if (elasticSearchServer == null) {
-				LOGGER.error("elasticSearchServer has not been set. Unable to index place");
-				return;
-			}
 			
 			String response = Client.create().resource(baseUri + "place/" + place.getId())
 				.accept(MediaType.APPLICATION_JSON_TYPE)

@@ -10,24 +10,30 @@
 
 	<bean id="elasticSearchConfiguration"
           class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-        <property name="location" value="WEB-INF/elasticsearch.properties"/>
-        <property name="localOverride" value="true"/>
+        <property name="location" value="WEB-INF/elasticsearch.properties" />
+        <property name="localOverride" value="true" />
     </bean>
 
     <bean id="elasticSearchServer" class="org.dainst.gazetteer.search.ElasticSearchServer"
           init-method="start" destroy-method="stop">
-        <constructor-arg ref="elasticSearchConfiguration"/>
+        <constructor-arg ref="elasticSearchConfiguration" />
     </bean>
     
     <bean id="elasticSearchPlaceIndexer" class="org.dainst.gazetteer.search.ElasticSearchPlaceIndexer">
-    	<property name="elasticSearchServer" ref="elasticSearchServer"/>
+    	<constructor-arg ref="elasticSearchServer" />
+    	<constructor-arg value="${baseUri}" />
     </bean>
     
     <aop:config>
-        <!-- this advice will execute around the transactional advice -->
-        <aop:aspect id="profilingAspect" ref="elasticSearchPlaceIndexer" order="1">
-            <aop:pointcut id="save" expression="execution(* org.dainst.gazetteer.dao.PlaceDao.save(..))"/>
-            <aop:around method="indexPlace" pointcut-ref="save"/>
+        <!-- this advice will execute around the transactional advice becasue of the order attribute -->
+        <aop:aspect id="addToIndexAspect" ref="elasticSearchPlaceIndexer" order="1">
+            <aop:pointcut id="save" expression="execution(* org.dainst.gazetteer.dao.PlaceDao.save(..))" />
+            <aop:after-returning method="addPlaceToIndex" pointcut-ref="save" returning="place" />
+        </aop:aspect>
+        <!-- this advice will execute around the transactional advice becasue of the order attribute -->
+        <aop:aspect id="deleteFromIndexAspect" ref="elasticSearchPlaceIndexer" order="1">
+            <aop:pointcut id="delete" expression="execution(* org.dainst.gazetteer.dao.PlaceDao.delete(..))" />
+            <aop:after-returning method="deletePlaceFromIndex" pointcut-ref="delete" returning="placeId" />
         </aop:aspect>
     </aop:config>
 
