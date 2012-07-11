@@ -41,22 +41,9 @@ public class ElasticSearchPlaceIndexer implements Ordered {
 			return null;
 		}
 		
-		LOGGER.info("indexing place after: " + place.getId());
+		LOGGER.info("starting indexing thread for place: " + place.getId());
 		
-		if (elasticSearchServer == null) {
-			LOGGER.error("elasticSearchServer has not been set. Unable to index place");
-			return place;
-		}
-		
-		String response = Client.create().resource(baseUri + "place/" + place.getId())
-			.accept(MediaType.APPLICATION_JSON_TYPE)
-			.get(String.class);
-		
-		IndexResponse indexResponse = elasticSearchServer.getClient()
-			.prepareIndex("gazetteer", "place", String.valueOf(place.getId()))
-			.setSource(response).execute().actionGet();
-		
-		LOGGER.info("indexed place in document: " + indexResponse.getId());
+		new Thread(new SinglePlaceIndexer(place, elasticSearchServer, baseUri)).start();
 		
 		return place;
 	}
@@ -73,6 +60,42 @@ public class ElasticSearchPlaceIndexer implements Ordered {
 
 	public void setOrder(int order) {
 		this.order = order;
+	}
+	
+	private static class SinglePlaceIndexer implements Runnable {
+		
+		private Place place;
+		private ElasticSearchServer elasticSearchServer;
+		private String baseUri;
+
+		public SinglePlaceIndexer(Place place, ElasticSearchServer elasticSearchServer, String baseUri) {
+			this.place = place;
+			this.elasticSearchServer = elasticSearchServer;
+			this.baseUri = baseUri;
+		}
+
+		@Override
+		public void run() {
+			
+			if (elasticSearchServer == null) {
+				LOGGER.error("elasticSearchServer has not been set. Unable to index place");
+				return;
+			}
+			
+			String response = Client.create().resource(baseUri + "place/" + place.getId())
+				.accept(MediaType.APPLICATION_JSON_TYPE)
+				.get(String.class);
+			
+			IndexResponse indexResponse = elasticSearchServer.getClient()
+				.prepareIndex("gazetteer", "place", String.valueOf(place.getId()))
+				.setSource(response).execute().actionGet();
+			
+			LOGGER.info("indexed place in document: " + indexResponse.getId());
+			
+		}
+		
+		
+		
 	}
 	
 }
