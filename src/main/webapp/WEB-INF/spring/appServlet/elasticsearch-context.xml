@@ -21,17 +21,14 @@
     
     <bean id="elasticSearchPlaceIndexer" class="org.dainst.gazetteer.search.ElasticSearchPlaceIndexer">
     	<property name="elasticSearchServer" ref="elasticSearchServer"/>
-        <!-- this advice will execute around the transactional advice -->
-    	<property name="order" value="1"/>
     </bean>
     
     <aop:config>
-        <aop:aspect id="profilingAspect" ref="elasticSearchPlaceIndexer">
+        <!-- this advice will execute around the transactional advice -->
+        <aop:aspect id="profilingAspect" ref="elasticSearchPlaceIndexer" order="1">
             <aop:pointcut id="save" expression="execution(* org.dainst.gazetteer.dao.PlaceDao.save(..))"/>
             <aop:around method="indexPlace" pointcut-ref="save"/>
         </aop:aspect>
     </aop:config>
-	
-	<aop:aspectj-autoproxy />
 
 </beans>

@@ -9,11 +9,10 @@ import org.elasticsearch.action.index.IndexResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.Ordered;
 
 import com.sun.jersey.api.client.Client;
 
-public class ElasticSearchPlaceIndexer implements Ordered {
+public class ElasticSearchPlaceIndexer {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(ElasticSearchPlaceIndexer.class);
 	
@@ -22,8 +21,6 @@ public class ElasticSearchPlaceIndexer implements Ordered {
 	
 	@Value("${baseUri}")
 	private String baseUri;
-	
-	private int order = 1;
 	
 	public ElasticSearchPlaceIndexer() {
 		LOGGER.info("constructing");
@@ -51,15 +48,6 @@ public class ElasticSearchPlaceIndexer implements Ordered {
 	public void setElasticSearchServer(ElasticSearchServer elasticSearchServer) {
 		LOGGER.info("setElasticSearchServer called");
 		this.elasticSearchServer = elasticSearchServer;
-	}
-
-	@Override
-	public int getOrder() {
-		return order;
-	}
-
-	public void setOrder(int order) {
-		this.order = order;
 	}
 	
 	private static class SinglePlaceIndexer implements Runnable {
@@ -92,9 +80,7 @@ public class ElasticSearchPlaceIndexer implements Ordered {
 			
 			LOGGER.info("indexed place in document: " + indexResponse.getId());
 			
-		}
-		
-		
+		}		
 		
 	}
 	
