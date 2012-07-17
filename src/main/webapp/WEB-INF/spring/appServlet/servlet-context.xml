@@ -34,16 +34,16 @@
 			<list>
 				<bean
 					class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-					<property name="contentType" value="application/vnd.google-earth.kml+xml" />
-					<property name="prefix" value="/WEB-INF/views/kml/" />
-					<property name="suffix" value=".jsp" />
-				</bean>
-				<bean
-					class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 					<property name="contentType" value="text/html" />
 					<property name="prefix" value="/WEB-INF/views/html/" />
 					<property name="suffix" value=".jsp" />
-				</bean>				
+				</bean>	
+				<bean
+					class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+					<property name="contentType" value="application/vnd.google-earth.kml+xml" />
+					<property name="prefix" value="/WEB-INF/views/kml/" />
+					<property name="suffix" value=".jsp" />
+				</bean>			
 				<bean
 					class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 					<property name="contentType" value="application/json" />

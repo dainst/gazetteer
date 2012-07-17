@@ -1,7 +1,9 @@
 package org.dainst.gazetteer.domain;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -12,6 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import javax.persistence.Version;
 
 @Entity
@@ -22,7 +25,7 @@ public class Place {
 	private long id;
 
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
-	private Set<Description> descriptions;
+	private Set<Description> descriptions = new HashSet<Description>();
 
 	@ElementCollection(fetch=FetchType.EAGER)
 	private Set<String> uris;
@@ -64,12 +67,13 @@ public class Place {
 		return descriptions;
 	}
 	
-	public Description getDescription(String language) {
+	@Transient
+	public Map<String, Description> getDescriptionMap() {
+		HashMap<String, Description> result = new HashMap<String, Description>();
 		for (Description description : descriptions) {
-			if (description.getLanguage().equals(language))
-				return description;
+			result.put(description.getLanguage(), description);
 		}
-		return null;
+		return result;
 	}
 
 	public void setDescriptions(Set<Description> descriptions) {
@@ -92,12 +96,13 @@ public class Place {
 		return names;
 	}
 	
-	public PlaceName getName(String language) {
+	@Transient
+	public Map<String, PlaceName> getNameMap() {
+		HashMap<String, PlaceName> result = new HashMap<String, PlaceName>();
 		for (PlaceName name : names) {
-			if (name.getLanguage().equals(language))
-				return name;
+			result.put(name.getLanguage(), name);
 		}
-		return null;
+		return result;
 	}
 
 	public void setNames(Set<PlaceName> names) {

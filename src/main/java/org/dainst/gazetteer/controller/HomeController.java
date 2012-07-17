@@ -51,7 +51,7 @@ public class HomeController {
 		logger.info("saved timbuktu");*/
 		
 		Place place2 = new Place();
-		place2.addName(new PlaceName("Köln","de"));
+		place2.addName(new PlaceName("K√∂ln","de"));
 		place2.addName(new PlaceName("Cologne","en"));
 		place2.addLocation(new Location(50.937527,6.960268));
 		placeDao.save(place2);		
@@ -59,7 +59,7 @@ public class HomeController {
 		
 		Place place3 = new Place();
 		place3.setParent(place2);
-		place3.addName(new PlaceName("Arbeitsstelle für digitale Archäologie","de"));
+		place3.addName(new PlaceName("Arbeitsstelle f√ºr digitale Arch√§ologie","de"));
 		place3.addName(new PlaceName("Cologne Digital Archaeology Lab","en"));
 		place3.addLocation(new Location(50.925100, 6.925767));
 		placeDao.save(place3);		

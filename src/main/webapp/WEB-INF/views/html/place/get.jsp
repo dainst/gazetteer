@@ -59,14 +59,14 @@ body {
 	
 	<c:if test="${place.parent != null}">
 		<h1><s:message code="domain.place.parent" text="Übergeordneter Ort" />:</h1>	
-		<ul><li><a href="${place.parent.id}">${place.parent.getName(language).title}</a></li></ul>
+		<ul><li><a href="${place.parent.id}">${place.parent.nameMap[language].title}</a></li></ul>
 	</c:if>
 	
 	<c:if test="${!empty(place.children)}">
 		<h1><s:message code="domain.place.children" text="Untergeordnete Orte" />:</h1>
 		<ul>
 			<c:forEach var="child" items="${place.children}">
-				<li><a href="${child.id}">${child.getName(language).title}</a></li>
+				<li><a href="${child.id}">${child.nameMap[language].title}</a></li>
 			</c:forEach>
 		</ul>
 	</c:if>

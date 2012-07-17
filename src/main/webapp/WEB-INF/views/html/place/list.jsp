@@ -55,8 +55,8 @@ body {
 	
 		<div class="row">
 
-			<h1><a href="place/${place.id}">${place.getName(language).title}</a></h1>
-			<p>${place.getDescription(language).description}</p>
+			<h1><a href="place/${place.id}">${place.nameMap[language].title}</a></h1>
+			<p>${place.descriptionMap[language].description}</p>
 		
 		</div>
 	
