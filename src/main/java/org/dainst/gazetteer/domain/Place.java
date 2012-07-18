@@ -1,8 +1,10 @@
 package org.dainst.gazetteer.domain;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -14,6 +16,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
@@ -24,14 +27,12 @@ public class Place {
 	@GeneratedValue
 	private long id;
 
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
-	private Set<Description> descriptions = new HashSet<Description>();
-
 	@ElementCollection(fetch=FetchType.EAGER)
 	private Set<String> uris;
 
 	@OneToMany(mappedBy="place", cascade=CascadeType.ALL, fetch=FetchType.EAGER)
-	private Set<PlaceName> names = new HashSet<PlaceName>();
+	@OrderBy("ordering")
+	private List<PlaceName> names = new ArrayList<PlaceName>();
 	
 	private String type;
 
@@ -63,27 +64,6 @@ public class Place {
 		this.id = id;
 	}
 
-	public Set<Description> getDescriptions() {
-		return descriptions;
-	}
-	
-	@Transient
-	public Map<String, Description> getDescriptionMap() {
-		HashMap<String, Description> result = new HashMap<String, Description>();
-		for (Description description : descriptions) {
-			result.put(description.getLanguage(), description);
-		}
-		return result;
-	}
-
-	public void setDescriptions(Set<Description> descriptions) {
-		this.descriptions = descriptions;
-	}
-	
-	public void addDescription(Description description) {
-		descriptions.add(description);
-	}
-
 	public Set<String> getUris() {
 		return uris;
 	}
@@ -92,7 +72,7 @@ public class Place {
 		this.uris = uris;
 	}
 
-	public Set<PlaceName> getNames() {
+	public List<PlaceName> getNames() {
 		return names;
 	}
 	
@@ -105,7 +85,7 @@ public class Place {
 		return result;
 	}
 
-	public void setNames(Set<PlaceName> names) {
+	public void setNames(List<PlaceName> names) {
 		this.names = names;
 	}
 	

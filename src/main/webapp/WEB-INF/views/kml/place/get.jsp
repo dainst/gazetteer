@@ -15,9 +15,6 @@
 		</c:forEach>
 		<c:forEach var="location" items="${place.locations}">
 			<Placemark>
-				<c:forEach var="description" items="${location.descriptions}">
-					<description xml:lang="${description.language}"><c:out value="${description.description}" /></description>
-				</c:forEach>
 				<Point>
 					<coordinates><c:out value="${location.lat}" />,<c:out value="${location.lng}" />,0</coordinates>
 				</Point>

@@ -50,13 +50,6 @@ body {
 		</c:forEach>
 	</ul>
 	
-	<h1><s:message code="domain.placename.title" text="Beschreibung" />:</h1>
-	<ul>
-		<c:forEach var="description" items="${place.descriptions}">
-			<li>${description.description}</li>
-		</c:forEach>
-	</ul>
-	
 	<c:if test="${place.parent != null}">
 		<h1><s:message code="domain.place.parent" text="Übergeordneter Ort" />:</h1>	
 		<ul><li><a href="${place.parent.id}">${place.parent.nameMap[language].title}</a></li></ul>

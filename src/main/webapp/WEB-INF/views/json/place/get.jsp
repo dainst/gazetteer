@@ -25,14 +25,6 @@
 			</c:forEach>
 		],
 	</c:if>	
-	<c:if test="${!empty(place.descriptions)}">
-		"descriptions": [
-			<c:forEach var="description" items="${place.descriptions}" varStatus="status">
-				{ "title": "${description.description}", "language": "${description.language}"}
-				<c:if test="${status.count lt fn:length(place.descriptions)}">,</c:if>
-			</c:forEach>
-		],
-	</c:if>
 	"locations": [
 		<c:forEach var="location" items="${place.locations}" varStatus="status">
 			{

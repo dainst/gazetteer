@@ -45,22 +45,6 @@ public class PlaceController {
 	@Value("${baseUri}")
 	private String baseUri;
 	
-	@RequestMapping( value = "/enc/{foo}", method = RequestMethod.GET )
-	public HttpEntity<String> enc( @PathVariable( "foo" ) String foo, HttpServletRequest req )
-	{
-	  String resp;
-
-	  resp = "      path variable foo: " + foo + "\n" + 
-	         "      req.getPathInfo(): " + req.getPathInfo() + "\n" +
-	         "req.getPathTranslated(): " + req.getPathTranslated() + "\n" + 
-	         "    req.getRequestURI(): " + req.getRequestURI() + "\n" + 
-	         "   req.getContextPath(): " + req.getContextPath() + "\n";
-
-	  HttpHeaders headers = new HttpHeaders();
-	  headers.setContentType( new MediaType( "text", "plain", Charset.forName( "UTF-8" ) ) );
-	  return new HttpEntity<String>( resp, headers );
-	}
-	
 	@RequestMapping(value="/place", method=RequestMethod.GET)
 	public ModelAndView listPlaces(@RequestParam(defaultValue="50") int limit,
 			@RequestParam(defaultValue="0") int offset,

@@ -20,6 +20,12 @@ public class PlaceName {
 	private String title;
 	
 	private String language;
+	
+	private String script;
+	
+	private boolean modern;
+	
+	private int ordering = 0;
 
 	@ManyToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE})
 	private Place place;
@@ -63,6 +69,14 @@ public class PlaceName {
 		this.language = language;
 	}
 
+	public String getScript() {
+		return script;
+	}
+
+	public void setScript(String script) {
+		this.script = script;
+	}
+
 	public Place getPlace() {
 		return place;
 	}
@@ -85,6 +99,22 @@ public class PlaceName {
 
 	public void setCreated(Date created) {
 		this.created = created;
+	}
+
+	public boolean isModern() {
+		return modern;
+	}
+
+	public void setModern(boolean modern) {
+		this.modern = modern;
+	}
+
+	public int getOrdering() {
+		return ordering;
+	}
+
+	public void setOrdering(int ordering) {
+		this.ordering = ordering;
 	}
 	
 }

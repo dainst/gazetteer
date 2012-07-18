@@ -1,15 +1,12 @@
 package org.dainst.gazetteer.domain;
 
 import java.util.Date;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
@@ -27,9 +24,6 @@ public class Location {
 	@Id
 	@GeneratedValue
 	private long id;
-
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
-	private Set<Description> descriptions;
 
 	@Type(type="org.hibernatespatial.GeometryUserType")
 	private Point point;
@@ -124,26 +118,6 @@ public class Location {
 	@Transient
 	public double getLng() {
 		return point.getCoordinateSequence().getY(0);
-	}
-
-	public Set<Description> getDescriptions() {
-		return descriptions;
-	}
-	
-	public Description getDescription(String language) {
-		for (Description description : descriptions) {
-			if (description.getLanguage().equals(language))
-				return description;
-		}
-		return null;
-	}
-
-	public void setDescriptions(Set<Description> descriptions) {
-		this.descriptions = descriptions;
-	}
-	
-	public void addDescription(Description description) {
-		descriptions.add(description);
 	}
 
 }
