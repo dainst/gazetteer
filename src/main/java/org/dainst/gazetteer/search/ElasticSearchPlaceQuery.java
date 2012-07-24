@@ -9,7 +9,6 @@ import org.dainst.gazetteer.domain.Place;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
-import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.slf4j.Logger;
@@ -21,6 +20,7 @@ public class ElasticSearchPlaceQuery {
 	
 	private SearchRequestBuilder requestBuilder;
 	private JsonPlaceDeserializer jsonPlaceDeserializer;
+	private long hits = -1;
 
 	public ElasticSearchPlaceQuery(Client client, JsonPlaceDeserializer jsonPlaceDeserializer) {
 		requestBuilder = client.prepareSearch("gazetteer");
@@ -46,11 +46,16 @@ public class ElasticSearchPlaceQuery {
 		return this;
 	}
 	
+	public long getHits() {
+		return hits;
+	}
+	
 	public List<Place> execute() {
 		
 		List<Place> result = new ArrayList<Place>();
 		
 		SearchResponse response = requestBuilder.execute().actionGet();
+		hits = response.hits().getTotalHits();
 		for (SearchHit hit : response.getHits()) {
 			try {
 				logger.debug("deserializing hit: " + hit.sourceAsString());
@@ -59,7 +64,7 @@ public class ElasticSearchPlaceQuery {
 			} catch (Exception e) {
 				logger.error("unable to deserialize json query result", e);
 			}
-		}		
+		}
 		
 		return result;
 		

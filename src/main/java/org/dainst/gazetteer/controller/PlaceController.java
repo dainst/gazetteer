@@ -42,7 +42,7 @@ public class PlaceController {
 	private String baseUri;
 	
 	@RequestMapping(value="/place", method=RequestMethod.GET)
-	public ModelAndView listPlaces(@RequestParam(defaultValue="50") int limit,
+	public ModelAndView listPlaces(@RequestParam(defaultValue="10") int limit,
 			@RequestParam(defaultValue="0") int offset,
 			@RequestParam(required=false) String q,
 			HttpServletRequest request,
@@ -51,7 +51,7 @@ public class PlaceController {
 		RequestContext requestContext = new RequestContext(request);
 		String language = requestContext.getLocale().getLanguage();
 		
-		logger.debug("Searching places with query: " + q);
+		logger.debug("Searching places with query: " + q + " and limit " + limit + ", offset " + offset);
 		
 		ElasticSearchPlaceQuery query = new ElasticSearchPlaceQuery(elasticSearchServer.getClient(), jsonPlaceDeserializer);
 		if (q != null) {
@@ -70,6 +70,9 @@ public class PlaceController {
 		mav.addObject("places", places);
 		mav.addObject("baseUri", baseUri);
 		mav.addObject("language", language);
+		mav.addObject("limit", limit);
+		mav.addObject("offset", offset);
+		mav.addObject("hits", query.getHits());
 		
 		return mav;
 		
@@ -92,6 +95,7 @@ public class PlaceController {
 			mav.addObject(place);
 			mav.addObject("baseUri", baseUri);
 			mav.addObject("language", language);
+			mav.addObject("nativePlaceName", place.getNameMap().get(language));
 			return mav;
 		}
 		

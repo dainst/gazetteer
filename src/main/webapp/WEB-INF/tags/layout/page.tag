@@ -1,6 +1,7 @@
 <%@ tag description="page layout" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ attribute name="title" required="true" type="java.lang.String"%>
+<%@ attribute name="subtitle" type="java.lang.String"%>
 <%@ attribute name="menu" fragment="true" %>
 
 <!DOCTYPE HTML>
@@ -22,7 +23,7 @@
 </head>
 <body>
 
-<!-- Header -->
+<!-- Navigation Bar -->
 <div class="navbar navbar-fixed-top">
 	<div class="navbar-inner">
 		<div class="container-fluid">
@@ -66,7 +67,14 @@
 		</div>
 		
 		<!-- Body -->
-		<div class="span7">		
+		<div class="span7">
+			<!-- Page title -->
+			<div class="page-header">
+				<h1>
+					${title}
+					<small>${subtitle}</small>
+				</h1>
+			</div>
 			<jsp:doBody />
 		</div>
 		
