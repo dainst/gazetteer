@@ -45,7 +45,7 @@ public class Location {
 	
 	public Location(double lat, double lng) {
 		PackedCoordinateSequenceFactory factory = new PackedCoordinateSequenceFactory(PackedCoordinateSequenceFactory.DOUBLE);
-		CoordinateSequence coordinates = factory.create(new double[]{lat, lng}, 2);
+		CoordinateSequence coordinates = factory.create(new double[]{lng, lat}, 2);
 		point = new Point(coordinates, new GeometryFactory(factory));
 		created = new Date();
 	}
@@ -105,19 +105,20 @@ public class Location {
 	}
 	
 	public void setCoordinates(double[] coordinates) {
+		double[] coordinatesReversed = new double[]{ coordinates[1], coordinates[0] };
 		PackedCoordinateSequenceFactory factory = new PackedCoordinateSequenceFactory(PackedCoordinateSequenceFactory.DOUBLE);
-		CoordinateSequence sequence = factory.create(coordinates, 2);
+		CoordinateSequence sequence = factory.create(coordinatesReversed, 2);
 		point = new Point(sequence, new GeometryFactory(factory));
 	}
 	
 	@Transient
 	public double getLat() {
-		return point.getCoordinateSequence().getX(0);
+		return point.getCoordinateSequence().getY(0);
 	}
 	
 	@Transient
 	public double getLng() {
-		return point.getCoordinateSequence().getY(0);
+		return point.getCoordinateSequence().getX(0);
 	}
 
 }

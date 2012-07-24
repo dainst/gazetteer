@@ -1,8 +1,7 @@
 <%@ tag description="page layout" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ attribute name="title" required="true" type="java.lang.String"%>
-
-<% response.setHeader("Content-Type", "text/html; charset=utf-8"); %>
+<%@ attribute name="menu" fragment="true" %>
 
 <!DOCTYPE HTML>
 <html>
@@ -48,6 +47,9 @@
 					<li><a href="#contact">Contact</a></li>
 				</ul>
 			</div><!--/.nav-collapse -->
+			<form class="navbar-search pull-left" action="/gazetteer/place">
+ 				<input type="text" class="search-query" placeholder="Search" name="q">
+			</form>
 		</div>
 	</div>
 </div>
@@ -57,31 +59,14 @@
 	<div class="row-fluid">
 	
 		<!-- Menu -->
-		<div class="span3">
-			<div class="well sidebar-nav">
-				<ul class="nav nav-list">
-					<li class="nav-header">Sidebar</li>
-					<li class="active"><a href="#">Link</a></li>
-					<li><a href="#">Link</a></li>
-					<li><a href="#">Link</a></li>
-					<li><a href="#">Link</a></li>
-					<li class="nav-header">Sidebar</li>
-					<li><a href="#">Link</a></li>
-					<li><a href="#">Link</a></li>
-					<li><a href="#">Link</a></li>
-					<li><a href="#">Link</a></li>
-					<li><a href="#">Link</a></li>
-					<li><a href="#">Link</a></li>
-					<li class="nav-header">Sidebar</li>
-					<li><a href="#">Link</a></li>
-					<li><a href="#">Link</a></li>
-					<li><a href="#">Link</a></li>
-				</ul>
-			</div><!--/.well -->
-		</div><!--/span-->
+		<div class="span5">
+			<div class="well">
+				<jsp:invoke fragment="menu" />
+			</div>
+		</div>
 		
 		<!-- Body -->
-		<div class="span9">		
+		<div class="span7">		
 			<jsp:doBody />
 		</div>
 		

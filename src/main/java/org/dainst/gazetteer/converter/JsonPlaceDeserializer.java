@@ -76,7 +76,7 @@ public class JsonPlaceDeserializer {
 				JsonNode latNode = coordinatesNode.get(0);
 				if (latNode == null)
 					throw new HttpMessageNotReadableException("Invalid location object. Attribute \"coordinates\" cannot be read.");
-				JsonNode longNode = coordinatesNode.get(0);
+				JsonNode longNode = coordinatesNode.get(1);
 				if (longNode == null)
 					throw new HttpMessageNotReadableException("Invalid location object. Attribute \"coordinates\" cannot be read.");
 	

@@ -76,6 +76,14 @@ public class Place {
 		return names;
 	}
 	
+	public String[] getNamesAsArray() {
+		String[] result = new String[names.size()];
+		for (int i = 0; i < names.size(); i++) {
+			result[i] = names.get(i).getTitle();
+		}
+		return result;
+	}
+	
 	@Transient
 	public Map<String, PlaceName> getNameMap() {
 		HashMap<String, PlaceName> result = new HashMap<String, PlaceName>();

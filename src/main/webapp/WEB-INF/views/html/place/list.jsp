@@ -1,30 +1,32 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s"%>
 <%@ taglib tagdir="/WEB-INF/tags/layout" prefix="l"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ page session="false"%>
 
 <l:page title="Result">
 
-	<jsp:body> 
+	<jsp:attribute name="menu">	
+		<l:map places="${places}" height="500px"/>	
+	</jsp:attribute>
 
-		<c:forEach var="place" items="${places}">
-		
-			<div class="row-fluid">
-			
-				<div class="span12">
-		
-				<c:set var="title" value="${place.names[0].title}" />
-				<c:forEach var="name" items="${place.names}" begin="1" end="3">
-					<c:set var="title" value="${title} / ${name.title}" />
+	<jsp:body>	
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<td>#</td>
+					<td><s:message code="domain.placename.title" text="Name"/></td>
+				</tr>
+			</thead>
+			<tbody>
+				<c:forEach var="place" items="${places}">				
+					<tr>
+						<td>${place.id}</td>
+						<td><a href="place/${place.id}">${fn:join(place.namesAsArray, " / ")}</a></td>					
+					</tr>				
 				</c:forEach>
-		
-				<h4><a href="place/${place.id}">${title}</a></h4>
-				</div>
-			
-			</div>
-		
-		</c:forEach>
-		
+			</tbody>		
+		</table>		
 	</jsp:body>
 
 </l:page>
