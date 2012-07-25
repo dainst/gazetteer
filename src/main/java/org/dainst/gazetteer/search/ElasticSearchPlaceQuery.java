@@ -70,4 +70,9 @@ public class ElasticSearchPlaceQuery {
 		
 	}
 
+	public ElasticSearchPlaceQuery fuzzySearch(String query) {
+		requestBuilder.setQuery(QueryBuilders.fuzzyQuery("_all", query));
+		return this;
+	}
+
 }

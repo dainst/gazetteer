@@ -27,42 +27,48 @@ request.setAttribute("places", places);
 		<a href="javascript:window.prompt ('${copyMsg}', '${baseUri}place/${place.id}')"><i class="icon-share"></i></a>
 	</jsp:attribute>
 
-	<jsp:attribute name="menu">
-		<l:map places="${places}" height="500px"/>	
-	</jsp:attribute>
-
 	<jsp:body>
-
-		<h1><s:message code="domain.placename.title" text="Ortsnamen" />:</h1>
-		<ul>
-			<c:forEach var="placename" items="${place.names}">
-				<li>${placename.title}</li>
-			</c:forEach>
-		</ul>
 		
-		<c:if test="${place.parent != null}">
-			<h1><s:message code="domain.place.parent" text="Übergeordneter Ort" />:</h1>	
-			<ul><li><a href="${place.parent.id}">${place.parent.nameMap[language].title}</a></li></ul>
-		</c:if>
+		<div class="row-fluid">
 		
-		<c:if test="${!empty(place.children)}">
-			<h1><s:message code="domain.place.children" text="Untergeordnete Orte" />:</h1>
-			<ul>
-				<c:forEach var="child" items="${place.children}">
-					<li><a href="${child.id}">${child.nameMap[language].title}</a></li>
-				</c:forEach>
-			</ul>
-		</c:if>
-	
-		<h1><s:message code="domain.placename.title" text="Lage" />:</h1>
-		<ul>
-			<c:forEach var="location" items="${place.locations}">
-				<li>
-					<s:message code="domain.location.latitude" text="Breite"/>: ${location.lat}
-					<s:message code="domain.location.latitude" text="Länge"/>: ${location.lng}
-				</li>
-			</c:forEach>
-		</ul>
+			<div class="span5 well">
+				<l:map places="${places}" height="500px"/>	
+			</div>
+			
+			<div class="span7">
+				<h1><s:message code="domain.placename.title" text="Ortsnamen" />:</h1>
+				<ul>
+					<c:forEach var="placename" items="${place.names}">
+						<li>${placename.title}</li>
+					</c:forEach>
+				</ul>
+				
+				<c:if test="${place.parent != null}">
+					<h1><s:message code="domain.place.parent" text="Übergeordneter Ort" />:</h1>	
+					<ul><li><a href="${place.parent.id}">${place.parent.nameMap[language].title}</a></li></ul>
+				</c:if>
+				
+				<c:if test="${!empty(place.children)}">
+					<h1><s:message code="domain.place.children" text="Untergeordnete Orte" />:</h1>
+					<ul>
+						<c:forEach var="child" items="${place.children}">
+							<li><a href="${child.id}">${child.nameMap[language].title}</a></li>
+						</c:forEach>
+					</ul>
+				</c:if>
+			
+				<h1><s:message code="domain.placename.title" text="Lage" />:</h1>
+				<ul>
+					<c:forEach var="location" items="${place.locations}">
+						<li>
+							<s:message code="domain.location.latitude" text="Breite"/>: ${location.lat}
+							<s:message code="domain.location.latitude" text="Länge"/>: ${location.lng}
+						</li>
+					</c:forEach>
+				</ul>
+			</div>
+			
+		</div>
 			
 	</jsp:body>
 

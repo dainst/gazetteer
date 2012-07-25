@@ -1,39 +1,40 @@
 <%@ tag description="page layout" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="s"%>
 <%@ attribute name="title" required="true" type="java.lang.String"%>
 <%@ attribute name="subtitle" type="java.lang.String"%>
-<%@ attribute name="menu" fragment="true" %>
 
 <!DOCTYPE HTML>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>iDAI.Gazetteer - ${title}</title>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="/gazetteer/resources/js/custom.js"></script>
+<script src="/gazetteer/resources/bootstrap/js/bootstrap-dropdown.js"></script>
 <link href="/gazetteer/resources/bootstrap/css/bootstrap.css" rel="stylesheet">
 <link href="/gazetteer/resources/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+<link href="/gazetteer/resources/css/custom.css" rel="stylesheet">
 <style type="text/css">
       body {
         padding-top: 60px;
         padding-bottom: 40px;
       }
-      .sidebar-nav {
-        padding: 9px 0;
-      }
     </style>
 </head>
 <body>
 
-<!-- Navigation Bar -->
+<!-- Top Navigation Bar -->
 <div class="navbar navbar-fixed-top">
 	<div class="navbar-inner">
 		<div class="container-fluid">
 			<a class="btn btn-navbar" data-toggle="collapse"
 				data-target=".nav-collapse"> <span class="icon-bar"></span> <span
 				class="icon-bar"></span> <span class="icon-bar"></span>
-			</a> <a class="brand" href="#">iDAI.Gazetteer</a>
+			</a> <a class="brand" href="/gazetteer">iDAI.Gazetteer</a>
 			<div class="btn-group pull-right">
-				<a class="btn dropdown-toggle" data-toggle="dropdown" href="#"> <i
-					class="icon-user"></i> Username <span class="caret"></span>
+				<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+					<i class="icon-user"></i> Username <span class="caret"></span>
 				</a>
 				<ul class="dropdown-menu">
 					<li><a href="#">Profile</a></li>
@@ -43,42 +44,47 @@
 			</div>
 			<div class="nav-collapse">
 				<ul class="nav">
-					<li class="active"><a href="#">Home</a></li>
+					<li><a href="/gazetteer">Home</a></li>
 					<li><a href="#about">About</a></li>
 					<li><a href="#contact">Contact</a></li>
+					<li id="extendedSearchBtn">
+						<a href="#">
+							<s:message code="ui.search.extendedSearch" text="Erweiterte Suche"/>
+							<i class="icon-circle-arrow-down icon-white"></i>
+						</a>
+					</li>
 				</ul>
 			</div><!--/.nav-collapse -->
 			<form class="navbar-search pull-left" action="/gazetteer/place">
- 				<input type="text" class="search-query" placeholder="Search" name="q">
+				<s:message code="ui.search.simpleSearch" text="Einfache Suche" var="titleSimpleSearch"/>
+ 				<input type="text" class="search-query" placeholder="${titleSimpleSearch}" name="q">
 			</form>
 		</div>
 	</div>
 </div>
 
+<div id="extendedSearchDiv">
+	<form class="form-inline" action="/gazetteer/place">
+		<input type="text" class="search-query input-large" name="q">
+		<label class="checkbox">
+			<input type="checkbox" name="fuzzy" value="true">
+			<s:message code="ui.search.fuzzySearch" text="Unscharfe Suche" />
+		</label>
+		<button type="submit" class="btn"><s:message code="ui.search.submit" text="Suchen"/></button>
+	</form>
+</div>
+
 <div class="container-fluid">
 
-	<div class="row-fluid">
-	
-		<!-- Menu -->
-		<div class="span5">
-			<div class="well">
-				<jsp:invoke fragment="menu" />
-			</div>
-		</div>
-		
-		<!-- Body -->
-		<div class="span7">
-			<!-- Page title -->
-			<div class="page-header">
-				<h1>
-					${title}
-					<small>${subtitle}</small>
-				</h1>
-			</div>
-			<jsp:doBody />
-		</div>
-		
+	<!-- Page title -->
+	<div class="page-header">
+		<h1>
+			${title}
+			<small>${subtitle}</small>
+		</h1>
 	</div>
+
+	<jsp:doBody />
 	
 	<!-- Footer -->
 	<hr>

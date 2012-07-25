@@ -45,6 +45,8 @@ public class PlaceController {
 	public ModelAndView listPlaces(@RequestParam(defaultValue="10") int limit,
 			@RequestParam(defaultValue="0") int offset,
 			@RequestParam(required=false) String q,
+			@RequestParam(required=false) String fuzzy,
+			@RequestParam(required=false, defaultValue="map,table") String view,
 			HttpServletRequest request,
 			HttpServletResponse response) {
 		
@@ -55,7 +57,8 @@ public class PlaceController {
 		
 		ElasticSearchPlaceQuery query = new ElasticSearchPlaceQuery(elasticSearchServer.getClient(), jsonPlaceDeserializer);
 		if (q != null) {
-			query.metaSearch(q);
+			if ("true".equals(fuzzy)) query.fuzzySearch(q);
+			else query.metaSearch(q);
 		} else {
 			query.listAll();
 		}
@@ -73,6 +76,7 @@ public class PlaceController {
 		mav.addObject("limit", limit);
 		mav.addObject("offset", offset);
 		mav.addObject("hits", query.getHits());
+		mav.addObject("view", view);
 		
 		return mav;
 		
