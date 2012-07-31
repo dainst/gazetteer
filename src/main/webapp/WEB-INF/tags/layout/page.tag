@@ -1,6 +1,7 @@
 <%@ tag description="page layout" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ attribute name="title" required="true" type="java.lang.String"%>
 <%@ attribute name="subtitle" type="java.lang.String"%>
 
@@ -8,7 +9,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>iDAI.Gazetteer - ${title}</title>
+<title>iDAI.gazetteer - ${title}</title>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script src="/gazetteer/resources/js/custom.js"></script>
 <script src="/gazetteer/resources/bootstrap/js/bootstrap-dropdown.js"></script>
@@ -31,7 +32,7 @@
 			<a class="btn btn-navbar" data-toggle="collapse"
 				data-target=".nav-collapse"> <span class="icon-bar"></span> <span
 				class="icon-bar"></span> <span class="icon-bar"></span>
-			</a> <a class="brand" href="/gazetteer">iDAI.Gazetteer</a>
+			</a> <a class="brand" href="/gazetteer">iDAI.gazetteer</a>
 			<div class="btn-group pull-right">
 				<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
 					<i class="icon-user"></i> Username <span class="caret"></span>
@@ -89,7 +90,9 @@
 	<!-- Footer -->
 	<hr>
 	<footer>
-		<p>&copy; Deutsches Archäologisches Institut 2012</p>
+		<jsp:useBean id="now" class="java.util.Date" />
+		<fmt:formatDate var="year" value="${now}" pattern="yyyy" />
+		<p>&copy; Deutsches Archäologisches Institut ${year}</p>
 	</footer>
 	
 </div>

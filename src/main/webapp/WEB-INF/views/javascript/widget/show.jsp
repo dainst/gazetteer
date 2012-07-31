@@ -6,32 +6,30 @@
 <%@ page import="java.util.*, org.dainst.gazetteer.domain.Place"%>
 <%@ page contentType="application/javascript; charset=utf-8" session="false"%>
 
-<%
-// create list with one entry for map display
-List<Place> places = new ArrayList<Place>();
-places.add((Place) request.getAttribute("place"));
-request.setAttribute("places", places);
-%>
-
 <c:set var="html">
 	<div class="gaz-show">
-		<div class="gaz-info">
-			<h4><a href="${baseUri}place/${place.id}">#${place.id} - ${fn:join(place.namesAsArray, " / ")}</a></h4>
-			<ul>
-				<c:forEach var="location" items="${place.locations}" varStatus="status">
-				<li>
-					<strong>
-						<c:if test="${status.count > 1}"><s:message code="domain.placename.alternative" text="Alternative"/></c:if>
-						<s:message code="domain.placename.title" text="Lage" />:
-					</strong>
+		<div class="gaz-title"><a href="${baseUri}" target="_blank">iDAI.gazetteer</a></div>
+		<c:if test="${showInfo}">
+			<c:forEach var="place" items="${places}">
+				<div class="gaz-info">
+					<h4><a href="${baseUri}place/${place.id}">#${place.id} - ${fn:join(place.namesAsArray, " / ")}</a></h4>
 					<ul>
-						<li><em><s:message code="domain.location.latitude" text="Breite"/></em>: ${location.lat}</li>
-						<li><em><s:message code="domain.location.latitude" text="Länge"/></em>: ${location.lng}</li>
+						<c:forEach var="location" items="${place.locations}" varStatus="status">
+						<li>
+							<strong>
+								<c:if test="${status.count > 1}"><s:message code="domain.placename.alternative" text="Alternative"/></c:if>
+								<s:message code="domain.placename.title" text="Lage" />:
+							</strong>
+							<ul>
+								<li><em><s:message code="domain.location.latitude" text="Breite"/></em>: ${location.lat}</li>
+								<li><em><s:message code="domain.location.longitude" text="Länge"/></em>: ${location.lng}</li>
+							</ul>
+						</li>
+						</c:forEach>
 					</ul>
-				</li>
-				</c:forEach>
-			</ul>
-		</div>
+				</div>
+			</c:forEach>
+		</c:if>
 		<div class="gaz-map">
 			<l:map places="${places}" height="${mapHeight}px"/>
 		</div>	

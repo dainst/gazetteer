@@ -1,5 +1,7 @@
 package org.dainst.gazetteer.controller;
 
+import java.util.ArrayList;
+
 import org.dainst.gazetteer.dao.PlaceDao;
 import org.dainst.gazetteer.domain.Place;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,16 +36,22 @@ public class WidgetController {
 	@RequestMapping(value="/widget/show.js")
 	public ModelAndView showPlace(
 			@RequestParam String callback,
-			@RequestParam long id,
-			@RequestParam(defaultValue="150") int mapHeight) {
+			@RequestParam(required=false, value="id") long[] ids,
+			@RequestParam(defaultValue="150") int mapHeight,
+			@RequestParam(defaultValue="false") boolean showInfo) {
 		
-		Place place = placeDao.get(id);
+		ArrayList<Place> places = new ArrayList<Place>();
+		for (int i = 0; i < ids.length; i++) {
+			Place place = placeDao.get(ids[i]);
+			if(place != null) places.add(place);
+		}
 		
 		ModelAndView mav = new ModelAndView("widget/show");
-		mav.addObject("place", place);
+		mav.addObject("places", places);
 		mav.addObject("callback", callback);
 		mav.addObject("baseUri", baseUri);
 		mav.addObject("mapHeight", mapHeight);
+		mav.addObject("showInfo", showInfo);
 		mav.addObject("googleMapsApiKey", googleMapsApiKey);
 		
 		return mav;

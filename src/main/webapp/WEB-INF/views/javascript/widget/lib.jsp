@@ -42,20 +42,30 @@ function scriptLoadHandler() {
 function main() { 
     jQuery(document).ready(function($) { 
         /******* Load CSS *******/
-        /*var css_link = $("<link>", { 
+        var css_link = $("<link>", { 
             rel: "stylesheet", 
             type: "text/css", 
-            href: "style.css" 
+            href: "${baseUri}resources/css/widget.css" 
         });
-        css_link.appendTo('head');*/   
+        css_link.appendTo('head');
 
         /******* Load HTML for show elements *******/
         if ($('gaz\\:show').length) {
         	$('gaz\\:show').each(function(index, showElem) {
+        		var jsonp_url = "${baseUri}widget/show.js?callback=?";
         		var id = $(this).attr("gaz-id");
-        		var jsonp_url = "${baseUri}widget/show.js?callback=?&id=" + id;
+        		if (id != undefined) jsonp_url += "&id=" + id;
+        		var ids = $(this).attr("gaz-ids");
+        		if (ids != undefined) {
+        			var ids_split = ids.split(",");
+        			$.each(ids_split, function(i, val) {
+        				jsonp_url += "&id=" + val;
+        			});
+        		} 
         		var height = $(this).attr("map-height");
         		if (height != undefined) jsonp_url += "&mapHeight=" + height;
+        		var show_info = $(this).attr("show-info");
+        		if (show_info != undefined) jsonp_url += "&showInfo=true";
 		        $.getJSON(jsonp_url, function(data) {
 		        	var decodedHtml = $("<div/>").html(data.html).text();
 		        	$(showElem).replaceWith(decodedHtml);

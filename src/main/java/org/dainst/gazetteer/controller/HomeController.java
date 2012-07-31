@@ -28,10 +28,12 @@ public class HomeController {
 	@Autowired
 	private PlaceDao placeDao;
 
-	/**
-	 * Simply selects the home view to render by returning its name.
-	 */
-	@RequestMapping(value = "/generate", method = RequestMethod.GET)
+	@RequestMapping(value="/")
+	public String home() {
+		return "forward:/place";
+	}
+	
+	@RequestMapping(value="/generate", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {
 
 		Date date = new Date();

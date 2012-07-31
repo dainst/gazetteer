@@ -1,0 +1,12 @@
+.gaz-title {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 10px;
+	background-color: black;
+	color: #999;
+	padding: 1px 4px;
+}
+
+.gaz-title a {
+	text-decoration: none;
+	color: #999;
+}
