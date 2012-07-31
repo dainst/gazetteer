@@ -1,9 +1,9 @@
-<%@page import="org.springframework.context.annotation.Import"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s"%>
 <%@ taglib tagdir="/WEB-INF/tags/layout" prefix="l"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<%@ page import="java.util.*, org.dainst.gazetteer.domain.Place" session="false"%>
+<%@ page import="java.util.*, org.dainst.gazetteer.domain.Place"%>
+<%@ page import="org.springframework.context.annotation.Import"%>
 <%@ page contentType="text/html; charset=utf-8" session="false"%>
 
 
@@ -17,11 +17,6 @@ request.setAttribute("places", places);
 <l:page title="${nativePlaceName.title}">
 
 	<jsp:attribute name="subtitle">
-		<script type="text/javascript">
-			function copyToClipboard(text) {
-			  window.prompt ("Copy to clipboard: Ctrl+C, Enter", text);
-			}
-		</script>
 		${baseUri}place/${place.id}
 		<s:message code="ui.copyToClipboard" text="In die Zwischenablage kopieren mit Strg+C / Cmd+C" var="copyMsg"/>
 		<a href="javascript:window.prompt ('${copyMsg}', '${baseUri}place/${place.id}')"><i class="icon-share"></i></a>

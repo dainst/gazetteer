@@ -92,7 +92,14 @@
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
 			<version>2.0.2</version>
-		</dependency>            
+		</dependency>
+		
+		<!-- JSON tag library for JSTL -->
+		<dependency>
+			<groupId>atg.taglib.json</groupId>
+			<artifactId>json-taglib</artifactId>
+			<version>0.4.1</version>
+		</dependency>        
 		
 		<!-- Javassist -->
 		<dependency>
@@ -225,6 +232,10 @@
 		<repository>
 			<id>Sonatype OSS Releases</id>
 			<url>http://oss.sonatype.org/content/repositories/releases/</url>
+		</repository>
+		<repository>
+			<id>Nuxeo</id>
+			<url>https://maven-eu.nuxeo.org/nexus/content/groups/public/</url>
 		</repository>
 	</repositories>
 	

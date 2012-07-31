@@ -41,6 +41,9 @@ public class PlaceController {
 	@Value("${baseUri}")
 	private String baseUri;
 	
+	@Value("${googleMapsApiKey}")
+	private String googleMapsApiKey;
+	
 	@RequestMapping(value="/place", method=RequestMethod.GET)
 	public ModelAndView listPlaces(@RequestParam(defaultValue="10") int limit,
 			@RequestParam(defaultValue="0") int offset,
@@ -77,6 +80,7 @@ public class PlaceController {
 		mav.addObject("offset", offset);
 		mav.addObject("hits", query.getHits());
 		mav.addObject("view", view);
+		mav.addObject("googleMapsApiKey", googleMapsApiKey);
 		
 		return mav;
 		
@@ -100,6 +104,7 @@ public class PlaceController {
 			mav.addObject("baseUri", baseUri);
 			mav.addObject("language", language);
 			mav.addObject("nativePlaceName", place.getNameMap().get(language));
+			mav.addObject("googleMapsApiKey", googleMapsApiKey);
 			return mav;
 		}
 		
