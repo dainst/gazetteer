@@ -6,6 +6,8 @@ import org.dainst.gazetteer.dao.PlaceDao;
 import org.dainst.gazetteer.domain.Location;
 import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.PlaceName;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -17,6 +19,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 @Component
 public class JsonPlaceDeserializer {
+	
+	private final static Logger logger = LoggerFactory.getLogger("org.dainst.gazetteer.JsonPlaceDeserializer");
 	
 	@Value("${baseUri}")
 	private String baseUri;
@@ -31,11 +35,14 @@ public class JsonPlaceDeserializer {
 			ObjectMapper mapper = new ObjectMapper();
 			ObjectNode objectNode = mapper.readValue(jsonStream, ObjectNode.class);
 			
-			Place place = new Place();
+			Place place = getPlaceForNode(objectNode.get("@id"));
 			
-			// set place id from uri
-			String placeIdString = objectNode.get("@id").asText().replace(baseUri + "place/", "");
-			place.setId(Long.valueOf(placeIdString).longValue());
+			if (place == null) {
+				place = new Place();
+				String placeIdString = objectNode.get("@id").asText().replace(baseUri + "place/", "");
+				logger.debug("read id from uri: {}", placeIdString);
+				place.setId(Long.valueOf(placeIdString).longValue());
+			}
 			
 			// set parent place from URI 
 			JsonNode parentNode = objectNode.get("parent");
@@ -93,6 +100,7 @@ public class JsonPlaceDeserializer {
 			return place;
 			
 		} catch (Exception e) {
+			logger.error("Unable to deserialize json to place object", e);
 			throw new DeserializeException("Unable to deserialize json to place object", e);
 		}
 		

@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -91,6 +92,7 @@ public class PlaceController {
 
 	@RequestMapping(value="/place/{placeId}", method=RequestMethod.GET)
 	public ModelAndView getPlace(@PathVariable long placeId,
+			@RequestParam(required=false) String layout,
 			HttpServletRequest request,
 			HttpServletResponse response) {
 		
@@ -100,7 +102,10 @@ public class PlaceController {
 		Place place = placeDao.get(placeId);
 		if (place != null) {
 			ModelAndView mav = new ModelAndView("place/get");
-			mav.addObject(place);
+			if (layout != null) {
+				mav.setViewName("place/"+layout);
+			}
+			mav.addObject("place", place);
 			mav.addObject("baseUri", baseUri);
 			mav.addObject("language", language);
 			mav.addObject("nativePlaceName", place.getNameMap().get(language));
