@@ -41,11 +41,23 @@
 						<s:message code="domain.placename.title" text="Titel" />
 					</label>
 					<div class="controls">
+						<form:hidden path="names[${loopStatus.index}].id" />
 						<form:input path="names[${loopStatus.index}].title" class="input-xlarge" />
 						<form:input path="names[${loopStatus.index}].language" class="input-small" />
+						<div class="btn btn-danger minus">-</div>
 					</div>
 				</div>
 			</c:forEach>
+			<div class="control-group">
+				<label class="control-label">
+					<s:message code="domain.placename.title" text="Titel" />
+				</label>
+				<div class="controls">
+					<input type="text" name="names[].title" class="input-xlarge inactive"/>
+					<input type="text" name="names[].language" class="input-small inactive"/>
+					<div class="btn btn-primary plus">+</div>
+				</div>
+			</div>
 			
 			<!-- locations -->
 			<h3><s:message code="domain.place.locations" text="Lage" /></h3>
@@ -55,11 +67,23 @@
 						<s:message code="domain.location.coordinates" text="Koordinaten" />
 					</label>
 					<div class="controls">
+						<form:hidden path="locations[${loopStatus.index}].id" />
 						<form:input path="locations[${loopStatus.index}].lng" class="input-small" />
 						<form:input path="locations[${loopStatus.index}].lat" class="input-small" />
+						<div class="btn btn-danger minus">-</div>
 					</div>
 				</div>
 			</c:forEach>
+			<div class="control-group">
+				<label class="control-label">
+					<s:message code="domain.location.coordinates" text="Koordinaten" />
+				</label>
+				<div class="controls">
+					<input type="text" name="locations[].lat" class="input-small inactive" />
+					<input type="text" name="locations[].lng" class="input-small inactive" />
+					<div class="btn btn-primary plus">+</div>
+				</div>
+			</div>
 			
 			<!-- parent -->
 			<h3><s:message code="domain.place.parent" text="Übergeordneter Ort" /></h3>
@@ -87,13 +111,40 @@
 		</fieldset>
 		<div class="form-actions">
             <button type="submit" class="save btn btn-primary"><s:message code="ui.save" text="Speichern"/></button>
-            <button class="btn"><s:message code="ui.cancel" text="Abbrechen"/></button>
+            <div class="btn"><s:message code="ui.cancel" text="Abbrechen"/></div>
         </div>
 	</form:form>
 
 </div>
 
 <script type="text/javascript">
+
+$("#place-form .minus").click(function() {
+	$(this).closest(".control-group").slideUp("normal", function() { $(this).remove(); });
+});
+
+$("#place-form .plus").click(function() {
+	var oldGroup = $(this).closest(".control-group");
+	var newGroup = oldGroup.clone().hide();
+	oldGroup.before(newGroup);
+	newGroup.find(".plus").toggleClass("plus minus btn-primary btn-danger").html("-").click(function() {
+		$(this).closest(".control-group").slideUp("normal", function() { $(this).remove(); });
+	});
+	newGroup.find("input").toggleClass("inactive");
+	oldGroup.find("input").attr("value","");
+	var indices = {};
+	$("#place-form .control-group").each(function() {
+		var name = $(this).find("input").first().attr("name");
+		if (name.indexOf("[") == -1) return true;
+		var obj = name.substring(0,name.indexOf("["));
+		$(this).find("input:not(.inactive)").each(function() {
+			if (indices[obj] == undefined) indices[obj] = 0;
+			$(this).attr("name",$(this).attr("name").replace(/\[.?\]/,"["+(indices[obj])+"]"));
+		});
+		indices[obj]++;
+	});
+	newGroup.slideDown();
+});
 
 $("#place-form").submit(function(event) {
 	
@@ -108,8 +159,9 @@ $("#place-form").submit(function(event) {
 	var uri = form.find('input[name="uri"]').val();
 	if (uri) place["@id"] = uri;
 	
-	var inputs = form.find('fieldset input');
+	var inputs = form.find('fieldset input:not(.inactive)');
 	inputs.each(function(i, input) {
+		console.log(input);
 		var name = $(input).attr("name");
 		if (name.indexOf("[") != -1) {
 			var index = name.substring(name.indexOf("[")+1,name.indexOf("]"));
@@ -120,11 +172,11 @@ $("#place-form").submit(function(event) {
 				if (field === "lng") {
 					if (place[obj][index]["coordinates"] == undefined)
 						place[obj][index]["coordinates"] = [];
-					place[obj][index]["coordinates"][0] = $(input).val();
+					place[obj][index]["coordinates"][1] = $(input).val();
 				} else if (field === "lat") {
 					if (place[obj][index]["coordinates"] == undefined)
 						place[obj][index]["coordinates"] = [];
-					place[obj][index]["coordinates"][1] = $(input).val();
+					place[obj][index]["coordinates"][0] = $(input).val();
 				} else {
 					place[obj][index][field] = $(input).val();
 				}

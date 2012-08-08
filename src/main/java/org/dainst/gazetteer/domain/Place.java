@@ -30,13 +30,13 @@ public class Place {
 	@ElementCollection(fetch=FetchType.EAGER)
 	private Set<String> uris;
 
-	@OneToMany(mappedBy="place", cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="place", cascade=CascadeType.ALL, fetch=FetchType.EAGER, orphanRemoval=true)
 	@OrderBy("ordering")
 	private List<PlaceName> names = new ArrayList<PlaceName>();
 	
 	private String type;
 
-	@OneToMany(mappedBy="place", cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="place", cascade=CascadeType.ALL, fetch=FetchType.EAGER, orphanRemoval=true)
 	private Set<Location> locations = new HashSet<Location>();
 
 	@ManyToOne
@@ -166,6 +166,20 @@ public class Place {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public void removeName(PlaceName name) {
+		if (names.contains(name)) {
+			names.remove(name);
+			name.setPlace(null);
+		}
+	}
+
+	public void removeLocation(Location location) {
+		if (locations.contains(location)) {
+			locations.remove(location);
+			location.setPlace(null);
+		}
 	}
 	
 }

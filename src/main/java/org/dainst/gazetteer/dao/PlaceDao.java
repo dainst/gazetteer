@@ -5,7 +5,9 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.dainst.gazetteer.domain.Location;
 import org.dainst.gazetteer.domain.Place;
+import org.dainst.gazetteer.domain.PlaceName;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +30,7 @@ public class PlaceDao {
 
 	public long delete(long placeId) {
 		
-		Place place = em.find(Place.class, placeId);
+		Place place = em.getReference(Place.class, placeId);
 		if (place != null) {
 			place.setParent(null);
 			for (Place child : place.getChildren()) {
@@ -40,6 +42,27 @@ public class PlaceDao {
 			return 0;
 		}
 		
+	}
+	
+	public long deleteName(long id) {
+		PlaceName name = em.getReference(PlaceName.class, id);
+		if (name != null) {
+			em.remove(name);
+			return id;
+		} else {
+			return 0;
+		}
+			
+	}
+	
+	public long deleteLocation(long id) {
+		Location location = em.getReference(Location.class, id);
+		if (location != null) {
+			em.remove(location);
+			return id;
+		} else {
+			return 0;
+		}
 	}
 
 	public Place getPlaceByUri(String uri) {		

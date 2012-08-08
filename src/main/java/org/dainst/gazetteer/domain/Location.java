@@ -31,7 +31,7 @@ public class Location {
 	@Type(type="org.hibernatespatial.GeometryUserType")
 	private Polygon polygon;
 
-	@ManyToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE})
+	@ManyToOne
 	private Place place;
 
 	@Version

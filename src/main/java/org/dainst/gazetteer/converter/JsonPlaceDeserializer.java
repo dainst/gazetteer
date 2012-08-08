@@ -1,6 +1,10 @@
 package org.dainst.gazetteer.converter;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.dainst.gazetteer.dao.PlaceDao;
 import org.dainst.gazetteer.domain.Location;
@@ -58,25 +62,51 @@ public class JsonPlaceDeserializer {
 				if (child != null) place.addChild(child);
 			}
 			
-			// create name objects
+
+			List<PlaceName> names = new ArrayList<PlaceName>(place.getNames());
+			
+			// create or update name objects
 			JsonNode namesNode = objectNode.get("names");
 			if (namesNode != null) for (JsonNode nameNode : namesNode) {
+				PlaceName name = null;
+				for (PlaceName n : names)
+					if (nameNode.has("id") && n.getId() == nameNode.get("id").asLong())
+						name = n;
+				if (name == null) {
+					name = new PlaceName();
+					place.addName(name);
+				}
 				JsonNode languageNode = nameNode.get("language");
 				if (languageNode == null) 
 					throw new HttpMessageNotReadableException("Invalid name object. Attribute \"language\" has to be set.");
 				JsonNode titleNode = nameNode.get("title");
 				if (titleNode == null)
 					throw new HttpMessageNotReadableException("Invalid name object. Attribute \"title\" has to be set.");
-				PlaceName name = new PlaceName();
 				name.setLanguage(languageNode.asText());
 				name.setTitle(titleNode.asText());
-				place.addName(name);
+				names.remove(name);
+				logger.debug("updated placename: {}", name.getId());
 			}
+			
+			// delete old name objects that are not referenced in the json
+			for (PlaceName name : names) {
+				logger.debug("removing placename: {}", name.getId());
+				place.removeName(name);
+			}
+			
+			Set<Location> locations = new HashSet<Location>(place.getLocations());
 			
 			// create location objects
 			JsonNode locationsNode = objectNode.get("locations");
 			if (locationsNode != null) for (JsonNode locationNode : locationsNode) {
-				
+				Location location = null;
+				for (Location l : locations)
+					if (locationNode.has("id") && l.getId() == locationNode.get("id").asLong())
+						location = l;
+				if (location == null) {
+					location = new Location();					
+					place.addLocation(location);
+				}
 				JsonNode coordinatesNode = locationNode.get("coordinates");
 				if (coordinatesNode == null)
 					throw new HttpMessageNotReadableException("Invalid location object. Attribute \"coordinates\" has to be set.");
@@ -87,14 +117,21 @@ public class JsonPlaceDeserializer {
 				if (longNode == null)
 					throw new HttpMessageNotReadableException("Invalid location object. Attribute \"coordinates\" cannot be read.");
 	
-				double lat = latNode.asDouble();
-				double lng = longNode.asDouble();
-				if (lat == 0 || lng == 0)
+				double lat = latNode.asDouble(1000);
+				double lng = longNode.asDouble(1000);
+				if (lat > 90 || lat < -90 || lng > 180 || lng < -180)
 					throw new HttpMessageNotReadableException("Invalid location object. Attribute \"coordinates\" cannot be read.");
-				Location location = new Location(lat, lng);
 				
-				place.addLocation(location);
+				location.setCoordinates(new double[]{lat, lng});
+				locations.remove(location);
+				logger.debug("updated location: {}", location.getId());
 				
+			}
+			
+			// delete old name objects that are not referenced in the json
+			for (Location location : locations) {
+				logger.debug("removing location: {}", location.getId());
+				place.removeLocation(location);
 			}
 					
 			return place;

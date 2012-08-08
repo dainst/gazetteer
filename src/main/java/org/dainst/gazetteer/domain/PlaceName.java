@@ -2,7 +2,6 @@ package org.dainst.gazetteer.domain;
 
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -27,7 +26,7 @@ public class PlaceName {
 	
 	private int ordering = 0;
 
-	@ManyToOne(cascade={CascadeType.PERSIST, CascadeType.MERGE})
+	@ManyToOne
 	private Place place;
 
 	@Version
