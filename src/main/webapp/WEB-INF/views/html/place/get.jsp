@@ -19,10 +19,26 @@ request.setAttribute("places", places);
 	<jsp:attribute name="subtitle">
 		${baseUri}place/${place.id}
 		<s:message code="ui.copyToClipboard" text="In die Zwischenablage kopieren mit Strg+C / Cmd+C" var="copyMsg"/>
-		<a href="javascript:window.prompt ('${copyMsg}', '${baseUri}place/${place.id}')"><i class="icon-share"></i></a>
+		<a data-toggle="modal" href="#copyUriModal"><i class="icon-share"></i></a>
 	</jsp:attribute>
 
 	<jsp:body>
+		
+		<div class="modal hide" id="copyUriModal">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">×</button>
+				<h3><s:message code="ui.copyToClipboardHeading" text="URI in die Zwischenablage kopieren"/></h3>
+			</div>
+			<div class="modal-body">
+				<label>${copyMsg}</label>
+				<input class="input-xxlarge" type="text" value="${baseUri}place/${place.id}" id="copyUriInput">
+			</div>
+		</div>
+		<script type="text/javascript">
+			$("#copyUriModal").on("shown",function() {
+				$("#copyUriInput").focus().select();
+			});
+		</script>
 		
 		<div class="row-fluid">
 		
@@ -31,6 +47,26 @@ request.setAttribute("places", places);
 			</div>
 			
 			<div class="span7">
+				
+				<div class="pull-right">
+					<a class="btn btn-primary" href="?layout=edit">
+						<i class="icon-edit icon-white"></i>
+					</a>
+					<a class="btn btn-danger" data-toggle="modal" href="#deleteModal">
+						<i class="icon-trash icon-white"></i>
+					</a>
+					<div class="modal hide" id="deleteModal">
+					  <div class="modal-header">
+					    <button type="button" class="close" data-dismiss="modal">×</button>
+					    <h3><s:message code="ui.delete.really" text="Möchten Sie diesen Ort wirklich löschen?"/></h3>
+					  </div>
+					  <div class="modal-footer">
+					    <a href="#" class="btn" data-dismiss="modal"><s:message code="ui.cancel" text="Abbrechen"/></a>
+					    <a href="#" class="btn btn-danger"><s:message code="ui.delete" text="Löschen"/></a>
+					  </div>
+					</div>
+				</div>
+				
 				<h1><s:message code="domain.placename.title" text="Ortsnamen" />:</h1>
 				<ul>
 					<c:forEach var="placename" items="${place.names}">

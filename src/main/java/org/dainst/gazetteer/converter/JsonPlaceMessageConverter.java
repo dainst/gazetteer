@@ -3,7 +3,6 @@ package org.dainst.gazetteer.converter;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
-import org.dainst.gazetteer.converter.JsonPlaceDeserializer.DeserializeException;
 import org.dainst.gazetteer.domain.Place;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpInputMessage;
@@ -32,12 +31,7 @@ public class JsonPlaceMessageConverter extends AbstractHttpMessageConverter<Plac
 			HttpInputMessage inputMessage) throws IOException,
 			HttpMessageNotReadableException {
 		
-		try {
-			return deserializer.deserialize(inputMessage.getBody());
-		} catch (DeserializeException e) {
-			logger.error(e);
-			throw new HttpMessageNotReadableException("Failed to deserialize message body", e);
-		}
+		return deserializer.deserialize(inputMessage.getBody());
 		
 	}
 

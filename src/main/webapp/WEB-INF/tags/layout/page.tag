@@ -13,6 +13,8 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script src="/gazetteer/resources/js/custom.js"></script>
 <script src="/gazetteer/resources/bootstrap/js/bootstrap-dropdown.js"></script>
+<script src="/gazetteer/resources/bootstrap/js/bootstrap-alert.js"></script>
+<script src="/gazetteer/resources/bootstrap/js/bootstrap-modal.js"></script>
 <link href="/gazetteer/resources/bootstrap/css/bootstrap.css" rel="stylesheet">
 <link href="/gazetteer/resources/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 <link href="/gazetteer/resources/css/custom.css" rel="stylesheet">

@@ -32,7 +32,7 @@ public class JsonPlaceDeserializer {
 	@Autowired
 	private PlaceDao placeDao;
 
-	public Place deserialize(InputStream jsonStream) throws DeserializeException {
+	public Place deserialize(InputStream jsonStream) throws HttpMessageNotReadableException {
 		
 		try {
 		
@@ -137,8 +137,9 @@ public class JsonPlaceDeserializer {
 			return place;
 			
 		} catch (Exception e) {
-			logger.error("Unable to deserialize json to place object", e);
-			throw new DeserializeException("Unable to deserialize json to place object", e);
+			String msg = "Unable to deserialize json to place object";
+			logger.error(msg, e);
+			throw new HttpMessageNotReadableException(e.getMessage(), e);
 		}
 		
 	}
@@ -170,15 +171,6 @@ public class JsonPlaceDeserializer {
 			super(msg, cause);
 		}
 		
-	}
-	
-	public static class DeserializeException extends Exception {
-		
-		private static final long serialVersionUID = 1L;
-
-		public DeserializeException(String msg, Throwable cause) {
-			super(msg, cause);
-		}
 	}
 	
 }

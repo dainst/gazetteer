@@ -8,14 +8,16 @@ import javax.servlet.http.HttpServletResponse;
 import org.dainst.gazetteer.converter.JsonPlaceDeserializer;
 import org.dainst.gazetteer.dao.PlaceDao;
 import org.dainst.gazetteer.domain.Place;
+import org.dainst.gazetteer.domain.ValidationResult;
 import org.dainst.gazetteer.search.ElasticSearchPlaceQuery;
 import org.dainst.gazetteer.search.ElasticSearchServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -130,14 +132,37 @@ public class PlaceController {
 	}
 	
 	@RequestMapping(value="/place/{placeId}", method=RequestMethod.PUT)
-	public void updateOrCreatePlace(@RequestBody Place place, 
+	public ModelAndView updateOrCreatePlace(@RequestBody Place place, 
 			@PathVariable long placeId,
 			HttpServletResponse response) {
 		
 		place.setId(placeId);
 		place = placeDao.save(place);
 		
-		response.setStatus(204);
+		response.setStatus(201);
+		response.setHeader("location", baseUri + "place/" + place.getId());
+		
+		ModelAndView mav = new ModelAndView("place/validation");
+		mav.addObject("result", new ValidationResult());	
+		
+		return mav;
+		
+	}
+	
+	@ExceptionHandler(HttpMessageNotReadableException.class)
+	public ModelAndView handleValidationException(HttpMessageNotReadableException e,
+			HttpServletResponse response) {
+		
+		ValidationResult result = new ValidationResult();
+		result.setSuccess(false);
+		result.setMessage(e.getCause().getMessage());
+		
+		response.setStatus(400);
+		
+		ModelAndView mav = new ModelAndView("place/validation");
+		mav.addObject("result", result);
+		
+		return mav;
 		
 	}
 	

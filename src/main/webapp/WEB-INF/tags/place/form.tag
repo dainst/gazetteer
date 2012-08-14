@@ -111,7 +111,7 @@
 		</fieldset>
 		<div class="form-actions">
             <button type="submit" class="save btn btn-primary"><s:message code="ui.save" text="Speichern"/></button>
-            <div class="btn"><s:message code="ui.cancel" text="Abbrechen"/></div>
+            <a class="btn" href="${baseUri}place/${place.id}"><s:message code="ui.cancel" text="Abbrechen"/></a>
         </div>
 	</form:form>
 
@@ -161,7 +161,6 @@ $("#place-form").submit(function(event) {
 	
 	var inputs = form.find('fieldset input:not(.inactive)');
 	inputs.each(function(i, input) {
-		console.log(input);
 		var name = $(input).attr("name");
 		if (name.indexOf("[") != -1) {
 			var index = name.substring(name.indexOf("[")+1,name.indexOf("]"));
@@ -190,10 +189,13 @@ $("#place-form").submit(function(event) {
 		type: "PUT",
 		url: "${action}",
 		contentType: "application/json",
+		dataType: "json",
 		data: JSON.stringify(place)
 	}).done(function(data) {
-		console.log("success!");
-		console.log(data);
+		$("#place-form-div").prepend("<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>Success!</strong></div>");
+	}).fail(function(jqXHR) {
+		var data = $.parseJSON(jqXHR.responseText);
+		$("#place-form-div").prepend("<div class='alert alert-error'><button type='button' class='close' data-dismiss='alert'>×</button><strong>Failed!</strong> Message: "+data.message+"</div>");
 	});
 	
 });
