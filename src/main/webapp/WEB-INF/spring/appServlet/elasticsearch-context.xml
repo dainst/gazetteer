@@ -35,6 +35,11 @@
             <aop:pointcut id="delete" expression="execution(* org.dainst.gazetteer.dao.PlaceDao.delete(..))" />
             <aop:after-returning method="deletePlaceFromIndex" pointcut-ref="delete" returning="placeId" />
         </aop:aspect>
+        <!-- this advice will execute around the transactional advice becasue of the order attribute -->
+        <aop:aspect id="deleteFromIndexAspect2" ref="elasticSearchPlaceIndexer" order="1">
+            <aop:pointcut id="setDeleted" expression="execution(* org.dainst.gazetteer.dao.PlaceDao.setDeleted(..))" />
+            <aop:after-returning method="deletePlaceFromIndex" pointcut-ref="delete" returning="placeId" />
+        </aop:aspect>
     </aop:config>
 
 </beans>

@@ -117,6 +117,9 @@
 
 </div>
 
+<s:message code="ui.success" text="Änderungen gespeichert" var="successMsg"/>
+<s:message code="ui.failure" text="Fehler" var="failureMsg"/>
+
 <script type="text/javascript">
 
 $("#place-form .minus").click(function() {
@@ -191,11 +194,11 @@ $("#place-form").submit(function(event) {
 		contentType: "application/json",
 		dataType: "json",
 		data: JSON.stringify(place)
-	}).done(function(data) {
-		$("#place-form-div").prepend("<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>Success!</strong></div>");
+	}).done(function() {
+		$("#place-form-div").prepend("<div class='alert alert-success'><button type='button' class='close' data-dismiss='alert'>×</button><strong>${successMsg}!</strong></div>");
 	}).fail(function(jqXHR) {
 		var data = $.parseJSON(jqXHR.responseText);
-		$("#place-form-div").prepend("<div class='alert alert-error'><button type='button' class='close' data-dismiss='alert'>×</button><strong>Failed!</strong> Message: "+data.message+"</div>");
+		$("#place-form-div").prepend("<div class='alert alert-error'><button type='button' class='close' data-dismiss='alert'>×</button><strong>${failureMsg}!</strong> Message: "+data.message+"</div>");
 	});
 	
 });

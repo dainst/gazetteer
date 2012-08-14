@@ -1,6 +1,9 @@
 package org.dainst.gazetteer.dao;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -37,6 +40,35 @@ public class PlaceDao {
 				child.setParent(null);
 			}
 			em.remove(place);
+			return placeId;
+		} else {
+			return 0;
+		}
+		
+	}
+	
+	public long setDeleted(long placeId) {
+		
+		Place place = em.getReference(Place.class, placeId);
+		if (place != null) {
+			place.setParent(null);
+			for (Place child : place.getChildren()) {
+				child.setParent(null);
+			}
+			// make a copy to prevent ConcurrentModificationException
+			List<PlaceName> names = new ArrayList<PlaceName>(place.getNames());
+			for (PlaceName name : names) {
+				place.removeName(name);
+				em.remove(name);
+			}
+			// make a copy to prevent ConcurrentModificationException
+			Set<Location> locations = new HashSet<Location>(place.getLocations());
+			for (Location location : locations) {
+				place.removeLocation(location);
+				em.remove(location);
+			}
+			place.setDeleted(true);
+			em.merge(place);
 			return placeId;
 		} else {
 			return 0;
