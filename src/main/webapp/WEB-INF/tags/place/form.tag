@@ -80,6 +80,7 @@
 						<form:hidden path="locations[${loopStatus.index}].id" />
 						<form:input path="locations[${loopStatus.index}].lng" class="input-small" />
 						<form:input path="locations[${loopStatus.index}].lat" class="input-small" />
+						<input type="text" class="lnglat" />
 						<div class="btn btn-danger minus">-</div>
 					</div>
 				</div>

@@ -11,7 +11,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>iDAI.gazetteer - ${title}</title>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript" src='http://maps.google.com/maps/api/js?sensor=false'></script>
 <script src="/gazetteer/resources/js/custom.js"></script>
+<script src='/gazetteer/resources/js/jquery.locationpicker.js'></script>
 <script src="/gazetteer/resources/bootstrap/js/bootstrap-dropdown.js"></script>
 <script src="/gazetteer/resources/bootstrap/js/bootstrap-alert.js"></script>
 <script src="/gazetteer/resources/bootstrap/js/bootstrap-modal.js"></script>

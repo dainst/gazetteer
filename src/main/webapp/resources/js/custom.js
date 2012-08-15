@@ -6,7 +6,9 @@ $(document).ready(function(){
 		$("#extendedSearchBtn i").toggleClass("icon-circle-arrow-down icon-circle-arrow-up");
 		$("#extendedSearchBtn").toggleClass("active");
 	});
-
+	
+	$('input.lnglat').locationPicker();
+	
 });
 
 // Fix navbar to top when scrolling
