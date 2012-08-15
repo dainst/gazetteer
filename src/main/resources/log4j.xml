@@ -17,35 +17,6 @@
 	<logger name="org.dainst.gazetteer.converter">
 		<level value="debug" />
 	</logger>
-	
-	<!-- 3rdparty Loggers -->
-	<logger name="org.springframework.core">
-		<level value="info" />
-	</logger>
-	
-	<logger name="org.springframework.beans">
-		<level value="info" />
-	</logger>
-	
-	<logger name="org.springframework.context">
-		<level value="info" />
-	</logger>
-
-	<logger name="org.springframework.web">
-		<level value="debug" />
-	</logger>
-
-	<logger name="org.springframework.aop">
-		<level value="debug" />
-	</logger>
-
-	<logger name="org.springframework.orm">
-		<level value="debug" />
-	</logger>
-
-	<logger name="org.fusesource.scalate">
-		<level value="debug" />
-	</logger>
 
 	<!-- Root Logger -->
 	<root>

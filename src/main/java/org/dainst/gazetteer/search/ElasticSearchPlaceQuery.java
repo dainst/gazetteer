@@ -28,7 +28,8 @@ public class ElasticSearchPlaceQuery {
 	}
 	
 	public ElasticSearchPlaceQuery metaSearch(String query) {
-		requestBuilder.setQuery(QueryBuilders.textQuery("_all", query));
+		if("".equals(query) || "*".equals(query)) requestBuilder.setQuery(QueryBuilders.matchAllQuery());
+		else requestBuilder.setQuery(QueryBuilders.textQuery("_all", query));
 		return this;
 	}
 

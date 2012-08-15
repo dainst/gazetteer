@@ -4,6 +4,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ attribute name="place" type="org.dainst.gazetteer.domain.Place" %>
+<%@ attribute name="languages" type="java.util.Map" %>
 
 <c:choose>
 	<c:when test="${place == null}">
@@ -43,7 +44,11 @@
 					<div class="controls">
 						<form:hidden path="names[${loopStatus.index}].id" />
 						<form:input path="names[${loopStatus.index}].title" class="input-xlarge" />
-						<form:input path="names[${loopStatus.index}].language" class="input-small" />
+						<s:message code="ui.language.notSpecified" var="langNotSpecified" />
+						<form:select path="names[${loopStatus.index}].language">
+							<form:option value="" label="${langNotSpecified}" />
+							<form:options items="${languages}" />
+						</form:select>
 						<div class="btn btn-danger minus">-</div>
 					</div>
 				</div>
@@ -53,8 +58,13 @@
 					<s:message code="domain.placename.title" text="Titel" />
 				</label>
 				<div class="controls">
-					<input type="text" name="names[].title" class="input-xlarge inactive"/>
-					<input type="text" name="names[].language" class="input-small inactive"/>
+					<input type="text" name="names[].title" class="input-xlarge disabled" disabled />
+					<select name="names[].language" class="disabled" disabled>
+						<option value="">${langNotSpecified}</option>
+						<c:forEach var="lang" items="${languages}">
+							<option value="${lang.key}">${lang.value}</option> 
+						</c:forEach>
+					</select>
 					<div class="btn btn-primary plus">+</div>
 				</div>
 			</div>
@@ -79,8 +89,8 @@
 					<s:message code="domain.location.coordinates" text="Koordinaten" />
 				</label>
 				<div class="controls">
-					<input type="text" name="locations[].lat" class="input-small inactive" />
-					<input type="text" name="locations[].lng" class="input-small inactive" />
+					<input type="text" name="locations[].lat" class="input-small disabled" disabled />
+					<input type="text" name="locations[].lng" class="input-small disabled" disabled />
 					<div class="btn btn-primary plus">+</div>
 				</div>
 			</div>
@@ -133,14 +143,13 @@ $("#place-form .plus").click(function() {
 	newGroup.find(".plus").toggleClass("plus minus btn-primary btn-danger").html("-").click(function() {
 		$(this).closest(".control-group").slideUp("normal", function() { $(this).remove(); });
 	});
-	newGroup.find("input").toggleClass("inactive");
-	oldGroup.find("input").attr("value","");
+	newGroup.find("input, select").toggleClass("disabled").removeAttr("disabled");
 	var indices = {};
 	$("#place-form .control-group").each(function() {
 		var name = $(this).find("input").first().attr("name");
 		if (name.indexOf("[") == -1) return true;
 		var obj = name.substring(0,name.indexOf("["));
-		$(this).find("input:not(.inactive)").each(function() {
+		$(this).find("input:not(.disabled)").each(function() {
 			if (indices[obj] == undefined) indices[obj] = 0;
 			$(this).attr("name",$(this).attr("name").replace(/\[.?\]/,"["+(indices[obj])+"]"));
 		});
@@ -162,7 +171,7 @@ $("#place-form").submit(function(event) {
 	var uri = form.find('input[name="uri"]').val();
 	if (uri) place["@id"] = uri;
 	
-	var inputs = form.find('fieldset input:not(.inactive)');
+	var inputs = form.find('fieldset input:not(.disabled), fieldset select');
 	inputs.each(function(i, input) {
 		var name = $(input).attr("name");
 		if (name.indexOf("[") != -1) {

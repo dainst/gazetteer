@@ -1,6 +1,9 @@
 package org.dainst.gazetteer.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -44,8 +48,14 @@ public class PlaceController {
 	@Value("${baseUri}")
 	private String baseUri;
 	
+	@Value("${languages}")
+	private String[] languages;
+	
 	@Value("${googleMapsApiKey}")
 	private String googleMapsApiKey;
+	
+	@Autowired
+	MessageSource messageSource;
 	
 	@RequestMapping(value="/place", method=RequestMethod.GET)
 	public ModelAndView listPlaces(@RequestParam(defaultValue="10") int limit,
@@ -57,7 +67,7 @@ public class PlaceController {
 			HttpServletResponse response) {
 		
 		RequestContext requestContext = new RequestContext(request);
-		String language = requestContext.getLocale().getLanguage();
+		Locale locale = requestContext.getLocale();
 		
 		logger.debug("Searching places with query: " + q + " and limit " + limit + ", offset " + offset);
 		
@@ -78,7 +88,7 @@ public class PlaceController {
 		ModelAndView mav = new ModelAndView("place/list");
 		mav.addObject("places", places);
 		mav.addObject("baseUri", baseUri);
-		mav.addObject("language", language);
+		mav.addObject("language", locale.getISO3Language());
 		mav.addObject("limit", limit);
 		mav.addObject("offset", offset);
 		mav.addObject("hits", query.getHits());
@@ -105,7 +115,7 @@ public class PlaceController {
 			HttpServletResponse response) {
 		
 		RequestContext requestContext = new RequestContext(request);
-		String language = requestContext.getLocale().getLanguage();
+		Locale locale = requestContext.getLocale();
 
 		Place place = placeDao.get(placeId);
 		if (place != null) {
@@ -115,13 +125,15 @@ public class PlaceController {
 			}
 			mav.addObject("place", place);
 			mav.addObject("baseUri", baseUri);
-			mav.addObject("language", language);
+			mav.addObject("language", locale.getISO3Language());
 			mav.addObject("limit", limit);
 			mav.addObject("offset", offset);
 			mav.addObject("view", view);
 			mav.addObject("q", q);
-			mav.addObject("nativePlaceName", place.getNameMap().get(language));
+			mav.addObject("nativePlaceName", place.getNameMap().get(locale.getISO3Language()));
+			logger.debug(locale.getISO3Language());
 			mav.addObject("googleMapsApiKey", googleMapsApiKey);
+			mav.addObject("languages", getLocalizedLanguages(locale));
 			return mav;
 		}
 		
@@ -186,6 +198,14 @@ public class PlaceController {
 			response.setStatus(404);
 		}
 		
+	}
+	
+	private Map<String,String> getLocalizedLanguages(Locale locale) {
+		HashMap<String, String> localizedLanguages = new HashMap<String,String>();
+		for (String language : languages) {
+			localizedLanguages.put(language, messageSource.getMessage("languages."+language, null, locale));
+		}
+		return localizedLanguages;
 	}
 
 }

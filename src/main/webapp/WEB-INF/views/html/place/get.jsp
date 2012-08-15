@@ -14,11 +14,20 @@ places.add((Place) request.getAttribute("place"));
 request.setAttribute("places", places);
 %>
 
-<l:page title="${nativePlaceName.title}">
+<c:choose>
+	<c:when test="${nativePlaceName != null && nativePlaceName.title != ''}">
+		<c:set var="placeTitle" value="${nativePlaceName.title}" />
+	</c:when>
+	<c:otherwise>
+		<c:set var="placeTitle" value="${place.names[0].title}" />
+	</c:otherwise>
+</c:choose>
+
+<l:page title="${placeTitle}">
 
 	<jsp:attribute name="subtitle">
 		${baseUri}place/${place.id}
-		<s:message code="ui.copyToClipboard" text="In die Zwischenablage kopieren mit Strg+C / Cmd+C" var="copyMsg"/>
+		<s:message code="ui.copyToClipboard" var="copyMsg"/>
 		<a data-toggle="modal" href="#copyUriModal"><i class="icon-share"></i></a>
 	</jsp:attribute>
 
@@ -30,7 +39,7 @@ request.setAttribute("places", places);
 					<li>
 						<a href="${baseUri}place?limit=${limit}&offset=${offset}&q=${q}&view=${view}">
 							&larr; 
-							<s:message code="ui.search.back" text="Zurück zum Suchergebnis" />
+							<s:message code="ui.search.back" />
 						</a>
 					</li>
 				</c:if>
@@ -40,7 +49,7 @@ request.setAttribute("places", places);
 		<c:choose>
 		
 			<c:when test="${place.deleted}">
-				<div class="alert"><s:message code="ui.place.deleted" text="Dieser Ort wurde gelöscht"/></div>
+				<div class="alert"><s:message code="ui.place.deleted"/></div>
 			</c:when>
 			
 			<c:otherwise>
@@ -48,7 +57,7 @@ request.setAttribute("places", places);
 				<div class="modal hide" id="copyUriModal">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal">×</button>
-						<h3><s:message code="ui.copyToClipboardHeading" text="URI in die Zwischenablage kopieren"/></h3>
+						<h3><s:message code="ui.copyToClipboardHeading"/></h3>
 					</div>
 					<div class="modal-body">
 						<label>${copyMsg}</label>
@@ -79,12 +88,12 @@ request.setAttribute("places", places);
 							<div class="modal hide" id="deleteModal">
 							  <div class="modal-header">
 							    <button type="button" class="close" data-dismiss="modal">×</button>
-							    <h3><s:message code="ui.delete.really" text="Möchten Sie diesen Ort wirklich löschen?"/></h3>
+							    <h3><s:message code="ui.delete.really" /></h3>
 							  </div>
 							  <div class="modal-footer">
-							    <a href="#" class="btn" data-dismiss="modal"><s:message code="ui.cancel" text="Abbrechen"/></a>
-							    <a href="#" class="btn btn-danger" id="deleteBtn" data-dismiss="modal"><s:message code="ui.delete" text="Löschen"/></a>
-							    <s:message code="ui.failure" text="Fehler" var="failureMsg"/>
+							    <a href="#" class="btn" data-dismiss="modal"><s:message code="ui.cancel"/></a>
+							    <a href="#" class="btn btn-danger" id="deleteBtn" data-dismiss="modal"><s:message code="ui.delete"/></a>
+							    <s:message code="ui.failure" var="failureMsg"/>
 							    <script type="text/javascript">
 									$("#deleteBtn").click(function() {
 										$.ajax({
@@ -102,7 +111,7 @@ request.setAttribute("places", places);
 							</div>
 						</div>
 						
-						<h1><s:message code="domain.placename.title" text="Ortsnamen" />:</h1>
+						<h1><s:message code="domain.place.names" />:</h1>
 						<ul>
 							<c:forEach var="placename" items="${place.names}">
 								<li>${placename.title}</li>
@@ -110,12 +119,12 @@ request.setAttribute("places", places);
 						</ul>
 						
 						<c:if test="${place.parent != null}">
-							<h1><s:message code="domain.place.parent" text="Übergeordneter Ort" />:</h1>	
+							<h1><s:message code="domain.place.parent"/>:</h1>	
 							<ul><li><a href="${place.parent.id}">${place.parent.nameMap[language].title}</a></li></ul>
 						</c:if>
 						
 						<c:if test="${!empty(place.children)}">
-							<h1><s:message code="domain.place.children" text="Untergeordnete Orte" />:</h1>
+							<h1><s:message code="domain.place.children"/>:</h1>
 							<ul>
 								<c:forEach var="child" items="${place.children}">
 									<li><a href="${child.id}">${child.nameMap[language].title}</a></li>
@@ -123,12 +132,12 @@ request.setAttribute("places", places);
 							</ul>
 						</c:if>
 					
-						<h1><s:message code="domain.placename.title" text="Lage" />:</h1>
+						<h1><s:message code="domain.place.locations"/>:</h1>
 						<ul>
 							<c:forEach var="location" items="${place.locations}">
 								<li>
-									<s:message code="domain.location.latitude" text="Breite"/>: ${location.lat}
-									<s:message code="domain.location.latitude" text="Länge"/>: ${location.lng}
+									<s:message code="domain.location.latitude"/>: ${location.lat}
+									<s:message code="domain.location.longitude"/>: ${location.lng}
 								</li>
 							</c:forEach>
 						</ul>

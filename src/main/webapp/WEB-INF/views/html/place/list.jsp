@@ -4,8 +4,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ page contentType="text/html; charset=utf-8" session="false"%>
 
-<s:message code="ui.search.result" text="Suchergebnis" var="pageTitle"/>
-<s:message code="ui.search.hits" text="Treffer" var="pageSubtitleHits"/>
+<s:message code="ui.search.result" var="pageTitle"/>
+<s:message code="ui.search.hits" var="pageSubtitleHits"/>
 
 <l:page title="${pageTitle}">
 
@@ -34,17 +34,17 @@
 					<ul class="dropdown-menu">
 						<li>
 							<a href="${baseUri}place?limit=${limit}&offset=${offset}&q=${q}">
-								<i class="icon-globe"></i> <i class="icon-list"></i> <s:message code="ui.list.view.mapAndTable" text="Hybrid" />
+								<i class="icon-globe"></i> <i class="icon-list"></i> <s:message code="ui.search.view.mapAndTable" />
 							</a>
 						</li>
 						<li>
 							<a href="${baseUri}place?limit=${limit}&offset=${offset}&view=map&q=${q}">
-								<i class="icon-globe"></i> <s:message code="ui.list.view.mapAndTable" text="Karte" />
+								<i class="icon-globe"></i> <s:message code="ui.search.view.map" />
 							</a>
 						</li>
 						<li>
 							<a href="${baseUri}place?limit=${limit}&offset=${offset}&view=table&q=${q}">
-								<i class="icon-list"></i> <s:message code="ui.list.view.table" text="Tabelle" />
+								<i class="icon-list"></i> <s:message code="ui.search.view.table" />
 							</a>
 						</li>
 					</ul>
@@ -55,11 +55,11 @@
 							<c:when test="${offset-limit >= 0}">
 								<li><a
 							href="${baseUri}place?limit=${limit}&offset=${offset-limit}&view=${view}&q=${q}">&larr; <s:message
-									code="ui.previous" text="Zurück" /></a></li>
+									code="ui.previous" /></a></li>
 							</c:when>
 							<c:otherwise>
 								<li class="disabled"><a href="#">&larr; <s:message
-									code="ui.back" text="Zurück" /></a></li>
+									code="ui.previous" /></a></li>
 							</c:otherwise>
 						</c:choose>
 						<li class="disabled">
@@ -128,8 +128,8 @@
 								<thead>
 									<tr>
 										<td>#</td>
-										<td><s:message code="domain.placename.title" text="Name"/></td>
-										<td><s:message code="domain.place.uri" text="Permalink"/></td>
+										<td><s:message code="domain.placename.title"/></td>
+										<td><s:message code="domain.place.uri"/></td>
 									</tr>
 								</thead>
 								<tbody>
@@ -138,7 +138,7 @@
 											<td>${place.id}</td>
 											<td><a href="place/${place.id}?limit=${limit}&offset=${offset}&q=${q}&view=${view}">${fn:join(place.namesAsArray, " / ")}</a></td>
 											<td>
-												<s:message code="ui.copyToClipboard" text="In die Zwischenablage kopieren mit Strg+C / Cmd+C" var="copyMsg"/>
+												<s:message code="ui.copyToClipboard" var="copyMsg"/>
 												<a href="javascript:window.prompt ('${copyMsg}', '${baseUri}place/${place.id}')"><i class="icon-share"></i></a>
 											</td>				
 										</tr>				
@@ -150,7 +150,7 @@
 						<c:otherwise>
 							<div class="row-fluid">
 								<div class="span12 lead">
-									<s:message code="ui.search.emptyResult" text="Es wurden keine Ergebnisse gefunden"/>
+									<s:message code="ui.search.emptyResult" />
 								</div>
 							</div>
 						</c:otherwise>					

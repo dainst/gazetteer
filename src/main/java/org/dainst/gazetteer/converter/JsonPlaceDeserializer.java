@@ -76,13 +76,11 @@ public class JsonPlaceDeserializer {
 					name = new PlaceName();
 					place.addName(name);
 				}
-				JsonNode languageNode = nameNode.get("language");
-				if (languageNode == null) 
-					throw new HttpMessageNotReadableException("Invalid name object. Attribute \"language\" has to be set.");
+				JsonNode languageNode = nameNode.get("language"); 
 				JsonNode titleNode = nameNode.get("title");
 				if (titleNode == null)
 					throw new HttpMessageNotReadableException("Invalid name object. Attribute \"title\" has to be set.");
-				name.setLanguage(languageNode.asText());
+				if (languageNode != null) name.setLanguage(languageNode.asText());
 				name.setTitle(titleNode.asText());
 				names.remove(name);
 				logger.debug("updated placename: {}", name.getId());

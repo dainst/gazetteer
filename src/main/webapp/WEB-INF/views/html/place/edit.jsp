@@ -11,7 +11,7 @@
 	</jsp:attribute>
 	
 	<jsp:body>
-		<p:form place="${place}" />
+		<p:form place="${place}" languages="${languages}" />
 	</jsp:body>
 
 </l:page>
