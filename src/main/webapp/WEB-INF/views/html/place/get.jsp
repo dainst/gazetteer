@@ -24,6 +24,19 @@ request.setAttribute("places", places);
 
 	<jsp:body>
 	
+		<div class="subnav">
+			<ul class="nav nav-pills">
+				<c:if test="${limit != null}">
+					<li>
+						<a href="${baseUri}place?limit=${limit}&offset=${offset}&q=${q}&view=${view}">
+							&larr; 
+							<s:message code="ui.search.back" text="Zurück zum Suchergebnis" />
+						</a>
+					</li>
+				</c:if>
+			</ul>
+		</div>
+	
 		<c:choose>
 		
 			<c:when test="${place.deleted}">
@@ -57,7 +70,7 @@ request.setAttribute("places", places);
 					<div class="span7">
 						
 						<div class="pull-right">
-							<a class="btn btn-primary" href="?layout=edit">
+							<a class="btn btn-primary" href="?layout=edit&limit=${limit}&offset=${offset}&q=${q}&view=${view}">
 								<i class="icon-edit icon-white"></i>
 							</a>
 							<a class="btn btn-danger" data-toggle="modal" href="#deleteModal">

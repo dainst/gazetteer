@@ -111,7 +111,7 @@
 		</fieldset>
 		<div class="form-actions">
             <button type="submit" class="save btn btn-primary"><s:message code="ui.save" text="Speichern"/></button>
-            <a class="btn" href="${baseUri}place/${place.id}"><s:message code="ui.cancel" text="Abbrechen"/></a>
+            <a class="btn" href="${baseUri}place/${place.id}?limit=${limit}&offset=${offset}&q=${q}&view=${view}"><s:message code="ui.cancel" text="Abbrechen"/></a>
         </div>
 	</form:form>
 

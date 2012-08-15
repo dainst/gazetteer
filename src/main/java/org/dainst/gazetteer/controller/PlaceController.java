@@ -83,6 +83,7 @@ public class PlaceController {
 		mav.addObject("offset", offset);
 		mav.addObject("hits", query.getHits());
 		mav.addObject("view", view);
+		mav.addObject("q", q);
 		mav.addObject("googleMapsApiKey", googleMapsApiKey);
 		
 		return mav;
@@ -95,6 +96,11 @@ public class PlaceController {
 	@RequestMapping(value="/place/{placeId}", method=RequestMethod.GET)
 	public ModelAndView getPlace(@PathVariable long placeId,
 			@RequestParam(required=false) String layout,
+			@RequestParam(defaultValue="10") int limit,
+			@RequestParam(defaultValue="0") int offset,
+			@RequestParam(required=false) String q,
+			@RequestParam(required=false) String fuzzy,
+			@RequestParam(required=false, defaultValue="map,table") String view,
 			HttpServletRequest request,
 			HttpServletResponse response) {
 		
@@ -110,6 +116,10 @@ public class PlaceController {
 			mav.addObject("place", place);
 			mav.addObject("baseUri", baseUri);
 			mav.addObject("language", language);
+			mav.addObject("limit", limit);
+			mav.addObject("offset", offset);
+			mav.addObject("view", view);
+			mav.addObject("q", q);
 			mav.addObject("nativePlaceName", place.getNameMap().get(language));
 			mav.addObject("googleMapsApiKey", googleMapsApiKey);
 			return mav;

@@ -18,13 +18,13 @@
 		<div class="subnav">
 			<ul class="nav nav-pills">
 				<li>
-					<a href="${baseUri}place?limit=10&offset=0&view=${view}" style="border: none"><i class="icon-stop"></i> 10</a>
+					<a href="${baseUri}place?limit=10&offset=0&view=${view}&q=${q}" style="border: none"><i class="icon-stop"></i> 10</a>
 				</li>
 				<li>
-					<a href="${baseUri}place?limit=100&offset=0&view=${view}" style="border: none"><i class="icon-th-large"></i> 100</a>
+					<a href="${baseUri}place?limit=100&offset=0&view=${view}&q=${q}" style="border: none"><i class="icon-th-large"></i> 100</a>
 				</li>
 				<li>
-					<a href="${baseUri}place?limit=1000&offset=0&view=${view}" style="border-left: none"><i class="icon-th"></i> 1000</a>
+					<a href="${baseUri}place?limit=1000&offset=0&view=${view}&q=${q}" style="border-left: none"><i class="icon-th"></i> 1000</a>
 				</li>
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -33,17 +33,17 @@
 					</a>
 					<ul class="dropdown-menu">
 						<li>
-							<a href="${baseUri}place?limit=${limit}&offset=${offset}">
+							<a href="${baseUri}place?limit=${limit}&offset=${offset}&q=${q}">
 								<i class="icon-globe"></i> <i class="icon-list"></i> <s:message code="ui.list.view.mapAndTable" text="Hybrid" />
 							</a>
 						</li>
 						<li>
-							<a href="${baseUri}place?limit=${limit}&offset=${offset}&view=map">
+							<a href="${baseUri}place?limit=${limit}&offset=${offset}&view=map&q=${q}">
 								<i class="icon-globe"></i> <s:message code="ui.list.view.mapAndTable" text="Karte" />
 							</a>
 						</li>
 						<li>
-							<a href="${baseUri}place?limit=${limit}&offset=${offset}&view=table">
+							<a href="${baseUri}place?limit=${limit}&offset=${offset}&view=table&q=${q}">
 								<i class="icon-list"></i> <s:message code="ui.list.view.table" text="Tabelle" />
 							</a>
 						</li>
@@ -54,7 +54,7 @@
 						<c:choose>
 							<c:when test="${offset-limit >= 0}">
 								<li><a
-							href="${baseUri}place?limit=${limit}&offset=${offset-limit}&view=${view}">&larr; <s:message
+							href="${baseUri}place?limit=${limit}&offset=${offset-limit}&view=${view}&q=${q}">&larr; <s:message
 									code="ui.previous" text="Zurück" /></a></li>
 							</c:when>
 							<c:otherwise>
@@ -87,7 +87,7 @@
 						<c:choose>
 							<c:when test="${offset+limit < hits}">
 								<li>
-									<a href="${baseUri}place?limit=${limit}&offset=${offset+limit}&view=${view}">
+									<a href="${baseUri}place?limit=${limit}&offset=${offset+limit}&view=${view}&q=${q}">
 									<s:message code="ui.next" text="Vor" /> &rarr;</a>
 								</li>
 							</c:when>
@@ -136,7 +136,7 @@
 									<c:forEach var="place" items="${places}">				
 										<tr>
 											<td>${place.id}</td>
-											<td><a href="place/${place.id}">${fn:join(place.namesAsArray, " / ")}</a></td>
+											<td><a href="place/${place.id}?limit=${limit}&offset=${offset}&q=${q}&view=${view}">${fn:join(place.namesAsArray, " / ")}</a></td>
 											<td>
 												<s:message code="ui.copyToClipboard" text="In die Zwischenablage kopieren mit Strg+C / Cmd+C" var="copyMsg"/>
 												<a href="javascript:window.prompt ('${copyMsg}', '${baseUri}place/${place.id}')"><i class="icon-share"></i></a>
