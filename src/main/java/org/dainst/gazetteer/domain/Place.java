@@ -14,6 +14,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
@@ -44,6 +45,18 @@ public class Place {
 
 	@OneToMany(mappedBy="parent", fetch=FetchType.EAGER)
 	private Set<Place> children = new HashSet<Place>();
+	
+	@ManyToMany
+	private Set<Place> relatedPlaces = new HashSet<Place>();
+	
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, orphanRemoval=true)
+	private Set<Comment> comments;
+	
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, orphanRemoval=true)
+	private Set<Tag> tags;
+	
+	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, orphanRemoval=true)
+	private Set<Identifier> ids;
 
 	@Version
 	private Date lastModified;
@@ -180,6 +193,38 @@ public class Place {
 			locations.remove(location);
 			location.setPlace(null);
 		}
+	}
+
+	public Set<Place> getRelatedPlaces() {
+		return relatedPlaces;
+	}
+
+	public void setRelatedPlaces(Set<Place> relatedPlaces) {
+		this.relatedPlaces = relatedPlaces;
+	}
+
+	public Set<Comment> getComments() {
+		return comments;
+	}
+
+	public void setComments(Set<Comment> comments) {
+		this.comments = comments;
+	}
+
+	public Set<Tag> getTags() {
+		return tags;
+	}
+
+	public void setTags(Set<Tag> tags) {
+		this.tags = tags;
+	}
+
+	public Set<Identifier> getIdentifiers() {
+		return ids;
+	}
+
+	public void setIdentifiers(Set<Identifier> ids) {
+		this.ids = ids;
 	}
 	
 }

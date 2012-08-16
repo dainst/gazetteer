@@ -7,9 +7,12 @@ import java.util.List;
 import java.util.Set;
 
 import org.dainst.gazetteer.dao.PlaceDao;
+import org.dainst.gazetteer.domain.Comment;
+import org.dainst.gazetteer.domain.Identifier;
 import org.dainst.gazetteer.domain.Location;
 import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.PlaceName;
+import org.dainst.gazetteer.domain.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,7 +97,7 @@ public class JsonPlaceDeserializer {
 			
 			Set<Location> locations = new HashSet<Location>(place.getLocations());
 			
-			// create location objects
+			// create or update location objects
 			JsonNode locationsNode = objectNode.get("locations");
 			if (locationsNode != null) for (JsonNode locationNode : locationsNode) {
 				Location location = null;
@@ -126,10 +129,97 @@ public class JsonPlaceDeserializer {
 				
 			}
 			
-			// delete old name objects that are not referenced in the json
+			// delete old location objects that are not referenced in the json
 			for (Location location : locations) {
 				logger.debug("removing location: {}", location.getId());
 				place.removeLocation(location);
+			}
+			
+			Set<Comment> comments = new HashSet<Comment>(place.getComments());
+			
+			// create or update comment objects
+			JsonNode commentsNode = objectNode.get("comments");
+			if (commentsNode != null) for (JsonNode commentNode : commentsNode) {
+				Comment comment = null;
+				for (Comment c : comments)
+					if (commentNode.has("id") && c.getId() == commentNode.get("id").asLong())
+						comment = c;
+				if (comment == null) {
+					comment = new Comment();					
+					place.getComments().add(comment);
+				}
+				JsonNode languageNode = commentNode.get("language"); 
+				JsonNode textNode = commentNode.get("title");
+				if (textNode == null)
+					throw new HttpMessageNotReadableException("Invalid name object. Attribute \"text\" has to be set.");
+				if (languageNode != null) comment.setLanguage(languageNode.asText());
+				comment.setText(textNode.asText());
+				comments.remove(comment);
+				logger.debug("updated comment: {}", comment.getId());				
+			}
+			
+			// delete old comment objects that are not referenced in the json
+			for (Comment comment : comments) {
+				logger.debug("removing comment: {}", comment.getId());
+				place.getComments().remove(comment);
+			}
+			
+			Set<Tag> tags = new HashSet<Tag>(place.getTags());
+			
+			// create or update tag objects
+			JsonNode tagsNode = objectNode.get("tags");
+			if (tagsNode != null) for (JsonNode tagNode : tagsNode) {
+				Tag tag = null;
+				for (Tag t : tags)
+					if (tagNode.has("id") && t.getId() == tagNode.get("id").asLong())
+						tag = t;
+				if (tag == null) {
+					tag = new Tag();					
+					place.getTags().add(tag);
+				}
+				JsonNode languageNode = tagNode.get("language"); 
+				JsonNode textNode = tagNode.get("title");
+				if (textNode == null)
+					throw new HttpMessageNotReadableException("Invalid name object. Attribute \"text\" has to be set.");
+				if (languageNode != null) tag.setLanguage(languageNode.asText());
+				tag.setText(textNode.asText());
+				tags.remove(tag);
+				logger.debug("updated tag: {}", tag.getId());				
+			}
+			
+			// delete old tag objects that are not referenced in the json
+			for (Tag tag : tags) {
+				logger.debug("removing tag: {}", tag.getId());
+				place.getTags().remove(tag);
+			}
+			
+			Set<Identifier> identifiers = new HashSet<Identifier>(place.getIdentifiers());
+			
+			// create or update identifier objects
+			JsonNode identifiersNode = objectNode.get("identifiers");
+			if (identifiersNode != null) for (JsonNode identifierNode : identifiersNode) {
+				Identifier identifier = null;
+				for (Identifier i : identifiers)
+					if (identifierNode.has("id") && i.getId() == identifierNode.get("id").asLong())
+						identifier = i;
+				if (identifier == null) {
+					identifier = new Identifier();					
+					place.getIdentifiers().add(identifier);
+				}
+				JsonNode valueNode = identifierNode.get("value"); 
+				JsonNode contextNode = identifierNode.get("context");
+				if (valueNode == null)
+					throw new HttpMessageNotReadableException("Invalid name object. Attribute \"value\" has to be set.");
+				if (contextNode != null) identifier.setContext(contextNode.asText());
+				identifier.setValue(valueNode.asText());
+				identifiers.remove(identifier);
+				logger.debug("updated identifier: {}", identifier.getId());				
+			}
+			
+			// delete old identifier objects that are not referenced in the json
+			for (Identifier identifier : identifiers) {
+				logger.debug("removing identifier: {}", identifier.getId());
+				place.getIdentifiers().remove(identifier);
 			}
 					
 			return place;

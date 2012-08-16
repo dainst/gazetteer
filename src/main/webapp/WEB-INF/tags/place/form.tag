@@ -27,7 +27,7 @@
 		
 			<div class="control-group">
 				<label class="control-label">
-					<s:message code="domain.place.type" text="Typ" />
+					<s:message code="domain.place.type" text="domain.place.type" />
 				</label>
 				<div class="controls">
 					<form:input path="type" class="input-xlarge" />
@@ -35,11 +35,11 @@
 			</div>
 		
 			<!-- place names -->
-			<h3><s:message code="domain.place.names" text="Ortsnamen" /></h3>
+			<h3><s:message code="domain.place.names" text="domain.place.names" /></h3>
 			<c:forEach var="name" items="${place.names}" varStatus="loopStatus">
 				<div class="control-group">
 					<label class="control-label">
-						<s:message code="domain.placename.title" text="Titel" />
+						<s:message code="domain.placename.title" text="domain.placename.title" />
 					</label>
 					<div class="controls">
 						<form:hidden path="names[${loopStatus.index}].id" />
@@ -55,7 +55,7 @@
 			</c:forEach>
 			<div class="control-group">
 				<label class="control-label">
-					<s:message code="domain.placename.title" text="Titel" />
+					<s:message code="domain.placename.title" text="domain.placename.title" />
 				</label>
 				<div class="controls">
 					<input type="text" name="names[].title" class="input-xlarge disabled" disabled />
@@ -70,11 +70,11 @@
 			</div>
 			
 			<!-- locations -->
-			<h3><s:message code="domain.place.locations" text="Lage" /></h3>
+			<h3><s:message code="domain.place.locations" text="domain.place.locations" /></h3>
 			<c:forEach var="location" items="${place.locations}" varStatus="loopStatus">
 				<div class="control-group">
 					<label class="control-label">
-						<s:message code="domain.location.coordinates" text="Koordinaten" />
+						<s:message code="domain.location.coordinates" text="domain.location.coordinates" />
 					</label>
 					<div class="controls">
 						<form:hidden path="locations[${loopStatus.index}].id" />
@@ -90,7 +90,7 @@
 			</c:forEach>
 			<div class="control-group">
 				<label class="control-label">
-					<s:message code="domain.location.coordinates" text="Koordinaten" />
+					<s:message code="domain.location.coordinates" text="domain.location.coordinates" />
 				</label>
 				<div class="controls">
 					<div class="input-append">
@@ -98,6 +98,76 @@
 							<i class="icon-search"></i><i class="icon-globe"></i>
 						</button>
 					</div>
+					<div class="btn btn-primary plus">+</div>
+				</div>
+			</div>
+			
+			<!-- comments -->
+			<h3><s:message code="domain.place.comments" text="domain.place.comments" /></h3>
+			<c:forEach var="comment" items="${place.comments}" varStatus="loopStatus">
+				<div class="control-group">
+					<label class="control-label">
+						<s:message code="domain.comment.text" text="domain.comment.text" />
+					</label>
+					<div class="controls">
+						<form:hidden path="comments[${loopStatus.index}].id" />
+						<form:textarea path="comments[${loopStatus.index}].text" class="input-xlarge" />
+						<s:message code="ui.language.notSpecified" var="langNotSpecified" />
+						<form:select path="comments[${loopStatus.index}].language">
+							<form:option value="" label="${langNotSpecified}" />
+							<form:options items="${languages}" />
+						</form:select>
+						<div class="btn btn-danger minus">-</div>
+					</div>
+				</div>
+			</c:forEach>
+			<div class="control-group">
+				<label class="control-label">
+					<s:message code="domain.comment.text" text="domain.comment.text" />
+				</label>
+				<div class="controls">
+					<textarea name="comments[].text" class="input-xlarge disabled" disabled></textarea>
+					<select name="comments[].language" class="disabled" disabled>
+						<option value="">${langNotSpecified}</option>
+						<c:forEach var="lang" items="${languages}">
+							<option value="${lang.key}">${lang.value}</option> 
+						</c:forEach>
+					</select>
+					<div class="btn btn-primary plus">+</div>
+				</div>
+			</div>
+			
+			<!-- tags -->
+			<h3><s:message code="domain.place.tags" text="domain.place.tags" /></h3>
+			<c:forEach var="tag" items="${place.tags}" varStatus="loopStatus">
+				<div class="control-group">
+					<label class="control-label">
+						<s:message code="domain.tag.text" text="domain.tag.text" />
+					</label>
+					<div class="controls">
+						<form:hidden path="tags[${loopStatus.index}].id" />
+						<form:input path="tags[${loopStatus.index}].text" class="input-xlarge" />
+						<s:message code="ui.language.notSpecified" var="langNotSpecified" />
+						<form:select path="tags[${loopStatus.index}].language">
+							<form:option value="" label="${langNotSpecified}" />
+							<form:options items="${languages}" />
+						</form:select>
+						<div class="btn btn-danger minus">-</div>
+					</div>
+				</div>
+			</c:forEach>
+			<div class="control-group">
+				<label class="control-label">
+					<s:message code="domain.comment.text" text="domain.comment.text" />
+				</label>
+				<div class="controls">
+					<input type="text" name="tags" class="input-xlarge disabled" disabled>
+					<select name="tags[].language" class="disabled" disabled>
+						<option value="">${langNotSpecified}</option>
+						<c:forEach var="lang" items="${languages}">
+							<option value="${lang.key}">${lang.value}</option> 
+						</c:forEach>
+					</select>
 					<div class="btn btn-primary plus">+</div>
 				</div>
 			</div>
