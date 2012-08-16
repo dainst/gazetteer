@@ -78,9 +78,12 @@
 					</label>
 					<div class="controls">
 						<form:hidden path="locations[${loopStatus.index}].id" />
-						<form:input path="locations[${loopStatus.index}].lng" class="input-small" />
-						<form:input path="locations[${loopStatus.index}].lat" class="input-small" />
-						<input type="text" class="lnglat" />
+						<div class="input-append">
+							<c:set var="coordinates">${location.lat},${location.lng}</c:set>
+							<input type="text" name="locations[${loopStatus.index}].coordinates" value="${coordinates}" class="lnglat"><button class="picker-search-button btn" type="button">
+								<i class="icon-search"></i><i class="icon-globe"></i>
+							</button>
+						</div>						
 						<div class="btn btn-danger minus">-</div>
 					</div>
 				</div>
@@ -90,8 +93,11 @@
 					<s:message code="domain.location.coordinates" text="Koordinaten" />
 				</label>
 				<div class="controls">
-					<input type="text" name="locations[].lat" class="input-small disabled" disabled />
-					<input type="text" name="locations[].lng" class="input-small disabled" disabled />
+					<div class="input-append">
+						<input type="text" name="locations[${loopStatus.index}].coordinates" class="lnglat disabled" disabled><button class="picker-search-button btn disabled" disabled type="button">
+							<i class="icon-search"></i><i class="icon-globe"></i>
+						</button>
+					</div>
 					<div class="btn btn-primary plus">+</div>
 				</div>
 			</div>
@@ -144,7 +150,7 @@ $("#place-form .plus").click(function() {
 	newGroup.find(".plus").toggleClass("plus minus btn-primary btn-danger").html("-").click(function() {
 		$(this).closest(".control-group").slideUp("normal", function() { $(this).remove(); });
 	});
-	newGroup.find("input, select").toggleClass("disabled").removeAttr("disabled");
+	newGroup.find("input, select, button").toggleClass("disabled").removeAttr("disabled");
 	var indices = {};
 	$("#place-form .control-group").each(function() {
 		var name = $(this).find("input").first().attr("name");
@@ -157,6 +163,7 @@ $("#place-form .plus").click(function() {
 		indices[obj]++;
 	});
 	newGroup.slideDown();
+	$('input.lnglat').locationPicker();
 });
 
 $("#place-form").submit(function(event) {
@@ -181,14 +188,8 @@ $("#place-form").submit(function(event) {
 			var field = name.substring(name.indexOf(".")+1);
 			if ($(input).val()) {
 				if (place[obj][index] == undefined) place[obj][index] = {};
-				if (field === "lng") {
-					if (place[obj][index]["coordinates"] == undefined)
-						place[obj][index]["coordinates"] = [];
-					place[obj][index]["coordinates"][1] = $(input).val();
-				} else if (field === "lat") {
-					if (place[obj][index]["coordinates"] == undefined)
-						place[obj][index]["coordinates"] = [];
-					place[obj][index]["coordinates"][0] = $(input).val();
+				if (field === "coordinates") {
+					place[obj][index]["coordinates"] = $(input).val().split(",");
 				} else {
 					place[obj][index][field] = $(input).val();
 				}

@@ -1,7 +1,3 @@
-/*
- * 
- */
-
 (function($){
 
     //Attach this new method to jQuery
@@ -11,11 +7,7 @@
         locationPicker: function() {
             
             var options = {
-                width: "300px",
-                height: "200px",
-                backgroundColor: '#fff',
-                border: '1px solid #ccc',
-                borderRadius: 10,
+                height: "400px",
                 padding: 10,
                 defaultLat: 51.500152,
                 defaultLng: -0.126236            
@@ -27,11 +19,6 @@
             };
             
             var geocoder = new google.maps.Geocoder();
-            
-            //var mapsScript = document.createElement( 'script' );
-            //mapsScript.type = 'text/javascript';
-            //mapsScript.src = "http://maps.google.com/maps/api/js?sensor=false&callback=lptoremove";
-            //$(this).before( mapsScript );
 
             //Iterate over the current set of matched elements
             return this.each(function() {
@@ -53,23 +40,24 @@
                 
                 var id = $(this).attr('id');
                 
-                var searchButton = $("<input class='picker-search-button' type='button' value='Search'/>");
-                $(this).after(searchButton);
-                
-                var picker = $("<div id='" + id + "-picker' class='pickermap'></div>").css({
-                    width: options.width,
-                    backgroundColor: options.backgroundColor,
-                    border: options.border,
-                    padding: options.padding,
-                    borderRadius: options.borderRadius,
-                    position: "absolute",
-                    display: "none"
+                var searchButton = $(this).siblings("button");
+                $(this).keydown(function(e) {
+                	if(e.keyCode == 13) {
+                		searchButton.click();
+                		e.preventDefault();
+                		return false;
+                	}
                 });
-                $(this).after(picker);
-                var mapDiv = $("<div class='picker-map'>Loading</div>").css({
+                
+                var picker = $("<div id='" + id + "-picker' class='modal hide'><div id='modal-header'><button type='button' class='close' data-dismiss='modal'>×</button><h3>Pick a location</h3></div>").css({
+                    padding: options.padding
+                });
+                $("body").append(picker);
+                var mapDiv = $("<div class='picker-map gmap modal-body'>Loading</div>").css({
                     height: options.height
                 });
                 picker.append(mapDiv);
+                picker.append("<div class='modal-footer'><a href='#' class='btn btn-primary' data-dismiss='modal'>OK</a></div>");
                 
                 var myLatlng = new google.maps.LatLng(options.defaultLat, options.defaultLng);
                 var myOptions = {
@@ -113,7 +101,7 @@
                 }
                 
                 function showPicker(){
-                    picker.fadeIn('fast');
+                    picker.modal();
                     google.maps.event.trigger(map, 'resize');
                     getCurrentPosition();
                     map.setCenter(marker.position);

@@ -16,22 +16,27 @@
 
 var mapsApiCallback;
 
-(function() {
-
+function requireGoogleMaps(callback, apiKey) {
+	
 	/******** Load google maps api if not present *********/
 	if (typeof window.google === "undefined") {
-		mapsApiCallback = showMap;
+		mapsApiCallback = callback;
 	    var script_tag = document.createElement('script');
 	    script_tag.setAttribute("type","text/javascript");
-	    var src = "https://maps.google.com/maps/api/js?sensor=false&callback=mapsApiCallback";
-	    <c:if test="${!empty googleMapsApiKey}">src += "&key=${googleMapsApiKey}";</c:if>
+	    var src = "https://maps.google.com/maps/api/js?sensor=false&callback=mapsApiCallback&key=" + apiKey;
 	    script_tag.setAttribute("src", src);
 	    // Try to find the head, otherwise default to the documentElement
 	    (document.getElementsByTagName("head")[0] || document.documentElement).appendChild(script_tag);
 	} else {
 	    // called if google maps api already present
-	    showMap();
+	    callback();
 	}
+	
+}
+
+(function() {
+
+	requireGoogleMaps(showMap, "${googleMapsApiKey}");
 
 	/******** Actual logic that uses the google maps api ********/
 	function showMap() {

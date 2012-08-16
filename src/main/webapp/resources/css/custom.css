@@ -151,3 +151,5 @@
 		border-radius: 0;
 	}
 }
+
+.gmap img { max-width: none; } 
