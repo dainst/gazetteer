@@ -32,6 +32,8 @@ public class Location {
 
 	@ManyToOne
 	private Place place;
+	
+	private int confidence;
 
 	@Version
 	private Date lastModified;
@@ -118,6 +120,14 @@ public class Location {
 	@Transient
 	public double getLng() {
 		return point.getCoordinateSequence().getX(0);
+	}
+
+	public int getConfidence() {
+		return confidence;
+	}
+
+	public void setConfidence(int confidence) {
+		this.confidence = confidence;
 	}
 
 }

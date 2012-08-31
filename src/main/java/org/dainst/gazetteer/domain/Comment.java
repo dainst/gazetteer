@@ -1,6 +1,8 @@
 package org.dainst.gazetteer.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
@@ -11,6 +13,7 @@ public class Comment {
 	private String language;
 	
 	@Id
+	@GeneratedValue
 	public long getId() {
 		return id;
 	}
@@ -19,6 +22,7 @@ public class Comment {
 		this.id = id;
 	}
 
+	@Column(columnDefinition="TEXT")
 	public String getText() {
 		return text;
 	}

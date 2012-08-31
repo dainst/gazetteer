@@ -49,7 +49,7 @@ request.setAttribute("places", places);
 		<c:choose>
 		
 			<c:when test="${place.deleted}">
-				<div class="alert"><s:message code="ui.place.deleted"/></div>
+				<div class="alert"><s:message code="ui.place.deleted" text="ui.place.deleted" /></div>
 			</c:when>
 			
 			<c:otherwise>
@@ -91,8 +91,8 @@ request.setAttribute("places", places);
 							    <h3><s:message code="ui.delete.really" /></h3>
 							  </div>
 							  <div class="modal-footer">
-							    <a href="#" class="btn" data-dismiss="modal"><s:message code="ui.cancel"/></a>
-							    <a href="#" class="btn btn-danger" id="deleteBtn" data-dismiss="modal"><s:message code="ui.delete"/></a>
+							    <a href="#" class="btn" data-dismiss="modal"><s:message code="ui.cancel" text="ui.cancel" /></a>
+							    <a href="#" class="btn btn-danger" id="deleteBtn" data-dismiss="modal"><s:message code="ui.delete" text="ui.delete" /></a>
 							    <s:message code="ui.failure" var="failureMsg"/>
 							    <script type="text/javascript">
 									$("#deleteBtn").click(function() {
@@ -111,20 +111,25 @@ request.setAttribute("places", places);
 							</div>
 						</div>
 						
-						<h1><s:message code="domain.place.names" />:</h1>
+						<h3><s:message code="domain.place.names" />:</h3>
 						<ul>
 							<c:forEach var="placename" items="${place.names}">
-								<li>${placename.title}</li>
+								<li>
+									${placename.title}
+									<c:if test="${languages[placename.language] != null}">
+										<em>(${languages[placename.language]})</em>
+									</c:if>
+								</li>
 							</c:forEach>
 						</ul>
 						
 						<c:if test="${place.parent != null}">
-							<h1><s:message code="domain.place.parent"/>:</h1>	
+							<h3><s:message code="domain.place.parent" text="domain.place.parent" />:</h3>	
 							<ul><li><a href="${place.parent.id}">${place.parent.nameMap[language].title}</a></li></ul>
 						</c:if>
 						
 						<c:if test="${!empty(place.children)}">
-							<h1><s:message code="domain.place.children"/>:</h1>
+							<h3><s:message code="domain.place.children" text="domain.place.children" />:</h3>
 							<ul>
 								<c:forEach var="child" items="${place.children}">
 									<li><a href="${child.id}">${child.nameMap[language].title}</a></li>
@@ -132,15 +137,53 @@ request.setAttribute("places", places);
 							</ul>
 						</c:if>
 					
-						<h1><s:message code="domain.place.locations"/>:</h1>
+						<h3><s:message code="domain.place.locations" text="domain.place.locations" />:</h3>
 						<ul>
 							<c:forEach var="location" items="${place.locations}">
 								<li>
-									<s:message code="domain.location.latitude"/>: ${location.lat}
-									<s:message code="domain.location.longitude"/>: ${location.lng}
+									<strong><s:message code="domain.location.latitude" text="domain.location.latitude" />:</strong> ${location.lat}
+									<strong><s:message code="domain.location.longitude" text="domain.location.longitude" />:</strong> ${location.lng}
+									<em><strong><s:message code="domain.location.confidence" text="domain.location.confidence" />:</strong> ${location.confidence}</em>
 								</li>
 							</c:forEach>
 						</ul>
+						
+						<c:if test="${!empty(place.type)}">
+							<h3><s:message code="domain.place.type" text="domain.place.type" />: </h3>
+							<p>${place.type}</p>
+						</c:if>
+						
+						<c:if test="${!empty(place.identifiers)}">
+							<h3><s:message code="domain.place.identifiers" text="domain.place.identifiers" />:</h3>
+							<ul>
+								<c:forEach var="identifier" items="${place.identifiers}">
+									<li>
+										<strong>${identifier.context}:</strong> ${identifier.value}
+									</li>
+								</c:forEach>
+							</ul>
+						</c:if>
+						
+						<c:if test="${!empty(place.comments)}">
+							<h3><s:message code="domain.place.comments" text="domain.place.comments" />:</h3>
+							<c:forEach var="comment" items="${place.comments}">
+								<blockquote>
+									${comment.text}
+								</blockquote>
+							</c:forEach>
+						</c:if>
+						
+						<c:if test="${!empty(place.tags)}">
+							<h3><s:message code="domain.place.tags" text="domain.place.tags" />:</h3>
+							<ul>
+								<c:forEach var="tag" items="${place.tags}">
+									<li>
+										${tag.text}
+									</li>
+								</c:forEach>
+							</ul>
+						</c:if>
+						
 					</div>
 					
 				</div>

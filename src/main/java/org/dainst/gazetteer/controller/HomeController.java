@@ -59,7 +59,7 @@ public class HomeController {
 		logger.info("saved codarchlab");*/
 		
 		Random random = new Random();
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 768; i++) {
 			double d1 = random.nextDouble();
 			double d2 = random.nextDouble();
 			Place place = new Place();

@@ -65,6 +65,10 @@ public class JsonPlaceDeserializer {
 				if (child != null) place.addChild(child);
 			}
 			
+			// set place type
+			if (objectNode.has("type")) {
+				place.setType(objectNode.get("type").asText());
+			}			
 
 			List<PlaceName> names = new ArrayList<PlaceName>(place.getNames());
 			
@@ -124,6 +128,11 @@ public class JsonPlaceDeserializer {
 					throw new HttpMessageNotReadableException("Invalid location object. Attribute \"coordinates\" cannot be read.");
 				
 				location.setCoordinates(new double[]{lat, lng});
+				
+				if (locationNode.has("confidence")) {
+					location.setConfidence(locationNode.get("confidence").asInt());
+				}
+				
 				locations.remove(location);
 				logger.debug("updated location: {}", location.getId());
 				
@@ -149,9 +158,9 @@ public class JsonPlaceDeserializer {
 					place.getComments().add(comment);
 				}
 				JsonNode languageNode = commentNode.get("language"); 
-				JsonNode textNode = commentNode.get("title");
+				JsonNode textNode = commentNode.get("text");
 				if (textNode == null)
-					throw new HttpMessageNotReadableException("Invalid name object. Attribute \"text\" has to be set.");
+					throw new HttpMessageNotReadableException("Invalid comment object. Attribute \"text\" has to be set.");
 				if (languageNode != null) comment.setLanguage(languageNode.asText());
 				comment.setText(textNode.asText());
 				comments.remove(comment);
@@ -178,9 +187,9 @@ public class JsonPlaceDeserializer {
 					place.getTags().add(tag);
 				}
 				JsonNode languageNode = tagNode.get("language"); 
-				JsonNode textNode = tagNode.get("title");
+				JsonNode textNode = tagNode.get("text");
 				if (textNode == null)
-					throw new HttpMessageNotReadableException("Invalid name object. Attribute \"text\" has to be set.");
+					throw new HttpMessageNotReadableException("Invalid tag object. Attribute \"text\" has to be set.");
 				if (languageNode != null) tag.setLanguage(languageNode.asText());
 				tag.setText(textNode.asText());
 				tags.remove(tag);

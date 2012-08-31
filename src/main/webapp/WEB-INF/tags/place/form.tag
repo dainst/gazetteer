@@ -83,7 +83,12 @@
 							<input type="text" name="locations[${loopStatus.index}].coordinates" value="${coordinates}" class="lnglat"><button class="picker-search-button btn" type="button">
 								<i class="icon-search"></i><i class="icon-globe"></i>
 							</button>
-						</div>						
+						</div>
+						<form:select path="locations[${loopStatus.index}].confidence">
+							<form:option value="1" label="1" />
+							<form:option value="2" label="2" />
+							<form:option value="3" label="3" />
+						</form:select>		
 						<div class="btn btn-danger minus">-</div>
 					</div>
 				</div>
@@ -98,6 +103,39 @@
 							<i class="icon-search"></i><i class="icon-globe"></i>
 						</button>
 					</div>
+					<select name="locations[].confidence" class="disabled" disabled>
+						<option value="1" label="1" />
+						<option value="2" label="2" />
+						<option value="3" label="3" />
+					</select>
+					<div class="btn btn-primary plus">+</div>
+				</div>
+			</div>
+			
+			<!-- identifiers -->
+			<h3><s:message code="domain.place.identifiers" text="domain.place.identifiers" /></h3>
+			<c:forEach var="identifier" items="${place.identifiers}" varStatus="loopStatus">
+				<div class="control-group">
+					<label class="control-label">
+						<s:message code="domain.identifier.value" text="domain.identifier.value" />
+					</label>
+					<div class="controls">
+						<form:hidden path="identifiers[${loopStatus.index}].id" />
+						<form:input path="identifiers[${loopStatus.index}].value" class="input-large" />
+						<s:message code="domain.identifier.context" text="domain.identifier.context" />
+						<form:input path="identifiers[${loopStatus.index}].context" class="input-small" />
+						<div class="btn btn-danger minus">-</div>
+					</div>
+				</div>
+			</c:forEach>
+			<div class="control-group">
+				<label class="control-label">
+					<s:message code="domain.identifier.text" text="domain.identifier.text" />
+				</label>
+				<div class="controls">
+					<input type="text" name="identifiers[].value" class="input-large disabled" disabled>
+					<s:message code="domain.identifier.context" text="domain.identifier.context" />
+					<input type="text" name="identifiers[].context" class="input-small disabled" disabled>
 					<div class="btn btn-primary plus">+</div>
 				</div>
 			</div>
@@ -158,10 +196,10 @@
 			</c:forEach>
 			<div class="control-group">
 				<label class="control-label">
-					<s:message code="domain.comment.text" text="domain.comment.text" />
+					<s:message code="domain.tag.text" text="domain.tag.text" />
 				</label>
 				<div class="controls">
-					<input type="text" name="tags" class="input-xlarge disabled" disabled>
+					<input type="text" name="tags[].text" class="input-xlarge disabled" disabled>
 					<select name="tags[].language" class="disabled" disabled>
 						<option value="">${langNotSpecified}</option>
 						<c:forEach var="lang" items="${languages}">
@@ -220,13 +258,13 @@ $("#place-form .plus").click(function() {
 	newGroup.find(".plus").toggleClass("plus minus btn-primary btn-danger").html("-").click(function() {
 		$(this).closest(".control-group").slideUp("normal", function() { $(this).remove(); });
 	});
-	newGroup.find("input, select, button").toggleClass("disabled").removeAttr("disabled");
+	newGroup.find("input, select, button, textarea").toggleClass("disabled").removeAttr("disabled");
 	var indices = {};
 	$("#place-form .control-group").each(function() {
-		var name = $(this).find("input").first().attr("name");
+		var name = $(this).find("input, textarea").first().attr("name");
 		if (name.indexOf("[") == -1) return true;
 		var obj = name.substring(0,name.indexOf("["));
-		$(this).find("input:not(.disabled)").each(function() {
+		$(this).find("input:not(.disabled), select:not(.disabled), textarea:not(.disabled)").each(function() {
 			if (indices[obj] == undefined) indices[obj] = 0;
 			$(this).attr("name",$(this).attr("name").replace(/\[.?\]/,"["+(indices[obj])+"]"));
 		});
@@ -243,13 +281,16 @@ $("#place-form").submit(function(event) {
 	
 	var place = {
 		"names": [],
-		"locations": []
+		"locations": [],
+		"identifiers": [],
+		"comments": [],
+		"tags": []
 	};
 	
 	var uri = form.find('input[name="uri"]').val();
 	if (uri) place["@id"] = uri;
 	
-	var inputs = form.find('fieldset input:not(.disabled), fieldset select');
+	var inputs = form.find('fieldset input:not(.disabled), fieldset select:not(.disabled), fieldset textarea:not(.disabled)');
 	inputs.each(function(i, input) {
 		var name = $(input).attr("name");
 		if (name.indexOf("[") != -1) {
