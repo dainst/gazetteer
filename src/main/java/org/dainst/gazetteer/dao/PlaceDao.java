@@ -22,7 +22,7 @@ public class PlaceDao {
     private EntityManager em;
 	
 	public Place save(Place place) {
-        em.merge(place);
+        place = em.merge(place);
         return place;
     }
 

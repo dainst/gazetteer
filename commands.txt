@@ -2,7 +2,7 @@
 DROP TABLE description, location, location_description, place, place_description, place_uris, placename;
 
 # reset database
-DROP TABLE location, place, place_uris, placename;
+DROP TABLE comment, identifier, location, place, place_uris, place_comment, place_identifier, place_place, place_tag, place_uris, placename, tag;
 
 # reset index
 curl -XDELETE 'http://localhost:9200/gazetteer'
