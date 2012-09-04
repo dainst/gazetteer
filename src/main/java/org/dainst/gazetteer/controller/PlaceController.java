@@ -63,6 +63,7 @@ public class PlaceController {
 			@RequestParam(required=false) String q,
 			@RequestParam(required=false) String fuzzy,
 			@RequestParam(required=false, defaultValue="map,table") String view,
+			@RequestParam(required=false) String callback,
 			HttpServletRequest request,
 			HttpServletResponse response) {
 		
@@ -95,6 +96,7 @@ public class PlaceController {
 		mav.addObject("view", view);
 		mav.addObject("q", q);
 		mav.addObject("googleMapsApiKey", googleMapsApiKey);
+		mav.addObject("callback", callback);
 		
 		return mav;
 		

@@ -116,10 +116,14 @@
 	-webkit-border-radius: 0;
 	-moz-border-radius: 0;
 	border-radius: 0;
+	line-height: 36px;
+	background-color: transparent;
 }
 
-.subnav .pagination li:first-child a {
-	border-width: 0;
+.navbar-search .icon-search {
+	position: relative;
+	left: -30px;
+	top: 2px;
 }
 
 /* Fixed subnav on scroll, but only for 980px and up (sorry IE!) */

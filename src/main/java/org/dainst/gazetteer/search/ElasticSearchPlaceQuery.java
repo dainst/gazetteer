@@ -76,4 +76,9 @@ public class ElasticSearchPlaceQuery {
 		return this;
 	}
 
+	public ElasticSearchPlaceQuery fuzzyLikeThisSearch(String query, String... fields) {
+		requestBuilder.setQuery(QueryBuilders.fuzzyLikeThisQuery(fields).likeText(query).minSimilarity(0f));
+		return this;		
+	}
+
 }

@@ -71,7 +71,49 @@ function main() {
 		        	$(showElem).replaceWith(decodedHtml);
 		        });
         	});
-        }        
+        }
+        
+        /******* Load HTML for pick elements *******/
+        if ($('gaz\\:pick').length) {
+        	$('gaz\\:pick').each(function(index, pickElem) {
+        		var jsonp_url = "${baseUri}widget/pick.js?callback=?";
+		        $.getJSON(jsonp_url, function(data) {
+		        	var decodedHtml = $("<div/>").html(data.html).text();
+		        	var elem = $(decodedHtml);
+		        	var resultInput = $(elem.find('input.gaz-result'));
+		        	$(pickElem).replaceWith(elem);
+		        	var overlay = $(elem).find('.gaz-pick-overlay');
+		           	$(elem.find('button')).click(function(event) {
+		        		$(overlay).show();
+		        		$(overlay).click(function(event) { event.stopPropagation(); });
+		        		$('html').click(function() { overlay.hide(); });
+		        		event.stopPropagation();
+		        	});
+		        	$(elem.find('input.search-query')).keyup(function() {
+	        			var jsonp_url = "${baseUri}widget/search.js?limit=20&q="+$(this).val();
+			        	$.ajax({
+			        		"url": jsonp_url,
+			        		"dataType": "jsonp"
+			        	}).done(function(data) {
+			        		var resultDiv = elem.find('.gaz-pick-results');
+			        		resultDiv.empty();
+			        		$(data.places).each(function() {
+			        			var place = this;
+			        			var title = $(this.names).map(function() {
+			        				return this['title'];
+			        			}).get().join(' / ');
+			        			var row = $('<div class="gaz-pick-result-row">'+title+'</div>');
+			        			$(row).click(function() {
+			        				$(resultInput).val(place['@id']);
+			        				$(overlay).hide();
+			        			});
+			        			resultDiv.append(row);
+			        		});
+			        	});
+		        	});
+		        });
+        	});
+        }      
         
         
     });

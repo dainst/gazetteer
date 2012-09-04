@@ -81,7 +81,7 @@
 						<div class="input-append">
 							<c:set var="coordinates">${location.lat},${location.lng}</c:set>
 							<input type="text" name="locations[${loopStatus.index}].coordinates" value="${coordinates}" class="lnglat"><button class="picker-search-button btn" type="button">
-								<i class="icon-search"></i><i class="icon-globe"></i>
+								<i class="icon-map-marker"></i>
 							</button>
 						</div>
 						<form:select path="locations[${loopStatus.index}].confidence">
@@ -100,7 +100,7 @@
 				<div class="controls">
 					<div class="input-append">
 						<input type="text" name="locations[${loopStatus.index}].coordinates" class="lnglat disabled" disabled><button class="picker-search-button btn disabled" disabled type="button">
-							<i class="icon-search"></i><i class="icon-globe"></i>
+							<i class="icon-map-marker"></i>
 						</button>
 					</div>
 					<select name="locations[].confidence" class="disabled" disabled>

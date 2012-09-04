@@ -1,3 +1,7 @@
+.gaz-pick {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
 .gaz-title {
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 	font-size: 10px;
@@ -9,4 +13,168 @@
 .gaz-title a {
 	text-decoration: none;
 	color: #999;
+}
+
+.gaz-pick-overlay {
+	position: relative;
+	width: 400px;
+	border: 1px solid #CCC;
+}
+
+.gaz-pick-results {
+	height: 260px;
+	overflow: auto;
+}
+
+.gaz-pick-result-row {
+	padding: 5px;
+	border-bottom: 1px solid #CCC;
+	cursor: pointer;
+	color: #08C;
+}
+
+.gaz-pick-result-row:hover {
+	background-color: #ccc
+}
+
+.gaz-pick .navbar {
+  *position: relative;
+  *z-index: 2;
+  margin-bottom: 0;
+  overflow: hidden;
+  color: #555555;
+}
+
+.gaz-pick .navbar-inner {
+  width: 450px;
+  min-height: 40px;
+  padding-right: 10px;
+  padding-left: 10px;
+  background-color: #fafafa;
+  background-image: -moz-linear-gradient(top, #ffffff, #f2f2f2);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#f2f2f2));
+  background-image: -webkit-linear-gradient(top, #ffffff, #f2f2f2);
+  background-image: -o-linear-gradient(top, #ffffff, #f2f2f2);
+  background-image: linear-gradient(to bottom, #ffffff, #f2f2f2);
+  background-repeat: repeat-x;
+  border: 1px solid #d4d4d4;
+  filter: progid:dximagetransform.microsoft.gradient(startColorstr='#ffffffff', endColorstr='#fff2f2f2', GradientType=0);
+  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
+     -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
+          box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
+}
+
+.gaz-pick .navbar-search {
+  position: relative;
+  float: left;
+  margin-top: 5px;
+  margin-bottom: 0;
+}
+
+.gaz-pick .navbar-search .search-query {
+  padding: 4px 14px;
+  margin-bottom: 0;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  font-weight: normal;
+  line-height: 1;
+  border: 1px solid #CCC;
+  width: 350px;
+  -webkit-border-radius: 15px;
+     -moz-border-radius: 15px;
+          border-radius: 15px;
+}
+
+.gaz-pick .navbar-inverse {
+  color: #999999;
+}
+
+.gaz-pick .navbar-inverse .navbar-inner {
+  background-color: #1b1b1b;
+  background-image: -moz-linear-gradient(top, #222222, #111111);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#222222), to(#111111));
+  background-image: -webkit-linear-gradient(top, #222222, #111111);
+  background-image: -o-linear-gradient(top, #222222, #111111);
+  background-image: linear-gradient(to bottom, #222222, #111111);
+  background-repeat: repeat-x;
+  border-color: #252525;
+  filter: progid:dximagetransform.microsoft.gradient(startColorstr='#ff222222', endColorstr='#ff111111', GradientType=0);
+}
+
+.gaz-pick .navbar-inverse .navbar-search .search-query {
+  color: #ffffff;
+  background-color: #515151;
+  border-color: #111111;
+  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 0 rgba(255, 255, 255, 0.15);
+     -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 0 rgba(255, 255, 255, 0.15);
+          box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 0 rgba(255, 255, 255, 0.15);
+  -webkit-transition: none;
+     -moz-transition: none;
+       -o-transition: none;
+          transition: none;
+}
+
+.gaz-pick .navbar-inverse .navbar-search .search-query:-moz-placeholder {
+  color: #cccccc;
+}
+
+.gaz-pick .navbar-inverse .navbar-search .search-query:-ms-input-placeholder {
+  color: #cccccc;
+}
+
+.gaz-pick .navbar-inverse .navbar-search .search-query::-webkit-input-placeholder {
+  color: #cccccc;
+}
+
+.gaz-pick .navbar-inverse .navbar-search .search-query:focus,
+.gaz-pick .navbar-inverse .navbar-search .search-query.focused {
+  padding: 5px 15px;
+  color: #333333;
+  text-shadow: 0 1px 0 #ffffff;
+  background-color: #ffffff;
+  border: 0;
+  outline: 0;
+  -webkit-box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
+     -moz-box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
+          box-shadow: 0 0 3px rgba(0, 0, 0, 0.15);
+}
+
+.gaz-pick .navbar-search .icon-search {
+	position: relative;
+	left: -30px;
+	top: 2px;
+}
+
+.gaz-pick [class^="icon-"],
+.gaz-pick [class*=" icon-"] {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-top: 1px;
+  *margin-right: .3em;
+  line-height: 14px;
+  vertical-align: text-top;
+  background-image: url("../bootstrap/img/glyphicons-halflings.png");
+  background-position: 14px 14px;
+  background-repeat: no-repeat;
+}
+
+/* White icons with optional class, or on hover/active states of certain elements */
+
+.gaz-pick .icon-white,
+.gaz-pick .nav > .active > a > [class^="icon-"],
+.gaz-pick .nav > .active > a > [class*=" icon-"],
+.gaz-pick .dropdown-menu > li > a:hover > [class^="icon-"],
+.gaz-pick .dropdown-menu > li > a:hover > [class*=" icon-"],
+.gaz-pick .dropdown-menu > .active > a > [class^="icon-"],
+.gaz-pick .dropdown-menu > .active > a > [class*=" icon-"] {
+  background-image: url("../bootstrap/img/glyphicons-halflings-white.png");
+}
+
+.gaz-pick .icon-search {
+  background-position: -48px 0;
+}
+
+.gaz-pick .icon-globe {
+  background-position: -336px -144px;
 }

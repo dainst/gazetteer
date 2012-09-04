@@ -30,7 +30,7 @@
 <body>
 
 <!-- Top Navigation Bar -->
-<div class="navbar navbar-fixed-top">
+<div class="navbar navbar-fixed-top navbar-inverse">
 	<div class="navbar-inner">
 		<div class="container-fluid">
 			<a class="btn btn-navbar" data-toggle="collapse"
@@ -63,6 +63,7 @@
 			<form class="navbar-search pull-left" action="/gazetteer/place">
 				<s:message code="ui.search.simpleSearch" text="Einfache Suche" var="titleSimpleSearch"/>
  				<input type="text" class="search-query" placeholder="${titleSimpleSearch}" name="q">
+ 				<i class="icon-search icon-white"></i>
 			</form>
 		</div>
 	</div>
