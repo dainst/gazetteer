@@ -11,6 +11,15 @@ public class Identifier {
 	private String value;	
 	private String context;
 	
+	public Identifier() {
+		
+	}
+	
+	public Identifier(String value, String context) {
+		this.value = value;
+		this.context = context;
+	}
+
 	@Id
 	@GeneratedValue
 	public long getId() {

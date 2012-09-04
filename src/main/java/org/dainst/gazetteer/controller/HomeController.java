@@ -1,11 +1,16 @@
 package org.dainst.gazetteer.controller;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
 
 import org.dainst.gazetteer.dao.PlaceDao;
+import org.dainst.gazetteer.domain.Identifier;
 import org.dainst.gazetteer.domain.Location;
 import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.PlaceName;
@@ -68,6 +73,57 @@ public class HomeController {
 			place.addLocation(new Location(d1*160-80, d2*360-180));
 			placeDao.save(place);		
 		}
+
+		return "generate";
+		
+	}
+	
+	@RequestMapping(value="/import", method = RequestMethod.GET)
+	public String importData(Locale locale, Model model) {
+
+		Connection conn = null;
+
+        try
+        {
+            String userName = "root";
+            String password = "tosso";
+            String url = "jdbc:mysql://arachne.uni-koeln.de/arachne";
+            Class.forName ("com.mysql.jdbc.Driver").newInstance ();
+            conn = DriverManager.getConnection (url, userName, password);
+            logger.info("Database connection established");
+            
+            Statement s = conn.createStatement ();
+            s.executeQuery ("SELECT PS_OrtID, Stadt, Ort_antik, Longitude, Latitude FROM ort");
+            ResultSet rs = s.getResultSet ();
+            while (rs.next ())
+            {
+            	Place place = new Place();
+            	place.addName(new PlaceName(rs.getString("Stadt"), "de"));
+            	place.addName(new PlaceName(rs.getString("Ort_antik"), ""));
+            	place.addLocation(new Location(rs.getDouble("Latitude"), rs.getDouble("Longitude")));
+                place.getIdentifiers().add(new Identifier(rs.getString("PS_OrtID"),"arachne-ort-id"));
+                placeDao.save(place);
+            }
+            rs.close ();
+            s.close ();
+            
+        }
+        catch (Exception e)
+        {
+            logger.error("Cannot connect to database server",e);
+        }
+        finally
+        {
+            if (conn != null)
+            {
+                try
+                {
+                    conn.close ();
+                    logger.info("Database connection terminated");
+                }
+                catch (Exception e) { /* ignore close errors */ }
+            }
+        }
 
 		return "generate";
 		

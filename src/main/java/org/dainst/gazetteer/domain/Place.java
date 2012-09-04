@@ -50,13 +50,13 @@ public class Place {
 	private Set<Place> relatedPlaces = new HashSet<Place>();
 	
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, orphanRemoval=true)
-	private Set<Comment> comments;
+	private Set<Comment> comments = new HashSet<Comment>();
 	
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, orphanRemoval=true)
-	private Set<Tag> tags;
+	private Set<Tag> tags = new HashSet<Tag>();
 	
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, orphanRemoval=true)
-	private Set<Identifier> ids;
+	private Set<Identifier> ids = new HashSet<Identifier>();
 
 	@Version
 	private Date lastModified;
