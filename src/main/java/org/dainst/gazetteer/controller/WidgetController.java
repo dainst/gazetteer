@@ -70,10 +70,16 @@ public class WidgetController {
 	
 	@RequestMapping(value="/widget/pick.js")
 	public ModelAndView pickPlace(
-			@RequestParam String callback) {
+			@RequestParam String callback,
+			@RequestParam(required=false) String name,
+			@RequestParam(required=false) String id,
+			@RequestParam(required=false, value="class") String cssClass) {
 		
 		ModelAndView mav = new ModelAndView("widget/pick");		
 		mav.addObject("callback", callback);
+		mav.addObject("name", name);
+		mav.addObject("id", id);
+		mav.addObject("cssClass", cssClass);
 		return mav;
 		
 	}

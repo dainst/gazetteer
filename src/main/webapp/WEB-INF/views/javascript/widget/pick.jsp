@@ -9,7 +9,7 @@
 <c:set var="html">
 	<span class="gaz-pick">
 		<div class="input-append">
-			<input type="text" class="gaz-result" autocomplete="off" disabled size="50">
+			<input type="text" class="gaz-result ${cssClass}" name="${name}" id="${id}" autocomplete="off" disabled size="50">
 			<button class="btn" type="button">
 				<i class="icon-search"></i><i class="icon-globe"></i>
 			</button>
