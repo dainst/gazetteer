@@ -214,23 +214,35 @@
 			<h3><s:message code="domain.place.parent" text="Übergeordneter Ort" /></h3>
 			<div class="control-group">
 				<label class="control-label">
-					<s:message code="domain.place" text="Ort" />
+					<s:message code="domain.place" text="domain.place" />
 				</label>
 				<div class="controls">
-					<form:input path="parent" class="input-small" />
+					<gaz:pick name="parent" id="parent" class="input-xlarge" value="${baseUri}place/${parent.id}" returnType="uri"></gaz:pick>
 				</div>
 			</div>
 			
 			<!-- children -->
-			<h3><s:message code="domain.place.children" text="Untergeordnete Orte" /></h3>
+			<h3><s:message code="domain.place.children" text="domain.place.children" /></h3>
 			<c:forEach var="child" items="${place.children}" varStatus="loopStatus">
-				<label class="control-label">
-					<s:message code="domain.place" text="Ort" />
-				</label>
-				<div class="controls">
-					<form:input path="child.id" class="input-small" />
+				<div class="control-group">
+					<label class="control-label">
+						<s:message code="domain.place" text="domain.place" />
+					</label>
+					<div class="controls">
+						<form:input path="children[${loopStatus.index}]" class="input-xlarge disabled" />
+						<div class="btn btn-danger minus">-</div>
+					</div>
 				</div>
 			</c:forEach>
+			<div class="control-group">
+				<label class="control-label">
+					<s:message code="domain.place" text="domain.place" />
+				</label>
+				<div class="controls">
+					<gaz:pick name="children[]" class="input-xlarge disabled" disabled="true"></gaz:pick>
+					<div class="btn btn-primary plus">+</div>
+				</div>
+			</div>
 			
 			
 		</fieldset>

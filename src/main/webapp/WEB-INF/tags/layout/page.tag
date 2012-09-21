@@ -13,6 +13,7 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script type="text/javascript" src='http://maps.google.com/maps/api/js?sensor=false'></script>
 <script src="/gazetteer/resources/js/custom.js"></script>
+<script src="/gazetteer/widget/lib.js"></script>
 <script src='/gazetteer/resources/js/jquery.locationpicker.js'></script>
 <script src="/gazetteer/resources/bootstrap/js/bootstrap-dropdown.js"></script>
 <script src="/gazetteer/resources/bootstrap/js/bootstrap-alert.js"></script>

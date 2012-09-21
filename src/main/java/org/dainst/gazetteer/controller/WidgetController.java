@@ -73,13 +73,17 @@ public class WidgetController {
 			@RequestParam String callback,
 			@RequestParam(required=false) String name,
 			@RequestParam(required=false) String id,
-			@RequestParam(required=false, value="class") String cssClass) {
+			@RequestParam(required=false, value="class") String cssClass,
+			@RequestParam(required=false) String value,
+			@RequestParam(defaultValue="false") boolean disabled) {
 		
 		ModelAndView mav = new ModelAndView("widget/pick");		
 		mav.addObject("callback", callback);
 		mav.addObject("name", name);
 		mav.addObject("id", id);
 		mav.addObject("cssClass", cssClass);
+		mav.addObject("value", value);
+		mav.addObject("disabled", disabled);
 		return mav;
 		
 	}

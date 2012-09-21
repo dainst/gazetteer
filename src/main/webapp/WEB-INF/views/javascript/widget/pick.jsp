@@ -9,10 +9,19 @@
 <c:set var="html">
 	<span class="gaz-pick">
 		<div class="input-append">
-			<input type="text" class="gaz-result ${cssClass}" name="${name}" id="${id}" autocomplete="off" disabled size="50">
-			<button class="btn" type="button">
-				<i class="icon-search"></i><i class="icon-globe"></i>
-			</button>
+			<input type="text" class="gaz-result ${cssClass}" name="${name}" id="${id}" value="${value}" autocomplete="off" disabled size="50">
+			<c:choose>
+				<c:when test="${disabled}">
+					<button class="btn disabled" disabled type="button">
+						<i class="icon-search"></i><i class="icon-globe"></i>
+					</button>
+				</c:when>
+				<c:otherwise>
+					<button class="btn" type="button">
+						<i class="icon-search"></i><i class="icon-globe"></i>
+					</button>
+				</c:otherwise>
+			</c:choose>
 		</div>
 		<div class="gaz-pick-overlay" style="display:none;">
 			<div class="navbar navbar-inverse">

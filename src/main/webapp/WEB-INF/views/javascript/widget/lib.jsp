@@ -78,9 +78,11 @@ function main() {
         	$('gaz\\:pick').each(function(index, pickElem) {
         		var returnType = $(pickElem).attr("returnType");
         		var jsonp_url = "${baseUri}widget/pick.js?callback=?";
-				jsonp_url += "&name=" + $(pickElem).attr("name");
-				jsonp_url += "&id=" + $(pickElem).attr("id");
-				jsonp_url += "&class=" + $(pickElem).attr("class");
+				if($(pickElem).attr("name")) jsonp_url += "&name=" + $(pickElem).attr("name");
+				if($(pickElem).attr("id")) jsonp_url += "&id=" + $(pickElem).attr("id");
+				if($(pickElem).attr("class")) jsonp_url += "&class=" + $(pickElem).attr("class");
+				if($(pickElem).attr("value")) jsonp_url += "&value=" + $(pickElem).attr("value");
+				if($(pickElem).attr("disabled")) jsonp_url += "&disabled=true";
 		        $.getJSON(jsonp_url, function(data) {
 		        	var decodedHtml = $("<div/>").html(data.html).text();
 		        	var elem = $(decodedHtml);
