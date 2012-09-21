@@ -57,6 +57,9 @@ public class Place {
 	
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, orphanRemoval=true)
 	private Set<Identifier> ids = new HashSet<Identifier>();
+	
+	@ManyToOne
+	private Thesaurus thesaurus;
 
 	@Version
 	private Date lastModified;
@@ -225,6 +228,14 @@ public class Place {
 
 	public void setIdentifiers(Set<Identifier> ids) {
 		this.ids = ids;
+	}
+
+	public Thesaurus getThesaurus() {
+		return thesaurus;
+	}
+
+	public void setThesaurus(Thesaurus thesaurus) {
+		this.thesaurus = thesaurus;
 	}
 	
 }

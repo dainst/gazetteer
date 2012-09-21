@@ -10,10 +10,12 @@ import java.util.Locale;
 import java.util.Random;
 
 import org.dainst.gazetteer.dao.PlaceDao;
+import org.dainst.gazetteer.dao.ThesaurusDao;
 import org.dainst.gazetteer.domain.Identifier;
 import org.dainst.gazetteer.domain.Location;
 import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.PlaceName;
+import org.dainst.gazetteer.domain.Thesaurus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,9 @@ public class HomeController {
 
 	@Autowired
 	private PlaceDao placeDao;
+	
+	@Autowired
+	private ThesaurusDao thesaurusDao;
 
 	@RequestMapping(value="/")
 	public String home() {
@@ -89,17 +94,25 @@ public class HomeController {
             String password = "tosso";
             String url = "jdbc:mysql://arachne.uni-koeln.de/arachne";
             Class.forName ("com.mysql.jdbc.Driver").newInstance ();
-            conn = DriverManager.getConnection (url, userName, password);
+            conn = DriverManager.getConnection(url, userName, password);
             logger.info("Database connection established");
             
+            Thesaurus thesaurus = new Thesaurus();
+            thesaurus.setKey("arachne");
+            thesaurus.setTitle("Arachne");
+            thesaurus.setDescription("This thesaurus contains place information imported from the Arachne database (http://arachne.uni-koeln.de).");
+            thesaurus = thesaurusDao.save(thesaurus);
+            
             Statement s = conn.createStatement ();
-            s.executeQuery ("SELECT PS_OrtID, Stadt, Ort_antik, Longitude, Latitude FROM ort");
+            s.executeQuery ("SELECT PS_OrtID, Stadt, Ort_antik, Longitude, Latitude FROM ort LIMIT 1000");
             ResultSet rs = s.getResultSet ();
             while (rs.next ())
             {
             	Place place = new Place();
+            	place.setThesaurus(thesaurus);
             	place.addName(new PlaceName(rs.getString("Stadt"), "de"));
-            	place.addName(new PlaceName(rs.getString("Ort_antik"), ""));
+            	if (!"".equals(rs.getString("Ort_antik")))
+            		place.addName(new PlaceName(rs.getString("Ort_antik"), ""));
             	place.addLocation(new Location(rs.getDouble("Latitude"), rs.getDouble("Longitude")));
                 place.getIdentifiers().add(new Identifier(rs.getString("PS_OrtID"),"arachne-ort-id"));
                 placeDao.save(place);

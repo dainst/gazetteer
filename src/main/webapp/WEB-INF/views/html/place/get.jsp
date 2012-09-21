@@ -153,6 +153,11 @@ request.setAttribute("places", places);
 							<p>${place.type}</p>
 						</c:if>
 						
+						<c:if test="${!empty(place.thesaurus)}">
+							<h3><s:message code="domain.thesaurus" text="domain.thesaurus" />: </h3>
+							<p>${place.thesaurus.title}</p>
+						</c:if>
+						
 						<c:if test="${!empty(place.identifiers)}">
 							<h3><s:message code="domain.place.identifiers" text="domain.place.identifiers" />:</h3>
 							<ul>

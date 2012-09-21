@@ -128,8 +128,9 @@
 								<thead>
 									<tr>
 										<td>#</td>
-										<td><s:message code="domain.placename.title"/></td>
-										<td><s:message code="domain.place.uri"/></td>
+										<td><s:message code="domain.placename.title" text="domain.placename.title"/></td>
+										<td><s:message code="domain.thesaurus" text="domain.thesaurus"/></td>
+										<td><s:message code="domain.place.uri" text="domain.place.uri"/></td>
 									</tr>
 								</thead>
 								<tbody>
@@ -137,6 +138,7 @@
 										<tr>
 											<td>${place.id}</td>
 											<td><a href="place/${place.id}?limit=${limit}&offset=${offset}&q=${q}&view=${view}">${fn:join(place.namesAsArray, " / ")}</a></td>
+											<td>${place.thesaurus.title}</td>
 											<td>
 												<s:message code="ui.copyToClipboard" var="copyMsg"/>
 												<a href="javascript:window.prompt ('${copyMsg}', '${baseUri}place/${place.id}')"><i class="icon-share"></i></a>

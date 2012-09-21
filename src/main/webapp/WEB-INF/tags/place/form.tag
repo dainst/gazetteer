@@ -130,7 +130,7 @@
 			</c:forEach>
 			<div class="control-group">
 				<label class="control-label">
-					<s:message code="domain.identifier.text" text="domain.identifier.text" />
+					<s:message code="domain.identifier.value" text="domain.identifier.value" />
 				</label>
 				<div class="controls">
 					<input type="text" name="identifiers[].value" class="input-large disabled" disabled>
