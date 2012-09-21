@@ -7,6 +7,7 @@
 
 { 
 	"@id": "${baseUri}place/${place.id}",
+	"gazId": "${place.id}",
 	<c:if test="${place.parent != null}">
 		"parent": "${baseUri}place/${place.parent.id}",
 	</c:if>

@@ -76,6 +76,7 @@ function main() {
         /******* Load HTML for pick elements *******/
         if ($('gaz\\:pick').length) {
         	$('gaz\\:pick').each(function(index, pickElem) {
+        		var returnType = $(pickElem).attr("returnType");
         		var jsonp_url = "${baseUri}widget/pick.js?callback=?";
 		        $.getJSON(jsonp_url, function(data) {
 		        	var decodedHtml = $("<div/>").html(data.html).text();
@@ -104,7 +105,10 @@ function main() {
 			        			}).get().join(' / ');
 			        			var row = $('<div class="gaz-pick-result-row">'+title+'</div>');
 			        			$(row).click(function() {
-			        				$(resultInput).val(place['@id']);
+			        				if(returnType == "uri")
+			        					$(resultInput).val(place['@id']);
+			        				else
+			        					$(resultInput).val(place['gazId']);
 			        				$(overlay).hide();
 			        			});
 			        			resultDiv.append(row);

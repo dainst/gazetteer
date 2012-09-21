@@ -10,6 +10,7 @@ ${callback}({
 		<c:forEach var="place" items="${places}">				
 			{
 				"@id": "${baseUri}place/${place.id}",
+				"gazId": "${place.id}",
 				"names": [
 					<c:forEach var="placename" items="${place.names}" varStatus="status">
 						{ "title": "${placename.title}", "language": "${placename.language}"}
