@@ -135,8 +135,17 @@ request.setAttribute("places", places);
 									<li><a href="${child.id}?limit=${limit}&offset=${offset}&q=${q}&view=${view}">${fn:join(child.namesAsArray, " / ")}</a></li>
 								</c:forEach>
 							</ul>
+						</c:if>					
+						
+						<c:if test="${!empty(place.relatedPlaces)}">
+							<h3><s:message code="domain.place.relatedPlaces" text="domain.place.relatedPlaces" />:</h3>
+							<ul>
+								<c:forEach var="relatedPlace" items="${place.relatedPlaces}">
+									<li><a href="${relatedPlace.id}?limit=${limit}&offset=${offset}&q=${q}&view=${view}">${fn:join(relatedPlace.namesAsArray, " / ")}</a></li>
+								</c:forEach>
+							</ul>
 						</c:if>
-					
+						
 						<h3><s:message code="domain.place.locations" text="domain.place.locations" />:</h3>
 						<ul>
 							<c:forEach var="location" items="${place.locations}">

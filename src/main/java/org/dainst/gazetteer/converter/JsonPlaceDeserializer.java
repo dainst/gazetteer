@@ -65,6 +65,13 @@ public class JsonPlaceDeserializer {
 				if (child != null) place.addChild(child);
 			}
 			
+			// set related places from URIs
+			JsonNode relatedPlacesNode = objectNode.get("relatedPlaces");
+			if (childrenNode != null) for (JsonNode relatedPlaceNode : relatedPlacesNode) {
+				Place relatedPlace = getPlaceForNode(relatedPlaceNode);
+				if (relatedPlace != null) place.addRelatedPlace(relatedPlace);
+			}
+			
 			// set place type
 			if (objectNode.has("type")) {
 				place.setType(objectNode.get("type").asText());

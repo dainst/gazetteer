@@ -16,6 +16,7 @@ import org.dainst.gazetteer.domain.Location;
 import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.PlaceName;
 import org.dainst.gazetteer.domain.Thesaurus;
+import org.dainst.gazetteer.search.ElasticSearchPlaceIndexer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,35 +24,33 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * Handles requests for the application home page.
  */
 @Controller
-public class HomeController {
+public class AdminController {
 
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	private static final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
 	@Autowired
 	private PlaceDao placeDao;
 	
 	@Autowired
 	private ThesaurusDao thesaurusDao;
+	
+	@Autowired
+	private ElasticSearchPlaceIndexer elasticSearchPlaceIndexer;
 
 	@RequestMapping(value="/")
 	public String home() {
 		return "forward:/place";
 	}
 	
-	@RequestMapping(value="/generate", method = RequestMethod.GET)
-	public String home(Locale locale, Model model) {
-
-		Date date = new Date();
-		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
-
-		String formattedDate = dateFormat.format(date);
-
-		model.addAttribute("serverTime", formattedDate );
+	@RequestMapping(value="/admin/generate", method = RequestMethod.GET)
+	@ResponseBody
+	public String generateTestData() {
 		
 		/*Place place2 = new Place();
 		place2.addName(new PlaceName("Köln","de"));
@@ -79,12 +78,13 @@ public class HomeController {
 			placeDao.save(place);		
 		}
 
-		return "generate";
+		return "OK: Generated random places for test purposes.";
 		
 	}
 	
-	@RequestMapping(value="/import", method = RequestMethod.GET)
-	public String importData(Locale locale, Model model) {
+	@RequestMapping(value="/admin/import", method = RequestMethod.GET)
+	@ResponseBody
+	public String importData() {
 
 		Connection conn = null;
 
@@ -138,7 +138,17 @@ public class HomeController {
             }
         }
 
-		return "generate";
+		return "OK: Finished import.";
+		
+	}
+	
+	@RequestMapping(value="/admin/reindex")
+	@ResponseBody
+	public String reindex() {
+		
+		elasticSearchPlaceIndexer.reindexAllPlaces();
+		
+		return "OK: reindexing started";
 		
 	}
 

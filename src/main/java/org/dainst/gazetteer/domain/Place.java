@@ -43,10 +43,10 @@ public class Place {
 	@ManyToOne
 	private Place parent;
 
-	@OneToMany(mappedBy="parent", fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="parent", cascade={CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.EAGER)
 	private Set<Place> children = new HashSet<Place>();
 	
-	@ManyToMany
+	@ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.EAGER)
 	private Set<Place> relatedPlaces = new HashSet<Place>();
 	
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, orphanRemoval=true)
@@ -204,6 +204,11 @@ public class Place {
 
 	public void setRelatedPlaces(Set<Place> relatedPlaces) {
 		this.relatedPlaces = relatedPlaces;
+	}
+
+	public void addRelatedPlace(Place relatedPlace) {
+		relatedPlaces.add(relatedPlace);
+		relatedPlace.getRelatedPlaces().add(relatedPlace);
 	}
 
 	public Set<Comment> getComments() {

@@ -17,13 +17,20 @@
 
 .gaz-pick-overlay {
 	position: relative;
+	z-index: 2000;
+	display: inline;
+}
+
+.gaz-pick-overlay-inner {
+	position: absolute;
 	width: 400px;
-	border: 1px solid #CCC;
+	border: 1px solid lightgrey;
 }
 
 .gaz-pick-results {
 	height: 260px;
 	overflow: auto;
+	background-color: white;
 }
 
 .gaz-pick-result-row {

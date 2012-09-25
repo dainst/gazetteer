@@ -217,7 +217,14 @@
 					<s:message code="domain.place" text="domain.place" />
 				</label>
 				<div class="controls">
-					<gaz:pick name="parent" id="parent" class="input-xlarge" value="${baseUri}place/${parent.id}" returnType="uri"></gaz:pick>
+					<c:choose>
+						<c:when test="${parent.id}">
+							<gaz:pick name="parent" id="parent" class="input-xlarge" value="${baseUri}place/${parent.id}" returnType="uri"></gaz:pick>
+						</c:when>
+						<c:otherwise>
+							<gaz:pick name="parent" id="parent" class="input-xlarge" value="" returnType="uri"></gaz:pick>
+						</c:otherwise>
+					</c:choose>
 				</div>
 			</div>
 			
@@ -229,7 +236,7 @@
 						<s:message code="domain.place" text="domain.place" />
 					</label>
 					<div class="controls">
-						<form:input path="children[${loopStatus.index}]" class="input-xlarge disabled" />
+						<gaz:pick name="children[${loopStatus.index}]" value="${baseUri}place/${child.id}" class="input-xlarge" returnType="uri"></gaz:pick>
 						<div class="btn btn-danger minus">-</div>
 					</div>
 				</div>
@@ -239,7 +246,30 @@
 					<s:message code="domain.place" text="domain.place" />
 				</label>
 				<div class="controls">
-					<gaz:pick name="children[]" class="input-xlarge disabled" disabled="true"></gaz:pick>
+					<gaz:pick name="children[]" name="children[]" class="input-xlarge disabled" disabled="true" returnType="uri"></gaz:pick>
+					<div class="btn btn-primary plus">+</div>
+				</div>
+			</div>
+			
+			<!-- related places -->
+			<h3><s:message code="domain.place.relatedPlaces" text="domain.place.relatedPlaces" /></h3>
+			<c:forEach var="relatedPlace" items="${place.relatedPlaces}" varStatus="loopStatus">
+				<div class="control-group">
+					<label class="control-label">
+						<s:message code="domain.place" text="domain.place" />
+					</label>
+					<div class="controls">
+						<gaz:pick name="relatedPlaces[${loopStatus.index}]" value="${baseUri}place/${relatedPlace.id}" class="input-xlarge" returnType="uri"></gaz:pick>
+						<div class="btn btn-danger minus">-</div>
+					</div>
+				</div>
+			</c:forEach>
+			<div class="control-group">
+				<label class="control-label">
+					<s:message code="domain.place" text="domain.place" />
+				</label>
+				<div class="controls">
+					<gaz:pick name="relatedPlaces[]" name="relatedPlaces[]" class="input-xlarge disabled" disabled="true" returnType="uri"></gaz:pick>
 					<div class="btn btn-primary plus">+</div>
 				</div>
 			</div>
@@ -265,20 +295,27 @@ $("#place-form .minus").click(function() {
 
 $("#place-form .plus").click(function() {
 	var oldGroup = $(this).closest(".control-group");
-	var newGroup = oldGroup.clone().hide();
+	var newGroup = oldGroup.clone(true).hide();
 	oldGroup.before(newGroup);
-	newGroup.find(".plus").toggleClass("plus minus btn-primary btn-danger").html("-").click(function() {
+	newGroup.find(".plus").toggleClass("plus minus btn-primary btn-danger").unbind().html("-").click(function() {
 		$(this).closest(".control-group").slideUp("normal", function() { $(this).remove(); });
 	});
 	newGroup.find("input, select, button, textarea").toggleClass("disabled").removeAttr("disabled");
-	var indices = {};
+	var indices = {
+		"names": 0,
+		"locations": 0,
+		"identifiers": 0,
+		"comments": 0,
+		"tags": 0,
+		"children": 0,
+		"relatedPlaces": 0
+	};
 	$("#place-form .control-group").each(function() {
 		var name = $(this).find("input, textarea").first().attr("name");
 		if (name.indexOf("[") == -1) return true;
 		var obj = name.substring(0,name.indexOf("["));
 		$(this).find("input:not(.disabled), select:not(.disabled), textarea:not(.disabled)").each(function() {
-			if (indices[obj] == undefined) indices[obj] = 0;
-			$(this).attr("name",$(this).attr("name").replace(/\[.?\]/,"["+(indices[obj])+"]"));
+			$(this).attr("name",$(this).attr("name").replace(/\[.?\]/,"["+indices[obj].toString()+"]"));
 		});
 		indices[obj]++;
 	});
@@ -296,7 +333,9 @@ $("#place-form").submit(function(event) {
 		"locations": [],
 		"identifiers": [],
 		"comments": [],
-		"tags": []
+		"tags": [],
+		"children": [],
+		"relatedPlaces": []
 	};
 	
 	var uri = form.find('input[name="uri"]').val();
@@ -313,6 +352,8 @@ $("#place-form").submit(function(event) {
 				if (place[obj][index] == undefined) place[obj][index] = {};
 				if (field === "coordinates") {
 					place[obj][index]["coordinates"] = $(input).val().split(",");
+				} else if (field == name) {
+					place[obj][index] = $(input).val();
 				} else {
 					place[obj][index][field] = $(input).val();
 				}

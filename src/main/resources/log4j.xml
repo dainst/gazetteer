@@ -12,10 +12,10 @@
 	
 	<!-- Application Loggers -->
 	<logger name="org.dainst.gazetteer">
-		<level value="debug" />
+		<level value="info" />
 	</logger>
-	<logger name="org.dainst.gazetteer.converter">
-		<level value="debug" />
+	<logger name="org.dainst.gazetteer.search">
+		<level value="trace" />
 	</logger>
 
 	<!-- Root Logger -->

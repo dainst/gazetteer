@@ -86,10 +86,9 @@ function main() {
 		        $.getJSON(jsonp_url, function(data) {
 		        	var decodedHtml = $("<div/>").html(data.html).text();
 		        	var elem = $(decodedHtml);
-		        	var resultInput = $(elem.find('input.gaz-result'));
 		        	$(pickElem).replaceWith(elem);
-		        	var overlay = $(elem).find('.gaz-pick-overlay');
-		           	$(elem.find('button')).click(function(event) {
+		           	$(elem.find('button.gaz-pick-button')).click(function(event) {
+		           		var overlay = $(this).closest('.gaz-pick').find('.gaz-pick-overlay');
 		        		$(overlay).show();
 		        		$(overlay).click(function(event) { event.stopPropagation(); });
 		        		$('html').click(function() { overlay.hide(); });
@@ -97,11 +96,12 @@ function main() {
 		        	});
 		        	$(elem.find('input.search-query')).keyup(function() {
 	        			var jsonp_url = "${baseUri}widget/search.js?limit=20&q="+$(this).val();
+	        			var queryElem = $(this);
 			        	$.ajax({
 			        		"url": jsonp_url,
 			        		"dataType": "jsonp"
 			        	}).done(function(data) {
-			        		var resultDiv = elem.find('.gaz-pick-results');
+			        		var resultDiv = queryElem.closest('.gaz-pick').find('.gaz-pick-results');
 			        		resultDiv.empty();
 			        		$(data.places).each(function() {
 			        			var place = this;
@@ -111,10 +111,10 @@ function main() {
 			        			var row = $('<div class="gaz-pick-result-row">'+title+'</div>');
 			        			$(row).click(function() {
 			        				if(returnType == "uri")
-			        					$(resultInput).val(place['@id']);
+			        					$(this).closest('.gaz-pick').find('input.gaz-result').val(place['@id']);
 			        				else
-			        					$(resultInput).val(place['gazId']);
-			        				$(overlay).hide();
+			        					$(this).closest('.gaz-pick').find('input.gaz-result').val(place['gazId']);
+			        				$(this).closest('.gaz-pick').find('.gaz-pick-overlay').hide();
 			        			});
 			        			resultDiv.append(row);
 			        		});

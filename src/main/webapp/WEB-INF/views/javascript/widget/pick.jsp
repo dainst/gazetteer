@@ -12,29 +12,31 @@
 			<input type="text" class="gaz-result ${cssClass}" name="${name}" id="${id}" value="${value}" autocomplete="off" disabled size="50">
 			<c:choose>
 				<c:when test="${disabled}">
-					<button class="btn disabled" disabled type="button">
+					<button class="btn disabled gaz-pick-button" disabled type="button">
 						<i class="icon-search"></i><i class="icon-globe"></i>
 					</button>
 				</c:when>
 				<c:otherwise>
-					<button class="btn" type="button">
+					<button class="btn gaz-pick-button" type="button">
 						<i class="icon-search"></i><i class="icon-globe"></i>
 					</button>
 				</c:otherwise>
 			</c:choose>
 		</div>
 		<div class="gaz-pick-overlay" style="display:none;">
-			<div class="navbar navbar-inverse">
-				<div class="navbar-inner">
-					<form class="navbar-search pull-left" action="/gazetteer/place" autocomplete="off">
-						<s:message code="ui.pick.search" text="Suche" var="titleSearch"/>
-		 				<input type="text" class="search-query" placeholder="${titleSearch}" name="q" autocomplete="off">
-		 				<i class="icon-search icon-white"></i>
-					</form>
+			<div class="gaz-pick-overlay-inner">
+				<div class="navbar navbar-inverse">
+					<div class="navbar-inner">
+						<form class="navbar-search pull-left" action="/gazetteer/place" autocomplete="off">
+							<s:message code="ui.pick.search" text="Suche" var="titleSearch"/>
+			 				<input type="text" class="search-query" placeholder="${titleSearch}" name="q" autocomplete="off">
+			 				<i class="icon-search icon-white"></i>
+						</form>
+					</div>
 				</div>
-			</div>
-			<div class="gaz-pick-results">
-			
+				<div class="gaz-pick-results">
+				
+				</div>
 			</div>
 		</div>
 	</span>
