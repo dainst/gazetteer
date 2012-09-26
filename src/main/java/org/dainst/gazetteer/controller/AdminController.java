@@ -67,18 +67,24 @@ public class AdminController {
 		placeDao.save(place3);		
 		logger.info("saved codarchlab");*/
 		
-		Random random = new Random();
-		for (int i = 0; i < 768; i++) {
-			double d1 = random.nextDouble();
-			double d2 = random.nextDouble();
-			Place place = new Place();
-			place.addName(new PlaceName("Ort " + i,"de"));
-			place.addName(new PlaceName("Place " + i,"en"));			
-			place.addLocation(new Location(d1*160-80, d2*360-180));
-			placeDao.save(place);		
-		}
+//		Random random = new Random();
+//		for (int i = 0; i < 768; i++) {
+//			double d1 = random.nextDouble();
+//			double d2 = random.nextDouble();
+//			Place place = new Place();
+//			place.addName(new PlaceName("Ort " + i,"de"));
+//			place.addName(new PlaceName("Place " + i,"en"));			
+//			place.addLocation(new Location(d1*160-80, d2*360-180));
+//			placeDao.save(place);		
+//		}
+		
+		Thesaurus thesaurus = new Thesaurus();
+        thesaurus.setKey("albania");
+        thesaurus.setTitle("Albania");
+        thesaurus.setDescription("This thesaurus contains place information imported from the albanian folder structure.");
+        thesaurus = thesaurusDao.save(thesaurus);
 
-		return "OK: Generated random places for test purposes.";
+		return "OK.";
 		
 	}
 	
