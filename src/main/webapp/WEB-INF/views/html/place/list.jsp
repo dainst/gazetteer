@@ -129,6 +129,10 @@
 									<tr>
 										<td>#</td>
 										<td><s:message code="domain.placename.title" text="domain.placename.title"/></td>
+										<c:if test="${!fn:contains(view, 'map')}">
+											<td><s:message code="domain.place.type" text="domain.place.type"/></td>
+											<td><s:message code="domain.location.coordinates"/></td>
+										</c:if>
 										<td><s:message code="domain.thesaurus" text="domain.thesaurus"/></td>
 										<td><s:message code="domain.place.uri" text="domain.place.uri"/></td>
 									</tr>
@@ -138,6 +142,15 @@
 										<tr>
 											<td>${place.id}</td>
 											<td><a href="place/${place.id}?limit=${limit}&offset=${offset}&q=${q}&view=${view}">${fn:join(place.namesAsArray, " / ")}</a></td>
+											<c:if test="${!fn:contains(view, 'map')}">
+												<td>${place.type}</td>
+												<td>
+													<c:forEach var="location" items="${place.locations}" varStatus="status">
+														${location.lat}, ${location.lng}
+														<c:if test="${status.count lt fn:length(place.locations)}">,</c:if>
+													</c:forEach>
+												</td>
+											</c:if>
 											<td>${place.thesaurus.title}</td>
 											<td>
 												<s:message code="ui.copyToClipboard" var="copyMsg"/>

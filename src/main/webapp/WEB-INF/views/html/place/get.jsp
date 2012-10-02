@@ -125,14 +125,28 @@ request.setAttribute("places", places);
 						
 						<c:if test="${place.parent != null}">
 							<h3><s:message code="domain.place.parent" text="domain.place.parent" />:</h3>	
-							<ul><li><a href="${place.parent.id}?limit=${limit}&offset=${offset}&q=${q}&view=${view}">${fn:join(place.parent.namesAsArray, " / ")}</a></li></ul>
+							<ul>
+								<li>
+									<a href="${place.parent.id}?limit=${limit}&offset=${offset}&q=${q}&view=${view}">${fn:join(place.parent.namesAsArray, " / ")}
+										<c:if test="${place.parent.type != null}">
+											<em>(${place.parent.type})</em>
+										</c:if>
+									</a>
+								</li>
+							</ul>
 						</c:if>
 						
 						<c:if test="${!empty(place.children)}">
 							<h3><s:message code="domain.place.children" text="domain.place.children" />:</h3>
 							<ul>
 								<c:forEach var="child" items="${place.children}">
-									<li><a href="${child.id}?limit=${limit}&offset=${offset}&q=${q}&view=${view}">${fn:join(child.namesAsArray, " / ")}</a></li>
+									<li>
+										<a href="${child.id}?limit=${limit}&offset=${offset}&q=${q}&view=${view}">${fn:join(child.namesAsArray, " / ")}
+											<c:if test="${child.type != null}">
+												<em>(${child.type})</em>
+											</c:if>
+										</a>
+									</li>
 								</c:forEach>
 							</ul>
 						</c:if>					
@@ -141,7 +155,13 @@ request.setAttribute("places", places);
 							<h3><s:message code="domain.place.relatedPlaces" text="domain.place.relatedPlaces" />:</h3>
 							<ul>
 								<c:forEach var="relatedPlace" items="${place.relatedPlaces}">
-									<li><a href="${relatedPlace.id}?limit=${limit}&offset=${offset}&q=${q}&view=${view}">${fn:join(relatedPlace.namesAsArray, " / ")}</a></li>
+									<li>
+										<a href="${relatedPlace.id}?limit=${limit}&offset=${offset}&q=${q}&view=${view}">${fn:join(relatedPlace.namesAsArray, " / ")}
+											<c:if test="${relatedPlace.type != null}">
+												<em>(${relatedPlace.type})</em>
+											</c:if>	
+										</a>
+									</li>
 								</c:forEach>
 							</ul>
 						</c:if>
