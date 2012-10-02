@@ -66,5 +66,7 @@
 	<context:property-placeholder location="WEB-INF/*.properties" />
 	
 	<import resource="elasticsearch-context.xml" />
+	
+	<import resource="harvesting-context.xml" />
 
 </beans>

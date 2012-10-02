@@ -9,13 +9,16 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
 
+import org.dainst.gazetteer.dao.HarvesterDefinitionDao;
 import org.dainst.gazetteer.dao.PlaceDao;
 import org.dainst.gazetteer.dao.ThesaurusDao;
+import org.dainst.gazetteer.domain.HarvesterDefinition;
 import org.dainst.gazetteer.domain.Identifier;
 import org.dainst.gazetteer.domain.Location;
 import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.PlaceName;
 import org.dainst.gazetteer.domain.Thesaurus;
+import org.dainst.gazetteer.harvest.ArachneHarvester;
 import org.dainst.gazetteer.search.ElasticSearchPlaceIndexer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +44,9 @@ public class AdminController {
 	private ThesaurusDao thesaurusDao;
 	
 	@Autowired
+	private HarvesterDefinitionDao harvesterDefinitionDao;
+	
+	@Autowired
 	private ElasticSearchPlaceIndexer elasticSearchPlaceIndexer;
 
 	@RequestMapping(value="/")
@@ -52,20 +58,20 @@ public class AdminController {
 	@ResponseBody
 	public String generateTestData() {
 		
-		/*Place place2 = new Place();
-		place2.addName(new PlaceName("Köln","de"));
-		place2.addName(new PlaceName("Cologne","en"));
-		place2.addLocation(new Location(50.937527,6.960268));
-		placeDao.save(place2);		
-		logger.info("saved cologne");
-		
-		Place place3 = new Place();
-		place3.setParent(place2);
-		place3.addName(new PlaceName("Arbeitsstelle für digitale Archäologie","de"));
-		place3.addName(new PlaceName("Cologne Digital Archaeology Lab","en"));
-		place3.addLocation(new Location(50.925100, 6.925767));
-		placeDao.save(place3);		
-		logger.info("saved codarchlab");*/
+//		Place place2 = new Place();
+//		place2.addName(new PlaceName("Köln","de"));
+//		place2.addName(new PlaceName("Cologne","en"));
+//		place2.addLocation(new Location(50.937527,6.960268));
+//		placeDao.save(place2);		
+//		logger.info("saved cologne");
+//		
+//		Place place3 = new Place();
+//		place3.setParent(place2);
+//		place3.addName(new PlaceName("Arbeitsstelle für digitale Archäologie","de"));
+//		place3.addName(new PlaceName("Cologne Digital Archaeology Lab","en"));
+//		place3.addLocation(new Location(50.925100, 6.925767));
+//		placeDao.save(place3);		
+//		logger.info("saved codarchlab");
 		
 //		Random random = new Random();
 //		for (int i = 0; i < 768; i++) {
@@ -78,11 +84,17 @@ public class AdminController {
 //			placeDao.save(place);		
 //		}
 		
-		Thesaurus thesaurus = new Thesaurus();
-        thesaurus.setKey("albania");
-        thesaurus.setTitle("Albania");
-        thesaurus.setDescription("This thesaurus contains place information imported from the albanian folder structure.");
-        thesaurus = thesaurusDao.save(thesaurus);
+//		Thesaurus thesaurus = new Thesaurus();
+//        thesaurus.setKey("albania");
+//        thesaurus.setTitle("Albania");
+//        thesaurus.setDescription("This thesaurus contains place information imported from the albanian folder structure.");
+//        thesaurus = thesaurusDao.save(thesaurus);
+		
+		HarvesterDefinition def = new HarvesterDefinition();
+		def.setName("test");
+		def.setHarvesterType(ArachneHarvester.class);
+		def.setCronExpression("* * * * *");
+		harvesterDefinitionDao.save(def);
 
 		return "OK.";
 		

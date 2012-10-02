@@ -66,6 +66,8 @@ public class Place {
 	
 	private Date created;
 	
+	private boolean needsReview = false;
+	
 	private boolean deleted = false;
 	
 	public Place() {
@@ -241,6 +243,14 @@ public class Place {
 
 	public void setThesaurus(Thesaurus thesaurus) {
 		this.thesaurus = thesaurus;
+	}
+
+	public boolean isNeedsReview() {
+		return needsReview;
+	}
+
+	public void setNeedsReview(boolean needsReview) {
+		this.needsReview = needsReview;
 	}
 	
 }
