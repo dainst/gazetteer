@@ -13,7 +13,7 @@
 	transactions are closed before other aspects (such as indexing) run -->
 	<tx:annotation-driven transaction-manager="transactionManager" order="100" />
 
-	<bean id="entityManagerFactory"
+	<bean id="entityManagerFactory" name="entityManagerFactory"
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 		<property name="packagesToScan" value="org.dainst.gazetteer.domain" />

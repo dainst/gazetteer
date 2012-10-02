@@ -40,13 +40,13 @@ public class Place {
 	@OneToMany(mappedBy="place", cascade=CascadeType.ALL, fetch=FetchType.EAGER, orphanRemoval=true)
 	private Set<Location> locations = new HashSet<Location>();
 
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.LAZY)
 	private Place parent;
 
-	@OneToMany(mappedBy="parent", cascade={CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="parent", cascade={CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY)
 	private Set<Place> children = new HashSet<Place>();
 	
-	@ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.EAGER)
+	@ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY)
 	private Set<Place> relatedPlaces = new HashSet<Place>();
 	
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, orphanRemoval=true)

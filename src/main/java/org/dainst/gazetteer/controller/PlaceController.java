@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -120,7 +121,7 @@ public class PlaceController {
 		Locale locale = requestContext.getLocale();
 
 		Place place = placeDao.get(placeId);
-		if (place != null) {
+		if (place != null) {			
 			ModelAndView mav = new ModelAndView("place/get");
 			if (layout != null) {
 				mav.setViewName("place/"+layout);
