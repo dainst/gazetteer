@@ -1,5 +1,6 @@
 package org.dainst.gazetteer.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -73,7 +74,7 @@ public class PlaceController {
 		
 		logger.debug("Searching places with query: " + q + " and limit " + limit + ", offset " + offset);
 		
-		ElasticSearchPlaceQuery query = new ElasticSearchPlaceQuery(elasticSearchServer.getClient(), jsonPlaceDeserializer);
+		ElasticSearchPlaceQuery query = new ElasticSearchPlaceQuery(elasticSearchServer.getClient());
 		if (q != null) {
 			if ("true".equals(fuzzy)) query.fuzzySearch(q);
 			else query.metaSearch(q);
@@ -83,9 +84,16 @@ public class PlaceController {
 		query.limit(limit);
 		query.offset(offset);
 		
-		List<Place> places = query.execute();
+		// get ids from elastic search
+		int[] result = query.execute();
 		
-		logger.debug("Querying index returned: " + places);
+		logger.debug("Querying index returned: " + result.length + " places");
+		
+		// get places for the result ids from db
+		List<Place> places = new ArrayList<Place>();
+		for (int i = 0; i < result.length; i++) {
+			places.add(placeDao.get(result[i]));
+		}
 		
 		ModelAndView mav = new ModelAndView("place/list");
 		mav.addObject("places", places);

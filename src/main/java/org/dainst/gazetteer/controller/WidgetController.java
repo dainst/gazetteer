@@ -95,7 +95,7 @@ public class WidgetController {
 			@RequestParam(defaultValue="10") int limit,
 			@RequestParam(defaultValue="0") int offset) {
 		
-		ElasticSearchPlaceQuery query = new ElasticSearchPlaceQuery(elasticSearchServer.getClient(), jsonPlaceDeserializer);
+		ElasticSearchPlaceQuery query = new ElasticSearchPlaceQuery(elasticSearchServer.getClient());
 		if (q != null) {
 			query.fuzzyLikeThisSearch(q, "names.title");
 		} else {
@@ -104,7 +104,14 @@ public class WidgetController {
 		query.limit(limit);
 		query.offset(offset);
 		
-		List<Place> places = query.execute();
+		// get ids from elastic search
+		int[] result = query.execute();
+		
+		// get places for the result ids from db
+		List<Place> places = new ArrayList<Place>();
+		for (int i = 0; i < result.length; i++) {
+			places.add(placeDao.get(result[i]));
+		}
 		
 		ModelAndView mav = new ModelAndView("widget/search");
 		mav.addObject("places", places);

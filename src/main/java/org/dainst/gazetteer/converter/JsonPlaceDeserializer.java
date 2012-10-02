@@ -1,5 +1,6 @@
 package org.dainst.gazetteer.converter;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -22,6 +23,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -39,6 +42,21 @@ public class JsonPlaceDeserializer {
 	
 	@Autowired
 	private ThesaurusDao thesaurusDao;
+	
+	public Place deserializeLazily(InputStream jsonStream) throws InvalidIdException {
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			ObjectNode objectNode = mapper.readValue(jsonStream, ObjectNode.class);
+			
+			Place place = null;
+			if (objectNode.has("@id")) {
+				place = getPlaceForNode(objectNode.get("@id"));
+			}
+			return place;
+		} catch (Exception e) {
+			throw new InvalidIdException("error while getting id from json", e);
+		}
+	}
 
 	public Place deserialize(InputStream jsonStream) throws HttpMessageNotReadableException {
 		
