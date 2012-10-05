@@ -9,5 +9,7 @@ public interface Harvester {
 	public void harvest(Date date);
 	
 	public Place getNextPlace();
+	
+	public void close();
 
 }

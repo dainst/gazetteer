@@ -33,7 +33,7 @@ public class Location {
 	@ManyToOne
 	private Place place;
 	
-	private int confidence;
+	private int confidence = 0;
 
 	@Version
 	private Date lastModified;

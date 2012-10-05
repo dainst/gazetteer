@@ -7,6 +7,7 @@ import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
 import org.dainst.gazetteer.domain.Location;
 import org.dainst.gazetteer.domain.Place;
@@ -107,6 +108,25 @@ public class PlaceDao {
 				.setFirstResult(offset)
 				.setMaxResults(limit)
 				.getResultList();		
+	}
+	
+	public class Query {
+				
+		private TypedQuery<Place> query;
+
+		public Query(String queryString) {
+			query = em.createQuery(queryString, Place.class);
+		}
+		
+		public Query setParameter(String key, String val) {
+			query.setParameter(key, val);
+			return this;
+		}
+		
+		public List<Place> getResultList() {
+			return query.getResultList();
+		}
+		
 	}
 
 }

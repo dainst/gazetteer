@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -88,6 +89,10 @@ public class Place {
 
 	public void setUris(Set<String> uris) {
 		this.uris = uris;
+	}
+	
+	public void addUri(String uri) {
+		this.uris.add(uri);
 	}
 
 	public List<PlaceName> getNames() {
@@ -220,6 +225,10 @@ public class Place {
 	public void setComments(Set<Comment> comments) {
 		this.comments = comments;
 	}
+	
+	public void addComment(Comment comment) {
+		this.comments.add(comment);
+	}
 
 	public Set<Tag> getTags() {
 		return tags;
@@ -228,6 +237,10 @@ public class Place {
 	public void setTags(Set<Tag> tags) {
 		this.tags = tags;
 	}
+	
+	public void addTag(Tag tag) {
+		this.tags.add(tag);
+	}
 
 	public Set<Identifier> getIdentifiers() {
 		return ids;
@@ -235,6 +248,10 @@ public class Place {
 
 	public void setIdentifiers(Set<Identifier> ids) {
 		this.ids = ids;
+	}
+	
+	public void addIdentifier(Identifier id) {
+		this.ids.add(id);
 	}
 
 	public Thesaurus getThesaurus() {

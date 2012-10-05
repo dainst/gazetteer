@@ -3,6 +3,7 @@ package org.dainst.gazetteer.domain;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Identifier {
@@ -10,6 +11,7 @@ public class Identifier {
 	private long id;
 	private String value;	
 	private String context;
+	private Place place;
 	
 	public Identifier() {
 		
@@ -44,6 +46,15 @@ public class Identifier {
 	
 	public void setContext(String context) {
 		this.context = context;
+	}
+	
+	@ManyToOne
+	public Place getPlace() {
+		return place;
+	}
+
+	public void setPlace(Place place) {
+		this.place = place;
 	}
 	
 }

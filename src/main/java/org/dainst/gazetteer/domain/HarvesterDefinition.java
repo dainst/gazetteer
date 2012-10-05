@@ -2,6 +2,7 @@ package org.dainst.gazetteer.domain;
 
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -18,6 +19,8 @@ public class HarvesterDefinition {
 	private Date lastHarvestedDate;
 	
 	private String cronExpression;
+	
+	private boolean running = false;
 	
 	private Class<? extends Harvester> harvesterType;
 	
@@ -59,6 +62,14 @@ public class HarvesterDefinition {
 
 	public void setHarvesterType(Class<? extends Harvester> harvesterType) {
 		this.harvesterType = harvesterType;
+	}
+
+	public boolean isRunning() {
+		return running;
+	}
+
+	public void setRunning(boolean running) {
+		this.running = running;
 	}
 
 }

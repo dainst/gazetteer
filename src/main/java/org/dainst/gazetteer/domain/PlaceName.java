@@ -22,7 +22,7 @@ public class PlaceName {
 	
 	private String script;
 	
-	private boolean modern;
+	private boolean modern = true;
 	
 	private int ordering = 0;
 
@@ -35,6 +35,11 @@ public class PlaceName {
 	private Date created;
 	
 	public PlaceName() {
+		created = new Date();
+	}
+	
+	public PlaceName(String title) {
+		this.title = title;
 		created = new Date();
 	}
 	

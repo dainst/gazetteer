@@ -84,17 +84,17 @@ public class AdminController {
 //			placeDao.save(place);		
 //		}
 		
-//		Thesaurus thesaurus = new Thesaurus();
-//        thesaurus.setKey("albania");
-//        thesaurus.setTitle("Albania");
-//        thesaurus.setDescription("This thesaurus contains place information imported from the albanian folder structure.");
-//        thesaurus = thesaurusDao.save(thesaurus);
+		Thesaurus thesaurus = new Thesaurus();
+        thesaurus.setKey("arachne");
+        thesaurus.setTitle("Arachne");
+        thesaurus.setDescription("This thesaurus contains place information imported from arachne.");
+        thesaurus = thesaurusDao.save(thesaurus);
 		
-		HarvesterDefinition def = new HarvesterDefinition();
-		def.setName("test");
-		def.setHarvesterType(ArachneHarvester.class);
-		def.setCronExpression("* * * * *");
-		harvesterDefinitionDao.save(def);
+//		HarvesterDefinition def = new HarvesterDefinition();
+//		def.setName("test");
+//		def.setHarvesterType(ArachneHarvester.class);
+//		def.setCronExpression("* * * * *");
+//		harvesterDefinitionDao.save(def);
 
 		return "OK.";
 		
