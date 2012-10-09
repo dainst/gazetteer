@@ -14,8 +14,18 @@
         <property name="localOverride" value="true" />
     </bean>
 
-    <bean id="elasticSearchServer" class="org.dainst.gazetteer.search.ElasticSearchServer"
+    <!-- <bean id="elasticSearchServer" class="org.dainst.gazetteer.search.EmbeddedElasticSearchServer"
           init-method="start" destroy-method="stop">
+        <constructor-arg ref="elasticSearchConfiguration" />
+    </bean> -->
+    
+    <bean id="elasticSearchServer" class="org.dainst.gazetteer.search.RemoteElasticSearchServer"
+          init-method="start" destroy-method="stop">
+    	<constructor-arg>
+    		<map>
+    			<entry key="localhost" value="9300"/>
+    		</map>
+    	</constructor-arg>
         <constructor-arg ref="elasticSearchConfiguration" />
     </bean>
     
