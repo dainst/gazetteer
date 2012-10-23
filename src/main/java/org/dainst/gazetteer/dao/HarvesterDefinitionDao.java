@@ -25,5 +25,11 @@ public class HarvesterDefinitionDao {
 		return em.createQuery("SELECT h from HarvesterDefinition h",
 				HarvesterDefinition.class).getResultList();
 	}
+
+	public HarvesterDefinition getHarvesterDefinitionByName(String name) {
+		return em.createQuery("SELECT h from HarvesterDefinition h WHERE name = :name", 
+				HarvesterDefinition.class).setParameter("name", name)
+				.getSingleResult();
+	}
 	
 }

@@ -30,7 +30,7 @@ public class Place {
 	private long id;
 
 	@ElementCollection(fetch=FetchType.EAGER)
-	private Set<String> uris;
+	private Set<String> uris = new HashSet<String>();
 
 	@OneToMany(mappedBy="place", cascade=CascadeType.ALL, fetch=FetchType.EAGER, orphanRemoval=true)
 	@OrderBy("ordering")
@@ -44,10 +44,10 @@ public class Place {
 	@ManyToOne(fetch=FetchType.LAZY)
 	private Place parent;
 
-	@OneToMany(mappedBy="parent", cascade={CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY)
+	@OneToMany(mappedBy="parent", fetch=FetchType.LAZY)
 	private Set<Place> children = new HashSet<Place>();
 	
-	@ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY)
+	@ManyToMany(fetch=FetchType.LAZY)
 	private Set<Place> relatedPlaces = new HashSet<Place>();
 	
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, orphanRemoval=true)
@@ -56,7 +56,7 @@ public class Place {
 	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, orphanRemoval=true)
 	private Set<Tag> tags = new HashSet<Tag>();
 	
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, orphanRemoval=true)
+	@OneToMany(mappedBy="place", cascade=CascadeType.ALL, fetch=FetchType.EAGER, orphanRemoval=true)
 	private Set<Identifier> ids = new HashSet<Identifier>();
 	
 	@ManyToOne
@@ -268,6 +268,11 @@ public class Place {
 
 	public void setNeedsReview(boolean needsReview) {
 		this.needsReview = needsReview;
+	}
+	
+	public String toString() {
+		return String.format("Place(id: %s, name: %s, type: %s)",
+				getId(), getNames().get(0).getTitle(), getType());
 	}
 	
 }

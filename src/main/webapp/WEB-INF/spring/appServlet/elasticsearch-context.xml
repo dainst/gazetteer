@@ -37,6 +37,11 @@
     <aop:config>
         <!-- this advice will execute around the transactional advice because of the order attribute -->
         <aop:aspect id="addToIndexAspect" ref="elasticSearchPlaceIndexer" order="1">
+            <aop:pointcut id="insert" expression="execution(* org.dainst.gazetteer.dao.PlaceDao.insert(..))" />
+            <aop:after-returning method="addPlaceToIndex" pointcut-ref="insert" returning="place" />
+        </aop:aspect>
+        <!-- this advice will execute around the transactional advice because of the order attribute -->
+        <aop:aspect id="addToIndexAspect" ref="elasticSearchPlaceIndexer" order="1">
             <aop:pointcut id="save" expression="execution(* org.dainst.gazetteer.dao.PlaceDao.save(..))" />
             <aop:after-returning method="addPlaceToIndex" pointcut-ref="save" returning="place" />
         </aop:aspect>

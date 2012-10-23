@@ -45,9 +45,12 @@ public class HarvestingHandler implements Runnable {
 		
 		try {
 			
+			// get current harvesterDefinition from DB
+			harvesterDefinition = harvesterDefinitionDao.getHarvesterDefinitionByName(harvesterDefinition.getName());
+			
 			// prevent multiple instances of the same harvester from being executed simultaneously
-			if (harvesterDefinition.isRunning()) {
-				logger.info("An instance of {} is still running. Skipping execution ...",
+			if (!harvesterDefinition.isEnabled()) {
+				logger.info("Harvester {} is disabled. Skipping execution ...",
 						harvesterDefinition.getHarvesterType().getSimpleName());
 				return;
 			}
@@ -60,7 +63,7 @@ public class HarvestingHandler implements Runnable {
 						harvesterDefinition.getHarvesterType().getSimpleName(), formattedDate);
 			}
 			
-			harvesterDefinition.setRunning(true);
+			harvesterDefinition.setEnabled(false);
 			harvesterDefinitionDao.save(harvesterDefinition);
 			
 			Thesaurus thesaurus = thesaurusDao.getThesaurusByKey(harvesterDefinition.getTargetThesaurus());
@@ -73,32 +76,55 @@ public class HarvestingHandler implements Runnable {
 			
 			while (true) {
 				
-				Place place = harvester.getNextPlace();
-				if (place == null) break;
+				Place candidatePlace = harvester.getNextPlace();
 				
-				Place identifiedPlace = entityIdentifier.identify(place);
+				logger.debug("got place from harvester: {}", candidatePlace);
+				
+				if (candidatePlace == null) break;
+				
+				saveRecursive(candidatePlace, thesaurus);				
+				
+				/*Place identifiedPlace = entityIdentifier.identify(candidatePlace, thesaurus);
 				if (identifiedPlace != null) {
+					logger.info("identified place: {}", candidatePlace.getId());
 					// TODO merge places
-					place = identifiedPlace;
-					logger.info("identified place: {}", place.getId());
-				}
+					for (Place child : candidatePlace.getChildren()) {
+						identifiedPlace.addChild(child);
+					}
+					placeDao.delete(candidatePlace.getId());
+					placeDao.save(identifiedPlace);
+				}*/
 				
-				place.setThesaurus(thesaurus);
-				placeDao.save(place);
-				logger.info("saved place: {}", place.getId());
+				// TODO: beziehungen gerade biegen
+				// bei CascadeType.MERGE werden die children und ihre identifier zu früh gespeichert
+				// ohne gibt es eine TransientObjectException
 				
 			}
 			
 			harvester.close();
 			
 			harvesterDefinition.setLastHarvestedDate(new Date());
-			harvesterDefinition.setRunning(false);
+			harvesterDefinition.setEnabled(true);
 			harvesterDefinitionDao.save(harvesterDefinition);
 			
 		} catch (Exception e) {
-			harvesterDefinition.setRunning(false);
-			harvesterDefinitionDao.save(harvesterDefinition);
+			//harvesterDefinition.setRunning(false);
+			//harvesterDefinitionDao.save(harvesterDefinition);
 			throw new RuntimeException("error while creating harvester", e);
+		}
+		
+	}
+
+	private void saveRecursive(Place candidatePlace, Thesaurus thesaurus) {
+		
+		candidatePlace.setThesaurus(thesaurus);				
+		Place savedPlace = placeDao.save(candidatePlace);
+		logger.info("saved place: {}", savedPlace.getId());
+		
+		if (candidatePlace.getChildren().size() > 0) {
+			for (Place child : candidatePlace.getChildren()) {
+				saveRecursive(child, thesaurus);
+			}
 		}
 		
 	}

@@ -14,15 +14,11 @@
 	<logger name="org.dainst.gazetteer">
 		<level value="info" />
 	</logger>
-	<logger name="org.dainst.gazetteer.search">
+	<logger name="org.dainst.gazetteer.helpers">
 		<level value="trace" />
 	</logger>
 	<logger name="org.dainst.gazetteer.harvest">
 		<level value="trace" />
-	</logger>	
-	
-	<logger name="org.elasticsearch">
-		<level value="debug" />
 	</logger>
 
 	<!-- Root Logger -->

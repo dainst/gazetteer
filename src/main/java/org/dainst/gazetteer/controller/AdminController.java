@@ -4,10 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.text.DateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.Random;
 
 import org.dainst.gazetteer.dao.HarvesterDefinitionDao;
 import org.dainst.gazetteer.dao.PlaceDao;
@@ -24,7 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -84,17 +80,19 @@ public class AdminController {
 //			placeDao.save(place);		
 //		}
 		
-		Thesaurus thesaurus = new Thesaurus();
-        thesaurus.setKey("arachne");
-        thesaurus.setTitle("Arachne");
-        thesaurus.setDescription("This thesaurus contains place information imported from arachne.");
-        thesaurus = thesaurusDao.save(thesaurus);
+//		Thesaurus thesaurus = new Thesaurus();
+//        thesaurus.setKey("arachne");
+//        thesaurus.setTitle("Arachne");
+//        thesaurus.setDescription("This thesaurus contains place information imported from arachne.");
+//        thesaurus = thesaurusDao.save(thesaurus);
 		
-//		HarvesterDefinition def = new HarvesterDefinition();
-//		def.setName("test");
-//		def.setHarvesterType(ArachneHarvester.class);
-//		def.setCronExpression("* * * * *");
-//		harvesterDefinitionDao.save(def);
+		HarvesterDefinition def = new HarvesterDefinition();
+		def.setName("test");
+		def.setHarvesterType(ArachneHarvester.class);
+		def.setTargetThesaurus("arachne");
+		def.setCronExpression("0/10 * * * * *");
+		def.setEnabled(true);
+		harvesterDefinitionDao.save(def);
 
 		return "OK.";
 		
@@ -160,13 +158,61 @@ public class AdminController {
 		
 	}
 	
-	@RequestMapping(value="/admin/reindex")
+	@RequestMapping(value="/admin/reindex", method=RequestMethod.POST)
 	@ResponseBody
 	public String reindex() {
 		
 		elasticSearchPlaceIndexer.reindexAllPlaces();
 		
 		return "OK: reindexing started";
+		
+	}
+	
+	@RequestMapping(value="/admin/resetThesaurus/{key}", method=RequestMethod.POST)
+	@ResponseBody
+	public String resetThesaurus(@PathVariable String key) {
+		
+		Thesaurus thesaurus = thesaurusDao.getThesaurusByKey(key);
+		placeDao.deleteByThesaurus(thesaurus);
+		thesaurusDao.delete(thesaurus);
+		
+		Thesaurus thesaurus2 = new Thesaurus();
+		thesaurus2.setDescription(thesaurus.getDescription());
+		thesaurus2.setKey(key);
+		thesaurus2.setTitle(thesaurus.getTitle());
+		thesaurusDao.save(thesaurus2);
+		
+		return "OK: Reset thesaurus " + key;
+		
+	}
+	
+	@RequestMapping(value="/admin/toggleHarvester/{name}", method=RequestMethod.POST)
+	@ResponseBody
+	public String toggleHarvester(@PathVariable String name) {
+		
+		HarvesterDefinition harvesterDefinition = harvesterDefinitionDao
+				.getHarvesterDefinitionByName(name);
+		harvesterDefinition.setEnabled(!harvesterDefinition.isEnabled());
+		harvesterDefinitionDao.save(harvesterDefinition);
+		
+		return String.format("OK: set %s to enabled = %s",
+				harvesterDefinition.getName(),
+				harvesterDefinition.isEnabled());
+		
+	}
+	
+	@RequestMapping(value="/admin/resetHarvester/{name}", method=RequestMethod.POST)
+	@ResponseBody
+	public String resetHarvester(@PathVariable String name) {
+		
+		HarvesterDefinition harvesterDefinition = harvesterDefinitionDao
+				.getHarvesterDefinitionByName(name);
+		harvesterDefinition.setLastHarvestedDate(null);
+		harvesterDefinition.setEnabled(true);
+		harvesterDefinitionDao.save(harvesterDefinition);
+		
+		return String.format("OK: reset %s",
+				harvesterDefinition.getName());
 		
 	}
 

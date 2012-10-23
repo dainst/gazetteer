@@ -7,11 +7,12 @@ import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 
+import org.dainst.gazetteer.domain.Identifier;
 import org.dainst.gazetteer.domain.Location;
 import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.PlaceName;
+import org.dainst.gazetteer.domain.Thesaurus;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,12 @@ public class PlaceDao {
 	
 	@PersistenceContext
     private EntityManager em;
+	
+	public Place insert(Place place) {
+		em.persist(place);
+		em.refresh(place);
+		return place;
+	}
 	
 	public Place save(Place place) {
         place = em.merge(place);
@@ -46,6 +53,20 @@ public class PlaceDao {
 			return 0;
 		}
 		
+	}
+	
+	public int deleteByThesaurus(Thesaurus thesaurus) {
+		int i = 0;
+		for (Place place : thesaurus.getPlaces()) {
+			em.merge(place);
+			for (Identifier id : place.getIdentifiers()) {
+				em.merge(id);
+				em.remove(id);
+			}
+			em.remove(place);
+			i++;
+		}		
+		return i;
 	}
 	
 	public long setDeleted(long placeId) {
@@ -99,7 +120,7 @@ public class PlaceDao {
 	}
 
 	public Place getPlaceByUri(String uri) {		
-		return (Place) em.createQuery("SELECT p FROM Place p, IN(p.uris) u where u = :uri")
+		return em.createQuery("SELECT p FROM Place p, IN(p.uris) u where u = :uri", Place.class)
 				.setParameter("uri", uri).getSingleResult();		
 	}
 
@@ -110,23 +131,25 @@ public class PlaceDao {
 				.getResultList();		
 	}
 	
-	public class Query {
-				
-		private TypedQuery<Place> query;
-
-		public Query(String queryString) {
-			query = em.createQuery(queryString, Place.class);
-		}
-		
-		public Query setParameter(String key, String val) {
-			query.setParameter(key, val);
-			return this;
-		}
-		
-		public List<Place> getResultList() {
-			return query.getResultList();
-		}
-		
+	public List<Place> getPlacesByNameAndType(String name, String type) {
+		return em.createQuery("SELECT p FROM Place p JOIN p.names n "
+				+ "WHERE p.type = :type AND n.title = :name", Place.class)
+				.setParameter("name", name)
+				.setParameter("type", type)
+				.getResultList();
+	}
+	
+	public List<Place> getPlacesByNameAndTypeIncludingParent(
+			String name, String type, String parentName, String parentType) {
+		return em.createQuery("SELECT place FROM Place place JOIN p.names name "
+				+ "JOIN place.parent parent JOIN parent.names parentName "
+				+ "WHERE place.type = :type AND name.title = :name "
+				+ "AND parent.type = :parent_type AND parentName.title = :parent_name", Place.class)
+				.setParameter("name", name)
+				.setParameter("type", type)
+				.setParameter("parent_name", parentName)
+				.setParameter("parent_type", parentType)
+				.getResultList();
 	}
 
 }

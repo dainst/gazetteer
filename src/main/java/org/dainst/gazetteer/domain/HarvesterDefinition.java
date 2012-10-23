@@ -20,7 +20,7 @@ public class HarvesterDefinition {
 	
 	private String cronExpression;
 	
-	private boolean running = false;
+	private boolean enabled = true;
 	
 	private Class<? extends Harvester> harvesterType;
 	
@@ -64,12 +64,12 @@ public class HarvesterDefinition {
 		this.harvesterType = harvesterType;
 	}
 
-	public boolean isRunning() {
-		return running;
+	public boolean isEnabled() {
+		return enabled;
 	}
 
-	public void setRunning(boolean running) {
-		this.running = running;
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 
 }

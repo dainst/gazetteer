@@ -26,7 +26,7 @@ public class Thesaurus {
 	
 	private String description;
 	
-	@OneToMany(cascade=CascadeType.REMOVE, orphanRemoval=true)
+	@OneToMany(mappedBy="thesaurus", cascade=CascadeType.REMOVE, orphanRemoval=true)
 	private Set<Place> places = new HashSet<Place>();
 
 	@Version
