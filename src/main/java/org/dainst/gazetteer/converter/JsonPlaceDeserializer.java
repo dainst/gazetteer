@@ -1,14 +1,13 @@
 package org.dainst.gazetteer.converter;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.dainst.gazetteer.dao.PlaceDao;
-import org.dainst.gazetteer.dao.ThesaurusDao;
+import org.dainst.gazetteer.dao.PlaceRepository;
+import org.dainst.gazetteer.dao.ThesaurusRepository;
 import org.dainst.gazetteer.domain.Comment;
 import org.dainst.gazetteer.domain.Identifier;
 import org.dainst.gazetteer.domain.Location;
@@ -23,8 +22,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -38,10 +35,10 @@ public class JsonPlaceDeserializer {
 	private String baseUri;
 	
 	@Autowired
-	private PlaceDao placeDao;
+	private PlaceRepository placeDao;
 	
 	@Autowired
-	private ThesaurusDao thesaurusDao;
+	private ThesaurusRepository thesaurusDao;
 	
 	public Place deserializeLazily(InputStream jsonStream) throws InvalidIdException {
 		try {
@@ -75,7 +72,10 @@ public class JsonPlaceDeserializer {
 				if (objectNode.has("@id")) {
 					String placeIdString = objectNode.get("@id").asText().replace(baseUri + "place/", "");
 					logger.debug("read id from uri: {}", placeIdString);
-					place.setId(Long.valueOf(placeIdString).longValue());
+					place.setId(placeIdString);
+				} else {
+					place = placeDao.save(place);
+					logger.debug("created new place with id: {}", place.getId());
 				}
 			}
 			
@@ -83,21 +83,29 @@ public class JsonPlaceDeserializer {
 			JsonNode parentNode = objectNode.get("parent");
 			if (parentNode != null) {
 				Place parent = getPlaceForNode(parentNode);
-				if (parent != null) place.setParent(parent);
+				if (parent != null) {
+					place.setParent(parent.getId());
+					parent.addChild(place.getId());
+				}
 			}
 			
 			// set child places from URIs
 			JsonNode childrenNode = objectNode.get("children");
 			if (childrenNode != null) for (JsonNode childNode : childrenNode) {
 				Place child = getPlaceForNode(childNode);
-				if (child != null) place.addChild(child);
+				if (child != null) {
+					place.addChild(child.getId());
+					child.setParent(place.getId());
+				}
 			}
 			
 			// set related places from URIs
 			JsonNode relatedPlacesNode = objectNode.get("relatedPlaces");
 			if (childrenNode != null) for (JsonNode relatedPlaceNode : relatedPlacesNode) {
 				Place relatedPlace = getPlaceForNode(relatedPlaceNode);
-				if (relatedPlace != null) place.addRelatedPlace(relatedPlace);
+				if (relatedPlace != null) {
+					place.addRelatedPlace(relatedPlace.getId());
+				}
 			}
 			
 			// set place type
@@ -110,51 +118,31 @@ public class JsonPlaceDeserializer {
 				Thesaurus thesaurus = thesaurusDao.getThesaurusByKey(objectNode.get("thesaurus").asText());
 				if (thesaurus == null)
 					throw new HttpMessageNotReadableException("Invalid thesaurus key. Attribute \"title\" has to be set.");
-				place.setThesaurus(thesaurus);
+				place.setThesaurus(thesaurus.getKey());
 			}
-
-			List<PlaceName> names = new ArrayList<PlaceName>(place.getNames());
 			
-			// create or update name objects
+			// update name objects
+			List<PlaceName> names = new ArrayList<PlaceName>();
 			JsonNode namesNode = objectNode.get("names");
 			if (namesNode != null) for (JsonNode nameNode : namesNode) {
-				PlaceName name = null;
-				for (PlaceName n : names)
-					if (nameNode.has("id") && n.getId() == nameNode.get("id").asLong())
-						name = n;
-				if (name == null) {
-					name = new PlaceName();
-					place.addName(name);
-				}
+				PlaceName name = new PlaceName();
+				names.add(name);				
 				JsonNode languageNode = nameNode.get("language"); 
 				JsonNode titleNode = nameNode.get("title");
 				if (titleNode == null)
 					throw new HttpMessageNotReadableException("Invalid name object. Attribute \"title\" has to be set.");
 				if (languageNode != null) name.setLanguage(languageNode.asText());
 				name.setTitle(titleNode.asText());
-				names.remove(name);
-				logger.debug("updated placename: {}", name.getId());
+				logger.debug("updated placename: {}", name);
 			}
+			place.setNames(names);
 			
-			// delete old name objects that are not referenced in the json
-			for (PlaceName name : names) {
-				logger.debug("removing placename: {}", name.getId());
-				place.removeName(name);
-			}
-			
-			Set<Location> locations = new HashSet<Location>(place.getLocations());
-			
-			// create or update location objects
+			// update location objects
+			Set<Location> locations = new HashSet<Location>();
 			JsonNode locationsNode = objectNode.get("locations");
 			if (locationsNode != null) for (JsonNode locationNode : locationsNode) {
-				Location location = null;
-				for (Location l : locations)
-					if (locationNode.has("id") && l.getId() == locationNode.get("id").asLong())
-						location = l;
-				if (location == null) {
-					location = new Location();					
-					place.addLocation(location);
-				}
+				Location location = new Location();					
+				locations.add(location);
 				JsonNode coordinatesNode = locationNode.get("coordinates");
 				if (coordinatesNode == null)
 					throw new HttpMessageNotReadableException("Invalid location object. Attribute \"coordinates\" has to be set.");
@@ -176,103 +164,58 @@ public class JsonPlaceDeserializer {
 					location.setConfidence(locationNode.get("confidence").asInt());
 				}
 				
-				locations.remove(location);
-				logger.debug("updated location: {}", location.getId());
+				logger.debug("updated location: {}", location);
 				
 			}
+			place.setLocations(locations);
 			
-			// delete old location objects that are not referenced in the json
-			for (Location location : locations) {
-				logger.debug("removing location: {}", location.getId());
-				place.removeLocation(location);
-			}
-			
-			Set<Comment> comments = new HashSet<Comment>(place.getComments());
-			
-			// create or update comment objects
+			// update comment objects			
+			Set<Comment> comments = new HashSet<Comment>();
 			JsonNode commentsNode = objectNode.get("comments");
 			if (commentsNode != null) for (JsonNode commentNode : commentsNode) {
-				Comment comment = null;
-				for (Comment c : comments)
-					if (commentNode.has("id") && c.getId() == commentNode.get("id").asLong())
-						comment = c;
-				if (comment == null) {
-					comment = new Comment();					
-					place.getComments().add(comment);
-				}
+				Comment comment = new Comment();					
+				comments.add(comment);
 				JsonNode languageNode = commentNode.get("language"); 
 				JsonNode textNode = commentNode.get("text");
 				if (textNode == null)
 					throw new HttpMessageNotReadableException("Invalid comment object. Attribute \"text\" has to be set.");
 				if (languageNode != null) comment.setLanguage(languageNode.asText());
 				comment.setText(textNode.asText());
-				comments.remove(comment);
-				logger.debug("updated comment: {}", comment.getId());				
+				logger.debug("updated comment: {}", comment);				
 			}
+			place.setComments(comments);
 			
-			// delete old comment objects that are not referenced in the json
-			for (Comment comment : comments) {
-				logger.debug("removing comment: {}", comment.getId());
-				place.getComments().remove(comment);
-			}
-			
-			Set<Tag> tags = new HashSet<Tag>(place.getTags());
-			
-			// create or update tag objects
+			// update tag objects			
+			Set<Tag> tags = new HashSet<Tag>();
 			JsonNode tagsNode = objectNode.get("tags");
 			if (tagsNode != null) for (JsonNode tagNode : tagsNode) {
-				Tag tag = null;
-				for (Tag t : tags)
-					if (tagNode.has("id") && t.getId() == tagNode.get("id").asLong())
-						tag = t;
-				if (tag == null) {
-					tag = new Tag();					
-					place.getTags().add(tag);
-				}
+				Tag tag = new Tag();					
+				tags.add(tag);
 				JsonNode languageNode = tagNode.get("language"); 
 				JsonNode textNode = tagNode.get("text");
 				if (textNode == null)
 					throw new HttpMessageNotReadableException("Invalid tag object. Attribute \"text\" has to be set.");
 				if (languageNode != null) tag.setLanguage(languageNode.asText());
 				tag.setText(textNode.asText());
-				tags.remove(tag);
-				logger.debug("updated tag: {}", tag.getId());				
+				logger.debug("updated tag: {}", tag);				
 			}
+			place.setTags(tags);
 			
-			// delete old tag objects that are not referenced in the json
-			for (Tag tag : tags) {
-				logger.debug("removing tag: {}", tag.getId());
-				place.getTags().remove(tag);
-			}
-			
-			Set<Identifier> identifiers = new HashSet<Identifier>(place.getIdentifiers());
-			
-			// create or update identifier objects
+			// update identifier objects			
+			Set<Identifier> identifiers = new HashSet<Identifier>();
 			JsonNode identifiersNode = objectNode.get("identifiers");
 			if (identifiersNode != null) for (JsonNode identifierNode : identifiersNode) {
-				Identifier identifier = null;
-				for (Identifier i : identifiers)
-					if (identifierNode.has("id") && i.getId() == identifierNode.get("id").asLong())
-						identifier = i;
-				if (identifier == null) {
-					identifier = new Identifier();					
-					place.getIdentifiers().add(identifier);
-				}
+				Identifier identifier = new Identifier();					
+				identifiers.add(identifier);
 				JsonNode valueNode = identifierNode.get("value"); 
 				JsonNode contextNode = identifierNode.get("context");
 				if (valueNode == null)
 					throw new HttpMessageNotReadableException("Invalid name object. Attribute \"value\" has to be set.");
 				if (contextNode != null) identifier.setContext(contextNode.asText());
 				identifier.setValue(valueNode.asText());
-				identifiers.remove(identifier);
-				logger.debug("updated identifier: {}", identifier.getId());				
+				logger.debug("updated identifier: {}", identifier);				
 			}
-			
-			// delete old identifier objects that are not referenced in the json
-			for (Identifier identifier : identifiers) {
-				logger.debug("removing identifier: {}", identifier.getId());
-				place.getIdentifiers().remove(identifier);
-			}
+			place.setIdentifiers(identifiers);
 					
 			return place;
 			
@@ -291,14 +234,13 @@ public class JsonPlaceDeserializer {
 		if (placeUri.startsWith(baseUri)) {
 			String placeIdString = placeUri.replace(baseUri + "place/", "");
 			try {
-				long placeId = Long.valueOf(placeIdString).longValue();
-				Place place = placeDao.get(placeId);
+				Place place = placeDao.findOne(placeIdString);
 				return place;
 			} catch (NumberFormatException e) {
 				throw new InvalidIdException("Invalid id: " + placeIdString, e);
 			}
 		} else {
-			return placeDao.getPlaceByUri(placeUri);
+			return placeDao.getByUris(placeUri);
 		}
 		
 	}

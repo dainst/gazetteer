@@ -1,5 +1,7 @@
 package org.dainst.gazetteer.search;
 
+import java.math.BigInteger;
+
 import org.dainst.gazetteer.converter.JsonPlaceDeserializer;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
@@ -44,14 +46,14 @@ public class ElasticSearchPlaceQuery {
 		return totalHits;
 	}
 	
-	public int[] execute() {
+	public String[] execute() {
 		
 		SearchResponse response = requestBuilder.execute().actionGet();
 		SearchHits hits = response.hits();
 		totalHits = hits.getTotalHits();
-		int[] result = new int[hits.hits().length];
+		String[] result = new String[hits.hits().length];
 		for (int i = 0; i < result.length; i++) {
-			result[i] = Integer.parseInt(hits.getAt(i).getId());
+			result[i] = hits.getAt(i).getId();
 		}
 		
 		return result;

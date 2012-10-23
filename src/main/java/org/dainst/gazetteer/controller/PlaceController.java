@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.dainst.gazetteer.converter.JsonPlaceDeserializer;
-import org.dainst.gazetteer.dao.PlaceDao;
+import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.ValidationResult;
 import org.dainst.gazetteer.search.ElasticSearchPlaceQuery;
@@ -38,7 +38,7 @@ public class PlaceController {
 	private static final Logger logger = LoggerFactory.getLogger(PlaceController.class);
 	
 	@Autowired
-	private PlaceDao placeDao;
+	private PlaceRepository placeDao;
 	
 	@Autowired
 	private JsonPlaceDeserializer jsonPlaceDeserializer;
@@ -84,14 +84,14 @@ public class PlaceController {
 		query.offset(offset);
 		
 		// get ids from elastic search
-		int[] result = query.execute();
+		String[] result = query.execute();
 		
 		logger.debug("Querying index returned: " + result.length + " places");
 		
 		// get places for the result ids from db
 		List<Place> places = new ArrayList<Place>();
 		for (int i = 0; i < result.length; i++) {
-			places.add(placeDao.get(result[i]));
+			places.add(placeDao.findOne(result[i]));
 		}
 		
 		ModelAndView mav = new ModelAndView("place/list");
@@ -114,7 +114,7 @@ public class PlaceController {
 	// REST-Interface for single places
 
 	@RequestMapping(value="/place/{placeId}", method=RequestMethod.GET)
-	public ModelAndView getPlace(@PathVariable long placeId,
+	public ModelAndView getPlace(@PathVariable String placeId,
 			@RequestParam(required=false) String layout,
 			@RequestParam(defaultValue="10") int limit,
 			@RequestParam(defaultValue="0") int offset,
@@ -127,13 +127,22 @@ public class PlaceController {
 		RequestContext requestContext = new RequestContext(request);
 		Locale locale = requestContext.getLocale();
 
-		Place place = placeDao.get(placeId);
-		if (place != null) {			
+		Place place = placeDao.findOne(placeId);
+		if (place != null) {		
+			
+			List<Place> children = placeDao.findByIdIn(place.getChildren());
+			List<Place> relatedPlaces = placeDao.findByIdIn(place.getRelatedPlaces());
+			Place parent = null;
+			if (place.getParent() != null) parent = placeDao.findOne(place.getParent());
+			
 			ModelAndView mav = new ModelAndView("place/get");
 			if (layout != null) {
 				mav.setViewName("place/"+layout);
 			}
 			mav.addObject("place", place);
+			mav.addObject("children", children);
+			mav.addObject("relatedPlaces", relatedPlaces);
+			mav.addObject("parent", parent);
 			mav.addObject("baseUri", baseUri);
 			mav.addObject("language", locale.getISO3Language());
 			mav.addObject("limit", limit);
@@ -145,6 +154,7 @@ public class PlaceController {
 			mav.addObject("googleMapsApiKey", googleMapsApiKey);
 			mav.addObject("languages", getLocalizedLanguages(locale));
 			return mav;
+			
 		}
 		
 		response.setStatus(404);
@@ -165,7 +175,7 @@ public class PlaceController {
 	
 	@RequestMapping(value="/place/{placeId}", method=RequestMethod.PUT)
 	public ModelAndView updateOrCreatePlace(@RequestBody Place place, 
-			@PathVariable long placeId,
+			@PathVariable String placeId,
 			HttpServletResponse response) {
 		
 		place.setId(placeId);
@@ -199,14 +209,14 @@ public class PlaceController {
 	}
 	
 	@RequestMapping(value="/place/{placeId}", method=RequestMethod.DELETE)
-	public void deletePlace(@PathVariable long placeId,
+	public void deletePlace(@PathVariable String placeId,
 			HttpServletResponse response) {
 		
-		if(placeDao.setDeleted(placeId) != 0) {
-			response.setStatus(204);
-		} else {
-			response.setStatus(404);
-		}
+		Place place = placeDao.findOne(placeId);
+		place.setDeleted(true);
+		placeDao.save(place);
+		
+		response.setStatus(204);
 		
 	}
 	

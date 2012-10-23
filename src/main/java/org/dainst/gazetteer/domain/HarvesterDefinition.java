@@ -2,13 +2,11 @@ package org.dainst.gazetteer.domain;
 
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-
 import org.dainst.gazetteer.harvest.Harvester;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
+@Document
 public class HarvesterDefinition {
 	
 	@Id
@@ -22,7 +20,7 @@ public class HarvesterDefinition {
 	
 	private boolean enabled = true;
 	
-	private Class<? extends Harvester> harvesterType;
+	private String harvesterType;
 	
 	public String getName() {
 		return name;
@@ -57,11 +55,15 @@ public class HarvesterDefinition {
 	}
 
 	public Class<? extends Harvester> getHarvesterType() {
-		return harvesterType;
+		try {
+			return (Class<? extends Harvester>) Class.forName(harvesterType);
+		} catch (ClassNotFoundException e) {
+			return null;
+		}
 	}
 
 	public void setHarvesterType(Class<? extends Harvester> harvesterType) {
-		this.harvesterType = harvesterType;
+		this.harvesterType = harvesterType.getCanonicalName();
 	}
 
 	public boolean isEnabled() {

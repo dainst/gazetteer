@@ -3,9 +3,9 @@ package org.dainst.gazetteer.harvest;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.dainst.gazetteer.dao.HarvesterDefinitionDao;
-import org.dainst.gazetteer.dao.PlaceDao;
-import org.dainst.gazetteer.dao.ThesaurusDao;
+import org.dainst.gazetteer.dao.HarvesterDefinitionRepository;
+import org.dainst.gazetteer.dao.PlaceRepository;
+import org.dainst.gazetteer.dao.ThesaurusRepository;
 import org.dainst.gazetteer.domain.HarvesterDefinition;
 import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.Thesaurus;
@@ -19,17 +19,17 @@ public class HarvestingHandler implements Runnable {
 	
 	private HarvesterDefinition harvesterDefinition;
 	
-	private PlaceDao placeDao;
+	private PlaceRepository placeDao;
 
-	private ThesaurusDao thesaurusDao;
+	private ThesaurusRepository thesaurusDao;
 
-	private HarvesterDefinitionDao harvesterDefinitionDao;
+	private HarvesterDefinitionRepository harvesterDefinitionDao;
 
 	private EntityIdentifier entityIdentifier;
 	
 	public HarvestingHandler(HarvesterDefinition harvesterDefinition,
-			PlaceDao placeDao, ThesaurusDao thesaurusDao, 
-			HarvesterDefinitionDao harvesterDefinitionDao,
+			PlaceRepository placeDao, ThesaurusRepository thesaurusDao, 
+			HarvesterDefinitionRepository harvesterDefinitionDao,
 			EntityIdentifier entityIdentifier) {
 		
 		this.harvesterDefinition = harvesterDefinition;
@@ -46,7 +46,7 @@ public class HarvestingHandler implements Runnable {
 		try {
 			
 			// get current harvesterDefinition from DB
-			harvesterDefinition = harvesterDefinitionDao.getHarvesterDefinitionByName(harvesterDefinition.getName());
+			harvesterDefinition = harvesterDefinitionDao.getByName(harvesterDefinition.getName());
 			
 			// prevent multiple instances of the same harvester from being executed simultaneously
 			if (!harvesterDefinition.isEnabled()) {
@@ -117,15 +117,16 @@ public class HarvestingHandler implements Runnable {
 
 	private void saveRecursive(Place candidatePlace, Thesaurus thesaurus) {
 		
-		candidatePlace.setThesaurus(thesaurus);				
+		candidatePlace.setThesaurus(thesaurus.getKey());				
 		Place savedPlace = placeDao.save(candidatePlace);
 		logger.info("saved place: {}", savedPlace.getId());
 		
-		if (candidatePlace.getChildren().size() > 0) {
-			for (Place child : candidatePlace.getChildren()) {
-				saveRecursive(child, thesaurus);
-			}
-		}
+// TODO
+//		if (candidatePlace.getChildren().size() > 0) {
+//			for (Place child : candidatePlace.getChildren()) {
+//				saveRecursive(child, thesaurus);
+//			}
+//		}
 		
 	}
 

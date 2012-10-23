@@ -11,7 +11,8 @@
 	</jsp:attribute>
 	
 	<jsp:body>
-		<p:form place="${place}" languages="${languages}" />
+		<p:form place="${place}" languages="${languages}"
+			parentPlace="${parent}" children="${children}" relatedPlaces="${relatedPlaces}" />
 	</jsp:body>
 
 </l:page>

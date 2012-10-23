@@ -8,61 +8,38 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.Transient;
-import javax.persistence.Version;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
+@Document
 public class Place {
 
 	@Id
-	@GeneratedValue
-	private long id;
+	private String id;
 
-	@ElementCollection(fetch=FetchType.EAGER)
 	private Set<String> uris = new HashSet<String>();
 
-	@OneToMany(mappedBy="place", cascade=CascadeType.ALL, fetch=FetchType.EAGER, orphanRemoval=true)
-	@OrderBy("ordering")
 	private List<PlaceName> names = new ArrayList<PlaceName>();
 	
 	private String type;
 
-	@OneToMany(mappedBy="place", cascade=CascadeType.ALL, fetch=FetchType.EAGER, orphanRemoval=true)
 	private Set<Location> locations = new HashSet<Location>();
 
-	@ManyToOne(fetch=FetchType.LAZY)
-	private Place parent;
+	private String parent;
 
-	@OneToMany(mappedBy="parent", fetch=FetchType.LAZY)
-	private Set<Place> children = new HashSet<Place>();
+	private Set<String> children = new HashSet<String>();
+
+	private Set<String> relatedPlaces = new HashSet<String>();
 	
-	@ManyToMany(fetch=FetchType.LAZY)
-	private Set<Place> relatedPlaces = new HashSet<Place>();
-	
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, orphanRemoval=true)
 	private Set<Comment> comments = new HashSet<Comment>();
 	
-	@OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER, orphanRemoval=true)
 	private Set<Tag> tags = new HashSet<Tag>();
 	
-	@OneToMany(mappedBy="place", cascade=CascadeType.ALL, fetch=FetchType.EAGER, orphanRemoval=true)
 	private Set<Identifier> ids = new HashSet<Identifier>();
 	
-	@ManyToOne
-	private Thesaurus thesaurus;
+	private String thesaurus;
 
-	@Version
 	private Date lastModified;
 	
 	private Date created;
@@ -75,11 +52,11 @@ public class Place {
 		created = new Date();
 	}
 	
-	public long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -106,8 +83,7 @@ public class Place {
 		}
 		return result;
 	}
-	
-	@Transient
+
 	public Map<String, PlaceName> getNameMap() {
 		HashMap<String, PlaceName> result = new HashMap<String, PlaceName>();
 		for (PlaceName name : names) {
@@ -122,7 +98,6 @@ public class Place {
 	
 	public void addName(PlaceName name) {
 		names.add(name);
-		name.setPlace(this);
 	}
 
 	public Set<Location> getLocations() {
@@ -135,28 +110,26 @@ public class Place {
 	
 	public void addLocation(Location location) {
 		locations.add(location);
-		location.setPlace(this);
 	}
 
-	public Place getParent() {
+	public String getParent() {
 		return parent;
 	}
 
-	public void setParent(Place parent) {
+	public void setParent(String parent) {
 		this.parent = parent;
 	}
 	
-	public Set<Place> getChildren() {
+	public Set<String> getChildren() {
 		return children;
 	}
 
-	public void setChildren(Set<Place> children) {
+	public void setChildren(Set<String> children) {
 		this.children = children;
 	}
 	
-	public void addChild(Place child) {
+	public void addChild(String child) {
 		children.add(child);
-		child.setParent(this);
 	}
 
 	public Date getLastModified() {
@@ -194,28 +167,25 @@ public class Place {
 	public void removeName(PlaceName name) {
 		if (names.contains(name)) {
 			names.remove(name);
-			name.setPlace(null);
 		}
 	}
 
 	public void removeLocation(Location location) {
 		if (locations.contains(location)) {
 			locations.remove(location);
-			location.setPlace(null);
 		}
 	}
 
-	public Set<Place> getRelatedPlaces() {
+	public Set<String> getRelatedPlaces() {
 		return relatedPlaces;
 	}
 
-	public void setRelatedPlaces(Set<Place> relatedPlaces) {
+	public void setRelatedPlaces(Set<String> relatedPlaces) {
 		this.relatedPlaces = relatedPlaces;
 	}
 
-	public void addRelatedPlace(Place relatedPlace) {
+	public void addRelatedPlace(String relatedPlace) {
 		relatedPlaces.add(relatedPlace);
-		relatedPlace.getRelatedPlaces().add(relatedPlace);
 	}
 
 	public Set<Comment> getComments() {
@@ -254,11 +224,11 @@ public class Place {
 		this.ids.add(id);
 	}
 
-	public Thesaurus getThesaurus() {
+	public String getThesaurus() {
 		return thesaurus;
 	}
 
-	public void setThesaurus(Thesaurus thesaurus) {
+	public void setThesaurus(String thesaurus) {
 		this.thesaurus = thesaurus;
 	}
 

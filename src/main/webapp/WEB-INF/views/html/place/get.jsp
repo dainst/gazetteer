@@ -123,23 +123,23 @@ request.setAttribute("places", places);
 							</c:forEach>
 						</ul>
 						
-						<c:if test="${place.parent != null}">
+						<c:if test="${parent != null}">
 							<h3><s:message code="domain.place.parent" text="domain.place.parent" />:</h3>	
 							<ul>
 								<li>
-									<a href="${place.parent.id}?limit=${limit}&offset=${offset}&q=${q}&view=${view}">${fn:join(place.parent.namesAsArray, " / ")}
-										<c:if test="${place.parent.type != null}">
-											<em>(${place.parent.type})</em>
+									<a href="${parent.id}?limit=${limit}&offset=${offset}&q=${q}&view=${view}">${fn:join(parent.namesAsArray, " / ")}
+										<c:if test="${parent.type != null}">
+											<em>(${parent.type})</em>
 										</c:if>
 									</a>
 								</li>
 							</ul>
 						</c:if>
 						
-						<c:if test="${!empty(place.children)}">
+						<c:if test="${!empty(children)}">
 							<h3><s:message code="domain.place.children" text="domain.place.children" />:</h3>
 							<ul>
-								<c:forEach var="child" items="${place.children}">
+								<c:forEach var="child" items="${children}">
 									<li>
 										<a href="${child.id}?limit=${limit}&offset=${offset}&q=${q}&view=${view}">${fn:join(child.namesAsArray, " / ")}
 											<c:if test="${child.type != null}">
@@ -151,10 +151,10 @@ request.setAttribute("places", places);
 							</ul>
 						</c:if>					
 						
-						<c:if test="${!empty(place.relatedPlaces)}">
+						<c:if test="${!empty(relatedPlaces)}">
 							<h3><s:message code="domain.place.relatedPlaces" text="domain.place.relatedPlaces" />:</h3>
 							<ul>
-								<c:forEach var="relatedPlace" items="${place.relatedPlaces}">
+								<c:forEach var="relatedPlace" items="${relatedPlaces}">
 									<li>
 										<a href="${relatedPlace.id}?limit=${limit}&offset=${offset}&q=${q}&view=${view}">${fn:join(relatedPlace.namesAsArray, " / ")}
 											<c:if test="${relatedPlace.type != null}">

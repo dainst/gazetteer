@@ -1,33 +1,24 @@
 package org.dainst.gazetteer.domain;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Version;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Version;
 
-@Entity
+@Document
 public class Thesaurus {
 
 	@Id
-	@GeneratedValue
 	private long id;
 
-	@Column(unique=true, nullable=false)
+	@Indexed(unique = true)
 	private String key;
 	
 	private String title;
 	
 	private String description;
-	
-	@OneToMany(mappedBy="thesaurus", cascade=CascadeType.REMOVE, orphanRemoval=true)
-	private Set<Place> places = new HashSet<Place>();
 
 	@Version
 	private Date lastModified;
@@ -68,14 +59,6 @@ public class Thesaurus {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public Set<Place> getPlaces() {
-		return places;
-	}
-
-	public void setPlaces(Set<Place> places) {
-		this.places = places;
 	}
 
 	public Date getLastModified() {

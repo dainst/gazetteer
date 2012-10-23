@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.dainst.gazetteer.converter.JsonPlaceDeserializer;
-import org.dainst.gazetteer.dao.PlaceDao;
+import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.search.ElasticSearchPlaceQuery;
 import org.dainst.gazetteer.search.ElasticSearchServer;
@@ -25,7 +25,7 @@ public class WidgetController {
 	private String googleMapsApiKey;
 	
 	@Autowired
-	private PlaceDao placeDao;
+	private PlaceRepository placeDao;
 	
 	@Autowired
 	private ElasticSearchServer elasticSearchServer;
@@ -46,13 +46,13 @@ public class WidgetController {
 	@RequestMapping(value="/widget/show.js")
 	public ModelAndView showPlace(
 			@RequestParam String callback,
-			@RequestParam(required=false, value="id") long[] ids,
+			@RequestParam(required=false, value="id") String[] ids,
 			@RequestParam(defaultValue="150") int mapHeight,
 			@RequestParam(defaultValue="false") boolean showInfo) {
 		
 		ArrayList<Place> places = new ArrayList<Place>();
 		for (int i = 0; i < ids.length; i++) {
-			Place place = placeDao.get(ids[i]);
+			Place place = placeDao.findOne(ids[i]);
 			if(place != null) places.add(place);
 		}
 		
@@ -105,12 +105,12 @@ public class WidgetController {
 		query.offset(offset);
 		
 		// get ids from elastic search
-		int[] result = query.execute();
+		String[] result = query.execute();
 		
 		// get places for the result ids from db
 		List<Place> places = new ArrayList<Place>();
 		for (int i = 0; i < result.length; i++) {
-			places.add(placeDao.get(result[i]));
+			places.add(placeDao.findOne(result[i]));
 		}
 		
 		ModelAndView mav = new ModelAndView("widget/search");
