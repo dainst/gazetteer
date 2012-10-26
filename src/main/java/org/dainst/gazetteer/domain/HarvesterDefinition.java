@@ -2,7 +2,6 @@ package org.dainst.gazetteer.domain;
 
 import java.util.Date;
 
-import org.dainst.gazetteer.harvest.Harvester;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -54,16 +53,12 @@ public class HarvesterDefinition {
 		this.cronExpression = cronExpression;
 	}
 
-	public Class<? extends Harvester> getHarvesterType() {
-		try {
-			return (Class<? extends Harvester>) Class.forName(harvesterType);
-		} catch (ClassNotFoundException e) {
-			return null;
-		}
+	public String getHarvesterType() {
+		return harvesterType;
 	}
 
-	public void setHarvesterType(Class<? extends Harvester> harvesterType) {
-		this.harvesterType = harvesterType.getCanonicalName();
+	public void setHarvesterType(String harvesterType) {
+		this.harvesterType = harvesterType;
 	}
 
 	public boolean isEnabled() {

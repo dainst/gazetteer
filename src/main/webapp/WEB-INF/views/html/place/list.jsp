@@ -151,7 +151,7 @@
 													</c:forEach>
 												</td>
 											</c:if>
-											<td>${place.thesaurus.title}</td>
+											<td>${place.thesaurus}</td>
 											<td>
 												<s:message code="ui.copyToClipboard" var="copyMsg"/>
 												<a href="javascript:window.prompt ('${copyMsg}', '${baseUri}place/${place.id}')"><i class="icon-share"></i></a>

@@ -1,7 +1,6 @@
 package org.dainst.gazetteer.domain;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -9,7 +8,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
@@ -39,18 +37,10 @@ public class Place {
 	private Set<Identifier> ids = new HashSet<Identifier>();
 	
 	private String thesaurus;
-
-	private Date lastModified;
-	
-	private Date created;
 	
 	private boolean needsReview = false;
 	
 	private boolean deleted = false;
-	
-	public Place() {
-		created = new Date();
-	}
 	
 	public String getId() {
 		return id;
@@ -130,22 +120,6 @@ public class Place {
 	
 	public void addChild(String child) {
 		children.add(child);
-	}
-
-	public Date getLastModified() {
-		return lastModified;
-	}
-
-	public void setLastModified(Date lastModified) {
-		this.lastModified = lastModified;
-	}
-
-	public Date getCreated() {
-		return created;
-	}
-
-	public void setCreated(Date created) {
-		this.created = created;
 	}
 
 	public boolean isDeleted() {

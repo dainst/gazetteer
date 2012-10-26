@@ -5,6 +5,7 @@ import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.dao.ThesaurusRepository;
 import org.dainst.gazetteer.domain.HarvesterDefinition;
 import org.dainst.gazetteer.helpers.EntityIdentifier;
+import org.dainst.gazetteer.helpers.IdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,9 @@ public class HarvestingManager {
 	
 	@Autowired
 	private EntityIdentifier entityIdentifier;
+	
+	@Autowired
+	private IdGenerator idGenerator;
 
 	public void initialize() {
 		logger.info("initializing HarvestingManager");
@@ -41,7 +45,7 @@ public class HarvestingManager {
 			logger.info("scheduling harvesting handler for definition: " + def.getName());
 			CronTrigger trigger = new CronTrigger(def.getCronExpression());
 			HarvestingHandler handler = new HarvestingHandler(def, placeDao,
-					thesaurusDao, harvesterDefinitionDao, entityIdentifier);
+					thesaurusDao, harvesterDefinitionDao, idGenerator, entityIdentifier);
 			taskScheduler.schedule(handler, trigger);
 		}
 	}

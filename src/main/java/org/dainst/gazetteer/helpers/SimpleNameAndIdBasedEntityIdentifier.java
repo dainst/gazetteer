@@ -22,7 +22,7 @@ public class SimpleNameAndIdBasedEntityIdentifier implements EntityIdentifier {
 		
 		// identifier equality is a perfect match
 		for (Identifier id : place.getIdentifiers()) {
-			Place matchedPlace = placeDao.findByIdentifiers(id);
+			Place matchedPlace = placeDao.findByIds(id);
 			if (matchedPlace != null) {
 				logger.debug("matched id: " + id);
 				return matchedPlace;

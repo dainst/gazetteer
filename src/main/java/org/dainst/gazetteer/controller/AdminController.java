@@ -53,7 +53,7 @@ public class AdminController {
 		return "forward:/place";
 	}
 	
-	@RequestMapping(value="/admin/generate", method = RequestMethod.GET)
+	@RequestMapping(value="/admin/generate", method = RequestMethod.POST)
 	@ResponseBody
 	public String generateTestData() {
 		
@@ -106,7 +106,7 @@ public class AdminController {
 		
 	}
 	
-	@RequestMapping(value="/admin/import", method = RequestMethod.GET)
+	@RequestMapping(value="/admin/import", method = RequestMethod.POST)
 	@ResponseBody
 	public String importData() {
 
@@ -181,7 +181,7 @@ public class AdminController {
 	public String resetThesaurus(@PathVariable String key) {
 		
 		Thesaurus thesaurus = thesaurusDao.getThesaurusByKey(key);
-		placeDao.delete(placeDao.findByThesaurus());
+		placeDao.delete(placeDao.findByThesaurus(key));
 		thesaurusDao.delete(thesaurus);
 		
 		Thesaurus thesaurus2 = new Thesaurus();

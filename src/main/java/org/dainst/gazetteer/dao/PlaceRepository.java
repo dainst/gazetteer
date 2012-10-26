@@ -13,9 +13,9 @@ public interface PlaceRepository extends PagingAndSortingRepository<Place, Strin
 
 	public List<Place> findByNamesTitleAndType(String name, String type);
 
-	public List<Place> findByThesaurus();
+	public List<Place> findByThesaurus(String thesaurus);
 
-	public Place findByIdentifiers(Identifier id);
+	public Place findByIds(Identifier id);
 
 	public List<Place> findByIdIn(Set<String> children);
 
