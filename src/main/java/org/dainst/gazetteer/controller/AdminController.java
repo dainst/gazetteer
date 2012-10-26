@@ -14,6 +14,7 @@ import org.dainst.gazetteer.domain.Location;
 import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.PlaceName;
 import org.dainst.gazetteer.domain.Thesaurus;
+import org.dainst.gazetteer.helpers.IdGenerator;
 import org.dainst.gazetteer.search.ElasticSearchPlaceIndexer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +44,9 @@ public class AdminController {
 	
 	@Autowired
 	private ElasticSearchPlaceIndexer elasticSearchPlaceIndexer;
+	
+	@Autowired
+	private IdGenerator idGenerator;
 
 	@RequestMapping(value="/")
 	public String home() {
@@ -57,16 +61,18 @@ public class AdminController {
 		place2.addName(new PlaceName("Köln","de"));
 		place2.addName(new PlaceName("Cologne","en"));
 		place2.addLocation(new Location(50.937527,6.960268));
+		place2.setId(idGenerator.generate(place2));
 		placeDao.save(place2);		
-		logger.info("saved cologne");
+		logger.info("saved {}", place2);
 		
 		Place place3 = new Place();
 		place3.setParent(place2.getId());
 		place3.addName(new PlaceName("Arbeitsstelle für digitale Archäologie","de"));
 		place3.addName(new PlaceName("Cologne Digital Archaeology Lab","en"));
 		place3.addLocation(new Location(50.925100, 6.925767));
+		place3.setId(idGenerator.generate(place3));
 		placeDao.save(place3);
-		logger.info("saved codarchlab");
+		logger.info("saved {}", place3);
 		
 		place2.getChildren().add(place3.getId());
 		placeDao.save(place2);

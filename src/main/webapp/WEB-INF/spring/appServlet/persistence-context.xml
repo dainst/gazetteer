@@ -22,5 +22,10 @@
 		<constructor-arg name="databaseName" value="gazetteer" />
 		<property name="writeResultChecking" value="EXCEPTION" />
 	</bean>
+	
+	<bean id="idGenerator" class="org.dainst.gazetteer.helpers.NameBasedIdGenerator">
+		<property name="length" value="8" />
+		<property name="placeRepository" ref="placeRepository" />
+	</bean>
 
 </beans>
