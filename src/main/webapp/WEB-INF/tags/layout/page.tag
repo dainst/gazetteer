@@ -15,6 +15,7 @@
 <script src="/gazetteer/resources/js/custom.js"></script>
 <script src="/gazetteer/widget/lib.js"></script>
 <script src='/gazetteer/resources/js/jquery.locationpicker.js'></script>
+<script src='/gazetteer/resources/js/jquery.jstree.js'></script>
 <script src="/gazetteer/resources/bootstrap/js/bootstrap-dropdown.js"></script>
 <script src="/gazetteer/resources/bootstrap/js/bootstrap-alert.js"></script>
 <script src="/gazetteer/resources/bootstrap/js/bootstrap-modal.js"></script>

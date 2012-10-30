@@ -62,6 +62,8 @@ public class PlaceController {
 	public ModelAndView listPlaces(@RequestParam(defaultValue="10") int limit,
 			@RequestParam(defaultValue="0") int offset,
 			@RequestParam(required=false) String q,
+			@RequestParam(required=false) String sort,
+			@RequestParam(defaultValue="asc") String order,
 			@RequestParam(required=false) String fuzzy,
 			@RequestParam(required=false, defaultValue="map,table") String view,
 			@RequestParam(required=false) String callback,
@@ -82,6 +84,9 @@ public class PlaceController {
 		}
 		query.limit(limit);
 		query.offset(offset);
+		if (sort != null) {
+			query.addSort(sort, order);
+		}
 		
 		// get ids from elastic search
 		String[] result = query.execute();

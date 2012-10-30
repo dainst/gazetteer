@@ -27,7 +27,7 @@ public class NameBasedIdGenerator implements IdGenerator {
 			if (id.length() > length) id = id.substring(0, length);
 			id = id.toLowerCase();
 			id = Normalizer.normalize(id, Normalizer.Form.NFD)
-	           .replaceAll("[^\\p{ASCII}]", "");
+	           .replaceAll("[^\\p{ASCII}]", "").replaceAll("[^\\p{Alnum}]", "");
 		} else {
 			id = new BigInteger(length*5, random).toString(32).toLowerCase();
 		}

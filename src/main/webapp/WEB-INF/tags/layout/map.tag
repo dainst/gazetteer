@@ -1,7 +1,7 @@
 <%@ tag description="page layout"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<%@ attribute name="places" required="true" type="java.util.List"%>
+<%@ attribute name="places" required="false" type="java.util.List"%>
 <%@ attribute name="width" required="false" type="java.lang.String"%>
 <%@ attribute name="height" required="false" type="java.lang.String"%>
 <%@ attribute name="googleMapsApiKey" required="false" type="java.lang.String"%>

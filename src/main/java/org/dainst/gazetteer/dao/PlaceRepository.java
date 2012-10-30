@@ -9,11 +9,15 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 
 public interface PlaceRepository extends PagingAndSortingRepository<Place, String> {
 
-	public Place getByUris(String uri);
+	public Place getByLinksObjectAndLinksPredicate(String object, String predicate);
 
 	public List<Place> findByNamesTitleAndType(String name, String type);
 
 	public List<Place> findByThesaurus(String thesaurus);
+
+	public List<Place> findByThesaurusAndParentIsNull(String key);
+
+	public List<Place> findByThesaurusAndType(String key, String type);
 
 	public Place findByIds(Identifier id);
 

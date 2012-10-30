@@ -240,7 +240,7 @@ public class JsonPlaceDeserializer {
 				throw new InvalidIdException("Invalid id: " + placeIdString, e);
 			}
 		} else {
-			return placeDao.getByUris(placeUri);
+			return placeDao.getByLinksObjectAndLinksPredicate(placeUri, "owl:sameAs");
 		}
 		
 	}

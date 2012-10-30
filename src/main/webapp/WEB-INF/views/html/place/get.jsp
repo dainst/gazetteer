@@ -184,7 +184,7 @@ request.setAttribute("places", places);
 						
 						<c:if test="${!empty(place.thesaurus)}">
 							<h3><s:message code="domain.thesaurus" text="domain.thesaurus" />: </h3>
-							<p>${place.thesaurus.title}</p>
+							<p>${place.thesaurus}</p>
 						</c:if>
 						
 						<c:if test="${!empty(place.identifiers)}">
@@ -193,6 +193,17 @@ request.setAttribute("places", places);
 								<c:forEach var="identifier" items="${place.identifiers}">
 									<li>
 										<strong>${identifier.context}:</strong> ${identifier.value}
+									</li>
+								</c:forEach>
+							</ul>
+						</c:if>
+						
+						<c:if test="${!empty(place.links)}">
+							<h3><s:message code="domain.place.links" text="domain.place.links" />:</h3>
+							<ul>
+								<c:forEach var="link" items="${place.links}">
+									<li>
+										<strong>${link.predicate}:</strong> ${link.object}
 									</li>
 								</c:forEach>
 							</ul>

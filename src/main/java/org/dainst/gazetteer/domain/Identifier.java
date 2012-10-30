@@ -30,4 +30,8 @@ public class Identifier {
 		this.context = context;
 	}
 	
+	public String toString() {
+		return String.format("Identifier { value: %s, context: %s}", value, context); 
+	}
+	
 }

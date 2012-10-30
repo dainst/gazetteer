@@ -16,7 +16,7 @@ public class Place {
 	@Id
 	private String id;
 
-	private Set<String> uris = new HashSet<String>();
+	private Set<Link> links = new HashSet<Link>();
 
 	private List<PlaceName> names = new ArrayList<PlaceName>();
 	
@@ -50,16 +50,16 @@ public class Place {
 		this.id = id;
 	}
 
-	public Set<String> getUris() {
-		return uris;
+	public Set<Link> getLinks() {
+		return links;
 	}
 
-	public void setUris(Set<String> uris) {
-		this.uris = uris;
+	public void setLinks(Set<Link> links) {
+		this.links = links;
 	}
 	
-	public void addUri(String uri) {
-		this.uris.add(uri);
+	public void addLink(Link link) {
+		this.links.add(link);
 	}
 
 	public List<PlaceName> getNames() {

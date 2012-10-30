@@ -1,0 +1,87 @@
+/*
+ * jsTree apple theme 1.0
+ * Supported features: dots/no-dots, icons/no-icons, focused, loading
+ * Supported plugins: ui (hovered, clicked), checkbox, contextmenu, search
+ */
+
+.jstree-custom > ul {
+	
+}
+
+.jstree-custom li {
+	padding: 8px;
+	line-height: 20px;
+	text-align: left;
+	vertical-align: top;
+	border-top: 1px solid #DDD;
+}
+
+.jstree-custom li:last-child {
+	border-bottom: 1px solid #DDD;
+}
+
+.jstree-custom li:nth-child(odd) {
+	background-color: #FFFFFF;
+}
+
+.jstree-custom li:nth-child(even) {
+	background-color: #F9F9F9;
+}
+
+.jstree-custom ins.jstree-icon {
+	display: inline-block;
+	width: 14px;
+	height: 14px;
+	margin-top: 1px;
+	line-height: 14px;
+	vertical-align: text-top;
+	background-image: url("../../../bootstrap/img/glyphicons-halflings.png");
+	background-position: 14px 14px;
+	background-repeat: no-repeat;
+}
+
+.jstree-custom .jstree-closed > .jstree-icon {
+	background-position: -456px -72px;
+}
+
+.jstree-custom .jstree-open > .jstree-icon {
+	background-position: -313px -119px;
+}
+
+.jstree-custom .jstree-loading > .jstree-icon { 
+	background:url("throbber.gif") center center no-repeat !important; 
+}
+
+.jstree-custom .jstree-no-icons a .jstree-icon { display:none; }
+
+.jstree-custom .jstree-search { font-style:italic; }
+
+.jstree-custom .jstree-no-icons .jstree-checkbox { display:inline-block; }
+.jstree-custom .jstree-no-checkboxes .jstree-checkbox { display:none !important; }
+.jstree-custom .jstree-checked > a > .jstree-checkbox { background-position:-38px -19px; }
+.jstree-custom .jstree-unchecked > a > .jstree-checkbox { background-position:-2px -19px; }
+.jstree-custom .jstree-undetermined > a > .jstree-checkbox { background-position:-20px -19px; }
+.jstree-custom .jstree-checked > a > .checkbox:hover { background-position:-38px -37px; }
+.jstree-custom .jstree-unchecked > a > .jstree-checkbox:hover { background-position:-2px -37px; }
+.jstree-custom .jstree-undetermined > a > .jstree-checkbox:hover { background-position:-20px -37px; }
+
+#vakata-dragged.jstree-custom ins { background:transparent !important; }
+#vakata-dragged.jstree-custom .jstree-ok { background:url("d.png") -2px -53px no-repeat !important; }
+#vakata-dragged.jstree-custom .jstree-invalid { background:url("d.png") -18px -53px no-repeat !important; }
+#jstree-marker.jstree-custom { background:url("d.png") -41px -57px no-repeat !important; text-indent:-100px; }
+
+.jstree-custom a.jstree-search { color:aqua; }
+.jstree-custom .jstree-locked a { color:silver; cursor:default; }
+
+#vakata-contextmenu.jstree-custom-context, 
+#vakata-contextmenu.jstree-custom-context li ul { background:#f0f0f0; border:1px solid #979797; -moz-box-shadow: 1px 1px 2px #999; -webkit-box-shadow: 1px 1px 2px #999; box-shadow: 1px 1px 2px #999; }
+#vakata-contextmenu.jstree-custom-context li { }
+#vakata-contextmenu.jstree-custom-context a { color:black; }
+#vakata-contextmenu.jstree-custom-context a:hover, 
+#vakata-contextmenu.jstree-custom-context .vakata-hover > a { padding:0 5px; background:#e8eff7; border:1px solid #aecff7; color:black; -moz-border-radius:2px; -webkit-border-radius:2px; border-radius:2px; }
+#vakata-contextmenu.jstree-custom-context li.jstree-contextmenu-disabled a, 
+#vakata-contextmenu.jstree-custom-context li.jstree-contextmenu-disabled a:hover { color:silver; background:transparent; border:0; padding:1px 4px; }
+#vakata-contextmenu.jstree-custom-context li.vakata-separator { background:white; border-top:1px solid #e0e0e0; margin:0; }
+#vakata-contextmenu.jstree-custom-context li ul { margin-left:-4px; }
+
+/* TODO: IE6 support - the `>` selectors */

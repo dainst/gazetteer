@@ -8,24 +8,24 @@
 { 
 	"@id": "${baseUri}place/${place.id}",
 	"gazId": "${place.id}",
-	"thesaurus": "${place.thesaurus.key}",
+	"thesaurus": "${place.thesaurus}",
 	<c:if test="${place.type != null}">
 		"type": "${place.type}",
 	</c:if>
-	<c:if test="${place.parent != null}">
-		"parent": "${baseUri}place/${place.parent.id}",
+	<c:if test="${parent != null}">
+		"parent": "${baseUri}place/${parent.id}",
 	</c:if>
-	<c:if test="${!empty(place.children)}">
+	<c:if test="${!empty(children)}">
 		"children": [
-			<c:forEach var="child" items="${place.children}" varStatus="status">
-				"${baseUri}place/${child.id}"<c:if test="${status.count lt fn:length(place.children)}">,</c:if>
+			<c:forEach var="child" items="${children}" varStatus="status">
+				"${baseUri}place/${child.id}"<c:if test="${status.count lt fn:length(children)}">,</c:if>
 			</c:forEach>
 		],
 	</c:if>
-	<c:if test="${!empty(place.children)}">
+	<c:if test="${!empty(relatedPlaces)}">
 		"relatedPlaces": [
-			<c:forEach var="relatedPlace" items="${place.relatedPlaces}" varStatus="status">
-				"${baseUri}place/${relatedPlace.id}"<c:if test="${status.count lt fn:length(place.relatedPlaces)}">,</c:if>
+			<c:forEach var="relatedPlace" items="${relatedPlaces}" varStatus="status">
+				"${baseUri}place/${relatedPlace.id}"<c:if test="${status.count lt fn:length(relatedPlaces)}">,</c:if>
 			</c:forEach>
 		],
 	</c:if>

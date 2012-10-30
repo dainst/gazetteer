@@ -100,7 +100,7 @@ public class HarvestingHandler implements Runnable {
 					
 					Place identifiedPlace = entityIdentifier.identify(candidatePlace, thesaurus);
 					if (identifiedPlace != null) {
-						logger.info("identified place: {}", candidatePlace.getId());
+						logger.info("identified place: {}", identifiedPlace.getId());
 						// TODO merge places
 						// add children of candidate to identified place
 						for (String childId : candidatePlace.getChildren()) {
