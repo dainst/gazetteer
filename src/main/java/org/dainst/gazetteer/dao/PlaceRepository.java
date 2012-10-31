@@ -11,7 +11,7 @@ public interface PlaceRepository extends PagingAndSortingRepository<Place, Strin
 
 	public Place getByLinksObjectAndLinksPredicate(String object, String predicate);
 
-	public List<Place> findByNamesTitleAndType(String name, String type);
+	public List<Place> findByPrefNameTitleAndType(String name, String type);
 
 	public List<Place> findByThesaurus(String thesaurus);
 

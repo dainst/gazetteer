@@ -56,7 +56,7 @@ function requireGoogleMaps(callback, apiKey) {
 		<c:forEach var="place" items="${places}">	
 			<c:forEach var="location" items="${place.locations}">
 				<c:set var="placeUri" value="${baseUri}place/${place.id}"/>
-				<c:set var="title" value="${fn:join(place.namesAsArray, ' / ')}"/>
+				<c:set var="title" value="${place.prefName.title}"/>
 				ll = new google.maps.LatLng("${location.lat}", "${location.lng}");
 				var marker${place.id} = new google.maps.Marker({
 					position: ll,
@@ -64,7 +64,7 @@ function requireGoogleMaps(callback, apiKey) {
 					map: map
 				});
 				var infowindow${place.id} = new google.maps.InfoWindow({
-				    content: "<h4>${fn:join(place.namesAsArray, ' / ')}</h4><p><a href=\"${placeUri}\">${placeUri}</a></p>",
+				    content: "<h4>${place.prefName.title}</h4><p><a href=\"${placeUri}\">${placeUri}</a></p>",
 				});
 				google.maps.event.addListener(marker${place.id}, 'click', function() {
 					if (activeinfowindow) activeinfowindow.close();  

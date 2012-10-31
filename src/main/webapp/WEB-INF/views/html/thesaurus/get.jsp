@@ -36,7 +36,7 @@
 						<c:forEach var="place" items="${places}" varStatus="status">
 							{
 								"data": {
-									"title": "${fn:join(place.namesAsArray, " / ")}",
+									"title": "${place.prefName.title}",
 									"attr": { "href": "${baseUri}place/${place.id}" }
 								},
 								"metadata": { id: "${place.id}" },
@@ -56,7 +56,7 @@
 							$(data).each(function(index, place) {
 								result[index] = { 
 									data: { 
-										title: place.names[0].title,
+										title: place.prefName.title,
 										attr: { href: "${baseUri}place/" + place.gazId }
 									},
 									metadata: { id: place.gazId }

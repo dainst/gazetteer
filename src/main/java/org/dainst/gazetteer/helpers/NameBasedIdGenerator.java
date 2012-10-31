@@ -22,8 +22,8 @@ public class NameBasedIdGenerator implements IdGenerator {
 	public String generate(Place place) {
 		
 		String id;
-		if (place.getNames().size() > 0) {
-			id = place.getNames().get(0).getTitle();
+		if (place.getPrefName() != null && !place.getPrefName().getTitle().isEmpty()) {
+			id = place.getPrefName().getTitle();
 			if (id.length() > length) id = id.substring(0, length);
 			id = id.toLowerCase();
 			id = Normalizer.normalize(id, Normalizer.Form.NFD)

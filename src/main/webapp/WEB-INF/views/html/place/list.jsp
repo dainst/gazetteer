@@ -141,7 +141,7 @@
 									<c:forEach var="place" items="${places}">				
 										<tr>
 											<td>${place.id}</td>
-											<td><a href="place/${place.id}?limit=${limit}&offset=${offset}&q=${q}&view=${view}">${fn:join(place.namesAsArray, " / ")}</a></td>
+											<td><a href="place/${place.id}?limit=${limit}&offset=${offset}&q=${q}&view=${view}">${place.prefName.title}</a></td>
 											<c:if test="${!fn:contains(view, 'map')}">
 												<td>${place.type}</td>
 												<td>
@@ -154,7 +154,22 @@
 											<td>${place.thesaurus}</td>
 											<td>
 												<s:message code="ui.copyToClipboard" var="copyMsg"/>
-												<a href="javascript:window.prompt ('${copyMsg}', '${baseUri}place/${place.id}')"><i class="icon-share"></i></a>
+												<div class="modal hide" id="copyUriModal">
+													<div class="modal-header">
+														<button type="button" class="close" data-dismiss="modal">×</button>
+														<h3><s:message code="ui.copyToClipboardHeading"/></h3>
+													</div>
+													<div class="modal-body">
+														<label>${copyMsg}</label>
+														<input class="input-xxlarge" type="text" value="${baseUri}place/${place.id}" id="copyUriInput">
+													</div>
+												</div>
+												<script type="text/javascript">
+													$("#copyUriModal").on("shown",function() {
+														$("#copyUriInput").focus().select();
+													});
+												</script>
+												<a data-toggle="modal" href="#copyUriModal"><i class="icon-share"></i></a>
 											</td>				
 										</tr>				
 									</c:forEach>

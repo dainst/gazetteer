@@ -19,7 +19,7 @@ request.setAttribute("places", places);
 		<c:set var="placeTitle" value="${nativePlaceName.title}" />
 	</c:when>
 	<c:otherwise>
-		<c:set var="placeTitle" value="${place.names[0].title}" />
+		<c:set var="placeTitle" value="${place.prefName.title}" />
 	</c:otherwise>
 </c:choose>
 
@@ -113,6 +113,13 @@ request.setAttribute("places", places);
 						
 						<h3><s:message code="domain.place.names" />:</h3>
 						<ul>
+							<li>
+								<strong><s:message code="domain.place.prefName" text="domain.place.prefName"/>: </strong>
+								${place.prefName.title}
+								<c:if test="${languages[place.prefName.language] != null}">
+									<em>(${languages[place.prefName.language]})</em>
+								</c:if>
+							</li>
 							<c:forEach var="placename" items="${place.names}">
 								<li>
 									${placename.title}
@@ -127,7 +134,7 @@ request.setAttribute("places", places);
 							<h3><s:message code="domain.place.parent" text="domain.place.parent" />:</h3>	
 							<ul>
 								<li>
-									<a href="${parent.id}?limit=${limit}&offset=${offset}&q=${q}&view=${view}">${fn:join(parent.namesAsArray, " / ")}
+									<a href="${parent.id}?limit=${limit}&offset=${offset}&q=${q}&view=${view}">${parent.prefName.title}
 										<c:if test="${parent.type != null}">
 											<em>(${parent.type})</em>
 										</c:if>
@@ -141,7 +148,7 @@ request.setAttribute("places", places);
 							<ul>
 								<c:forEach var="child" items="${children}">
 									<li>
-										<a href="${child.id}?limit=${limit}&offset=${offset}&q=${q}&view=${view}">${fn:join(child.namesAsArray, " / ")}
+										<a href="${child.id}?limit=${limit}&offset=${offset}&q=${q}&view=${view}">${child.prefName.title}
 											<c:if test="${child.type != null}">
 												<em>(${child.type})</em>
 											</c:if>
@@ -156,7 +163,7 @@ request.setAttribute("places", places);
 							<ul>
 								<c:forEach var="relatedPlace" items="${relatedPlaces}">
 									<li>
-										<a href="${relatedPlace.id}?limit=${limit}&offset=${offset}&q=${q}&view=${view}">${fn:join(relatedPlace.namesAsArray, " / ")}
+										<a href="${relatedPlace.id}?limit=${limit}&offset=${offset}&q=${q}&view=${view}">${relatedPlace.prefName.title}
 											<c:if test="${relatedPlace.type != null}">
 												<em>(${relatedPlace.type})</em>
 											</c:if>	
@@ -203,7 +210,7 @@ request.setAttribute("places", places);
 							<ul>
 								<c:forEach var="link" items="${place.links}">
 									<li>
-										<strong>${link.predicate}:</strong> ${link.object}
+										<strong>${link.predicate}:</strong> <a href="${link.object}" target="_blank">${link.object}</a>
 									</li>
 								</c:forEach>
 							</ul>

@@ -17,6 +17,8 @@ public class Place {
 	private String id;
 
 	private Set<Link> links = new HashSet<Link>();
+	
+	private PlaceName prefName;
 
 	private List<PlaceName> names = new ArrayList<PlaceName>();
 	
@@ -64,14 +66,6 @@ public class Place {
 
 	public List<PlaceName> getNames() {
 		return names;
-	}
-	
-	public String[] getNamesAsArray() {
-		String[] result = new String[names.size()];
-		for (int i = 0; i < names.size(); i++) {
-			result[i] = names.get(i).getTitle();
-		}
-		return result;
 	}
 
 	public Map<String, PlaceName> getNameMap() {
@@ -216,7 +210,15 @@ public class Place {
 	
 	public String toString() {
 		return String.format("Place(id: %s, name: %s, type: %s)",
-				getId(), getNames().get(0).getTitle(), getType());
+				getId(), getPrefName().getTitle(), getType());
+	}
+
+	public PlaceName getPrefName() {
+		return prefName;
+	}
+
+	public void setPrefName(PlaceName prefName) {
+		this.prefName = prefName;
 	}
 	
 }

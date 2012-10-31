@@ -36,8 +36,25 @@
 					<form:input path="type" class="input-xlarge" />
 				</div>
 			</div>
+			
+			<!-- preferred name -->
+			<h3><s:message code="domain.place.prefName" text="domain.place.prefName" /></h3>
+			<div class="control-group">
+				<label class="control-label">
+					<s:message code="domain.placename.title" text="domain.placename.title" />
+				</label>
+				<div class="controls">
+					<form:input path="prefName.title" class="input-xlarge" />
+					<s:message code="ui.language.notSpecified" var="langNotSpecified" />
+					<form:select path="prefName.language">
+						<form:option value="" label="${langNotSpecified}" />
+						<form:options items="${languages}" />
+					</form:select>
+					<div class="btn btn-danger minus">-</div>
+				</div>
+			</div>
 		
-			<!-- place names -->
+			<!-- other place names -->
 			<h3><s:message code="domain.place.names" text="domain.place.names" /></h3>
 			<c:forEach var="name" items="${place.names}" varStatus="loopStatus">
 				<div class="control-group">
