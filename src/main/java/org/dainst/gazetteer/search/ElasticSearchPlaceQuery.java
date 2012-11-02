@@ -3,7 +3,6 @@ package org.dainst.gazetteer.search;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
-import org.elasticsearch.index.query.CustomScoreQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHits;
@@ -14,6 +13,7 @@ public class ElasticSearchPlaceQuery {
 	//private static final Logger logger = LoggerFactory.getLogger(ElasticSearchPlaceQuery.class);
 	
 	private SearchRequestBuilder requestBuilder;
+	private QueryBuilder queryBuilder;
 	private long totalHits = -1;
 
 	public ElasticSearchPlaceQuery(Client client) {
@@ -21,15 +21,15 @@ public class ElasticSearchPlaceQuery {
 	}
 	
 	public ElasticSearchPlaceQuery metaSearch(String query) {
-		QueryBuilder basicQueryBuilder;
-		if("".equals(query) || "*".equals(query)) 
-			basicQueryBuilder = QueryBuilders.matchAllQuery();
-		else 
-			basicQueryBuilder = QueryBuilders.queryString(query).defaultField("_all");
-		CustomScoreQueryBuilder customScoreQueryBuilder = QueryBuilders.customScoreQuery(basicQueryBuilder);
+		if(query == null || "".equals(query) || "*".equals(query)) listAll();
+		else queryBuilder = QueryBuilders.queryString(query).defaultField("_all");
+		return this;
+	}
+	
+	public ElasticSearchPlaceQuery addBoostForChildren() {
 		// places with many children should get a higher score
-		customScoreQueryBuilder.script("_score + (doc['children'].values.length / 1000)");
-		requestBuilder.setQuery(customScoreQueryBuilder);
+		queryBuilder = QueryBuilders.customScoreQuery(queryBuilder)
+				.script("_score + (doc['children'].values.length / 1000)");
 		return this;
 	}
 	
@@ -42,7 +42,7 @@ public class ElasticSearchPlaceQuery {
 	}
 
 	public void listAll() {
-		requestBuilder.setQuery(QueryBuilders.matchAllQuery());		
+		queryBuilder = QueryBuilders.matchAllQuery();		
 	}
 	
 	public ElasticSearchPlaceQuery offset(int offset) {
@@ -61,6 +61,7 @@ public class ElasticSearchPlaceQuery {
 	
 	public String[] execute() {
 		
+		requestBuilder.setQuery(queryBuilder);
 		SearchResponse response = requestBuilder.execute().actionGet();
 		SearchHits hits = response.hits();
 		totalHits = hits.getTotalHits();
@@ -74,12 +75,12 @@ public class ElasticSearchPlaceQuery {
 	}
 
 	public ElasticSearchPlaceQuery fuzzySearch(String query) {
-		requestBuilder.setQuery(QueryBuilders.fuzzyQuery("_all", query));
+		queryBuilder = QueryBuilders.fuzzyQuery("_all", query);
 		return this;
 	}
 
 	public ElasticSearchPlaceQuery fuzzyLikeThisSearch(String query, String... fields) {
-		requestBuilder.setQuery(QueryBuilders.fuzzyLikeThisQuery(fields).likeText(query).minSimilarity(0f));
+		queryBuilder = QueryBuilders.fuzzyLikeThisQuery(fields).likeText(query).minSimilarity(0f);
 		return this;		
 	}
 

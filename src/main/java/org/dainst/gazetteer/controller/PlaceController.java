@@ -82,6 +82,7 @@ public class PlaceController {
 		} else {
 			query.listAll();
 		}
+		query.addBoostForChildren();
 		query.limit(limit);
 		query.offset(offset);
 		if (sort != null) {
