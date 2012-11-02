@@ -22,7 +22,8 @@ public class ElasticSearchPlaceQuery {
 	
 	public ElasticSearchPlaceQuery metaSearch(String query) {
 		if(query == null || "".equals(query) || "*".equals(query)) listAll();
-		else queryBuilder = QueryBuilders.queryString(query).defaultField("_all");
+		else queryBuilder = QueryBuilders.queryString(query + " OR _id:\"" + query + "\"")
+				.defaultField("_all"); // _id can't be added to _all, so it's appended here
 		return this;
 	}
 	

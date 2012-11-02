@@ -13,15 +13,11 @@ rs.initiate({ _id : "rs0", members : [ { _id : 0, host : "localhost:27017" } ] }
 # elasticsearch mapping for places
 {
     "place": {
+		"_id": {
+			"index": "not_analyzed",
+			"include_in_all": true
+		},
         "properties": {
-			"gazId": {
-				"type": "string",
-				"index": "not_analyzed"
-			},
-			"@id": {
-				"type": "string",
-				"index": "not_analyzed"
-			},
             "prefName": {
                 "properties": {
                     "language": {
@@ -62,8 +58,7 @@ rs.initiate({ _id : "rs0", members : [ { _id : 0, host : "localhost:27017" } ] }
 				"include_in_all": false
             },
             "deleted": {
-                "type": "boolean",
-				"include_in_all": false
+                "type": "boolean"
             },
             "ids": {
                 "properties": {
@@ -117,8 +112,7 @@ rs.initiate({ _id : "rs0", members : [ { _id : 0, host : "localhost:27017" } ] }
                 }
             },
             "needsReview": {
-                "type": "boolean",
-				"include_in_all": false
+                "type": "boolean"
             },
             "parent": {
                 "type": "string",
