@@ -1,13 +1,11 @@
 package org.dainst.gazetteer.domain;
 
-import org.springframework.data.mongodb.core.geo.Point;
-import org.springframework.data.mongodb.core.geo.Polygon;
 
 public class Location {
 
-	private Point point;
+	private double[] coordinates;
 
-	private Polygon polygon;
+	private double[][] polygon;
 	
 	private int confidence = 0;
 	
@@ -15,40 +13,38 @@ public class Location {
 		
 	}
 	
-	public Location(double lat, double lng) {
-		point = new Point(lng, lat);
+	public Location(double lng, double lat) {
+		coordinates = new double[]{ lng, lat };
 	}
 
-	public Point getPoint() {
-		return point;
+	public double[] getCoordinates() {
+		return coordinates;
 	}
 
-	public void setPoint(Point point) {
-		this.point = point;
+	public void setCoordinates(double[] point) {
+		this.coordinates = point;
 	}
 
-	public Polygon getPolygon() {
+	public double[][] getPolygon() {
 		return polygon;
 	}
 
-	public void setPolygon(Polygon polygon) {
+	public void setPolygon(double[][] polygon) {
 		this.polygon = polygon;
 	}
 	
-	public double[] getCoordinates() {
-		return point.asArray();
-	}
-	
-	public void setCoordinates(double[] coordinates) {
-		point = new Point(coordinates[1], coordinates[0]);
-	}
-	
 	public double getLat() {
-		return point.getY();
+		if (coordinates.length >= 2)
+			return coordinates[1];
+		else
+			return 0;
 	}
 	
 	public double getLng() {
-		return point.getX();
+		if (coordinates.length >= 1)
+			return coordinates[0];
+		else
+			return 0;
 	}
 
 	public int getConfidence() {

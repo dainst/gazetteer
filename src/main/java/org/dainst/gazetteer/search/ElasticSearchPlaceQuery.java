@@ -3,6 +3,8 @@ package org.dainst.gazetteer.search;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
+import org.elasticsearch.index.query.CustomScoreQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.sort.SortOrder;
@@ -19,8 +21,15 @@ public class ElasticSearchPlaceQuery {
 	}
 	
 	public ElasticSearchPlaceQuery metaSearch(String query) {
-		if("".equals(query) || "*".equals(query)) requestBuilder.setQuery(QueryBuilders.matchAllQuery());
-		else requestBuilder.setQuery(QueryBuilders.queryString(query).defaultField("_all"));
+		QueryBuilder basicQueryBuilder;
+		if("".equals(query) || "*".equals(query)) 
+			basicQueryBuilder = QueryBuilders.matchAllQuery();
+		else 
+			basicQueryBuilder = QueryBuilders.queryString(query).defaultField("_all");
+		CustomScoreQueryBuilder customScoreQueryBuilder = QueryBuilders.customScoreQuery(basicQueryBuilder);
+		// places with many children should get a higher score
+		customScoreQueryBuilder.script("_score + (doc['children'].values.length / 1000)");
+		requestBuilder.setQuery(customScoreQueryBuilder);
 		return this;
 	}
 	

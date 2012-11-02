@@ -366,7 +366,8 @@ $("#place-form").submit(function(event) {
 			if ($(input).val()) {
 				if (place[obj][index] == undefined) place[obj][index] = {};
 				if (field === "coordinates") {
-					place[obj][index]["coordinates"] = $(input).val().split(",");
+					// coords are typed in lat long order but stored in long lat
+					place[obj][index]["coordinates"] = $(input).val().split(",").reverse();
 				} else if (field == name) {
 					place[obj][index] = $(input).val();
 				} else {

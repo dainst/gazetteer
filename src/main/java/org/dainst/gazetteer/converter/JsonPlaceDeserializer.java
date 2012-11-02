@@ -158,7 +158,7 @@ public class JsonPlaceDeserializer {
 				if (lat > 90 || lat < -90 || lng > 180 || lng < -180)
 					throw new HttpMessageNotReadableException("Invalid location object. Attribute \"coordinates\" cannot be read.");
 				
-				location.setCoordinates(new double[]{lat, lng});
+				location.setCoordinates(new double[]{lng, lat});
 				
 				if (locationNode.has("confidence")) {
 					location.setConfidence(locationNode.get("confidence").asInt());
