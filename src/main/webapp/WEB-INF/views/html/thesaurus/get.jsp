@@ -37,7 +37,7 @@
 							{
 								"data": {
 									"title": "${place.prefName.title}",
-									"attr": { "href": "${baseUri}place/${place.id}" }
+									"attr": { "href": "${baseUri}doc/${place.id}.html" }
 								},
 								"metadata": { id: "${place.id}" },
 								"state" : "closed"
@@ -45,7 +45,7 @@
 						</c:forEach>
 					],
 					"ajax": {
-						"url": function(n) { return "${baseUri}/place?limit=10000&q=parent:" + n.data("id"); },
+						"url": function(n) { return "${baseUri}search?limit=10000&q=parent:" + n.data("id"); },
 						"error":  function(data) {
 							console.log("ERROR:");
 							console.log(data);
@@ -57,7 +57,7 @@
 								result[index] = { 
 									data: { 
 										title: place.prefName.title,
-										attr: { href: "${baseUri}place/" + place.gazId }
+										attr: { href: "${baseUri}doc/" + place.gazId + ".html" }
 									},
 									metadata: { id: place.gazId }
 								};
