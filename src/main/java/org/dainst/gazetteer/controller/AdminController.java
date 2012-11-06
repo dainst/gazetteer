@@ -47,11 +47,6 @@ public class AdminController {
 	
 	@Autowired
 	private IdGenerator idGenerator;
-
-	@RequestMapping(value="/")
-	public String home() {
-		return "forward:/place";
-	}
 	
 	@RequestMapping(value="/admin/generate", method = RequestMethod.POST)
 	@ResponseBody

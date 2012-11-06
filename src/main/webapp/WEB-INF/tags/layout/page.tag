@@ -1,9 +1,12 @@
 <%@ tag description="page layout" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://www.springframework.org/tags" prefix="s"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
+<%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ attribute name="title" required="true" type="java.lang.String"%>
 <%@ attribute name="subtitle" type="java.lang.String"%>
+
+<s:url var="searchAction" value="/search" />
 
 <!DOCTYPE HTML>
 <html>
@@ -62,24 +65,24 @@
 					</li>
 				</ul>
 			</div><!--/.nav-collapse -->
-			<form class="navbar-search pull-left" action="/gazetteer/place">
+			<form:form class="navbar-search pull-left" action="${searchAction}" method="GET">
 				<s:message code="ui.search.simpleSearch" text="Einfache Suche" var="titleSimpleSearch"/>
  				<input type="text" class="search-query" placeholder="${titleSimpleSearch}" name="q">
  				<i class="icon-search icon-white"></i>
-			</form>
+			</form:form>
 		</div>
 	</div>
 </div>
 
 <div id="extendedSearchDiv">
-	<form class="form-inline" action="/gazetteer/place">
+	<form:form class="form-inline" action="${searchAction}" method="GET">
 		<input type="text" class="search-query input-large" name="q">
 		<label class="checkbox">
 			<input type="checkbox" name="fuzzy" value="true">
 			<s:message code="ui.search.fuzzySearch" text="Unscharfe Suche" />
 		</label>
 		<button type="submit" class="btn"><s:message code="ui.search.submit" text="Suchen"/></button>
-	</form>
+	</form:form>
 </div>
 
 <div class="container-fluid">
