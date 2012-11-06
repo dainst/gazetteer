@@ -23,9 +23,11 @@
 		<property name="writeResultChecking" value="EXCEPTION" />
 	</bean>
 	
-	<bean id="idGenerator" class="org.dainst.gazetteer.helpers.NameBasedIdGenerator">
-		<property name="length" value="8" />
-		<property name="placeRepository" ref="placeRepository" />
+	<bean id="idGenerator" class="org.dainst.gazetteer.helpers.MongoBasedIncrementingIdGenerator">
+		<constructor-arg ref="mongoTemplate" />
+		<constructor-arg value="place_id_counter3" />
+		<constructor-arg value="2000000" />
+		<property name="blockSize" value="1000" />
 	</bean>
 
 </beans>
