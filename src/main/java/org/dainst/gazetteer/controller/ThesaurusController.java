@@ -8,6 +8,7 @@ import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.Thesaurus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,7 +31,7 @@ public class ThesaurusController {
 	public ModelAndView getThesaurus(@PathVariable String key) {
 		
 		Thesaurus thesaurus = thesaurusRepository.findOne(key);
-		List<Place> places = placeRepository.findByThesaurusAndType(key, "continent");
+		List<Place> places = placeRepository.findByThesaurusAndType(key, "continent", new Sort("prefName"));
 		
 		ModelAndView mav = new ModelAndView("thesaurus/get");
 		mav.addObject("thesaurus", thesaurus);

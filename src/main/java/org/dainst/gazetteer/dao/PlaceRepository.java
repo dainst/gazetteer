@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.dainst.gazetteer.domain.Identifier;
 import org.dainst.gazetteer.domain.Place;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 public interface PlaceRepository extends PagingAndSortingRepository<Place, String> {
@@ -17,7 +18,7 @@ public interface PlaceRepository extends PagingAndSortingRepository<Place, Strin
 
 	public List<Place> findByThesaurusAndParentIsNull(String key);
 
-	public List<Place> findByThesaurusAndType(String key, String type);
+	public List<Place> findByThesaurusAndType(String key, String type, Sort sort);
 
 	public Place findByIds(Identifier id);
 

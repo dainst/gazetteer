@@ -15,6 +15,8 @@
 <!--
 
 var mapsApiCallback;
+var map;
+var markers = [];
 
 function requireGoogleMaps(callback, apiKey) {
 	
@@ -47,18 +49,18 @@ function requireGoogleMaps(callback, apiKey) {
 			center: new google.maps.LatLng(0, 0),
 			mapTypeId: google.maps.MapTypeId.ROADMAP
 		};
-		var map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+		map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
 
 		// add markers for locations and auto zoom and center map
 		var bounds = new google.maps.LatLngBounds();
 		var activeinfowindow;
-		var ll
+		var ll;
 		<c:forEach var="place" items="${places}">	
 			<c:forEach var="location" items="${place.locations}">
 				<c:set var="placeUri" value="${baseUri}place/${place.id}"/>
 				<c:set var="title" value="${place.prefName.title}"/>
 				ll = new google.maps.LatLng("${location.lat}", "${location.lng}");
-				var marker${place.id} = new google.maps.Marker({
+				markers['${place.id}'] = new google.maps.Marker({
 					position: ll,
 					title: "${title}",
 					map: map
@@ -66,9 +68,9 @@ function requireGoogleMaps(callback, apiKey) {
 				var infowindow${place.id} = new google.maps.InfoWindow({
 				    content: "<h4>${place.prefName.title}</h4><p><a href=\"${placeUri}\">${placeUri}</a></p>",
 				});
-				google.maps.event.addListener(marker${place.id}, 'click', function() {
+				google.maps.event.addListener(markers['${place.id}'], 'click', function() {
 					if (activeinfowindow) activeinfowindow.close();  
-					infowindow${place.id}.open(map,marker${place.id});
+					infowindow${place.id}.open(map,markers['${place.id}']);
 					activeinfowindow = infowindow${place.id};
 				});
 				bounds.extend(ll);
@@ -87,6 +89,29 @@ function requireGoogleMaps(callback, apiKey) {
 	}
 
 })(); // We call our anonymous function immediately
+
+var dynMarker;
+
+function zoomToPlace(placeId) {
+	
+	$.getJSON('${baseUri}doc/'+ placeId +'.json', function(place) {
+		if (place.locations && place.locations[0]) {
+			var ll = new google.maps.LatLng(place.locations[0].coordinates[1], place.locations[0].coordinates[0]);
+			dynMarker = new google.maps.Marker({
+				position: ll,
+				title: place.prefName.title,
+				map: map
+			});
+			map.setZoom(5);
+			map.panTo(dynMarker.position);
+		}
+	});
+	
+}
+
+function resetMarker() {
+	if (dynMarker) dynMarker.setMap(null);
+}
 
 //-->
 </script>

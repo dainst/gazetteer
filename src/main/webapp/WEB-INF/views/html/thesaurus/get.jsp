@@ -28,9 +28,13 @@
 		<script type="text/javascript">		
 
 		$(function () {
-			$("#thesaurusTree").bind("loaded.jstree", function (event, data) {
-				console.log("loaded tree");
-		    }).jstree({ 
+			$("#thesaurusTree").bind("hover_node.jstree", function(event, data) {
+				zoomToPlace($(data.rslt.obj[0]).data("id"));
+			}).bind("dehover_node.jstree", function(event, data) {
+				resetMarker();
+			}).bind("select_node.jstree", function(event, data) {
+				window.location.href = "${baseUri}doc/" + $(data.rslt.obj[0]).data("id") + ".html";
+			}).jstree({ 
 				"json_data" : {
 					"data": [
 						<c:forEach var="place" items="${places}" varStatus="status">
@@ -45,25 +49,25 @@
 						</c:forEach>
 					],
 					"ajax": {
-						"url": function(n) { return "${baseUri}search?limit=10000&q=parent:" + n.data("id"); },
+						"url": function(n) { return "${baseUri}search?sort=prefName.title.sort&limit=10000&q=parent:" + n.data("id"); },
 						"error":  function(data) {
 							console.log("ERROR:");
 							console.log(data);
 						},
 						"success": function(data) {
-							console.log(data);
 							var result = [];
 							$(data).each(function(index, place) {
 								result[index] = { 
 									data: { 
 										title: place.prefName.title,
-										attr: { href: "${baseUri}doc/" + place.gazId + ".html" }
+										attr: { 
+											href: "${baseUri}doc/" + place.gazId + ".html"
+										}
 									},
 									metadata: { id: place.gazId }
 								};
 								if (place.children) result[index].state = "closed";
 							});
-							console.log(result);
 							return result;
 						}
 					}
@@ -73,7 +77,7 @@
 					"dots" : false,
 					"icons" : false
 				},
-				"plugins" : [ "themes", "json_data" ]
+				"plugins" : [ "themes", "json_data", "ui" ]
 			});
 		});
 		
