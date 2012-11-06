@@ -25,8 +25,8 @@
 	
 	<bean id="idGenerator" class="org.dainst.gazetteer.helpers.MongoBasedIncrementingIdGenerator">
 		<constructor-arg ref="mongoTemplate" />
-		<constructor-arg value="place_id_counter3" />
-		<constructor-arg value="2000000" />
+		<constructor-arg value="place_id_counter4" />
+		<constructor-arg value="1000000" />
 		<property name="blockSize" value="1000" />
 	</bean>
 

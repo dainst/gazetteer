@@ -25,7 +25,7 @@ public class MongoBasedIncrementingIdGenerator implements IdGenerator {
 			counter.setId(counterId);
 			counter.setValue(start);
 		}
-		nextId = start;
+		nextId = counter.getValue();
 		allocateBlock();
 	}
 
