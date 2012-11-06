@@ -14,6 +14,8 @@ places.add((Place) request.getAttribute("place"));
 request.setAttribute("places", places);
 %>
 
+<s:url var="searchAction" value="/search" />
+
 <c:choose>
 	<c:when test="${nativePlaceName != null && nativePlaceName.title != ''}">
 		<c:set var="placeTitle" value="${nativePlaceName.title}" />
@@ -37,7 +39,7 @@ request.setAttribute("places", places);
 			<ul class="nav nav-pills">
 				<c:if test="${limit != null}">
 					<li>
-						<a href="${baseUri}place?limit=${limit}&offset=${offset}&q=${q}&view=${view}">
+						<a href="${searchAction}?limit=${limit}&offset=${offset}&q=${q}&view=${view}">
 							&larr; 
 							<s:message code="ui.search.back" />
 						</a>
