@@ -1,15 +1,19 @@
 package org.dainst.gazetteer.harvest;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
-import org.dainst.gazetteer.dao.HarvesterDefinitionDao;
-import org.dainst.gazetteer.dao.PlaceDao;
-import org.dainst.gazetteer.dao.ThesaurusDao;
+import org.dainst.gazetteer.dao.HarvesterDefinitionRepository;
+import org.dainst.gazetteer.dao.PlaceRepository;
+import org.dainst.gazetteer.dao.ThesaurusRepository;
 import org.dainst.gazetteer.domain.HarvesterDefinition;
 import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.Thesaurus;
 import org.dainst.gazetteer.helpers.EntityIdentifier;
+import org.dainst.gazetteer.helpers.IdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,23 +23,27 @@ public class HarvestingHandler implements Runnable {
 	
 	private HarvesterDefinition harvesterDefinition;
 	
-	private PlaceDao placeDao;
+	private PlaceRepository placeDao;
 
-	private ThesaurusDao thesaurusDao;
+	private ThesaurusRepository thesaurusDao;
 
-	private HarvesterDefinitionDao harvesterDefinitionDao;
+	private HarvesterDefinitionRepository harvesterDefinitionDao;
 
 	private EntityIdentifier entityIdentifier;
+
+	private IdGenerator idGenerator;
 	
 	public HarvestingHandler(HarvesterDefinition harvesterDefinition,
-			PlaceDao placeDao, ThesaurusDao thesaurusDao, 
-			HarvesterDefinitionDao harvesterDefinitionDao,
+			PlaceRepository placeDao, ThesaurusRepository thesaurusDao, 
+			HarvesterDefinitionRepository harvesterDefinitionDao,
+			IdGenerator idGenerator,
 			EntityIdentifier entityIdentifier) {
 		
 		this.harvesterDefinition = harvesterDefinition;
 		this.placeDao = placeDao;	
 		this.thesaurusDao = thesaurusDao;
 		this.harvesterDefinitionDao = harvesterDefinitionDao;
+		this.idGenerator = idGenerator;
 		this.entityIdentifier = entityIdentifier;
 		
 	}
@@ -46,12 +54,12 @@ public class HarvestingHandler implements Runnable {
 		try {
 			
 			// get current harvesterDefinition from DB
-			harvesterDefinition = harvesterDefinitionDao.getHarvesterDefinitionByName(harvesterDefinition.getName());
+			harvesterDefinition = harvesterDefinitionDao.getByName(harvesterDefinition.getName());
 			
 			// prevent multiple instances of the same harvester from being executed simultaneously
 			if (!harvesterDefinition.isEnabled()) {
 				logger.info("Harvester {} is disabled. Skipping execution ...",
-						harvesterDefinition.getHarvesterType().getSimpleName());
+						harvesterDefinition.getName());
 				return;
 			}
 			
@@ -60,7 +68,7 @@ public class HarvestingHandler implements Runnable {
 				if (harvesterDefinition.getLastHarvestedDate() != null)
 					formattedDate = new SimpleDateFormat().format(harvesterDefinition.getLastHarvestedDate());
 				logger.info("Running {}. Last time run: {}", 
-						harvesterDefinition.getHarvesterType().getSimpleName(), formattedDate);
+						harvesterDefinition.getName(), formattedDate);
 			}
 			
 			harvesterDefinition.setEnabled(false);
@@ -71,33 +79,54 @@ public class HarvestingHandler implements Runnable {
 				throw new IllegalStateException("Target thesaurus not found in database");
 			}
 			
-			Harvester harvester = harvesterDefinition.getHarvesterType().newInstance();
-			harvester.harvest(harvesterDefinition.getLastHarvestedDate());			
+			@SuppressWarnings("unchecked")
+			Class<Harvester> clazz = (Class<Harvester>) Class.forName(harvesterDefinition.getHarvesterType());
+			Harvester harvester = clazz.newInstance();
+			harvester.harvest(harvesterDefinition.getLastHarvestedDate());
+			harvester.setIdGenerator(idGenerator);
 			
 			while (true) {
 				
-				Place candidatePlace = harvester.getNextPlace();
+				Map<String,Place> candidatePlaces = harvester.getNextPlaces();
 				
-				logger.debug("got place from harvester: {}", candidatePlace);
+				if (candidatePlaces == null || candidatePlaces.isEmpty()) break;
 				
-				if (candidatePlace == null) break;
+				List<Place> places = new ArrayList<Place>();
 				
-				saveRecursive(candidatePlace, thesaurus);				
-				
-				/*Place identifiedPlace = entityIdentifier.identify(candidatePlace, thesaurus);
-				if (identifiedPlace != null) {
-					logger.info("identified place: {}", candidatePlace.getId());
-					// TODO merge places
-					for (Place child : candidatePlace.getChildren()) {
-						identifiedPlace.addChild(child);
+				// perform entity identification
+				for (Place candidatePlace : candidatePlaces.values()) {
+					
+					logger.debug("got place from harvester: {}", candidatePlace);
+					
+					Place identifiedPlace = entityIdentifier.identify(candidatePlace, thesaurus);
+					if (identifiedPlace != null) {
+						logger.info("identified place: {}", identifiedPlace.getId());
+						// TODO merge places
+						// add children of candidate to identified place
+						for (String childId : candidatePlace.getChildren()) {
+							identifiedPlace.addChild(childId);
+						}
+						// replace id in other places in the result
+						for (Place place : candidatePlaces.values()) {
+							if (place.getParent() != null && place.getParent().equals(candidatePlace.getId()))
+								place.setParent(identifiedPlace.getId());
+							if (place.getChildren().contains(candidatePlace.getId())) {
+								place.getChildren().remove(candidatePlace.getId());
+								place.getChildren().add(identifiedPlace.getId());
+							}
+						}
+						places.add(identifiedPlace);
+					} else {
+						places.add(candidatePlace);
 					}
-					placeDao.delete(candidatePlace.getId());
-					placeDao.save(identifiedPlace);
-				}*/
+				}
 				
-				// TODO: beziehungen gerade biegen
-				// bei CascadeType.MERGE werden die children und ihre identifier zu früh gespeichert
-				// ohne gibt es eine TransientObjectException
+				// save places
+				for (Place place : places) {					
+					place.setThesaurus(thesaurus.getKey());				
+					placeDao.save(place);
+					logger.info("saved place: {}", place.getId());
+				}
 				
 			}
 			
@@ -111,20 +140,6 @@ public class HarvestingHandler implements Runnable {
 			//harvesterDefinition.setRunning(false);
 			//harvesterDefinitionDao.save(harvesterDefinition);
 			throw new RuntimeException("error while creating harvester", e);
-		}
-		
-	}
-
-	private void saveRecursive(Place candidatePlace, Thesaurus thesaurus) {
-		
-		candidatePlace.setThesaurus(thesaurus);				
-		Place savedPlace = placeDao.save(candidatePlace);
-		logger.info("saved place: {}", savedPlace.getId());
-		
-		if (candidatePlace.getChildren().size() > 0) {
-			for (Place child : candidatePlace.getChildren()) {
-				saveRecursive(child, thesaurus);
-			}
 		}
 		
 	}

@@ -1,19 +1,19 @@
 package org.dainst.gazetteer.search;
 
-import org.dainst.gazetteer.converter.JsonPlaceDeserializer;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
+import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHits;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.elasticsearch.search.sort.SortOrder;
 
 public class ElasticSearchPlaceQuery {
 	
-	private static final Logger logger = LoggerFactory.getLogger(ElasticSearchPlaceQuery.class);
+	//private static final Logger logger = LoggerFactory.getLogger(ElasticSearchPlaceQuery.class);
 	
 	private SearchRequestBuilder requestBuilder;
+	private QueryBuilder queryBuilder;
 	private long totalHits = -1;
 
 	public ElasticSearchPlaceQuery(Client client) {
@@ -21,13 +21,29 @@ public class ElasticSearchPlaceQuery {
 	}
 	
 	public ElasticSearchPlaceQuery metaSearch(String query) {
-		if("".equals(query) || "*".equals(query)) requestBuilder.setQuery(QueryBuilders.matchAllQuery());
-		else requestBuilder.setQuery(QueryBuilders.textQuery("_all", query));
+		if(query == null || "".equals(query) || "*".equals(query)) listAll();
+		else queryBuilder = QueryBuilders.queryString(query + " OR _id:\"" + query + "\"")
+				.defaultField("_all"); // _id can't be added to _all, so it's appended here
+		return this;
+	}
+	
+	public ElasticSearchPlaceQuery addBoostForChildren() {
+		// places with many children should get a higher score
+		queryBuilder = QueryBuilders.customScoreQuery(queryBuilder)
+				.script("_score + (doc['children'].values.length / 1000)");
+		return this;
+	}
+	
+	public ElasticSearchPlaceQuery addSort(String field, String order) {
+		if ("asc".equals(order))
+			requestBuilder.addSort(field, SortOrder.ASC);
+		else
+			requestBuilder.addSort(field, SortOrder.DESC);
 		return this;
 	}
 
 	public void listAll() {
-		requestBuilder.setQuery(QueryBuilders.matchAllQuery());		
+		queryBuilder = QueryBuilders.matchAllQuery();		
 	}
 	
 	public ElasticSearchPlaceQuery offset(int offset) {
@@ -44,14 +60,15 @@ public class ElasticSearchPlaceQuery {
 		return totalHits;
 	}
 	
-	public int[] execute() {
+	public String[] execute() {
 		
+		requestBuilder.setQuery(queryBuilder);
 		SearchResponse response = requestBuilder.execute().actionGet();
 		SearchHits hits = response.hits();
 		totalHits = hits.getTotalHits();
-		int[] result = new int[hits.hits().length];
+		String[] result = new String[hits.hits().length];
 		for (int i = 0; i < result.length; i++) {
-			result[i] = Integer.parseInt(hits.getAt(i).getId());
+			result[i] = hits.getAt(i).getId();
 		}
 		
 		return result;
@@ -59,12 +76,12 @@ public class ElasticSearchPlaceQuery {
 	}
 
 	public ElasticSearchPlaceQuery fuzzySearch(String query) {
-		requestBuilder.setQuery(QueryBuilders.fuzzyQuery("_all", query));
+		queryBuilder = QueryBuilders.fuzzyQuery("_all", query);
 		return this;
 	}
 
 	public ElasticSearchPlaceQuery fuzzyLikeThisSearch(String query, String... fields) {
-		requestBuilder.setQuery(QueryBuilders.fuzzyLikeThisQuery(fields).likeText(query).minSimilarity(0f));
+		queryBuilder = QueryBuilders.fuzzyLikeThisQuery(fields).likeText(query).minSimilarity(0f);
 		return this;		
 	}
 

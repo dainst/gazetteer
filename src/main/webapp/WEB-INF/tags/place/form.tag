@@ -4,6 +4,9 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ attribute name="place" type="org.dainst.gazetteer.domain.Place" %>
+<%@ attribute name="parentPlace" type="org.dainst.gazetteer.domain.Place" %>
+<%@ attribute name="children" type="java.util.List" %>
+<%@ attribute name="relatedPlaces" type="java.util.List" %>
 <%@ attribute name="languages" type="java.util.Map" %>
 
 <c:choose>
@@ -33,8 +36,25 @@
 					<form:input path="type" class="input-xlarge" />
 				</div>
 			</div>
+			
+			<!-- preferred name -->
+			<h3><s:message code="domain.place.prefName" text="domain.place.prefName" /></h3>
+			<div class="control-group">
+				<label class="control-label">
+					<s:message code="domain.placename.title" text="domain.placename.title" />
+				</label>
+				<div class="controls">
+					<form:input path="prefName.title" class="input-xlarge" />
+					<s:message code="ui.language.notSpecified" var="langNotSpecified" />
+					<form:select path="prefName.language">
+						<form:option value="" label="${langNotSpecified}" />
+						<form:options items="${languages}" />
+					</form:select>
+					<div class="btn btn-danger minus">-</div>
+				</div>
+			</div>
 		
-			<!-- place names -->
+			<!-- other place names -->
 			<h3><s:message code="domain.place.names" text="domain.place.names" /></h3>
 			<c:forEach var="name" items="${place.names}" varStatus="loopStatus">
 				<div class="control-group">
@@ -42,7 +62,6 @@
 						<s:message code="domain.placename.title" text="domain.placename.title" />
 					</label>
 					<div class="controls">
-						<form:hidden path="names[${loopStatus.index}].id" />
 						<form:input path="names[${loopStatus.index}].title" class="input-xlarge" />
 						<s:message code="ui.language.notSpecified" var="langNotSpecified" />
 						<form:select path="names[${loopStatus.index}].language">
@@ -77,7 +96,6 @@
 						<s:message code="domain.location.coordinates" text="domain.location.coordinates" />
 					</label>
 					<div class="controls">
-						<form:hidden path="locations[${loopStatus.index}].id" />
 						<div class="input-append">
 							<c:set var="coordinates">${location.lat},${location.lng}</c:set>
 							<input type="text" name="locations[${loopStatus.index}].coordinates" value="${coordinates}" class="lnglat"><button class="picker-search-button btn" type="button">
@@ -120,7 +138,6 @@
 						<s:message code="domain.identifier.value" text="domain.identifier.value" />
 					</label>
 					<div class="controls">
-						<form:hidden path="identifiers[${loopStatus.index}].id" />
 						<form:input path="identifiers[${loopStatus.index}].value" class="input-large" />
 						<s:message code="domain.identifier.context" text="domain.identifier.context" />
 						<form:input path="identifiers[${loopStatus.index}].context" class="input-small" />
@@ -148,7 +165,6 @@
 						<s:message code="domain.comment.text" text="domain.comment.text" />
 					</label>
 					<div class="controls">
-						<form:hidden path="comments[${loopStatus.index}].id" />
 						<form:textarea path="comments[${loopStatus.index}].text" class="input-xlarge" />
 						<s:message code="ui.language.notSpecified" var="langNotSpecified" />
 						<form:select path="comments[${loopStatus.index}].language">
@@ -183,7 +199,6 @@
 						<s:message code="domain.tag.text" text="domain.tag.text" />
 					</label>
 					<div class="controls">
-						<form:hidden path="tags[${loopStatus.index}].id" />
 						<form:input path="tags[${loopStatus.index}].text" class="input-xlarge" />
 						<s:message code="ui.language.notSpecified" var="langNotSpecified" />
 						<form:select path="tags[${loopStatus.index}].language">
@@ -218,8 +233,8 @@
 				</label>
 				<div class="controls">
 					<c:choose>
-						<c:when test="${parent.id}">
-							<gaz:pick name="parent" id="parent" class="input-xlarge" value="${baseUri}place/${parent.id}" returnType="uri"></gaz:pick>
+						<c:when test="${parentPlace.id}">
+							<gaz:pick name="parent" id="parent" class="input-xlarge" value="${baseUri}place/${parentPlace.id}" returnType="uri"></gaz:pick>
 						</c:when>
 						<c:otherwise>
 							<gaz:pick name="parent" id="parent" class="input-xlarge" value="" returnType="uri"></gaz:pick>
@@ -230,7 +245,7 @@
 			
 			<!-- children -->
 			<h3><s:message code="domain.place.children" text="domain.place.children" /></h3>
-			<c:forEach var="child" items="${place.children}" varStatus="loopStatus">
+			<c:forEach var="child" items="${children}" varStatus="loopStatus">
 				<div class="control-group">
 					<label class="control-label">
 						<s:message code="domain.place" text="domain.place" />
@@ -253,7 +268,7 @@
 			
 			<!-- related places -->
 			<h3><s:message code="domain.place.relatedPlaces" text="domain.place.relatedPlaces" /></h3>
-			<c:forEach var="relatedPlace" items="${place.relatedPlaces}" varStatus="loopStatus">
+			<c:forEach var="relatedPlace" items="${relatedPlaces}" varStatus="loopStatus">
 				<div class="control-group">
 					<label class="control-label">
 						<s:message code="domain.place" text="domain.place" />
@@ -351,7 +366,8 @@ $("#place-form").submit(function(event) {
 			if ($(input).val()) {
 				if (place[obj][index] == undefined) place[obj][index] = {};
 				if (field === "coordinates") {
-					place[obj][index]["coordinates"] = $(input).val().split(",");
+					// coords are typed in lat long order but stored in long lat
+					place[obj][index]["coordinates"] = $(input).val().split(",").reverse();
 				} else if (field == name) {
 					place[obj][index] = $(input).val();
 				} else {

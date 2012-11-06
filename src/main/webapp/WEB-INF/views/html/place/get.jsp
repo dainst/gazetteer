@@ -19,7 +19,7 @@ request.setAttribute("places", places);
 		<c:set var="placeTitle" value="${nativePlaceName.title}" />
 	</c:when>
 	<c:otherwise>
-		<c:set var="placeTitle" value="${place.names[0].title}" />
+		<c:set var="placeTitle" value="${place.prefName.title}" />
 	</c:otherwise>
 </c:choose>
 
@@ -113,6 +113,13 @@ request.setAttribute("places", places);
 						
 						<h3><s:message code="domain.place.names" />:</h3>
 						<ul>
+							<li>
+								<strong><s:message code="domain.place.prefName" text="domain.place.prefName"/>: </strong>
+								${place.prefName.title}
+								<c:if test="${languages[place.prefName.language] != null}">
+									<em>(${languages[place.prefName.language]})</em>
+								</c:if>
+							</li>
 							<c:forEach var="placename" items="${place.names}">
 								<li>
 									${placename.title}
@@ -123,25 +130,25 @@ request.setAttribute("places", places);
 							</c:forEach>
 						</ul>
 						
-						<c:if test="${place.parent != null}">
+						<c:if test="${parent != null}">
 							<h3><s:message code="domain.place.parent" text="domain.place.parent" />:</h3>	
 							<ul>
 								<li>
-									<a href="${place.parent.id}?limit=${limit}&offset=${offset}&q=${q}&view=${view}">${fn:join(place.parent.namesAsArray, " / ")}
-										<c:if test="${place.parent.type != null}">
-											<em>(${place.parent.type})</em>
+									<a href="${parent.id}?limit=${limit}&offset=${offset}&q=${q}&view=${view}">${parent.prefName.title}
+										<c:if test="${parent.type != null}">
+											<em>(${parent.type})</em>
 										</c:if>
 									</a>
 								</li>
 							</ul>
 						</c:if>
 						
-						<c:if test="${!empty(place.children)}">
+						<c:if test="${!empty(children)}">
 							<h3><s:message code="domain.place.children" text="domain.place.children" />:</h3>
 							<ul>
-								<c:forEach var="child" items="${place.children}">
+								<c:forEach var="child" items="${children}">
 									<li>
-										<a href="${child.id}?limit=${limit}&offset=${offset}&q=${q}&view=${view}">${fn:join(child.namesAsArray, " / ")}
+										<a href="${child.id}?limit=${limit}&offset=${offset}&q=${q}&view=${view}">${child.prefName.title}
 											<c:if test="${child.type != null}">
 												<em>(${child.type})</em>
 											</c:if>
@@ -151,12 +158,12 @@ request.setAttribute("places", places);
 							</ul>
 						</c:if>					
 						
-						<c:if test="${!empty(place.relatedPlaces)}">
+						<c:if test="${!empty(relatedPlaces)}">
 							<h3><s:message code="domain.place.relatedPlaces" text="domain.place.relatedPlaces" />:</h3>
 							<ul>
-								<c:forEach var="relatedPlace" items="${place.relatedPlaces}">
+								<c:forEach var="relatedPlace" items="${relatedPlaces}">
 									<li>
-										<a href="${relatedPlace.id}?limit=${limit}&offset=${offset}&q=${q}&view=${view}">${fn:join(relatedPlace.namesAsArray, " / ")}
+										<a href="${relatedPlace.id}?limit=${limit}&offset=${offset}&q=${q}&view=${view}">${relatedPlace.prefName.title}
 											<c:if test="${relatedPlace.type != null}">
 												<em>(${relatedPlace.type})</em>
 											</c:if>	
@@ -184,7 +191,7 @@ request.setAttribute("places", places);
 						
 						<c:if test="${!empty(place.thesaurus)}">
 							<h3><s:message code="domain.thesaurus" text="domain.thesaurus" />: </h3>
-							<p>${place.thesaurus.title}</p>
+							<p>${place.thesaurus}</p>
 						</c:if>
 						
 						<c:if test="${!empty(place.identifiers)}">
@@ -193,6 +200,17 @@ request.setAttribute("places", places);
 								<c:forEach var="identifier" items="${place.identifiers}">
 									<li>
 										<strong>${identifier.context}:</strong> ${identifier.value}
+									</li>
+								</c:forEach>
+							</ul>
+						</c:if>
+						
+						<c:if test="${!empty(place.links)}">
+							<h3><s:message code="domain.place.links" text="domain.place.links" />:</h3>
+							<ul>
+								<c:forEach var="link" items="${place.links}">
+									<li>
+										<strong>${link.predicate}:</strong> <a href="${link.object}" target="_blank">${link.object}</a>
 									</li>
 								</c:forEach>
 							</ul>

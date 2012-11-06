@@ -7,6 +7,8 @@
 <s:message code="ui.search.result" var="pageTitle"/>
 <s:message code="ui.search.hits" var="pageSubtitleHits"/>
 
+<s:url var="searchAction" value="/search" />
+
 <l:page title="${pageTitle}">
 
 	<jsp:attribute name="subtitle">
@@ -18,13 +20,13 @@
 		<div class="subnav">
 			<ul class="nav nav-pills">
 				<li>
-					<a href="${baseUri}place?limit=10&offset=0&view=${view}&q=${q}" style="border: none"><i class="icon-stop"></i> 10</a>
+					<a href="${searchAction}?limit=10&offset=0&view=${view}&q=${q}" style="border: none"><i class="icon-stop"></i> 10</a>
 				</li>
 				<li>
-					<a href="${baseUri}place?limit=100&offset=0&view=${view}&q=${q}" style="border: none"><i class="icon-th-large"></i> 100</a>
+					<a href="${searchAction}?limit=100&offset=0&view=${view}&q=${q}" style="border: none"><i class="icon-th-large"></i> 100</a>
 				</li>
 				<li>
-					<a href="${baseUri}place?limit=1000&offset=0&view=${view}&q=${q}" style="border-left: none"><i class="icon-th"></i> 1000</a>
+					<a href="${searchAction}?limit=1000&offset=0&view=${view}&q=${q}" style="border-left: none"><i class="icon-th"></i> 1000</a>
 				</li>
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -33,17 +35,17 @@
 					</a>
 					<ul class="dropdown-menu">
 						<li>
-							<a href="${baseUri}place?limit=${limit}&offset=${offset}&q=${q}">
+							<a href="${searchAction}?limit=${limit}&offset=${offset}&q=${q}">
 								<i class="icon-globe"></i> <i class="icon-list"></i> <s:message code="ui.search.view.mapAndTable" />
 							</a>
 						</li>
 						<li>
-							<a href="${baseUri}place?limit=${limit}&offset=${offset}&view=map&q=${q}">
+							<a href="${searchAction}?limit=${limit}&offset=${offset}&view=map&q=${q}">
 								<i class="icon-globe"></i> <s:message code="ui.search.view.map" />
 							</a>
 						</li>
 						<li>
-							<a href="${baseUri}place?limit=${limit}&offset=${offset}&view=table&q=${q}">
+							<a href="${searchAction}?limit=${limit}&offset=${offset}&view=table&q=${q}">
 								<i class="icon-list"></i> <s:message code="ui.search.view.table" />
 							</a>
 						</li>
@@ -54,7 +56,7 @@
 						<c:choose>
 							<c:when test="${offset-limit >= 0}">
 								<li><a
-							href="${baseUri}place?limit=${limit}&offset=${offset-limit}&view=${view}&q=${q}">&larr; <s:message
+							href="${searchAction}?limit=${limit}&offset=${offset-limit}&view=${view}&q=${q}">&larr; <s:message
 									code="ui.previous" /></a></li>
 							</c:when>
 							<c:otherwise>
@@ -87,7 +89,7 @@
 						<c:choose>
 							<c:when test="${offset+limit < hits}">
 								<li>
-									<a href="${baseUri}place?limit=${limit}&offset=${offset+limit}&view=${view}&q=${q}">
+									<a href="${searchAction}?limit=${limit}&offset=${offset+limit}&view=${view}&q=${q}">
 									<s:message code="ui.next" text="Vor" /> &rarr;</a>
 								</li>
 							</c:when>
@@ -141,7 +143,7 @@
 									<c:forEach var="place" items="${places}">				
 										<tr>
 											<td>${place.id}</td>
-											<td><a href="place/${place.id}?limit=${limit}&offset=${offset}&q=${q}&view=${view}">${fn:join(place.namesAsArray, " / ")}</a></td>
+											<td><a href="doc/${place.id}.html?limit=${limit}&offset=${offset}&q=${q}&view=${view}">${place.prefName.title}</a></td>
 											<c:if test="${!fn:contains(view, 'map')}">
 												<td>${place.type}</td>
 												<td>
@@ -151,10 +153,25 @@
 													</c:forEach>
 												</td>
 											</c:if>
-											<td>${place.thesaurus.title}</td>
+											<td>${place.thesaurus}</td>
 											<td>
 												<s:message code="ui.copyToClipboard" var="copyMsg"/>
-												<a href="javascript:window.prompt ('${copyMsg}', '${baseUri}place/${place.id}')"><i class="icon-share"></i></a>
+												<div class="modal hide" id="copyUriModal">
+													<div class="modal-header">
+														<button type="button" class="close" data-dismiss="modal">×</button>
+														<h3><s:message code="ui.copyToClipboardHeading"/></h3>
+													</div>
+													<div class="modal-body">
+														<label>${copyMsg}</label>
+														<input class="input-xxlarge" type="text" value="${baseUri}place/${place.id}" id="copyUriInput">
+													</div>
+												</div>
+												<script type="text/javascript">
+													$("#copyUriModal").on("shown",function() {
+														$("#copyUriInput").focus().select();
+													});
+												</script>
+												<a data-toggle="modal" href="#copyUriModal"><i class="icon-share"></i></a>
 											</td>				
 										</tr>				
 									</c:forEach>

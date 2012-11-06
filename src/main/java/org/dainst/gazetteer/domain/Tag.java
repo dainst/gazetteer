@@ -1,18 +1,11 @@
 package org.dainst.gazetteer.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-
-@Entity
 public class Tag {
 	
 	private long id;
 	private String text;
 	private String language;
 	
-	@Id
-	@GeneratedValue
 	public long getId() {
 		return id;
 	}
