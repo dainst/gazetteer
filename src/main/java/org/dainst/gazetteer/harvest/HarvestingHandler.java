@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.dainst.gazetteer.dao.HarvesterDefinitionRepository;
 import org.dainst.gazetteer.dao.PlaceRepository;
@@ -92,24 +91,24 @@ public class HarvestingHandler implements Runnable {
 			
 			while (true) {
 				
-				Map<String,Place> candidatePlaces = harvester.getNextPlaces();
+				List<Place> candidatePlaces = harvester.getNextPlaces();
 				
 				if (candidatePlaces == null || candidatePlaces.isEmpty()) break;
 				
 				List<Place> places = new ArrayList<Place>();
 				
 				// perform entity identification
-				for (Place candidatePlace : candidatePlaces.values()) {
+				for (Place candidatePlace : candidatePlaces) {
 					
 					logger.debug("got place from harvester: {}", candidatePlace);
 					
 					Place identifiedPlace = entityIdentifier.identify(candidatePlace, thesaurus);
 					if (identifiedPlace != null) {
-						logger.info("identified place: {}", identifiedPlace.getId());
+						logger.info("identified place: {}", identifiedPlace);
 						Place mergedPlace = merger.merge(identifiedPlace, candidatePlace);
 						mergedPlace.setId(identifiedPlace.getId());
 						// replace id in other places in the result
-						for (Place place : candidatePlaces.values()) {
+						for (Place place : candidatePlaces) {
 							if (place.getParent() != null && place.getParent().equals(candidatePlace.getId()))
 								place.setParent(mergedPlace.getId());
 							if (place.getChildren().contains(candidatePlace.getId())) {
