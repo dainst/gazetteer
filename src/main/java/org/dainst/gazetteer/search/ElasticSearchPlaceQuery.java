@@ -22,8 +22,12 @@ public class ElasticSearchPlaceQuery {
 	
 	public ElasticSearchPlaceQuery metaSearch(String query) {
 		if(query == null || "".equals(query) || "*".equals(query)) listAll();
-		else queryBuilder = QueryBuilders.queryString(query + " OR _id:\"" + query + "\"")
-				.defaultField("_all"); // _id can't be added to _all, so it's appended here
+		// _id can't be added to _all, so it's appended here, prefName.title is
+		// added in order to boost it and prevent its score from being
+		// diminished by norms when occurring together with other fields in _all
+		else queryBuilder = QueryBuilders
+				.queryString(query + " OR _id:\"" + query + "\" OR prefName.title:" + query)
+				.defaultField("_all");
 		return this;
 	}
 	
