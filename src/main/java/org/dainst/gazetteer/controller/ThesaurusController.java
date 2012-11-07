@@ -26,6 +26,24 @@ public class ThesaurusController {
 	
 	@Value("${baseUri}")
 	private String baseUri;
+
+	@RequestMapping(value="/")
+	public String home() {
+		return "forward:/thesaurus";
+	}
+	
+	@RequestMapping(value="/thesaurus", method=RequestMethod.GET)
+	public ModelAndView listThesauri() {
+		
+		Iterable<Thesaurus> thesauri = thesaurusRepository.findAll();
+		
+		ModelAndView mav = new ModelAndView("thesaurus/list");
+		mav.addObject("thesauri", thesauri);
+		mav.addObject("baseUri", baseUri);
+		
+		return mav;
+		
+	}
 	
 	@RequestMapping(value="/thesaurus/{key}", method=RequestMethod.GET)
 	public ModelAndView getThesaurus(@PathVariable String key) {

@@ -49,11 +49,6 @@ public class SearchController {
 	
 	@Autowired
 	MessageSource messageSource;
-
-	@RequestMapping(value="/")
-	public String home() {
-		return "forward:/search";
-	}
 	
 	@RequestMapping(value="/search", method=RequestMethod.GET)
 	public ModelAndView listPlaces(@RequestParam(defaultValue="10") int limit,
