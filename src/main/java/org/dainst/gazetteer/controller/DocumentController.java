@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.RequestContext;
+import org.springframework.web.servlet.view.RedirectView;
 
 
 @Controller
@@ -64,21 +66,40 @@ public class DocumentController {
 			@RequestParam(required=false) String q,
 			@RequestParam(required=false) String fuzzy,
 			@RequestParam(required=false, defaultValue="map,table") String view,
-			HttpServletRequest request,
-			HttpServletResponse response) {
+			HttpServletRequest request) {
 		
 		RequestContext requestContext = new RequestContext(request);
 		Locale locale = requestContext.getLocale();
 
+		ModelAndView mav;
+		
 		Place place = placeDao.findOne(placeId);
-		if (place != null) {		
+		if (place == null) {
+			
+			throw new ResourceNotFoundException();
+			
+		} else if (place.getReplacedBy() != null && !place.getReplacedBy().isEmpty()) {
+			
+			String suffix = "";
+			String uri = request.getRequestURI();
+			logger.debug("uri: " + uri);
+			if (uri.lastIndexOf(".") > 0) {
+				suffix = uri.substring(uri.lastIndexOf("."));
+				logger.debug("suffix: " + suffix);
+			}
+			
+			RedirectView redirectView = new RedirectView("/doc/" + place.getReplacedBy() + suffix, true, true);
+			redirectView.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
+			mav = new ModelAndView(redirectView);
+			
+		} else {
 			
 			List<Place> children = placeDao.findByIdIn(place.getChildren());
 			List<Place> relatedPlaces = placeDao.findByIdIn(place.getRelatedPlaces());
 			Place parent = null;
 			if (place.getParent() != null) parent = placeDao.findOne(place.getParent());
 			
-			ModelAndView mav = new ModelAndView("place/get");
+			mav = new ModelAndView("place/get");
 			if (layout != null) {
 				mav.setViewName("place/"+layout);
 			}
@@ -96,12 +117,10 @@ public class DocumentController {
 			logger.debug(locale.getISO3Language());
 			mav.addObject("googleMapsApiKey", googleMapsApiKey);
 			mav.addObject("languages", getLocalizedLanguages(locale));
-			return mav;
 			
 		}
 		
-		response.setStatus(404);
-		return null;
+		return mav;
 
 	}
 	

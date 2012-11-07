@@ -3,8 +3,10 @@ package org.dainst.gazetteer.search;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
+import org.elasticsearch.index.query.FilterBuilders;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.index.query.QueryFilterBuilder;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.sort.SortOrder;
 
@@ -25,9 +27,12 @@ public class ElasticSearchPlaceQuery {
 		// _id can't be added to _all, so it's appended here, prefName.title is
 		// added in order to boost it and prevent its score from being
 		// diminished by norms when occurring together with other fields in _all
-		else queryBuilder = QueryBuilders
-				.queryString(query + " OR _id:\"" + query + "\" OR prefName.title:" + query)
-				.defaultField("_all");
+		else {
+			String queryString = query + " OR _id:\"" + query + "\"";
+			if (!query.contains(":")) queryString += " OR prefName.title:" + query;
+			queryBuilder = QueryBuilders.queryString(queryString).defaultField("_all");
+		}
+				
 		return this;
 	}
 	
@@ -43,6 +48,12 @@ public class ElasticSearchPlaceQuery {
 			requestBuilder.addSort(field, SortOrder.ASC);
 		else
 			requestBuilder.addSort(field, SortOrder.DESC);
+		return this;
+	}
+	
+	public ElasticSearchPlaceQuery addFilter(String filterQuery) {
+		QueryFilterBuilder filterBuilder = FilterBuilders.queryFilter(QueryBuilders.queryString(filterQuery));
+		queryBuilder = QueryBuilders.filteredQuery(queryBuilder, filterBuilder);
 		return this;
 	}
 

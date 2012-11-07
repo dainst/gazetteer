@@ -13,6 +13,9 @@ rs.initiate({ _id : "rs0", members : [ { _id : 0, host : "localhost:27017" } ] }
 # elasticsearch mapping for places
 {
     "place": {
+    	"_all": {
+    		"omit_norms": true
+    	},
 		"_id": {
 			"index": "not_analyzed",
 			"include_in_all": true

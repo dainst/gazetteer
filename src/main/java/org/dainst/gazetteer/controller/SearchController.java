@@ -85,6 +85,7 @@ public class SearchController {
 		if (sort != null) {
 			query.addSort(sort, order);
 		}
+		query.addFilter("deleted:false");
 		
 		// get ids from elastic search
 		String[] result = query.execute();
