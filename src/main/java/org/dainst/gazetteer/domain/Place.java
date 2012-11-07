@@ -1,9 +1,7 @@
 package org.dainst.gazetteer.domain;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -20,7 +18,7 @@ public class Place {
 	
 	private PlaceName prefName;
 
-	private List<PlaceName> names = new ArrayList<PlaceName>();
+	private Set<PlaceName> names = new HashSet<PlaceName>();
 	
 	private String type;
 
@@ -44,6 +42,8 @@ public class Place {
 	
 	private boolean deleted = false;
 	
+	private String replacedBy;
+	
 	public String getId() {
 		return id;
 	}
@@ -64,7 +64,7 @@ public class Place {
 		this.links.add(link);
 	}
 
-	public List<PlaceName> getNames() {
+	public Set<PlaceName> getNames() {
 		return names;
 	}
 
@@ -76,7 +76,7 @@ public class Place {
 		return result;
 	}
 
-	public void setNames(List<PlaceName> names) {
+	public void setNames(Set<PlaceName> names) {
 		this.names = names;
 	}
 	
@@ -207,11 +207,6 @@ public class Place {
 	public void setNeedsReview(boolean needsReview) {
 		this.needsReview = needsReview;
 	}
-	
-	public String toString() {
-		return String.format("Place(id: %s, name: %s, type: %s)",
-				getId(), getPrefName().getTitle(), getType());
-	}
 
 	public PlaceName getPrefName() {
 		return prefName;
@@ -220,5 +215,142 @@ public class Place {
 	public void setPrefName(PlaceName prefName) {
 		this.prefName = prefName;
 	}
+
+	public String getReplacedBy() {
+		return replacedBy;
+	}
+
+	public void setReplacedBy(String replacedBy) {
+		this.replacedBy = replacedBy;
+	}
+
+	@Override
+	public String toString() {
+		return "Place [id=" + id + ", prefName=" + prefName + ", names=" + names
+				+ ", type=" + type + ", links=" + links
+				+ ", locations=" + locations + ", parent=" + parent
+				+ ", children=" + children + ", relatedPlaces=" + relatedPlaces
+				+ ", comments=" + comments + ", tags=" + tags + ", ids=" + ids
+				+ ", thesaurus=" + thesaurus + ", needsReview=" + needsReview
+				+ ", deleted=" + deleted + ", replacedBy=" + replacedBy + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((children == null) ? 0 : children.hashCode());
+		result = prime * result
+				+ ((comments == null) ? 0 : comments.hashCode());
+		result = prime * result + (deleted ? 1231 : 1237);
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		result = prime * result + ((ids == null) ? 0 : ids.hashCode());
+		result = prime * result + ((links == null) ? 0 : links.hashCode());
+		result = prime * result
+				+ ((locations == null) ? 0 : locations.hashCode());
+		result = prime * result + ((names == null) ? 0 : names.hashCode());
+		result = prime * result + (needsReview ? 1231 : 1237);
+		result = prime * result + ((parent == null) ? 0 : parent.hashCode());
+		result = prime * result
+				+ ((prefName == null) ? 0 : prefName.hashCode());
+		result = prime * result
+				+ ((relatedPlaces == null) ? 0 : relatedPlaces.hashCode());
+		result = prime * result
+				+ ((replacedBy == null) ? 0 : replacedBy.hashCode());
+		result = prime * result + ((tags == null) ? 0 : tags.hashCode());
+		result = prime * result
+				+ ((thesaurus == null) ? 0 : thesaurus.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Place other = (Place) obj;
+		if (children == null) {
+			if (other.children != null)
+				return false;
+		} else if (!children.equals(other.children))
+			return false;
+		if (comments == null) {
+			if (other.comments != null)
+				return false;
+		} else if (!comments.equals(other.comments))
+			return false;
+		if (deleted != other.deleted)
+			return false;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		if (ids == null) {
+			if (other.ids != null)
+				return false;
+		} else if (!ids.equals(other.ids))
+			return false;
+		if (links == null) {
+			if (other.links != null)
+				return false;
+		} else if (!links.equals(other.links))
+			return false;
+		if (locations == null) {
+			if (other.locations != null)
+				return false;
+		} else if (!locations.equals(other.locations))
+			return false;
+		if (names == null) {
+			if (other.names != null)
+				return false;
+		} else if (!names.equals(other.names))
+			return false;
+		if (needsReview != other.needsReview)
+			return false;
+		if (parent == null) {
+			if (other.parent != null)
+				return false;
+		} else if (!parent.equals(other.parent))
+			return false;
+		if (prefName == null) {
+			if (other.prefName != null)
+				return false;
+		} else if (!prefName.equals(other.prefName))
+			return false;
+		if (relatedPlaces == null) {
+			if (other.relatedPlaces != null)
+				return false;
+		} else if (!relatedPlaces.equals(other.relatedPlaces))
+			return false;
+		if (replacedBy == null) {
+			if (other.replacedBy != null)
+				return false;
+		} else if (!replacedBy.equals(other.replacedBy))
+			return false;
+		if (tags == null) {
+			if (other.tags != null)
+				return false;
+		} else if (!tags.equals(other.tags))
+			return false;
+		if (thesaurus == null) {
+			if (other.thesaurus != null)
+				return false;
+		} else if (!thesaurus.equals(other.thesaurus))
+			return false;
+		if (type == null) {
+			if (other.type != null)
+				return false;
+		} else if (!type.equals(other.type))
+			return false;
+		return true;
+	}
+	
+	
 	
 }

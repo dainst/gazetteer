@@ -29,5 +29,7 @@
 		<constructor-arg value="1000000" />
 		<property name="blockSize" value="1000" />
 	</bean>
+	
+	<bean id="merger" class="org.dainst.gazetteer.helpers.SimpleMerger" />
 
 </beans>

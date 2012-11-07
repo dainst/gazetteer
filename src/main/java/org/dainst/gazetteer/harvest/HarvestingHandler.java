@@ -14,6 +14,7 @@ import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.Thesaurus;
 import org.dainst.gazetteer.helpers.EntityIdentifier;
 import org.dainst.gazetteer.helpers.IdGenerator;
+import org.dainst.gazetteer.helpers.Merger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,11 +34,14 @@ public class HarvestingHandler implements Runnable {
 
 	private IdGenerator idGenerator;
 	
+	private Merger merger;
+	
 	public HarvestingHandler(HarvesterDefinition harvesterDefinition,
 			PlaceRepository placeDao, ThesaurusRepository thesaurusDao, 
 			HarvesterDefinitionRepository harvesterDefinitionDao,
 			IdGenerator idGenerator,
-			EntityIdentifier entityIdentifier) {
+			EntityIdentifier entityIdentifier,
+			Merger merger) {
 		
 		this.harvesterDefinition = harvesterDefinition;
 		this.placeDao = placeDao;	
@@ -45,6 +49,7 @@ public class HarvestingHandler implements Runnable {
 		this.harvesterDefinitionDao = harvesterDefinitionDao;
 		this.idGenerator = idGenerator;
 		this.entityIdentifier = entityIdentifier;
+		this.merger = merger;
 		
 	}
 
@@ -101,21 +106,18 @@ public class HarvestingHandler implements Runnable {
 					Place identifiedPlace = entityIdentifier.identify(candidatePlace, thesaurus);
 					if (identifiedPlace != null) {
 						logger.info("identified place: {}", identifiedPlace.getId());
-						// TODO merge places
-						// add children of candidate to identified place
-						for (String childId : candidatePlace.getChildren()) {
-							identifiedPlace.addChild(childId);
-						}
+						Place mergedPlace = merger.merge(identifiedPlace, candidatePlace);
+						mergedPlace.setId(identifiedPlace.getId());
 						// replace id in other places in the result
 						for (Place place : candidatePlaces.values()) {
 							if (place.getParent() != null && place.getParent().equals(candidatePlace.getId()))
-								place.setParent(identifiedPlace.getId());
+								place.setParent(mergedPlace.getId());
 							if (place.getChildren().contains(candidatePlace.getId())) {
 								place.getChildren().remove(candidatePlace.getId());
-								place.getChildren().add(identifiedPlace.getId());
+								place.getChildren().add(mergedPlace.getId());
 							}
 						}
-						places.add(identifiedPlace);
+						places.add(mergedPlace);
 					} else {
 						places.add(candidatePlace);
 					}

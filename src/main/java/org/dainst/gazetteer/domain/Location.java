@@ -1,5 +1,7 @@
 package org.dainst.gazetteer.domain;
 
+import java.util.Arrays;
+
 
 public class Location {
 
@@ -53,6 +55,41 @@ public class Location {
 
 	public void setConfidence(int confidence) {
 		this.confidence = confidence;
+	}
+
+	@Override
+	public String toString() {
+		return "Location [coordinates=" + Arrays.toString(coordinates)
+				+ ", polygon=" + Arrays.toString(polygon) + ", confidence="
+				+ confidence + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + confidence;
+		result = prime * result + Arrays.hashCode(coordinates);
+		result = prime * result + Arrays.hashCode(polygon);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Location other = (Location) obj;
+		if (confidence != other.confidence)
+			return false;
+		if (!Arrays.equals(coordinates, other.coordinates))
+			return false;
+		if (!Arrays.deepEquals(polygon, other.polygon))
+			return false;
+		return true;
 	}
 
 }

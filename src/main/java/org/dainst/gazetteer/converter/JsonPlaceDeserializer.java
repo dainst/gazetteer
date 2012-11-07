@@ -1,9 +1,7 @@
 package org.dainst.gazetteer.converter;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.dainst.gazetteer.dao.PlaceRepository;
@@ -122,7 +120,7 @@ public class JsonPlaceDeserializer {
 			}
 			
 			// update name objects
-			List<PlaceName> names = new ArrayList<PlaceName>();
+			Set<PlaceName> names = new HashSet<PlaceName>();
 			JsonNode namesNode = objectNode.get("names");
 			if (namesNode != null) for (JsonNode nameNode : namesNode) {
 				PlaceName name = new PlaceName();
