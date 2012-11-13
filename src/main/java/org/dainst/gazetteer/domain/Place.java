@@ -21,6 +21,8 @@ public class Place {
 	private Set<PlaceName> names = new HashSet<PlaceName>();
 	
 	private String type;
+	
+	private Location prefLocation;
 
 	private Set<Location> locations = new HashSet<Location>();
 
@@ -349,6 +351,14 @@ public class Place {
 		} else if (!type.equals(other.type))
 			return false;
 		return true;
+	}
+
+	public Location getPrefLocation() {
+		return prefLocation;
+	}
+
+	public void setPrefLocation(Location prefLocation) {
+		this.prefLocation = prefLocation;
 	}
 	
 	

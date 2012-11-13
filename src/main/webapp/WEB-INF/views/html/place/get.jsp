@@ -195,8 +195,14 @@ request.setAttribute("places", places);
 								<br/>
 							</c:if>
 							
-							<c:if test="${fn:length(place.locations) > 0}">
+							<c:if test="${place.prefLocation != null}">
 								<dt><s:message code="domain.place.locations" text="domain.place.locations" /></dt>
+								<dd>
+									<em><s:message code="domain.location.latitude" text="domain.location.latitude" />:</em> ${place.prefLocation.lat},
+									<em><s:message code="domain.location.longitude" text="domain.location.longitude" />:</em> ${place.prefLocation.lng}
+									(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />:</em>
+									<s:message code="confidence.${place.prefLocation.confidence}" text="${place.prefLocation.confidence}"/>)
+								</dd>
 								<c:forEach var="location" items="${place.locations}">
 									<dd>
 										<em><s:message code="domain.location.latitude" text="domain.location.latitude" />:</em> ${location.lat},

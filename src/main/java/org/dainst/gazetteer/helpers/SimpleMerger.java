@@ -28,9 +28,22 @@ public class SimpleMerger implements Merger {
 		
 		result.setThesaurus(place1.getThesaurus());
 		
-		result.setPrefName(place1.getPrefName());
-		if (!result.getPrefName().equals(place2.getPrefName()))
-			result.addName(place2.getPrefName());
+		if (place1.getPrefName() != null) {
+			result.setPrefName(place1.getPrefName());
+			if (!result.getPrefName().equals(place2.getPrefName()))
+				result.addName(place2.getPrefName());
+		} else {
+			result.setPrefName(place2.getPrefName());
+		}
+		
+		if (place1.getPrefLocation() != null) {
+			result.setPrefLocation(place1.getPrefLocation());
+			if (!result.getPrefLocation().equals(place2.getPrefLocation())
+					&& place2.getPrefLocation() != null )
+				result.addLocation(place2.getPrefLocation());
+		} else {
+			result.setPrefLocation(place2.getPrefLocation());
+		}
 		
 		if (place1.getParent() != null && place1.getParent().isEmpty())
 			result.setParent(place1.getParent());

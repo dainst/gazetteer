@@ -61,11 +61,11 @@ function requireGoogleMaps(callback, apiKey) {
 		var activeinfowindow;
 		var ll = new google.maps.LatLng("${lat}","${lng}");
 		<c:set var="numLocations" value="0" />
-		<c:forEach var="place" items="${places}">	
-			<c:forEach var="location" items="${place.locations}">
-				<c:set var="placeUri" value="${baseUri}place/${place.id}"/>
-				<c:set var="title" value="${place.prefName.title}"/>
-				ll = new google.maps.LatLng("${location.lat}", "${location.lng}");
+		<c:forEach var="place" items="${places}">
+			<c:set var="placeUri" value="${baseUri}place/${place.id}"/>
+			<c:set var="title" value="${place.prefName.title}"/>
+			<c:if test="${place.prefLocation != null}">
+				ll = new google.maps.LatLng("${place.prefLocation.lat}", "${place.prefLocation.lng}");
 				markers['${place.id}'] = new google.maps.Marker({
 					position: ll,
 					title: "${title}",
@@ -81,7 +81,7 @@ function requireGoogleMaps(callback, apiKey) {
 				});
 				bounds.extend(ll);
 				<c:set var="numLocations" value="${numLocations+1}"/>
-			</c:forEach>
+			</c:if>
 		</c:forEach>
 		
 		<c:choose>
