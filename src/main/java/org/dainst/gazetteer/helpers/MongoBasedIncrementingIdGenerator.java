@@ -34,7 +34,7 @@ public class MongoBasedIncrementingIdGenerator implements IdGenerator {
 		if (nextId >= counter.getValue()) {
 			allocateBlock();
 		}
-		return BigInteger.valueOf(nextId++).toString(32).toLowerCase();
+		return String.valueOf(nextId++);
 	}
 	
 	private void allocateBlock() {

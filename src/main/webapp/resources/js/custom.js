@@ -10,10 +10,9 @@ $(document).ready(function(){
 	$('input.lnglat').locationPicker();
 	
 });
-
-// Fix navbar to top when scrolling
 $(document).scroll(function(){
-	
+
+	// Fix navbar to top when scrolling
 	if($('.subnav').length > 0) {
 		
 	    // If has not activated (has no attribute "data-top"
@@ -31,6 +30,26 @@ $(document).scroll(function(){
 	        $('.subnav').removeClass('subnav-fixed');
 	    
 	}
+	
+	// Fix map to top when scrolling
+	if($('.map-top').length > 0) {
+		
+	    // If has not activated (has no attribute "data-top"
+	    if (!$('.map-top').attr('data-top')) {
+	        // If already fixed, then do nothing
+	        if ($('.map-top').hasClass('map-top-fixed')) return;
+	        // Remember top position
+	        var offset = $('.map-top').offset();
+	        $('.map-top').attr('data-top', offset.top);
+	    }
+
+	    if ($('.map-top').attr('data-top') - $('.subnav').outerHeight() <= $(this).scrollTop())
+	        $('.map-top').addClass('map-top-fixed');
+	    else
+	        $('.map-top').removeClass('map-top-fixed');
+	    
+	}
+	
 });
 
 var mapsApiCallback;

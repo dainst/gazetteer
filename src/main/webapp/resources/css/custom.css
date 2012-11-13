@@ -126,7 +126,7 @@
 	top: 2px;
 }
 
-/* Fixed subnav on scroll, but only for 980px and up (sorry IE!) */
+/* Fixed subnav and map on scroll, but only for 980px and up (sorry IE!) */
 @media ( min-width : 980px) {
 	.subnav-fixed {
 		position: fixed;
@@ -154,6 +154,13 @@
 		-moz-border-radius: 0;
 		border-radius: 0;
 	}
+	.map-top-fixed {
+		position: fixed;
+		top: 80px;
+		left: 0;
+		right: 0;
+		z-index: 1010; /* 10 less than .subnav-fixed to prevent any overlap */
+	}
 }
 
-.gmap img { max-width: none; } 
+.gmap img { max-width: none; }

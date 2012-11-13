@@ -5,9 +5,15 @@
 <%@ attribute name="width" required="false" type="java.lang.String"%>
 <%@ attribute name="height" required="false" type="java.lang.String"%>
 <%@ attribute name="googleMapsApiKey" required="false" type="java.lang.String"%>
+<%@ attribute name="zoom" required="false" type="java.lang.String"%>
+<%@ attribute name="lat" required="false" type="java.lang.String"%>
+<%@ attribute name="lng" required="false" type="java.lang.String"%>
 
 <c:if test="${empty width}"><c:set var="width" value="100%" /></c:if>
 <c:if test="${empty height}"><c:set var="height" value="100%" /></c:if>
+<c:if test="${empty zoom}"><c:set var="zoom" value="1" /></c:if>
+<c:if test="${empty lat}"><c:set var="lat" value="0" /></c:if>
+<c:if test="${empty lng}"><c:set var="lng" value="0" /></c:if>
 
 <div id="map_canvas" style="width: ${width}; height: ${height}"></div>
 	
@@ -45,16 +51,16 @@ function requireGoogleMaps(callback, apiKey) {
 		
 		// initialize map
 		var mapOptions = {
-			zoom: 4,
-			center: new google.maps.LatLng(0, 0),
-			mapTypeId: google.maps.MapTypeId.ROADMAP
+			mapTypeId: google.maps.MapTypeId.TERRAIN
 		};
 		map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+		map.setZoom(${zoom});
 
 		// add markers for locations and auto zoom and center map
 		var bounds = new google.maps.LatLngBounds();
 		var activeinfowindow;
-		var ll;
+		var ll = new google.maps.LatLng("${lat}","${lng}");
+		<c:set var="numLocations" value="0" />
 		<c:forEach var="place" items="${places}">	
 			<c:forEach var="location" items="${place.locations}">
 				<c:set var="placeUri" value="${baseUri}place/${place.id}"/>
@@ -74,11 +80,12 @@ function requireGoogleMaps(callback, apiKey) {
 					activeinfowindow = infowindow${place.id};
 				});
 				bounds.extend(ll);
+				<c:set var="numLocations" value="${numLocations+1}"/>
 			</c:forEach>
 		</c:forEach>
 		
 		<c:choose>
-			<c:when test="${fn:length(places) > 1}">		
+			<c:when test="${numLocations > 1}">
 				map.fitBounds(bounds);
 			</c:when>
 			<c:otherwise>
