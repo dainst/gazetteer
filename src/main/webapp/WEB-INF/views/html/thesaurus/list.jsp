@@ -16,7 +16,7 @@
 		<ul>
 	
 		<c:forEach var="thesaurus" items="${thesauri}">
-			<li><a href="${baseUri}/thesaurus/${thesaurus.key}">${thesaurus.title}</a></li>
+			<li><a href="${baseUri}thesaurus/${thesaurus.key}">${thesaurus.title}</a></li>
 		</c:forEach>
 		
 		</ul>
