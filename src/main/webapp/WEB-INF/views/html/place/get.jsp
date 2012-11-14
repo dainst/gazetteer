@@ -37,7 +37,7 @@ request.setAttribute("places", places);
 	
 		<div class="subnav">
 			<ul class="nav nav-pills">
-				<c:if test="${limit != null}">
+				<c:if test="${q != null}">
 					<li>
 						<a href="${searchAction}?limit=${limit}&offset=${offset}&q=${q}&view=${view}">
 							&larr; 

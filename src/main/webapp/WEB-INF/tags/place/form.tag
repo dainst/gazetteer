@@ -233,7 +233,7 @@
 				</label>
 				<div class="controls">
 					<c:choose>
-						<c:when test="${parentPlace.id}">
+						<c:when test="${parentPlace != null}">
 							<gaz:pick name="parent" id="parent" class="input-xlarge" value="${baseUri}place/${parentPlace.id}" returnType="uri"></gaz:pick>
 						</c:when>
 						<c:otherwise>
