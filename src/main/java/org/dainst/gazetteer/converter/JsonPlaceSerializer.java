@@ -56,7 +56,18 @@ public class JsonPlaceSerializer {
 			placeNode.put("names", namesNode);
 		}
 		
-		// locations
+		// preferred location
+		if (place.getPrefLocation() != null) {
+			ObjectNode locationNode = mapper.createObjectNode();
+			ArrayNode coordinatesNode = mapper.createArrayNode();
+			coordinatesNode.add(place.getPrefLocation().getLng());
+			coordinatesNode.add(place.getPrefLocation().getLat());
+			locationNode.put("coordinates", coordinatesNode);
+			locationNode.put("confidence", place.getPrefLocation().getConfidence());
+			placeNode.put("prefLocation", locationNode);
+		}
+		
+		// other locations
 		if (!place.getLocations().isEmpty()) {
 			ArrayNode locationsNode = mapper.createArrayNode();
 			for (Location location : place.getLocations()) {

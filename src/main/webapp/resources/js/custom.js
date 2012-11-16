@@ -31,25 +31,6 @@ $(document).scroll(function(){
 	    
 	}
 	
-	// Fix map to top when scrolling
-	if($('.map-top').length > 0) {
-		
-	    // If has not activated (has no attribute "data-top"
-	    if (!$('.map-top').attr('data-top')) {
-	        // If already fixed, then do nothing
-	        if ($('.map-top').hasClass('map-top-fixed')) return;
-	        // Remember top position
-	        var offset = $('.map-top').offset();
-	        $('.map-top').attr('data-top', offset.top);
-	    }
-
-	    if ($('.map-top').attr('data-top') - $('.subnav').outerHeight() <= $(this).scrollTop())
-	        $('.map-top').addClass('map-top-fixed');
-	    else
-	        $('.map-top').removeClass('map-top-fixed');
-	    
-	}
-	
 });
 
 var mapsApiCallback;

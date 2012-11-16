@@ -102,8 +102,8 @@ var dynMarker;
 function zoomToPlace(placeId) {
 	
 	$.getJSON('${baseUri}doc/'+ placeId +'.json', function(place) {
-		if (place.locations && place.locations[0]) {
-			var ll = new google.maps.LatLng(place.locations[0].coordinates[1], place.locations[0].coordinates[0]);
+		if (place.prefLocation) {
+			var ll = new google.maps.LatLng(place.prefLocation.coordinates[1], place.prefLocation.coordinates[0]);
 			dynMarker = new google.maps.Marker({
 				position: ll,
 				title: place.prefName.title,

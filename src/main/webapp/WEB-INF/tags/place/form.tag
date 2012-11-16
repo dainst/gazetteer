@@ -88,7 +88,28 @@
 				</div>
 			</div>
 			
-			<!-- locations -->
+			<!-- preferred location -->
+			<h3><s:message code="domain.place.prefLocation" text="domain.place.prefLocation"/></h3>
+			<div class="control-group">
+				<label class="control-label">
+					<s:message code="domain.location.coordinates" text="domain.location.coordinates" />
+				</label>
+				<div class="controls">
+					<div class="input-append">
+						<c:set var="coordinates">${place.prefLocation.lat},${place.prefLocation.lng}</c:set>
+						<input type="text" name="prefLocation.coordinates" value="${coordinates}" class="lnglat"><button class="picker-search-button btn" type="button">
+							<i class="icon-map-marker"></i>
+						</button>
+					</div>
+					<form:select path="prefLocation.confidence">
+						<form:option value="1" label="1" />
+						<form:option value="2" label="2" />
+						<form:option value="3" label="3" />
+					</form:select>
+				</div>
+			</div>
+			
+			<!-- other locations -->
 			<h3><s:message code="domain.place.locations" text="domain.place.locations" /></h3>
 			<c:forEach var="location" items="${place.locations}" varStatus="loopStatus">
 				<div class="control-group">
