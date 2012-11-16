@@ -76,7 +76,7 @@ request.setAttribute("places", places);
 				
 					<div class="span5 well">
 						<c:choose>
-							<c:when test="${fn:length(place.locations) > 0}">
+							<c:when test="${place.prefLocation != null}">
 								<l:map places="${places}" height="500px" zoom="7"/>
 							</c:when>
 							<c:otherwise>

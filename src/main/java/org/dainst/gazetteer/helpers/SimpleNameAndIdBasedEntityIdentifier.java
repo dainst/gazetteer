@@ -59,7 +59,8 @@ public class SimpleNameAndIdBasedEntityIdentifier implements EntityIdentifier {
 				}
 			} else {
 				for (Place candidate : resultList) {
-					if (candidate.getParent().equals(place.getParent()))
+					if (candidate.getParent() != null
+							&& candidate.getParent().equals(place.getParent()))
 						return candidate;
 				}
 			}

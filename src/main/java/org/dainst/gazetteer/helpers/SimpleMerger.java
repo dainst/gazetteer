@@ -45,7 +45,7 @@ public class SimpleMerger implements Merger {
 			result.setPrefLocation(place2.getPrefLocation());
 		}
 		
-		if (place1.getParent() != null && place1.getParent().isEmpty())
+		if (place1.getParent() != null && !place1.getParent().isEmpty())
 			result.setParent(place1.getParent());
 		else
 			result.setParent(place2.getParent());
