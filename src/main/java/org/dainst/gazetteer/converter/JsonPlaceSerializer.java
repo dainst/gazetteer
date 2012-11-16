@@ -32,8 +32,10 @@ public class JsonPlaceSerializer {
 		ObjectNode placeNode = mapper.createObjectNode();
 		placeNode.put("@id", baseUri + "place/" + place.getId());
 		placeNode.put("gazId", place.getId());
-		if (place.getType() != null && !place.getType().isEmpty()) 
+		if (place.getType() != null && !place.getType().isEmpty())
 			placeNode.put("type", place.getType());
+		if (place.getThesaurus() != null && !place.getThesaurus().isEmpty())
+			placeNode.put("thesaurus", place.getThesaurus());
 		
 		// preferred name
 		if (place.getPrefName() != null) {
