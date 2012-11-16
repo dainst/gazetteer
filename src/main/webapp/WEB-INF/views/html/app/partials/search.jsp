@@ -3,13 +3,13 @@
 
 <div class="subnav">
 	<ul class="nav nav-pills">
-		<li ng-click="limit=10; search()">
+		<li ng-click="offset=0; limit=10; search()">
 		    <a style="border: none"><i class="icon-stop"></i> 10</a>
 		</li>
-		<li ng-click="limit=100; search()">
+		<li ng-click="offset=0; limit=100; search()">
 			<a href="" style="border: none"><i class="icon-th-large"></i> 100</a>
 		</li>
-		<li ng-click="limit=1000; search()">
+		<li ng-click="offset=0; limit=1000; search()">
 			<a href="" style="border-left: none"><i class="icon-th"></i> 1000</a>
 		</li>
 		<li class="dropdown">
@@ -38,8 +38,8 @@
 		</li>
 		<li class="pull-right">
 			<ul class="pagination">
-				<li ng-class="{disabled:(offset == 0)}" ng-click="offset=offset-10; search()">
-					<a href="#">&larr; <s:message code="ui.previous" /></a>
+				<li ng-class="{disabled:(offset == 0)}" ng-click="offset=offset-limit; search()">
+					<a>&larr; <s:message code="ui.previous" /></a>
 				</li>
 				<li>
 					<a><s:message code="ui.page" text="Seite" /> 
@@ -59,10 +59,10 @@
 										</c:forEach>
 									</select>
 								--%> 
-						{{page()}} / {{totalPages}}
+						{{page()}} / {{limit}}
 					</a>
 				</li>
-				<li ng-click="offset=offset+10; search()">
+				<li ng-click="offset=offset+limit; search()">
 					<a><s:message code="ui.next" text="Vor"/> &rarr;</a>
 				</li>
 			</ul>
