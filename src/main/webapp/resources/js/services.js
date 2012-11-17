@@ -11,6 +11,6 @@ factory('Place', function($resource){
 			"../:method/:id",
 			{ id: '@gazId' },
 			{
-				query: {method:'GET', params:{method:'search'}, isArray:true}
+				query: {method:'GET', params:{method:'search'}, isArray:false}
 			});
 });

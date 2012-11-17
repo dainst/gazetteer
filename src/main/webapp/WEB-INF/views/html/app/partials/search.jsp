@@ -3,13 +3,13 @@
 
 <div class="subnav">
 	<ul class="nav nav-pills">
-		<li ng-click="offset=0; limit=10; search()">
+		<li ng-click="setLimit(10)">
 		    <a style="border: none"><i class="icon-stop"></i> 10</a>
 		</li>
-		<li ng-click="offset=0; limit=100; search()">
+		<li ng-click="setLimit(100)">
 			<a href="" style="border: none"><i class="icon-th-large"></i> 100</a>
 		</li>
-		<li ng-click="offset=0; limit=1000; search()">
+		<li ng-click="setLimit(1000)">
 			<a href="" style="border-left: none"><i class="icon-th"></i> 1000</a>
 		</li>
 		<li class="dropdown">
@@ -38,31 +38,16 @@
 		</li>
 		<li class="pull-right">
 			<ul class="pagination">
-				<li ng-class="{disabled:(offset == 0)}" ng-click="offset=offset-limit; search()">
+				<li ng-class="{disabled:(page() == 1)}" ng-click="prevPage()">
 					<a>&larr; <s:message code="ui.previous" /></a>
 				</li>
 				<li>
-					<a><s:message code="ui.page" text="Seite" /> 
-								<%--
-									<c:set var="currentPage" value="${fn:substringBefore(offset/limit + 1, '.')}"/>
-									<c:set var="totalPages" value="${fn:substringBefore(hits/limit + 0.999, '.')}"/>
-									<select style="width: auto; display: inline">
-										<c:forEach var="i" begin="1" end="${totalPages}">
-											<c:choose>
-												<c:when test="${i == currentPage}">
-													<option selected="selected">${i}</option>
-												</c:when>
-												<c:otherwise>
-													<option>${i}</option>
-												</c:otherwise>
-											</c:choose>
-										</c:forEach>
-									</select>
-								--%> 
-						{{page()}} / {{limit}}
+					<a>
+						<s:message code="ui.page" text="Seite" />
+						{{page()}} / {{totalPages()}}
 					</a>
 				</li>
-				<li ng-click="offset=offset+limit; search()">
+				<li ng-class="{disabled:(page() == totalPages())}" ng-click="nextPage()">
 					<a><s:message code="ui.next" text="Vor"/> &rarr;</a>
 				</li>
 			</ul>
@@ -89,32 +74,31 @@
 				</tr>
 			</thead>
 			<tbody>
-					<tr ng-repeat="place in places">
-						<td>{{place.gazId}}</td>
-						<td><a href="">{{place.prefName.title}}</a></td>
-						<td>{{place.thesaurus}}</td>
-						<td>
-							<s:message code="ui.copyToClipboard" var="copyMsg" />
-							<div class="modal hide" id="copyUriModal">
-								<div class="modal-header">
-									<button type="button" class="close" data-dismiss="modal">×</button>
-									<h3>
-										<s:message code="ui.copyToClipboardHeading" />
-									</h3>
-								</div>
-								<div class="modal-body">
-									<label>${copyMsg}</label>
-									<input class="input-xxlarge" type="text" value="{{baseUri}}place/{{place.id}}" id="copyUriInput">
-								</div>
+				<tr ng-repeat="place in places">
+					<td>{{place.gazId}}</td>
+					<td><a href="">{{place.prefName.title}}</a></td>
+					<td>{{place.thesaurus}}</td>
+					<td>
+						<s:message code="ui.copyToClipboard" var="copyMsg" />
+						<div class="modal hide" id="copyUriModal">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal">×</button>
+								<h3>
+									<s:message code="ui.copyToClipboardHeading" />
+								</h3>
 							</div>
-							<script type="text/javascript">
-								$("#copyUriModal").on("shown",function() {
-									$("#copyUriInput").focus().select();
-								});
-							</script>
-							<a data-toggle="modal" href="#copyUriModal"><i class="icon-share"></i></a></td>
-					</tr>
-				</c:forEach>
+							<div class="modal-body">
+								<label>${copyMsg}</label>
+								<input class="input-xxlarge" type="text" value="{{baseUri}}place/{{place.id}}" id="copyUriInput">
+							</div>
+						</div>
+						<script type="text/javascript">
+							$("#copyUriModal").on("shown",function() {
+								$("#copyUriInput").focus().select();
+							});
+						</script>
+						<a data-toggle="modal" href="#copyUriModal"><i class="icon-share"></i></a></td>
+				</tr>
 			</tbody>
 		</table>
 

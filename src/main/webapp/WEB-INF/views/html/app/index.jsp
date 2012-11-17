@@ -10,6 +10,7 @@
 <link href="../resources/bootstrap/css/bootstrap.css" rel="stylesheet">
 <link href="../resources/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 </head>
+<body>
 <!-- Top Navigation Bar -->
 <div class="navbar navbar-fixed-top navbar-inverse">
 	<div class="navbar-inner">
@@ -41,11 +42,11 @@
 					</li>
 				</ul>
 			</div><!--/.nav-collapse -->
-			<form:form class="navbar-search pull-left" action="${searchAction}" method="GET">
+			<form novalidate class="navbar-search pull-left" ng-submit="submit()" ng-controller="SearchBoxCtrl">
 				<s:message code="ui.search.simpleSearch" text="Einfache Suche" var="titleSimpleSearch"/>
- 				<input type="text" class="search-query" placeholder="${titleSimpleSearch}" name="q">
+ 				<input type="text" class="search-query" placeholder="${titleSimpleSearch}" ng-model="q">
  				<i class="icon-search icon-white"></i>
-			</form:form>
+			</form>
 		</div>
 	</div>
 </div>
