@@ -17,7 +17,7 @@
 <div class="subnav">
 	<ul class="nav nav-pills">
 		<li>
-			<a href="#/search">
+			<a href="javascript:history.back()">
 				&larr; 
 				<s:message code="ui.search.back" />
 			</a>
@@ -32,7 +32,7 @@
 	</div>
 	<div class="modal-body">
 		<label>${copyMsg}</label>
-		<input class="input-xxlarge" type="text" value="${baseUri}place/${place.id}" id="copyUriInput">
+		<input class="input-xxlarge" type="text" value="${baseUri}place/{{place.gazId}}" id="copyUriInput">
 	</div>
 </div>
 <script type="text/javascript">
