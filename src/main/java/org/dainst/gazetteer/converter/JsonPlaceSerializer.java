@@ -28,6 +28,10 @@ public class JsonPlaceSerializer {
 	}
 	
 	public String serialize(Place place) {
+		return serialize(place, 1);
+	}
+	
+	public String serialize(Place place, int lod) {
 		
 		ObjectNode placeNode = mapper.createObjectNode();
 		placeNode.put("@id", baseUri + "place/" + place.getId());
@@ -112,13 +116,15 @@ public class JsonPlaceSerializer {
 		if (place.getParent() != null && !place.getParent().isEmpty())
 			placeNode.put("parent", baseUri + "place/" + place.getParent());
 		
-		// children
-		if (!place.getChildren().isEmpty()) {
-			ArrayNode childrenNode = mapper.createArrayNode();
-			for (String childId : place.getChildren()) {
-				childrenNode.add(baseUri + "place/" + childId);
+		if (lod > 0) {
+			// children
+			if (!place.getChildren().isEmpty()) {
+				ArrayNode childrenNode = mapper.createArrayNode();
+				for (String childId : place.getChildren()) {
+					childrenNode.add(baseUri + "place/" + childId);
+				}
+				placeNode.put("children", childrenNode);
 			}
-			placeNode.put("children", childrenNode);
 		}
 		
 		// related places

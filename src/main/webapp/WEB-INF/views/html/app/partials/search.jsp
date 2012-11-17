@@ -1,6 +1,14 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s"%>
 <%@ page contentType="text/html; charset=utf-8" session="false"%>
 
+<!-- Page title -->
+<div class="page-header">
+	<h1>
+		<s:message code="ui.search.result"/>
+		<small>{{total}} <s:message code="ui.search.hits"/></small>
+	</h1>
+</div>
+
 <div class="subnav">
 	<ul class="nav nav-pills">
 		<li ng-click="setLimit(10)">
@@ -14,7 +22,7 @@
 		</li>
 		<li class="dropdown">
 			<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-				<s:message code="ui.list.view" text="ui.list.view" />
+				<s:message code="ui.search.views" text="ui.search.views" />
 				<b class="caret"></b>
 			</a>
 			<ul class="dropdown-menu">
@@ -76,7 +84,7 @@
 			<tbody>
 				<tr ng-repeat="place in places">
 					<td>{{place.gazId}}</td>
-					<td><a href="">{{place.prefName.title}}</a></td>
+					<td><a href="#/place/{{place.gazId}}">{{place.prefName.title}}</a></td>
 					<td>{{place.thesaurus}}</td>
 					<td>
 						<s:message code="ui.copyToClipboard" var="copyMsg" />
@@ -89,7 +97,7 @@
 							</div>
 							<div class="modal-body">
 								<label>${copyMsg}</label>
-								<input class="input-xxlarge" type="text" value="{{baseUri}}place/{{place.id}}" id="copyUriInput">
+								<input class="input-xxlarge" type="text" value="${baseUri}place/{{place.gazId}}" id="copyUriInput">
 							</div>
 						</div>
 						<script type="text/javascript">

@@ -14,6 +14,7 @@ function SearchBoxCtrl($scope, $location) {
 
 function SearchCtrl($scope, $routeParams, Place) {
 	
+	$scope.title = "Suche"
 	$scope.offset = 0;
 	$scope.limit = 10;
 	$scope.q = ($routeParams.q) ? ($routeParams.q) : "";
@@ -63,8 +64,15 @@ function SearchCtrl($scope, $routeParams, Place) {
 }
 
 
-function PlaceCtrl($scope, $routeParams, Place) {
+function PlaceCtrl($scope, $routeParams, Place, $http) {
 	
-	$scope.place = Place.get({phoneId: $routeParams.phoneId});
+	$scope.place = Place.get({
+		id: $routeParams.id
+	}, function(result) {
+		$http.get(result.parent).success(function(result) {
+			$scope.parent = result;
+			console.log(result);
+		});
+	});
 
 }

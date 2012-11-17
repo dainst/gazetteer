@@ -108,9 +108,13 @@ public class HarvestingHandler implements Runnable {
 						Place mergedPlace = merger.merge(identifiedPlace, candidatePlace);
 						mergedPlace.setId(identifiedPlace.getId());
 						// replace id in other places in the result
-						for (Place place : candidatePlaces) {
-							if (place.getParent() != null && place.getParent().equals(candidatePlace.getId()))
+						List<Place> allPlaces = new ArrayList<Place>();
+						allPlaces.addAll(places);
+						allPlaces.addAll(candidatePlaces);
+						for (Place place : allPlaces) {
+							if (place.getParent() != null && place.getParent().equals(candidatePlace.getId())) {
 								place.setParent(mergedPlace.getId());
+							}
 							if (place.getChildren().contains(candidatePlace.getId())) {
 								place.getChildren().remove(candidatePlace.getId());
 								place.getChildren().add(mergedPlace.getId());

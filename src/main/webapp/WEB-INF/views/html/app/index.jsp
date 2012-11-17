@@ -10,7 +10,7 @@
 <link href="../resources/bootstrap/css/bootstrap.css" rel="stylesheet">
 <link href="../resources/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 </head>
-<body>
+<body class="ng-cloak">
 <!-- Top Navigation Bar -->
 <div class="navbar navbar-fixed-top navbar-inverse">
 	<div class="navbar-inner">
@@ -63,14 +63,6 @@
 </div>
 
 <div class="container-fluid">
-
-	<!-- Page title -->
-	<div class="page-header">
-		<h1>
-			{{title}}
-			<small>{{subtitle}}</small>
-		</h1>
-	</div>
 
 	<div ng-view></div>
 	
