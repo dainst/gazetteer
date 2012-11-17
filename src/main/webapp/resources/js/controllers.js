@@ -33,6 +33,7 @@ function SearchCtrl($scope, $location, $routeParams, Place) {
 	
 	$scope.setLimit = function(limit) {
 		$scope.search.limit = limit;
+		$scope.search.offset = 0;
 		$location.search($scope.search);
 	};
 	

@@ -98,6 +98,7 @@
 <script src="../resources/js/controllers.js"></script>
 <script src="../resources/js/filters.js"></script>
 <script src="../resources/js/directives.js"></script>
+<script src="../resources/js/i18n/messages_${language}.js"></script>
 	
 </body>
 </html>

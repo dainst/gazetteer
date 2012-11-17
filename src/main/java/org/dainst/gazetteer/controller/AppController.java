@@ -1,10 +1,13 @@
 package org.dainst.gazetteer.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.support.RequestContext;
 
 @Controller
 public class AppController {
@@ -18,14 +21,16 @@ public class AppController {
 	}
 	
 	@RequestMapping(value="/app/")
-	public String app(ModelMap model) {
+	public String app(ModelMap model, HttpServletRequest request) {
 		model.addAttribute("baseUri",baseUri);
+		model.addAttribute("language", new RequestContext(request).getLocale().getLanguage());
 		return "app/index";
 	}
 	
 	@RequestMapping(value="/app/{view}.html")
-	public String app(@PathVariable String view, ModelMap model) {
+	public String app(@PathVariable String view, ModelMap model, HttpServletRequest request) {
 		model.addAttribute("baseUri",baseUri);
+		model.addAttribute("language", new RequestContext(request).getLocale().getLanguage());
 		return "app/" + view;
 	}
 	

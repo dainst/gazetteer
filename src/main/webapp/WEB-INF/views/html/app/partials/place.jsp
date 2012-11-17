@@ -63,11 +63,15 @@
 			<dd>
 				<em><s:message code="domain.place.prefName" text="domain.place.prefName"/>: </em>
 				{{place.prefName.title}}
-				<em ng-hide="!place.prefName.language">({{place.prefName.language}})</em>
+				<em ng-hide="!place.prefName.language">
+					(<span gaz-translate="'languages.' + place.prefName.language"></span>)
+				</em>
 			</dd>
 			<dd ng-repeat="placename in place.names">
 				{{placename.title}}
-				<em ng-hide="!placename.language">({{placename.language}})</em>
+				<em ng-hide="!placename.language">
+					(<span gaz-translate="'languages.' + placename.language"></span>)
+				</em>
 			</dd>
 			<br/>
 			
@@ -76,7 +80,7 @@
 				<dd>
 					<a href="#/place/{{parent.gazId}}">
 						{{parent.prefName.title}}
-						<em ng-hide="!parent.type">({{parent.type}})</em>
+						<em ng-hide="!parent.type">(<span gaz-translate="'place.types.' + parent.type"></span>)</em>
 					</a>
 				</dd>
 				<br/>
@@ -97,7 +101,9 @@
 					<dd ng-repeat="relatedPlace in relatedPlaces">
 						<a href="#/place/{{relatedPlace.gazId}}">
 							{{relatedPlace.prefName.title}}
-							<em ng-hide="!relatedPlace.type">({{relatedPlace.type}}</em>
+							<em ng-hide="!relatedPlace.type">
+								((<span gaz-translate="'place.types.' + relatedPlace.type"></span>)
+							</em>
 						</a>
 					</dd>
 				<br/>
@@ -109,20 +115,20 @@
 					<em><s:message code="domain.location.latitude" text="domain.location.latitude" />:</em> {{place.prefLocation.coordinates[1]}},
 					<em><s:message code="domain.location.longitude" text="domain.location.longitude" />:</em> {{place.prefLocation.coordinates[0]}}
 					(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />:</em>
-					{{place.prefLocation.confidence}})
+					<span gaz-translate="'location.confidence.'+place.prefLocation.confidence"></span>)
 				</dd>
 				<dd ng-repeat="location in place.locations">
 					<em><s:message code="domain.location.latitude" text="domain.location.latitude" />:</em> {{location.coordinates[1]}},
 					<em><s:message code="domain.location.longitude" text="domain.location.longitude" />:</em> {{location.coordinates[0]}}
 					(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />:</em>
-					{{location.confidence}})
+					<span gaz-translate="'location.confidence.'+location.confidence"></span>)
 				</dd>
 				<br/>
 			</span>
 			
 			<span ng-hide="!place.type">
 				<dt><s:message code="domain.place.type" text="domain.place.type" /></dt>
-				<dd>{{place.type}}</dd>
+				<dd><span gaz-translate="'place.types.' + place.type"></span></dd>
 				<br/>
 			</span>
 			
