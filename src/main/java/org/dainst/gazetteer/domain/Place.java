@@ -34,7 +34,7 @@ public class Place {
 	
 	private Set<Comment> comments = new HashSet<Comment>();
 	
-	private Set<Tag> tags = new HashSet<Tag>();
+	private Set<String> tags = new HashSet<String>();
 	
 	private Set<Identifier> ids = new HashSet<Identifier>();
 	
@@ -170,15 +170,15 @@ public class Place {
 		this.comments.add(comment);
 	}
 
-	public Set<Tag> getTags() {
+	public Set<String> getTags() {
 		return tags;
 	}
 
-	public void setTags(Set<Tag> tags) {
+	public void setTags(Set<String> tags) {
 		this.tags = tags;
 	}
 	
-	public void addTag(Tag tag) {
+	public void addTag(String tag) {
 		this.tags.add(tag);
 	}
 

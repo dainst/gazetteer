@@ -11,7 +11,6 @@ import org.dainst.gazetteer.domain.Identifier;
 import org.dainst.gazetteer.domain.Location;
 import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.PlaceName;
-import org.dainst.gazetteer.domain.Tag;
 import org.dainst.gazetteer.domain.Thesaurus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,7 +100,7 @@ public class JsonPlaceDeserializer {
 			
 			// set related places from URIs
 			JsonNode relatedPlacesNode = objectNode.get("relatedPlaces");
-			if (childrenNode != null) for (JsonNode relatedPlaceNode : relatedPlacesNode) {
+			if (relatedPlacesNode != null) for (JsonNode relatedPlaceNode : relatedPlacesNode) {
 				Place relatedPlace = getPlaceForNode(relatedPlaceNode);
 				if (relatedPlace != null) {
 					place.addRelatedPlace(relatedPlace.getId());
@@ -174,6 +173,8 @@ public class JsonPlaceDeserializer {
 					prefLocation.setConfidence(prefLocationNode.get("confidence").asInt());
 				}
 				
+				place.setPrefLocation(prefLocation);
+				
 				logger.debug("updated location: {}", prefLocation);
 			}
 			Set<Location> locations = new HashSet<Location>();
@@ -223,20 +224,13 @@ public class JsonPlaceDeserializer {
 			}
 			place.setComments(comments);
 			
-			// update tag objects			
-			Set<Tag> tags = new HashSet<Tag>();
+			// update tags	
+			Set<String> tags = new HashSet<String>();
 			JsonNode tagsNode = objectNode.get("tags");
-			if (tagsNode != null) for (JsonNode tagNode : tagsNode) {
-				Tag tag = new Tag();					
-				tags.add(tag);
-				JsonNode languageNode = tagNode.get("language"); 
-				JsonNode textNode = tagNode.get("text");
-				if (textNode == null)
-					throw new HttpMessageNotReadableException("Invalid tag object. Attribute \"text\" has to be set.");
-				if (languageNode != null) tag.setLanguage(languageNode.asText());
-				tag.setText(textNode.asText());
-				logger.debug("updated tag: {}", tag);				
+			if (tagsNode != null) for (JsonNode tagNode : tagsNode) {				
+				tags.add(tagNode.asText());	
 			}
+			logger.debug("updated tags: {}", tags);	
 			place.setTags(tags);
 			
 			// update identifier objects			

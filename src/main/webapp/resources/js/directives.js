@@ -14,3 +14,16 @@ directives.directive('gazTranslate', function(messages) {
 		}
 	};
 });
+
+directives.directive('gazLocationPicker', function() {
+	
+	return {
+		restrict: 'E',
+		replace: true,
+		scope: { coordinates: '=' },
+		template: '<div><input type="text" ng-model="coordinates" ng-list class="lnglat"></input></div>',
+		link: function(scope, element, attrs) {
+			$('input.lnglat').locationPicker();
+		}
+	};
+});

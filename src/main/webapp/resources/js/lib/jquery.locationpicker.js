@@ -35,7 +35,9 @@
                     }else{
                         map.panTo(latLng);
                     }
-                    $(that).val(lat + "," + lng);
+                    $(that).val(lng + "," + lat);
+                    var scope = angular.element(that).scope();
+                    scope.$apply("coordinates = [" + lng + "," + lat + "]");
                 }
                 
                 var id = $(this).attr('id');
@@ -89,8 +91,8 @@
                     if(posStr != ""){
                         var posArr = posStr.split(",");
                         if(posArr.length == 2){
-                            var lat = $.trim(posArr[0]);
-                            var lng = $.trim(posArr[1]);
+                            var lat = $.trim(posArr[1]);
+                            var lng = $.trim(posArr[0]);
                             var latlng = new google.maps.LatLng(lat, lng);
                             setPosition(latlng);
                             return;
@@ -135,7 +137,7 @@
                 }
                 
                 function findAddress(){
-                    var address = $(that).val();
+                    var address = $(that).val().split(",").reverse().join(",");
                     if(address == ""){
                         alert("Please enter an address or Lng/Lat position.");
                     }else{

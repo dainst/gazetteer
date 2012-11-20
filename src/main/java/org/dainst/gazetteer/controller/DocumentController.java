@@ -13,6 +13,7 @@ import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.ValidationResult;
 import org.dainst.gazetteer.helpers.IdGenerator;
+import org.dainst.gazetteer.helpers.LocalizedLanguagesHelper;
 import org.dainst.gazetteer.search.ElasticSearchServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,17 +51,14 @@ public class DocumentController {
 	@Autowired
 	private IdGenerator idGenerator;
 	
+	@Autowired
+	private LocalizedLanguagesHelper langHelper;
+	
 	@Value("${baseUri}")
 	private String baseUri;
 	
-	@Value("${languages}")
-	private String[] languages;
-	
 	@Value("${googleMapsApiKey}")
 	private String googleMapsApiKey;
-	
-	@Autowired
-	MessageSource messageSource;
 
 	@RequestMapping(value="/doc/{placeId}", method=RequestMethod.GET)
 	public ModelAndView getPlace(@PathVariable String placeId,
@@ -118,9 +116,8 @@ public class DocumentController {
 			mav.addObject("view", view);
 			mav.addObject("q", q);
 			mav.addObject("nativePlaceName", place.getNameMap().get(locale.getISO3Language()));
-			logger.debug(locale.getISO3Language());
 			mav.addObject("googleMapsApiKey", googleMapsApiKey);
-			mav.addObject("languages", getLocalizedLanguages(locale));
+			mav.addObject("languages", langHelper.getLocalizedLanguages(locale));
 			
 		}
 		
@@ -185,14 +182,6 @@ public class DocumentController {
 		
 		response.setStatus(204);
 		
-	}
-	
-	private Map<String,String> getLocalizedLanguages(Locale locale) {
-		HashMap<String, String> localizedLanguages = new HashMap<String,String>();
-		for (String language : languages) {
-			localizedLanguages.put(language, messageSource.getMessage("languages."+language, null, locale));
-		}
-		return localizedLanguages;
 	}
 
 }

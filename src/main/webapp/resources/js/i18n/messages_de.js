@@ -15,6 +15,7 @@ messages.factory('messages', function(){
 		"languages.fra": "Französisch",
 		"languages.ell": "Griechisch (Modern)",
 		"languages.lat": "Lateinisch",
-		"languages.grc": "Altgriechisch"
+		"languages.grc": "Altgriechisch",
+		"languages.sqi": "Albanisch"
 	};
 });

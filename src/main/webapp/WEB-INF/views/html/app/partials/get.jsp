@@ -19,7 +19,7 @@
 		<li>
 			<a href="javascript:history.back()">
 				&larr; 
-				<s:message code="ui.search.back" />
+				<s:message code="ui.back" />
 			</a>
 		</li>
 	</ul>
@@ -50,7 +50,7 @@
 	<div class="span7">
 		
 		<div class="pull-right">
-			<a class="btn btn-primary" href="">
+			<a class="btn btn-primary" href="#/edit/{{place.gazId}}">
 				<i class="icon-edit icon-white"></i>
 			</a>
 		</div>
@@ -74,6 +74,16 @@
 				</em>
 			</dd>
 			<br/>
+			
+			<span ng-hide="!place.tags">
+				<dt><s:message code="domain.place.tags" text="domain.place.tags" /></dt>
+				<dd>
+					<span ng-repeat="tag in place.tags">
+						<span class="label label-info">{{tag}}</span>&nbsp; 
+					</span>
+				</dd>
+				<br/>
+			</span>
 			
 			<span ng-hide="!parent">
 				<dt><s:message code="domain.place.parent" text="domain.place.parent" /></dt>
@@ -158,14 +168,6 @@
 				<dt><s:message code="domain.place.comments" text="domain.place.comments" /></dt>
 				<dd ng-repeat="comment in place.comments">
 					<blockquote>{{comment.text}}</blockquote>
-				</dd>
-				<br/>
-			</span>
-			
-			<span ng-hide="!place.tags">
-				<dt><s:message code="domain.place.tags" text="domain.place.tags" /></dt>
-				<dd ng-repeat="tag in place.tags">
-					{{tag.text}}
 				</dd>
 				<br/>
 			</span>

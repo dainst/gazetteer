@@ -6,7 +6,6 @@ import org.dainst.gazetteer.domain.Link;
 import org.dainst.gazetteer.domain.Location;
 import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.PlaceName;
-import org.dainst.gazetteer.domain.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,8 +65,8 @@ public class JsonPlaceSerializer {
 		if (place.getPrefLocation() != null) {
 			ObjectNode locationNode = mapper.createObjectNode();
 			ArrayNode coordinatesNode = mapper.createArrayNode();
-			coordinatesNode.add(place.getPrefLocation().getLng());
 			coordinatesNode.add(place.getPrefLocation().getLat());
+			coordinatesNode.add(place.getPrefLocation().getLng());
 			locationNode.put("coordinates", coordinatesNode);
 			locationNode.put("confidence", place.getPrefLocation().getConfidence());
 			placeNode.put("prefLocation", locationNode);
@@ -79,8 +78,8 @@ public class JsonPlaceSerializer {
 			for (Location location : place.getLocations()) {
 				ObjectNode locationNode = mapper.createObjectNode();
 				ArrayNode coordinatesNode = mapper.createArrayNode();
-				coordinatesNode.add(location.getLng());
 				coordinatesNode.add(location.getLat());
+				coordinatesNode.add(location.getLng());
 				locationNode.put("coordinates", coordinatesNode);
 				locationNode.put("confidence", location.getConfidence());
 				locationsNode.add(locationNode);
@@ -151,11 +150,8 @@ public class JsonPlaceSerializer {
 		// tags
 		if (!place.getTags().isEmpty()) {
 			ArrayNode tagsNode = mapper.createArrayNode();
-			for (Tag tag : place.getTags()) {
-				ObjectNode tagNode = mapper.createObjectNode();
-				tagNode.put("text", tag.getText());
-				tagNode.put("language", tag.getLanguage());
-				tagsNode.add(tagNode);
+			for (String tag : place.getTags()) {
+				tagsNode.add(tag);
 			}
 			placeNode.put("tags", tagsNode);
 		}

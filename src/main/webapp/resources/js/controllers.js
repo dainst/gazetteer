@@ -73,5 +73,25 @@ function PlaceCtrl($scope, $routeParams, Place, $http) {
 			console.log(result);
 		});
 	});
+	
+	$scope.save = function() {
+		Place.save($scope.place);
+	};
+	
+	$scope.addComment = function() {
+		if (!$scope.comment.text || !$scope.comment.language) return;
+		if ($scope.place.comments == undefined)
+			$scope.place.comments = [];
+		$scope.place.comments.push($scope.comment);
+		$scope.comment = {};
+	};
+	
+	$scope.addName = function() {
+		if (!$scope.name.title) return;
+		if ($scope.place.names == undefined)
+			$scope.place.names = [];
+		$scope.place.names.push($scope.name);
+		$scope.name = {};
+	};
 
 }

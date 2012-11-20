@@ -7,8 +7,6 @@ $(document).ready(function(){
 		$("#extendedSearchBtn").toggleClass("active");
 	});
 	
-	$('input.lnglat').locationPicker();
-	
 });
 $(document).scroll(function(){
 

@@ -10,6 +10,7 @@ services.factory('Place', function($resource){
 			{ id: '@gazId' },
 			{
 				query: { method:'GET', params: { method:'search' }, isArray:false },
-				get: { method:'GET', params: { method:'doc'} }
+				get: { method:'GET', params: { method:'doc'} },
+				save: { method:'PUT', params: { method:'doc'} }
 			});
 });
