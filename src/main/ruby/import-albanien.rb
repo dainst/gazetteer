@@ -21,19 +21,17 @@ def walk(path, parent_uri, gaz)
    
     place = {
       "type" => result[1],
-      "thesaurus" => "albania",
-      "names" => [
-        {
+      "thesaurus" => "aia",
+      "prefName" => {
           "title" => result[2],
-          "language" => "sq"
-        }
-      ]
+          "language" => "sqi"
+      }
     }
     
     place["parent"] = parent_uri if parent_uri != nil
 
     begin
-      response = gaz["place"].post place.to_json, :content_type => :json, :accept => :json
+      response = gaz["doc"].post place.to_json, :content_type => :json, :accept => :json
       uri = response.headers[:location]
       puts result[2] + " -> " + uri
     rescue => e
