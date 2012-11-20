@@ -17,14 +17,14 @@
 <script type="text/javascript" src='http://maps.google.com/maps/api/js?sensor=false'></script>
 <script src="/gazetteer/resources/js/custom.js"></script>
 <script src="/gazetteer/widget/lib.js"></script>
-<script src='/gazetteer/resources/js/jquery.locationpicker.js'></script>
-<script src='/gazetteer/resources/js/jquery.jstree.js'></script>
+<script src='/gazetteer/resources/js/lib/jquery.locationpicker.js'></script>
+<script src='/gazetteer/resources/js/lib/jquery.jstree.js'></script>
 <script src="/gazetteer/resources/bootstrap/js/bootstrap-dropdown.js"></script>
 <script src="/gazetteer/resources/bootstrap/js/bootstrap-alert.js"></script>
 <script src="/gazetteer/resources/bootstrap/js/bootstrap-modal.js"></script>
 <link href="/gazetteer/resources/bootstrap/css/bootstrap.css" rel="stylesheet">
 <link href="/gazetteer/resources/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
-<link href="/gazetteer/resources/css/custom.css" rel="stylesheet">
+<link href="/gazetteer/resources/css/app.css" rel="stylesheet">
 <style type="text/css">
       body {
         padding-top: 60px;

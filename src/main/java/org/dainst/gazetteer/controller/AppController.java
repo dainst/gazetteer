@@ -15,10 +15,10 @@ public class AppController {
 	@Value("${baseUri}")
 	private String baseUri;
 
-	@RequestMapping(value="/")
+	/*@RequestMapping(value="/")
 	public String index() {
 		return "redirect:/app/";
-	}
+	}*/
 	
 	@RequestMapping(value="/app/")
 	public String app(ModelMap model, HttpServletRequest request) {

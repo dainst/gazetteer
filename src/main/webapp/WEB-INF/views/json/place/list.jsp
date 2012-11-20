@@ -20,7 +20,7 @@ sb.append("\"total\": ").append(hits);
 sb.append(", \"result\": [");
 int i = 0;
 for(Place place : places) {
-	sb.append(serializer.serialize(place, 0));
+	sb.append(serializer.serialize(place, 1));
 	if(++i < places.size()) sb.append(",");
 }
 sb.append("]}");

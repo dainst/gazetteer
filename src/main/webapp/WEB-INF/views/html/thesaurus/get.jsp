@@ -56,7 +56,7 @@
 						},
 						"success": function(data) {
 							var result = [];
-							$(data).each(function(index, place) {
+							$(data.result).each(function(index, place) {
 								result[index] = { 
 									data: { 
 										title: place.prefName.title,
