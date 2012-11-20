@@ -11,16 +11,19 @@ response.setHeader("Content-Type", "application/json; charset=utf-8");
 
 List<Place> places = (List<Place>) request.getAttribute("places");
 String baseUri = (String) request.getAttribute("baseUri");
+Long hits = (Long) request.getAttribute("hits");
 
 JsonPlaceSerializer serializer = new JsonPlaceSerializer(baseUri);
 
-StringBuilder sb = new StringBuilder("[");
+StringBuilder sb = new StringBuilder("{");
+sb.append("\"total\": ").append(hits);
+sb.append(", \"result\": [");
 int i = 0;
 for(Place place : places) {
-	sb.append(serializer.serialize(place));
+	sb.append(serializer.serialize(place, 1));
 	if(++i < places.size()) sb.append(",");
 }
-sb.append("]");
+sb.append("]}");
 
 %>
 

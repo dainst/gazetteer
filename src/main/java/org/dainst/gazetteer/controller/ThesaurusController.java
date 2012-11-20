@@ -26,10 +26,10 @@ public class ThesaurusController {
 	
 	@Value("${baseUri}")
 	private String baseUri;
-
+	
 	@RequestMapping(value="/")
 	public String home() {
-		return "forward:/thesaurus";
+		return "redirect:/thesaurus";
 	}
 	
 	@RequestMapping(value="/thesaurus", method=RequestMethod.GET)

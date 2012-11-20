@@ -51,7 +51,7 @@ public class PlaceController {
 			String acceptHeader = request.getHeader("Accept");
 			String suffix = "html";
 			if (acceptHeader != null) for (Entry<String, String> entry : mediaTypes.entrySet()) {
-				if (entry.getValue().equals(acceptHeader))
+				if (acceptHeader.contains(entry.getValue()))
 					suffix = entry.getKey();
 			}
 			
