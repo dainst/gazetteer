@@ -45,17 +45,8 @@ rs.initiate({ _id : "rs0", members : [ { _id : 0, host : "localhost:27017" } ] }
                 }
             },
             "thesaurus": {
-                "type": "multi_field",
-				"fields": {
-					"title": {
-						"type" : "string"
-					},
-            		"sort" : {
-						"type" : "string",
-						"index" : "not_analyzed"
-					}
-				}
-			},
+                "type": "string"
+            },
             "children": {
                 "type": "string",
 				"include_in_all": false

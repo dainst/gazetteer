@@ -84,6 +84,7 @@ public class JsonPlaceDeserializer {
 				if (parent != null) {
 					place.setParent(parent.getId());
 					parent.addChild(place.getId());
+					placeDao.save(parent);
 				}
 			}
 			
@@ -94,6 +95,7 @@ public class JsonPlaceDeserializer {
 				if (child != null) {
 					place.addChild(child.getId());
 					child.setParent(place.getId());
+					placeDao.save(child);
 				}
 			}
 			
@@ -115,11 +117,23 @@ public class JsonPlaceDeserializer {
 			if (objectNode.has("thesaurus")) {
 				Thesaurus thesaurus = thesaurusDao.getThesaurusByKey(objectNode.get("thesaurus").asText());
 				if (thesaurus == null)
-					throw new HttpMessageNotReadableException("Invalid thesaurus key. Attribute \"title\" has to be set.");
+					throw new HttpMessageNotReadableException("Invalid thesaurus key.");
 				place.setThesaurus(thesaurus.getKey());
 			}
 			
 			// update name objects
+			JsonNode prefNameNode = objectNode.get("prefName");
+			if(prefNameNode != null) {
+				PlaceName prefName = new PlaceName();
+				JsonNode languageNode = prefNameNode.get("language"); 
+				JsonNode titleNode = prefNameNode.get("title");
+				if (titleNode == null)
+					throw new HttpMessageNotReadableException("Invalid prefName object. Attribute \"title\" has to be set.");
+				if (languageNode != null) prefName.setLanguage(languageNode.asText());
+				prefName.setTitle(titleNode.asText());
+				logger.debug("updated placename: {}", prefName);
+				place.setPrefName(prefName);
+			}			
 			Set<PlaceName> names = new HashSet<PlaceName>();
 			JsonNode namesNode = objectNode.get("names");
 			if (namesNode != null) for (JsonNode nameNode : namesNode) {
@@ -136,6 +150,32 @@ public class JsonPlaceDeserializer {
 			place.setNames(names);
 			
 			// update location objects
+			JsonNode prefLocationNode = objectNode.get("prefLocation");
+			if (prefLocationNode != null) {
+				Location prefLocation = new Location();
+				JsonNode coordinatesNode = prefLocationNode.get("coordinates");
+				if (coordinatesNode == null)
+					throw new HttpMessageNotReadableException("Invalid location object. Attribute \"coordinates\" has to be set.");
+				JsonNode latNode = coordinatesNode.get(0);
+				if (latNode == null)
+					throw new HttpMessageNotReadableException("Invalid location object. Attribute \"coordinates\" cannot be read.");
+				JsonNode longNode = coordinatesNode.get(1);
+				if (longNode == null)
+					throw new HttpMessageNotReadableException("Invalid location object. Attribute \"coordinates\" cannot be read.");
+	
+				double lat = latNode.asDouble(1000);
+				double lng = longNode.asDouble(1000);
+				if (lat > 90 || lat < -90 || lng > 180 || lng < -180)
+					throw new HttpMessageNotReadableException("Invalid location object. Attribute \"coordinates\" cannot be read.");
+				
+				prefLocation.setCoordinates(new double[]{lng, lat});
+				
+				if (prefLocationNode.has("confidence")) {
+					prefLocation.setConfidence(prefLocationNode.get("confidence").asInt());
+				}
+				
+				logger.debug("updated location: {}", prefLocation);
+			}
 			Set<Location> locations = new HashSet<Location>();
 			JsonNode locationsNode = objectNode.get("locations");
 			if (locationsNode != null) for (JsonNode locationNode : locationsNode) {

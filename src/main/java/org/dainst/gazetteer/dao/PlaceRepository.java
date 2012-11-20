@@ -16,7 +16,7 @@ public interface PlaceRepository extends PagingAndSortingRepository<Place, Strin
 
 	public List<Place> findByThesaurus(String thesaurus);
 
-	public List<Place> findByThesaurusAndParentIsNull(String key);
+	public List<Place> findByThesaurusAndParentIsNullAndDeletedIsFalse(String key, Sort sort);
 
 	public List<Place> findByThesaurusAndTypeAndDeletedIsFalse(String key, String type, Sort sort);
 
