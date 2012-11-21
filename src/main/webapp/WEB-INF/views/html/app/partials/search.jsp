@@ -105,7 +105,8 @@
 								$("#copyUriInput").focus().select();
 							});
 						</script>
-						<a data-toggle="modal" href="#copyUriModal"><i class="icon-share"></i></a></td>
+						<a data-toggle="modal" href="#copyUriModal"><i class="icon-share"></i></a>
+					</td>
 				</tr>
 			</tbody>
 		</table>

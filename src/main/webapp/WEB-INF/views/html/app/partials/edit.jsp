@@ -231,7 +231,19 @@
 						</div>
 					</div>
 				</div>
-
+				
+				<legend><s:message code="domain.place.connections" text="domain.place.connections"/></legend>
+				
+				<!-- parent -->
+				<div class="control-group">
+					<label class="control-label">
+						<s:message code="domain.place.parent" text="domain.place.parent" />
+					</label>
+					<div class="controls">
+						<gaz-place-picker place="parent" id="place.parent"/>
+					</div>
+				</div>
+	
 			</div>
 		
 		</fieldset>

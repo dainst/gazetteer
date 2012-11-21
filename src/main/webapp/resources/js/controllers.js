@@ -126,5 +126,7 @@ function PlaceCtrl($scope, $routeParams, Place, $http) {
 		$scope.place.links.push($scope.link);
 		$scope.link = { predicate: "owl:sameAs" };
 	};
+	
+	$scope.$watch("place.parent", function() { console.log("place.parent", $scope.place.parent); } );
 
 }
