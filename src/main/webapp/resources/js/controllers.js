@@ -65,6 +65,10 @@ function SearchCtrl($scope, $location, $routeParams, Place) {
 
 function PlaceCtrl($scope, $routeParams, Place, $http) {
 	
+	$scope.location = { confidence: 0 };
+	$scope.success = false;
+	$scope.failure = false;
+	
 	$scope.place = Place.get({
 		id: $routeParams.id
 	}, function(result) {
@@ -75,7 +79,11 @@ function PlaceCtrl($scope, $routeParams, Place, $http) {
 	});
 	
 	$scope.save = function() {
-		Place.save($scope.place);
+		Place.save(
+			$scope.place,
+			function() { $scope.success = true; $scope.failure = false; },
+			function() { $scope.failure = true; $scope.success = false; }
+		);
 	};
 	
 	$scope.addComment = function() {
@@ -92,6 +100,15 @@ function PlaceCtrl($scope, $routeParams, Place, $http) {
 			$scope.place.names = [];
 		$scope.place.names.push($scope.name);
 		$scope.name = {};
+	};
+	
+	$scope.addLocation = function() {
+		if (!$scope.location.coordinates) return;
+		if ($scope.place.locations == undefined)
+			$scope.place.locations = [];
+		$scope.place.locations.push($scope.location);
+		console.log($scope.location);
+		$scope.location = { confidence: 0 };
 	};
 
 }

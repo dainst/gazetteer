@@ -155,10 +155,10 @@ public class JsonPlaceDeserializer {
 				JsonNode coordinatesNode = prefLocationNode.get("coordinates");
 				if (coordinatesNode == null)
 					throw new HttpMessageNotReadableException("Invalid location object. Attribute \"coordinates\" has to be set.");
-				JsonNode latNode = coordinatesNode.get(0);
+				JsonNode latNode = coordinatesNode.get(1);
 				if (latNode == null)
 					throw new HttpMessageNotReadableException("Invalid location object. Attribute \"coordinates\" cannot be read.");
-				JsonNode longNode = coordinatesNode.get(1);
+				JsonNode longNode = coordinatesNode.get(0);
 				if (longNode == null)
 					throw new HttpMessageNotReadableException("Invalid location object. Attribute \"coordinates\" cannot be read.");
 	
@@ -185,10 +185,10 @@ public class JsonPlaceDeserializer {
 				JsonNode coordinatesNode = locationNode.get("coordinates");
 				if (coordinatesNode == null)
 					throw new HttpMessageNotReadableException("Invalid location object. Attribute \"coordinates\" has to be set.");
-				JsonNode latNode = coordinatesNode.get(0);
+				JsonNode latNode = coordinatesNode.get(1);
 				if (latNode == null)
 					throw new HttpMessageNotReadableException("Invalid location object. Attribute \"coordinates\" cannot be read.");
-				JsonNode longNode = coordinatesNode.get(1);
+				JsonNode longNode = coordinatesNode.get(0);
 				if (longNode == null)
 					throw new HttpMessageNotReadableException("Invalid location object. Attribute \"coordinates\" cannot be read.");
 	

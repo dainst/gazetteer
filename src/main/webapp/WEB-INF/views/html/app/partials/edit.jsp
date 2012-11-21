@@ -2,7 +2,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html; charset=utf-8" session="false"%>
 
-<s:message code="ui.language.notSpecified" var="langNotSpecified" />
+<s:message code="ui.language.notSpecified" text="ui.language.notSpecified" var="langNotSpecified" />
+<s:message code="ui.place.save.success" text="ui.success" var="successMsg"/>
+<s:message code="ui.place.save.failure" text="ui.failure" var="failureMsg"/>
 
 <!-- Page title -->
 <div class="page-header">
@@ -26,6 +28,11 @@
 </div>
 
 <div class="row-fluid" id="contentDiv">
+
+	<div class="span12">
+		<div ng-show="success" class='alert alert-success'><strong>${successMsg}.</strong></div>
+		<div ng-show="failure" class='alert alert-error'><strong>${failureMsg}!</strong></div>
+	</div>
 
 	<form novalidate class="form-horizontal"">
 	
@@ -141,18 +148,39 @@
 						<s:message code="domain.place.prefLocation" text="domain.place.prefLocation" />
 					</label>
 					<div class="controls">
-						<div class="input-append">
-							<gaz-location-picker coordinates="place.prefLocation.coordinates">
-							<button class="picker-search-button btn" type="button">
-								<i class="icon-map-marker"></i>
-							</button>
+						<gaz-location-picker coordinates="place.prefLocation.coordinates"></gaz-location-picker>
+						<select path="prefLocation.confidence" class="input-small">
+							<option value="0" gaz-translate="'location.confidence.0'">
+							<option value="1" gaz-translate="'location.confidence.1'">
+							<option value="2" gaz-translate="'location.confidence.2'">
+							<option value="3" gaz-translate="'location.confidence.3'">
+						</select>
+					</div>
+				</div>
+				
+				<!-- additional locations -->
+				<div class="control-group">
+					<label class="control-label">
+						<s:message code="domain.place.otherLocations" text="domain.place.otherLocations" />
+					</label>
+					<div class="controls">
+						<gaz-location-picker coordinates="location.coordinates"></gaz-location-picker>
+						<select ng-model="location.confidence" class="input-small">
+							<option value="0" gaz-translate="'location.confidence.0'">
+							<option value="1" gaz-translate="'location.confidence.1'">
+							<option value="2" gaz-translate="'location.confidence.2'">
+							<option value="3" gaz-translate="'location.confidence.3'">
+						</select>
+						<div class="btn btn-primary plus" ng-click="addLocation()" ng-disabled="!location.coordinates">
+							<i class="icon-plus icon-white"></i>
 						</div>
-						<form:select path="prefLocation.confidence">
-							<form:option value="1" label="1" />
-							<form:option value="2" label="2" />
-							<form:option value="3" label="3" />
-						</form:select>
-						{{place.prefLocation.coordinates.join(",")}}
+						<div ng-repeat="location in place.locations">
+							<a ng-click="place.locations.splice($index,1)"><i class="icon-remove-sign"></i></a>
+							<em><s:message code="domain.location.latitude" text="domain.location.latitude" />:</em> {{location.coordinates[1]}},
+							<em><s:message code="domain.location.longitude" text="domain.location.longitude" />:</em> {{location.coordinates[0]}}
+							(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />:</em>
+							<span gaz-translate="'location.confidence.'+location.confidence"></span>)
+						</div>
 					</div>
 				</div>
 

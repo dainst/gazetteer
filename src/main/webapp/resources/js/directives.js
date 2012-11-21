@@ -21,9 +21,11 @@ directives.directive('gazLocationPicker', function() {
 		restrict: 'E',
 		replace: true,
 		scope: { coordinates: '=' },
-		template: '<div><input type="text" ng-model="coordinates" ng-list class="lnglat"></input></div>',
+		template: '<div class="input-append"><input type="text" ng-model="coordinates" ng-list class="lnglat"></input>'
+			+ '<button class="picker-search-button btn" type="button">'
+			+ '<i class="icon-map-marker"></i></button></div>',
 		link: function(scope, element, attrs) {
-			$('input.lnglat').locationPicker();
+			$(element).find('input.lnglat').locationPicker();
 		}
 	};
 });
