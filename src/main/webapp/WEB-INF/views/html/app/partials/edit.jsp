@@ -34,7 +34,7 @@
 		<div ng-show="failure" class='alert alert-error'><strong>${failureMsg}!</strong></div>
 	</div>
 
-	<form novalidate class="form-horizontal"">
+	<form novalidate class="form-horizontal" name="editForm">
 	
 		<fieldset>
 
@@ -89,6 +89,54 @@
 								<p>{{comment.text}}</p>
 								<small ng-hide="!comment.language" gaz-translate="'languages.' + comment.language"></small>
 							</blockquote>
+						</div>
+					</div>
+				</div>
+				
+				
+				<legend><s:message code="domain.place.identification" text="domain.place.identification"/></legend>
+				
+				<!-- identifiers -->
+				<div class="control-group">
+					<label class="control-label">
+						<s:message code="domain.identifier.value" text="domain.identifier.value" />
+					</label>
+					<div class="controls">
+						<input type="text" ng-model="identifier.value" class="input-medium">
+						<s:message code="domain.identifier.context" text="domain.identifier.context" />
+						<input type="text" ng-model="identifier.context" class="input-small">
+						<div class="btn btn-primary plus" ng-click="addIdentifier()" ng-disabled="!identifier.value || !identifier.context">
+							<i class="icon-plus icon-white"></i>
+						</div>
+						<div type="text" ng.hide="!place.identifiers">
+							<div ng-repeat="identifier in place.identifiers">
+								<a ng-click="place.identifiers.splice($index,1)"><i class="icon-remove-sign"></i></a>
+								<em>{{identifier.context}}:</em> {{identifier.value}}
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<!-- URI -->
+				<div class="control-group">
+					<label class="control-label">
+						<s:message code="domain.place.links" text="domain.place.links"/>
+					</label>
+					<div class="controls">
+						<input type="url" name="link-object" ng-model="link.object" required>
+						<select ng-model="link.predicate" class="input-small">
+							<option value="owl:sameAs" label="owl:sameAs">
+							<option value="rdfs:seeAlso" label="rdfs:seeAlso">
+						</select>
+						<div class="btn btn-primary plus" ng-click="addLink()"
+								ng-disabled="!link.object || !link.predicate">
+							<i class="icon-plus icon-white"></i>
+						</div>
+						<div type="text" ng.hide="!place.linkss">
+							<div ng-repeat="link in place.links">
+								<a ng-click="place.links.splice($index,1)"><i class="icon-remove-sign"></i></a>
+								<em>{{link.predicate}}:</em> <a href="{{link.object}}" target="_blank">{{link.object}}</a>
+							</div>
 						</div>
 					</div>
 				</div>

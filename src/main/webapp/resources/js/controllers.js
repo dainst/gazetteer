@@ -66,6 +66,7 @@ function SearchCtrl($scope, $location, $routeParams, Place) {
 function PlaceCtrl($scope, $routeParams, Place, $http) {
 	
 	$scope.location = { confidence: 0 };
+	$scope.link = { predicate: "owl:sameAs" };
 	$scope.success = false;
 	$scope.failure = false;
 	
@@ -107,8 +108,23 @@ function PlaceCtrl($scope, $routeParams, Place, $http) {
 		if ($scope.place.locations == undefined)
 			$scope.place.locations = [];
 		$scope.place.locations.push($scope.location);
-		console.log($scope.location);
 		$scope.location = { confidence: 0 };
+	};
+	
+	$scope.addIdentifier = function() {
+		if (!$scope.identifier.value || !$scope.identifier.context) return;
+		if ($scope.place.identifiers == undefined)
+			$scope.place.identifiers = [];
+		$scope.place.identifiers.push($scope.identifier);
+		$scope.identifier = { };
+	};
+	
+	$scope.addLink = function() {
+		if (!$scope.link.object || !$scope.link.predicate) return;
+		if ($scope.place.links == undefined)
+			$scope.place.links = [];
+		$scope.place.links.push($scope.link);
+		$scope.link = { predicate: "owl:sameAs" };
 	};
 
 }
