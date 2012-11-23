@@ -125,8 +125,8 @@ public class DocumentController {
 
 	}
 	
-	@RequestMapping(value="/doc", method=RequestMethod.POST)
-	public void createPlace(@RequestBody Place place,
+	@RequestMapping(value="/doc", method={RequestMethod.POST, RequestMethod.PUT})
+	public ModelAndView createPlace(@RequestBody Place place,
 			HttpServletResponse response) {
 		
 		place.setId(idGenerator.generate(place));		
@@ -135,9 +135,14 @@ public class DocumentController {
 		response.setStatus(201);
 		response.setHeader("Location", baseUri + "place/" + place.getId());
 		
+		ModelAndView mav = new ModelAndView("place/get");
+		mav.addObject("place", place);
+		mav.addObject("baseUri", baseUri);
+		return mav;
+		
 	}
 	
-	@RequestMapping(value="/doc/{placeId}", method=RequestMethod.PUT)
+	@RequestMapping(value="/doc/{placeId}", method={RequestMethod.POST, RequestMethod.PUT})
 	public ModelAndView updateOrCreatePlace(@RequestBody Place place, 
 			@PathVariable String placeId,
 			HttpServletResponse response) {

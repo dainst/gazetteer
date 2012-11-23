@@ -70,22 +70,35 @@ function PlaceCtrl($scope, $routeParams, Place, $http) {
 	$scope.success = false;
 	$scope.failure = false;
 	
-	$scope.place = Place.get({
-		id: $routeParams.id
-	}, function(result) {
-		$http.get(result.parent).success(function(result) {
-			$scope.parent = result;
+	if ($routeParams.id) {
+		$scope.place = Place.get({
+			id: $routeParams.id
+		}, function(result) {
+			if (result.parent) {
+				$http.get(result.parent).success(function(result) {
+					$scope.parent = result;
+				});
+			}
+			Place.query({q: "relatedPlaces:" + $scope.place.gazId}, function(result) {
+				$scope.relatedPlaces = result.result;
+			});
 		});
-		Place.query({q: "relatedPlaces:" + $scope.place.gazId}, function(result) {
-			$scope.relatedPlaces = result.result;
-		});
-	});
+	}
 	
 	$scope.save = function() {
 		Place.save(
 			$scope.place,
-			function() { $scope.success = true; $scope.failure = false; },
-			function() { $scope.failure = true; $scope.success = false; }
+			function(p, responseHeaders) {
+				$scope.place = p;
+				$scope.success = true; 
+				$scope.failure = false; 
+				window.scrollTo(0,0);
+			},
+			function() { 
+				$scope.failure = true; 
+				$scope.success = false; 
+				window.scrollTo(0,0);
+			}
 		);
 	};
 	
@@ -136,7 +149,5 @@ function PlaceCtrl($scope, $routeParams, Place, $http) {
 		$scope.place.relatedPlaces.push($scope.relatedPlace['@id']);
 		$scope.relatedPlace = {};
 	};
-	
-	$scope.$watch("place.parent", function() { console.log("place.parent", $scope.place.parent); } );
 
 }
