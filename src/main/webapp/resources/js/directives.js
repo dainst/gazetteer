@@ -9,7 +9,7 @@ directives.directive('gazTranslate', function(messages) {
 	return {
 		link: function(scope, element, attrs) {
 			scope.$watch(attrs.gazTranslate, function(code) {
-				element.text(messages[code]);
+				element.text(messages[code.toLowerCase()]);
 			});
 		}
 	};

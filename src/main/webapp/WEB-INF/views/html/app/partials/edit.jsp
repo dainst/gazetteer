@@ -31,7 +31,7 @@
 
 	<div class="span12">
 		<div ng-show="success" class='alert alert-success'><strong>${successMsg}.</strong></div>
-		<div ng-show="failure" class='alert alert-error'><strong>${failureMsg}!</strong></div>
+		<div ng-show="failure != null" class='alert alert-error'><strong>${failureMsg}: </strong>{{failure}}</div>
 	</div>
 
 	<form novalidate class="form-horizontal" name="editForm">
@@ -64,6 +64,16 @@
 								<span class="label label-info">{{tag}}</span>&nbsp; 
 							</span>
 						</div>
+					</div>
+				</div>
+				
+				<!-- thesaurus -->
+				<div class="control-group">
+					<label class="control-label">
+						<s:message code="domain.thesaurus" text="domain.thesaurus" />
+					</label>
+					<div class="controls">
+						<input type="text" ng-model="place.thesaurus" ng-required />
 					</div>
 				</div>
 				

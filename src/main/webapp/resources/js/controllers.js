@@ -68,7 +68,7 @@ function PlaceCtrl($scope, $routeParams, Place, $http) {
 	$scope.location = { confidence: 0 };
 	$scope.link = { predicate: "owl:sameAs" };
 	$scope.success = false;
-	$scope.failure = false;
+	$scope.failure = null;
 	
 	if ($routeParams.id) {
 		$scope.place = Place.get({
@@ -88,14 +88,16 @@ function PlaceCtrl($scope, $routeParams, Place, $http) {
 	$scope.save = function() {
 		Place.save(
 			$scope.place,
-			function(p, responseHeaders) {
-				$scope.place = p;
+			function(data) {
+				if (data.gazId) {
+					$scope.place = data;
+				}
 				$scope.success = true; 
-				$scope.failure = false; 
+				$scope.failure = null; 
 				window.scrollTo(0,0);
 			},
-			function() { 
-				$scope.failure = true; 
+			function(result) {
+				$scope.failure = result.data.message; 
 				$scope.success = false; 
 				window.scrollTo(0,0);
 			}
