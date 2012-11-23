@@ -75,7 +75,9 @@ function PlaceCtrl($scope, $routeParams, Place, $http) {
 	}, function(result) {
 		$http.get(result.parent).success(function(result) {
 			$scope.parent = result;
-			console.log(result);
+		});
+		Place.query({q: "relatedPlaces:" + $scope.place.gazId}, function(result) {
+			$scope.relatedPlaces = result.result;
 		});
 	});
 	
@@ -125,6 +127,14 @@ function PlaceCtrl($scope, $routeParams, Place, $http) {
 			$scope.place.links = [];
 		$scope.place.links.push($scope.link);
 		$scope.link = { predicate: "owl:sameAs" };
+	};
+	
+	$scope.addRelatedPlace = function() {
+		if (!$scope.relatedPlace['@id']) return;
+		if ($scope.place.relatedPlaces == undefined)
+			$scope.place.relatedPlaces = [];
+		$scope.place.relatedPlaces.push($scope.relatedPlace['@id']);
+		$scope.relatedPlace = {};
 	};
 	
 	$scope.$watch("place.parent", function() { console.log("place.parent", $scope.place.parent); } );

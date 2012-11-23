@@ -1,7 +1,7 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s"%>
 <%@ page contentType="text/html; charset=utf-8" session="false"%>
 
-<div>
+<span>
 
 	<style type="text/css">
 		.place-picker-field {
@@ -29,8 +29,10 @@
 	<span>
 	
 		<div class="place-picker-field">
-			<span ng-hide="place"><s:message code="ui.picker.pickAPlace" text="ui.picker.pickAPlace"/></span>
-			<a ng-show="place" href="#/place/{{parent.gazId}}">
+			<span ng-hide="place.gazId">
+				<em><s:message code="ui.picker.pickAPlace" text="ui.picker.pickAPlace"/></em>
+			</span>
+			<a ng-show="place.gazId" href="#/place/{{parent.gazId}}">
 				{{place.prefName.title}}
 				<em ng-hide="!place.type">(<span gaz-translate="'place.types.' + place.type"></span>)</em>
 			</a>
@@ -40,22 +42,20 @@
 	
 	</span>
 	
-	<div class="place-picker-overlay" ng-show="showOverlay">
-		<div class="gaz-pick-overlay-inner">
-			<div class="navbar navbar-inverse">
-				<div class="navbar-inner">
-					<form class="navbar-search pull-left" action="/gazetteer/place" autocomplete="off">
-		 				<input type="text" class="search-query" placeholder="Suche" ng-model="search.q" autocomplete="off">
-		 				<i class="icon-search icon-white"></i>
-					</form>
-				</div>
+	<div class="gaz-pick-overlay-inner" ng-show="showOverlay">
+		<div class="navbar navbar-inverse">
+			<div class="navbar-inner">
+				<form class="navbar-search pull-left" action="/gazetteer/place" autocomplete="off">
+	 				<input type="text" class="search-query" placeholder="Suche" ng-model="search.q" autocomplete="off">
+	 				<i class="icon-search icon-white"></i>
+				</form>
 			</div>
-			<div class="gaz-pick-results">
-				<div class="gaz-pick-result-row" ng-repeat="place in places">
-					<a ng-click="selectPlace(place)">{{place.prefName.title}} <em>(&#35;{{place.gazId}})</em></a>
-				</div>
+		</div>
+		<div class="gaz-pick-results">
+			<div class="gaz-pick-result-row" ng-repeat="place in places">
+				<a ng-click="selectPlace(place)">{{place.prefName.title}} <em>(&#35;{{place.gazId}})</em></a>
 			</div>
 		</div>
 	</div>
 
-</div>
+</span>

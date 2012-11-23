@@ -240,7 +240,24 @@
 						<s:message code="domain.place.parent" text="domain.place.parent" />
 					</label>
 					<div class="controls">
-						<gaz-place-picker place="parent" id="place.parent"/>
+						<gaz-place-picker place="parent" id="place.parent"></gaz-place-picker>
+					</div>
+				</div>
+				
+				<!-- related places -->
+				<div class="control-group">
+					<label class="control-label">
+						<s:message code="domain.place.relatedPlaces" text="domain.place.relatedPlaces" />
+					</label>
+					<div class="controls">
+						<gaz-place-picker place="relatedPlace" id="relatedPlace['@id']"></gaz-place-picker>
+						<div class="btn btn-primary plus" ng-click="addRelatedPlace()" ng-disabled="!relatedPlace['@id']">
+							<i class="icon-plus icon-white"></i>
+						</div>
+						<div ng-repeat="relatedPlace in place.relatedPlaces">
+							<a ng-click="place.relatedPlaces.splice($index,1)"><i class="icon-remove-sign"></i></a>
+							{{relatedPlace}}
+						</div>
 					</div>
 				</div>
 	

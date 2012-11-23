@@ -78,6 +78,7 @@ public class JsonPlaceDeserializer {
 			
 			// set parent place from URI 
 			JsonNode parentNode = objectNode.get("parent");
+			String oldParent = place.getParent();
 			if (parentNode != null) {
 				Place parent = getPlaceForNode(parentNode);
 				if (parent != null) {
@@ -86,9 +87,17 @@ public class JsonPlaceDeserializer {
 					placeDao.save(parent);
 				}
 			}
+			// delete place in children of old parent if necessary
+			if (oldParent != null && !oldParent.equals(place.getParent())) {
+				Place parent = placeDao.findOne(oldParent);
+				parent.getChildren().remove(place.getId());
+				placeDao.save(parent);
+			}
 			
 			// set child places from URIs
 			JsonNode childrenNode = objectNode.get("children");
+			Set<String> oldChildren = place.getChildren();
+			place.setChildren(new HashSet<String>());
 			if (childrenNode != null) for (JsonNode childNode : childrenNode) {
 				Place child = getPlaceForNode(childNode);
 				if (child != null) {
@@ -97,15 +106,35 @@ public class JsonPlaceDeserializer {
 					placeDao.save(child);
 				}
 			}
+			// delete place as parent of old children if necessary
+			for (String oldChild : oldChildren) {
+				if (!place.getChildren().contains(oldChild)) {
+					Place child = placeDao.findOne(oldChild);
+					child.setParent(null);
+					placeDao.save(child);
+				}
+			}
 			
 			// set related places from URIs
 			JsonNode relatedPlacesNode = objectNode.get("relatedPlaces");
+			Set<String> oldRelatedPlaces = place.getRelatedPlaces();
+			place.setRelatedPlaces(new HashSet<String>());
 			if (relatedPlacesNode != null) for (JsonNode relatedPlaceNode : relatedPlacesNode) {
 				Place relatedPlace = getPlaceForNode(relatedPlaceNode);
 				if (relatedPlace != null) {
 					place.addRelatedPlace(relatedPlace.getId());
+					relatedPlace.addRelatedPlace(place.getId());
+					placeDao.save(relatedPlace);
 				}
 			}
+			// delete place from related places' related places if necessary
+			for (String oldRelatedPlace : oldRelatedPlaces) {
+				if (!place.getRelatedPlaces().contains(oldRelatedPlace)) {
+					Place relatedPlace = placeDao.findOne(oldRelatedPlace);
+					relatedPlace.getRelatedPlaces().remove(place.getId());
+					placeDao.save(relatedPlace);
+				}
+			}			
 			
 			// set place type
 			if (objectNode.has("type")) {

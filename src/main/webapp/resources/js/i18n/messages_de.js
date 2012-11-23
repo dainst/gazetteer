@@ -3,7 +3,7 @@ var messages = angular.module('gazetteer.messages', []);
 messages.factory('messages', function(){
 	return {
 		"place.types.continent": "Kontinent",
-		"place.types.country": "Stadt",
+		"place.types.country": "Land",
 		"place.types.city": "Stadt",
 		"location.confidence.0": "Keine Angabe",
 		"location.confidence.1": "Ungenau",

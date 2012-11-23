@@ -88,7 +88,7 @@
 			<span ng-hide="!parent">
 				<dt><s:message code="domain.place.parent" text="domain.place.parent" /></dt>
 				<dd>
-					<a href="#/place/{{parent.gazId}}">
+					<a href="#/get/{{parent.gazId}}">
 						{{parent.prefName.title}}
 						<em ng-hide="!parent.type">(<span gaz-translate="'place.types.' + parent.type"></span>)</em>
 					</a>
@@ -106,13 +106,13 @@
 				<br/>
 			</span>					
 			
-			<span ng-hide="!relatedPlaces">
+			<span ng-hide="!relatedPlaces || relatedPlaces.length < 1">
 				<dt><s:message code="domain.place.relatedPlaces" text="domain.place.relatedPlaces" /></dt>
 					<dd ng-repeat="relatedPlace in relatedPlaces">
-						<a href="#/place/{{relatedPlace.gazId}}">
+						<a href="#/get/{{relatedPlace.gazId}}">
 							{{relatedPlace.prefName.title}}
 							<em ng-hide="!relatedPlace.type">
-								((<span gaz-translate="'place.types.' + relatedPlace.type"></span>)
+								(<span gaz-translate="'place.types.' + relatedPlace.type"></span>)
 							</em>
 						</a>
 					</dd>
