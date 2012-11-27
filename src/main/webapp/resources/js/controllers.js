@@ -82,6 +82,7 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 		});
 	};
 	
+	// needed because reloadOnSearch is turned off for this controller
 	$scope.$watch(
 		function(){ 
 			return $location.search().q + $location.search().type;
@@ -89,6 +90,7 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 		function() {
 			$scope.search.q = $location.search().q;
 			$scope.search.type = $location.search().type;
+			$scope.search.offset = 0;
 			$scope.submit();
 		}
 	);
