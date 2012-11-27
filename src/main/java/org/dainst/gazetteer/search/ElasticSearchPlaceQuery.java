@@ -100,4 +100,9 @@ public class ElasticSearchPlaceQuery {
 		return this;		
 	}
 
+	public ElasticSearchPlaceQuery prefixSearch(String query) {
+		queryBuilder = QueryBuilders.prefixQuery("_all", query);
+		return this;
+	}
+
 }

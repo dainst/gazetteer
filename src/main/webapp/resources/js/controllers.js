@@ -10,8 +10,12 @@ function AppCtrl($scope, $location, $rootScope) {
 	
 	$rootScope.activePlaces = [];
 	
+	$scope.$watch("q", function() {
+		$location.path('/search').search({q:$scope.q, type: "prefix"});
+	});
+	
 	$scope.submit = function() {
-		$location.path('/search').search({q:$scope.q});
+		$location.path('/search').search({q:$scope.q, type: ""});
 	};
 	
 }
@@ -32,7 +36,8 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 	$scope.search = {
 		offset: ($routeParams.offset) ? parseInt($routeParams.offset) : 0,
 		limit: ($routeParams.limit) ? parseInt($routeParams.limit) : 10,
-		q: ($routeParams.q) ? ($routeParams.q) : "" 
+		q: ($routeParams.q) ? ($routeParams.q) : "",
+		type: ($routeParams.type) ? ($routeParams.type) : ""
 	};
 	
 	$scope.places = [];
@@ -77,11 +82,16 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 		});
 	};
 	
-	$scope.$watch(function(){ return $location.search().q; }, function() {
-		console.log("q", $location.search().q);
-		$scope.search.q = $location.search().q;
-		$scope.submit();
-	});
+	$scope.$watch(
+		function(){ 
+			return $location.search().q + $location.search().type;
+		},
+		function() {
+			$scope.search.q = $location.search().q;
+			$scope.search.type = $location.search().type;
+			$scope.submit();
+		}
+	);
 	
 	$scope.submit();
 
@@ -189,7 +199,7 @@ function MergeCtrl($scope, $routeParams, Place, $http) {
 			id: $routeParams.id
 		}, function(result) {
 			// TODO: more like this query
-			Place.query({q: result.prefName.title, fuzzy: true}, function(result) {
+			Place.query({q: result.prefName.title, type: fuzzy}, function(result) {
 				$scope.candidatePlaces = result.result;
 			});
 		});

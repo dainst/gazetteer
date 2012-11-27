@@ -56,7 +56,7 @@ public class SearchController {
 			@RequestParam(required=false) String q,
 			@RequestParam(required=false) String sort,
 			@RequestParam(defaultValue="asc") String order,
-			@RequestParam(required=false) String fuzzy,
+			@RequestParam(required=false) String type,
 			@RequestParam(required=false, defaultValue="map,table") String view,
 			@RequestParam(required=false) String callback,
 			HttpServletRequest request,
@@ -69,7 +69,8 @@ public class SearchController {
 		
 		ElasticSearchPlaceQuery query = new ElasticSearchPlaceQuery(elasticSearchServer.getClient());
 		if (q != null) {
-			if ("true".equals(fuzzy)) query.fuzzySearch(q);
+			if ("fuzzy".equals(type)) query.fuzzySearch(q);
+			else if ("prefix".equals(type)) query.prefixSearch(q);
 			else query.metaSearch(q);
 		} else {
 			query.listAll();
