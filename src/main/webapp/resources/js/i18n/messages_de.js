@@ -2,6 +2,8 @@ var messages = angular.module('gazetteer.messages', []);
 
 messages.factory('messages', function(){
 	return {
+		"ui.search.results": "Suchergebnis",
+		"ui.search.hits": "Treffer",
 		"place.types.continent": "Kontinent",
 		"place.types.country": "Land",
 		"place.types.city": "Stadt",

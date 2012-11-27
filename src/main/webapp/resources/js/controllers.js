@@ -2,9 +2,13 @@
 
 /* Controllers */
 
-function SearchBoxCtrl($scope, $location) {
+function AppCtrl($scope, $location, $rootScope) {
 	
 	$scope.q = "";
+	$rootScope.title = "";
+	$rootScope.subtitle = "";
+	
+	$rootScope.activePlaces = [];
 	
 	$scope.submit = function() {
 		$location.path('/search').search({q:$scope.q});
@@ -12,7 +16,18 @@ function SearchBoxCtrl($scope, $location) {
 	
 }
 
-function SearchCtrl($scope, $location, $routeParams, Place) {
+function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages) {
+	
+	$rootScope.title = messages["ui.search.results"];
+	$rootScope.subtitle = "";
+	
+	$scope.$watch("total", function() {
+		$rootScope.subtitle = $scope.total + " " + messages["ui.search.hits"];
+	});
+	
+	$scope.$watch(("places"), function() {
+		$rootScope.activePlaces = $scope.places;
+	});
 	
 	$scope.search = {
 		offset: ($routeParams.offset) ? parseInt($routeParams.offset) : 0,
@@ -35,12 +50,14 @@ function SearchCtrl($scope, $location, $routeParams, Place) {
 		$scope.search.limit = limit;
 		$scope.search.offset = 0;
 		$location.search($scope.search);
+		$scope.submit();
 	};
 	
 	$scope.prevPage = function() {
 		if ($scope.page() > 1) {
 			$scope.search.offset = $scope.search.offset - $scope.search.limit;
 			$location.search($scope.search);
+			$scope.submit();
 		}
 	};
 	
@@ -48,22 +65,30 @@ function SearchCtrl($scope, $location, $routeParams, Place) {
 		if ($scope.page() < $scope.totalPages()) {
 			$scope.search.offset = $scope.search.offset + $scope.search.limit;
 			$location.search($scope.search);
+			$scope.submit();
 		}
 	};
 	
 	$scope.submit = function() {
 		Place.query($scope.search, function(result) {
 			$scope.places = result.result;
-			$scope.total = result.total;
+			if ($scope.total != result.total)
+				$scope.total = result.total;
 		});
 	};
+	
+	$scope.$watch(function(){ return $location.search().q; }, function() {
+		console.log("q", $location.search().q);
+		$scope.search.q = $location.search().q;
+		$scope.submit();
+	});
 	
 	$scope.submit();
 
 }
 
 
-function PlaceCtrl($scope, $routeParams, Place, $http) {
+function PlaceCtrl($scope, $rootScope, $routeParams, Place, $http) {
 	
 	$scope.location = { confidence: 0 };
 	$scope.link = { predicate: "owl:sameAs" };
@@ -82,6 +107,9 @@ function PlaceCtrl($scope, $routeParams, Place, $http) {
 			Place.query({q: "relatedPlaces:" + $scope.place.gazId}, function(result) {
 				$scope.relatedPlaces = result.result;
 			});
+			$rootScope.title = result.prefName.title,
+			$rootScope.subtitle = result["@id"]	+ '<a data-toggle="modal" href="#copyUriModal"><i class="icon-share"></i></a>';
+			$rootScope.activePlaces = [ result ];
 		});
 	}
 	
@@ -152,4 +180,19 @@ function PlaceCtrl($scope, $routeParams, Place, $http) {
 		$scope.relatedPlace = {};
 	};
 
+}
+
+function MergeCtrl($scope, $routeParams, Place, $http) {
+	
+	if ($routeParams.id) {
+		$scope.place = Place.get({
+			id: $routeParams.id
+		}, function(result) {
+			// TODO: more like this query
+			Place.query({q: result.prefName.title, fuzzy: true}, function(result) {
+				$scope.candidatePlaces = result.result;
+			});
+		});
+	}
+	
 }

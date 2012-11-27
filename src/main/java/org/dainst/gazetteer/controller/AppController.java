@@ -19,6 +19,9 @@ public class AppController {
 	@Value("${baseUri}")
 	private String baseUri;
 	
+	@Value("${googleMapsApiKey}")
+	private String googleMapsApiKey;
+	
 	@Autowired
 	LocalizedLanguagesHelper langHelper;
 
@@ -33,6 +36,7 @@ public class AppController {
 		Locale locale = new RequestContext(request).getLocale();
 		model.addAttribute("language", locale.getLanguage());
 		model.addAttribute("languages", langHelper.getLocalizedLanguages(locale));
+		model.addAttribute("googleMapsApiKey", googleMapsApiKey);
 		return "app/index";
 	}
 	
@@ -42,6 +46,7 @@ public class AppController {
 		Locale locale = new RequestContext(request).getLocale();
 		model.addAttribute("language", locale.getLanguage());
 		model.addAttribute("languages", langHelper.getLocalizedLanguages(locale));
+		model.addAttribute("googleMapsApiKey", googleMapsApiKey);
 		return "app/" + view;
 	}
 	
