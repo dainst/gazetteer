@@ -1,4 +1,5 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html; charset=utf-8" session="false"%>
 
 <!doctype html>
@@ -85,15 +86,15 @@
 			
 		</div>
 		
-	</div>
+		<!-- Footer -->
+		<hr>
+		<footer>
+			<jsp:useBean id="now" class="java.util.Date" />
+			<fmt:formatDate var="year" value="${now}" pattern="yyyy" />
+			<p>&copy; Deutsches Archäologisches Institut ${year}</p>
+		</footer>
 		
-	<!-- Footer -->
-	<hr>
-	<footer>
-		<jsp:useBean id="now" class="java.util.Date" />
-		<fmt:formatDate var="year" value="${now}" pattern="yyyy" />
-		<p>&copy; Deutsches Archäologisches Institut ${year}</p>
-	</footer>
+	</div>
 	
 	<!-- In production use:
 	 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js"></script>
