@@ -24,7 +24,9 @@ function AppCtrl($scope, $location, $rootScope) {
 			return $location.search().q;
 		},
 		function() {
-			$scope.q = $location.search().q;
+			if ($location.path() == "/search") {
+				$scope.q = $location.search().q;
+			}
 		}
 	);
 	
@@ -44,10 +46,10 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 	});
 	
 	$scope.search = {
-		offset: ($routeParams.offset) ? parseInt($routeParams.offset) : 0,
-		limit: ($routeParams.limit) ? parseInt($routeParams.limit) : 10,
-		q: ($routeParams.q) ? ($routeParams.q) : "",
-		type: ($routeParams.type) ? ($routeParams.type) : ""
+			offset: ($location.search().offset) ? parseInt($location.search().offset) : 0,
+			limit: ($location.search().limit) ? parseInt($location.search().limit) : 10,
+			q: ($location.search().q) ? ($location.search().q) : "",
+			type: ($location.search().type) ? ($location.search().type) : ""
 	};
 	
 	$scope.places = [];
@@ -77,13 +79,11 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 	$scope.nextPage = function() {
 		if ($scope.page() < $scope.totalPages()) {
 			$scope.search.offset = $scope.search.offset + $scope.search.limit;
-			console.log("nextPage",$scope.search);
 			$location.search($scope.search);
 		}
 	};
 	
 	$scope.submit = function() {
-		console.log("submit",$scope.search);
 		Place.query($scope.search, function(result) {
 			$scope.places = result.result;
 			if ($scope.total != result.total)
@@ -95,16 +95,18 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 	// because reloadOnSearch is turned off for this controller
 	$scope.$watch(
 		function(){ 
-			return JSON.stringify($location.search());
+			return $location.absUrl();
 		},
 		function() {
-			$scope.search = {
-				offset: ($location.search().offset) ? parseInt($location.search().offset) : 0,
-				limit: ($location.search().limit) ? parseInt($location.search().limit) : 10,
-				q: ($location.search().q) ? ($location.search().q) : "",
-				type: ($location.search().type) ? ($location.search().type) : ""
-			};
-			$scope.submit();
+			if ($location.path() == "/search") {
+				$scope.search = {
+					offset: ($location.search().offset) ? parseInt($location.search().offset) : 0,
+					limit: ($location.search().limit) ? parseInt($location.search().limit) : 10,
+					q: ($location.search().q) ? ($location.search().q) : "",
+					type: ($location.search().type) ? ($location.search().type) : ""
+				};
+				$scope.submit();
+			}
 		}
 	);
 
