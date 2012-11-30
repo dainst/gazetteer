@@ -212,8 +212,6 @@ function PlaceCtrl($scope, $rootScope, $routeParams, Place, $http) {
 
 function MergeCtrl($scope, $routeParams, Place, $http) {
 	
-	console.log("merge");
-	
 	if ($routeParams.id) {
 		$scope.place = Place.get({
 			id: $routeParams.id

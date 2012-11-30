@@ -1,31 +1,7 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s"%>
 <%@ page contentType="text/html; charset=utf-8" session="false"%>
 
-<div class="subnav">
-	<ul class="nav nav-pills">
-		<li>
-			<a href="javascript:history.back()">
-				&larr; 
-				<s:message code="ui.back" />
-			</a>
-		</li>
-		<li class="pull-right active">	
-			<a href="#/merge/{{place.gazId}}">
-				<i class="icon-filter"></i> <s:message code="ui.merge" text="ui.merge"/>
-			</a>
-		</li>
-		<li class="pull-right">
-			<a href="#/edit/{{place.gazId}}">
-				<i class="icon-edit"></i> <s:message code="ui.edit" text="ui.edit"/>
-			</a>
-		</li>
-		<li class="pull-right">
-			<a href="#/get/{{place.gazId}}">
-				<i class="icon-th-list"></i> <s:message code="ui.show" text="ui.show"/>
-			</a>
-		</li>
-	</ul>
-</div>
+<gaz-place-nav active-tab="merge" place="place"></gaz-place-nav>
 
 <div class="row-fluid" id="contentDiv">
 
@@ -41,7 +17,7 @@
 		<tbody>
 			<tr ng-repeat="place in candidatePlaces">
 				<td>{{place.gazId}}</td>
-				<td><a href="#/get/{{place.gazId}}">{{place.prefName.title}}</a></td>
+				<td><a href="#/show/{{place.gazId}}">{{place.prefName.title}}</a></td>
 				<td>{{place.thesaurus}}</td>
 				<td>
 					<s:message code="ui.copyToClipboard" var="copyMsg" />

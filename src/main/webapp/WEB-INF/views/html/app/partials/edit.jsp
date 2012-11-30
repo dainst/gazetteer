@@ -11,31 +11,7 @@
 	<div ng-show="failure != null" class='alert alert-error'><strong>${failureMsg}: </strong>{{failure}}</div>
 </div>
 
-<div class="subnav">
-	<ul class="nav nav-pills">
-		<li>
-			<a href="javascript:history.back()">
-				&larr; 
-				<s:message code="ui.back" />
-			</a>
-		</li>
-		<li class="pull-right">	
-			<a href="#/merge/{{place.gazId}}">
-				<i class="icon-filter"></i> <s:message code="ui.merge" text="ui.merge"/>
-			</a>
-		</li>
-		<li class="pull-right active">
-			<a href="#/edit/{{place.gazId}}">
-				<i class="icon-edit"></i> <s:message code="ui.edit" text="ui.edit"/>
-			</a>
-		</li>
-		<li class="pull-right">
-			<a href="#/get/{{place.gazId}}">
-				<i class="icon-th-list"></i> <s:message code="ui.show" text="ui.show"/>
-			</a>
-		</li>
-	</ul>
-</div>
+<gaz-place-nav active-tab="edit" place="place"></gaz-place-nav>
 
 <ul class="nav nav-tabs">
 	<li class="active">

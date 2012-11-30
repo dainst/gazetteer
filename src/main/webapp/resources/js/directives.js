@@ -29,6 +29,20 @@ directives.directive('gazLocationPicker', function() {
 	};	
 });
 
+directives.directive('gazPlaceNav', function() {
+	return {
+		restrict: 'E',
+		replace: true,
+		scope: { place: '=' },
+		templateUrl: 'partials/placeNav.html',
+		controller: function($scope, $attrs) {
+			$scope.isActive = function(view) {
+				return ($attrs.activeTab == view) ? 'active' : '';
+			};
+		}
+	};
+});
+
 directives.directive('gazPlacePicker', function() {
 	return {
 		restrict: 'E',
@@ -114,7 +128,7 @@ directives.directive('gazMap', function() {
 							map: map
 						});
 						infowindows[i] = new google.maps.InfoWindow({
-						    content: "<h4><a href=\"#get/" + place.gazId +">"+ place.prefName.title + "</h4>"
+						    content: "<h4><a href=\"#show/" + place.gazId +">"+ place.prefName.title + "</h4>"
 						});
 						google.maps.event.addListener(markers[i], 'click', function() {
 							if (activeinfowindow) activeinfowindow.close();  

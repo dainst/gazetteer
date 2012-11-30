@@ -32,7 +32,7 @@
 			<span ng-hide="place.gazId">
 				<em><s:message code="ui.picker.pickAPlace" text="ui.picker.pickAPlace"/></em>
 			</span>
-			<a ng-show="place.gazId" href="#/place/{{parent.gazId}}">
+			<a ng-show="place.gazId" href="#/show/{{parent.gazId}}">
 				{{place.prefName.title}}
 				<em ng-hide="!place.type">(<span gaz-translate="'place.types.' + place.type"></span>)</em>
 			</a>
