@@ -4,10 +4,13 @@ import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.index.query.FilterBuilders;
+import org.elasticsearch.index.query.GeoDistanceFilterBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.QueryFilterBuilder;
 import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.sort.GeoDistanceSortBuilder;
+import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
 
 public class ElasticSearchPlaceQuery {
@@ -34,6 +37,37 @@ public class ElasticSearchPlaceQuery {
 		}
 				
 		return this;
+		
+	}
+	
+	public ElasticSearchPlaceQuery queryStringSearch(String query) {
+		queryBuilder = QueryBuilders.queryString(query).defaultField("_all");
+		return this;
+	}
+
+	public ElasticSearchPlaceQuery fuzzySearch(String query) {
+		queryBuilder = QueryBuilders.fuzzyQuery("_all", query);
+		return this;
+	}
+
+	public ElasticSearchPlaceQuery fuzzyLikeThisSearch(String query, String... fields) {
+		queryBuilder = QueryBuilders.fuzzyLikeThisQuery(fields).likeText(query).minSimilarity(0f);
+		return this;		
+	}
+
+	public ElasticSearchPlaceQuery prefixSearch(String query) {
+		query = query.toLowerCase();
+		queryBuilder = QueryBuilders.prefixQuery("_all", query);
+		return this;
+	}
+	
+	public ElasticSearchPlaceQuery geoDistanceSearch(double lon, double lat, int distance) {
+		queryBuilder = QueryBuilders.matchAllQuery();
+		GeoDistanceFilterBuilder filterBuilder = FilterBuilders.geoDistanceFilter("prefLocation.coordinates");
+		filterBuilder.distance(Integer.toString(distance) + "km");
+		filterBuilder.point(lat, lon);
+		requestBuilder.setFilter(filterBuilder);
+		return this;
 	}
 	
 	public ElasticSearchPlaceQuery addBoostForChildren() {
@@ -48,6 +82,14 @@ public class ElasticSearchPlaceQuery {
 			requestBuilder.addSort(field, SortOrder.ASC);
 		else
 			requestBuilder.addSort(field, SortOrder.DESC);
+		return this;
+	}
+	
+	public ElasticSearchPlaceQuery addGeoDistanceSort(double lon, double lat) {
+		GeoDistanceSortBuilder sortBuilder = SortBuilders.geoDistanceSort("prefLocation.coordinates");
+		sortBuilder.order(SortOrder.ASC);
+		sortBuilder.point(lat, lon);
+		requestBuilder.addSort(sortBuilder);
 		return this;
 	}
 	
@@ -88,21 +130,6 @@ public class ElasticSearchPlaceQuery {
 		
 		return result;
 		
-	}
-
-	public ElasticSearchPlaceQuery fuzzySearch(String query) {
-		queryBuilder = QueryBuilders.fuzzyQuery("_all", query);
-		return this;
-	}
-
-	public ElasticSearchPlaceQuery fuzzyLikeThisSearch(String query, String... fields) {
-		queryBuilder = QueryBuilders.fuzzyLikeThisQuery(fields).likeText(query).minSimilarity(0f);
-		return this;		
-	}
-
-	public ElasticSearchPlaceQuery prefixSearch(String query) {
-		queryBuilder = QueryBuilders.prefixQuery("_all", query);
-		return this;
 	}
 
 }

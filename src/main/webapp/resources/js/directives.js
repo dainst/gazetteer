@@ -127,14 +127,14 @@ directives.directive('gazMap', function() {
 							title: title,
 							map: map
 						});
-						infowindows[i] = new google.maps.InfoWindow({
+						/*infowindows[i] = new google.maps.InfoWindow({
 						    content: "<h4><a href=\"#show/" + place.gazId +">"+ place.prefName.title + "</h4>"
 						});
 						google.maps.event.addListener(markers[i], 'click', function() {
 							if (activeinfowindow) activeinfowindow.close();  
 							infowindows[i].open(map,markers[i]);
 							activeinfowindow = infowindows[i];
-						});
+						});*/
 						bounds.extend(ll);
 						numLocations++;
 					}

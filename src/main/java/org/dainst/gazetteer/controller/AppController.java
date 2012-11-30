@@ -25,10 +25,10 @@ public class AppController {
 	@Autowired
 	LocalizedLanguagesHelper langHelper;
 
-	/*@RequestMapping(value="/")
+	@RequestMapping(value="/")
 	public String index() {
 		return "redirect:/app/";
-	}*/
+	}
 	
 	@RequestMapping(value="/app/")
 	public String app(ModelMap model, HttpServletRequest request) {

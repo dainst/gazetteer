@@ -9,7 +9,12 @@
 <title>iDAI.gazetteer</title>
 <link rel="stylesheet" href="../resources/css/app.css" />
 <link href="../resources/bootstrap/css/bootstrap.css" rel="stylesheet">
-<link href="../resources/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+<link href="../resources/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">	
+<!-- In production use:
+ <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js"></script>
+ -->
+<script src="../resources/js/lib/angular/angular.js"></script>
+<script src="../resources/js/lib/angular/angular-resource.js"></script>
 </head>
 <body class="ng-cloak" ng-controller="AppCtrl">
 
@@ -33,9 +38,7 @@
 				</div>
 				<div class="nav-collapse">
 					<ul class="nav">
-						<li><a href="/gazetteer">Home</a></li>
-						<li><a href="#about">About</a></li>
-						<li><a href="#contact">Contact</a></li>
+						<li><a href="/gazetteer/thesaurus"><s:message code="ui.thesaurus.list" text="ui.thesaurus.list"/></a></li>
 						<li id="extendedSearchBtn">
 							<a href="#">
 								<s:message code="ui.search.extendedSearch" text="Erweiterte Suche"/>
@@ -69,7 +72,7 @@
 		<!-- Page title -->
 		<div class="page-header">
 			<h1>
-				{{title}}
+				<span class="ng-cloak">{{title}}</span>
 				<small ng-bind-html-unsafe="subtitle"></small>
 			</h1>
 		</div>
@@ -95,12 +98,6 @@
 		</footer>
 		
 	</div>
-	
-	<!-- In production use:
-	 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js"></script>
-	 -->
-	<script src="../resources/js/lib/angular/angular.js"></script>
-	<script src="../resources/js/lib/angular/angular-resource.js"></script>
 	
 	<script	src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 	<script src='http://maps.google.com/maps/api/js?key=${googleMapsApiKey}&amp;sensor=false'></script>

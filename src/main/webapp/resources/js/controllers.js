@@ -11,7 +11,8 @@ function AppCtrl($scope, $location, $rootScope) {
 	$rootScope.activePlaces = [];
 	
 	$scope.$watch("q", function() {
-		if ($scope.q != "" || $location.path() == "/search") {
+		if ($location.search().q.indexOf(':') == -1
+				&& ($scope.q != "" || $location.path() == "/search") ) {
 			$location.path('/search').search({q:$scope.q, type: "prefix"});
 		}
 	});
@@ -210,17 +211,44 @@ function PlaceCtrl($scope, $rootScope, $routeParams, Place, $http) {
 
 }
 
-function MergeCtrl($scope, $routeParams, Place, $http) {
+function MergeCtrl($scope, $rootScope, $routeParams, Place, $http) {
 	
 	if ($routeParams.id) {
 		$scope.place = Place.get({
 			id: $routeParams.id
 		}, function(result) {
-			// TODO: more like this query
-			Place.query({q: result.prefName.title, type: 'fuzzy'}, function(result) {
-				$scope.candidatePlaces = result.result;
-			});
+			$rootScope.title = result.prefName.title,
+			$rootScope.subtitle = result["@id"]	+ '<a data-toggle="modal" href="#copyUriModal"><i class="icon-share"></i></a>';
+			$scope.getCandidatesByName();
 		});
 	}
+	
+	$scope.getCandidatesByName = function() {
+		var query = "(\"" + $scope.place.prefName.title + "\"~0.5";
+		for(var i in $scope.place.names) {
+			query += " OR \"" + $scope.place.names[i].title + "\"~0.5";
+		}
+		query += ") AND NOT _id:" + $scope.place.gazId;
+		Place.query({q: query, type: 'queryString'}, function(result) {
+			$scope.candidatePlaces = result.result;
+		});
+	};
+	
+	$scope.getCandidatesByLocation = function() {
+		Place.distance({
+			lon: $scope.place.prefLocation.coordinates[0],
+			lat: $scope.place.prefLocation.coordinates[1],
+			distance: 50,
+			filter: "type:"+ $scope.place.type + " AND NOT _id:" + $scope.place.gazId
+		}, function(result) {
+			$scope.candidatePlaces = result.result;
+		});
+	};
+	
+	$scope.$watch("candidatePlaces", function() {
+		$rootScope.activePlaces = [];
+		$rootScope.activePlaces = $rootScope.activePlaces.concat($scope.candidatePlaces);
+		$rootScope.activePlaces.push($scope.place);
+	});
 	
 }

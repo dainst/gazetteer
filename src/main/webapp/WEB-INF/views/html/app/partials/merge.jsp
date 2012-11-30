@@ -3,6 +3,19 @@
 
 <gaz-place-nav active-tab="merge" place="place"></gaz-place-nav>
 
+<ul class="nav nav-tabs">
+	<li class="active">
+		<a ng-click="getCandidatesByName()" data-toggle="tab">
+			<s:message code="ui.place.placesWithSimilarNames" text="ui.place.placesWithSimilarNames"/>
+		</a>
+	</li>
+	<li>
+		<a ng-click="getCandidatesByLocation()" data-toggle="tab">
+			<s:message code="ui.place.placesWithSimilarLocation" text="ui.place.placesWithSimilarLocation"/>
+		</a>
+	</li>
+</ul>
+
 <div class="row-fluid" id="contentDiv">
 
 	<table class="table table-striped">

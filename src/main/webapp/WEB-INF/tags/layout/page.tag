@@ -6,7 +6,7 @@
 <%@ attribute name="title" required="true" type="java.lang.String"%>
 <%@ attribute name="subtitle" type="java.lang.String"%>
 
-<s:url var="searchAction" value="/search" />
+<s:url var="searchAction" value="/app/#search" />
 
 <!DOCTYPE HTML>
 <html>
@@ -54,9 +54,7 @@
 			</div>
 			<div class="nav-collapse">
 				<ul class="nav">
-					<li><a href="/gazetteer">Home</a></li>
-					<li><a href="#about">About</a></li>
-					<li><a href="#contact">Contact</a></li>
+					<li><a href="/gazetteer/thesaurus"><s:message code="ui.thesaurus.list" text="ui.thesaurus.list"/></a></li>
 					<li id="extendedSearchBtn">
 						<a href="#">
 							<s:message code="ui.search.extendedSearch" text="Erweiterte Suche"/>

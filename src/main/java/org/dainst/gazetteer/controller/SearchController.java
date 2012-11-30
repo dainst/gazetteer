@@ -71,6 +71,7 @@ public class SearchController {
 		if (q != null) {
 			if ("fuzzy".equals(type)) query.fuzzySearch(q);
 			else if ("prefix".equals(type)) query.prefixSearch(q);
+			else if ("queryString".equals(type)) query.queryStringSearch(q);
 			else query.metaSearch(q);
 		} else {
 			query.listAll();
@@ -105,6 +106,54 @@ public class SearchController {
 		mav.addObject("q", q);
 		mav.addObject("googleMapsApiKey", googleMapsApiKey);
 		mav.addObject("callback", callback);
+		
+		return mav;
+		
+	}
+	
+	@RequestMapping(value="/geoSearch", method=RequestMethod.GET)
+	public ModelAndView geoList(@RequestParam(defaultValue="10") int limit,
+			@RequestParam(defaultValue="0") int offset,
+			@RequestParam double lat,
+			@RequestParam double lon,
+			@RequestParam(defaultValue="50") int distance,
+			@RequestParam(required=false) String filter,
+			HttpServletRequest request,
+			HttpServletResponse response) {
+		
+		RequestContext requestContext = new RequestContext(request);
+		Locale locale = requestContext.getLocale();
+		
+		ElasticSearchPlaceQuery query = new ElasticSearchPlaceQuery(elasticSearchServer.getClient());
+		query.geoDistanceSearch(lon, lat, distance);
+		query.addGeoDistanceSort(lon, lat);
+		query.limit(limit);
+		query.offset(offset);
+		query.addFilter("deleted:false");
+		
+		if (filter != null) {
+			query.addFilter(filter);
+		}
+		
+		// get ids from elastic search
+		String[] result = query.execute();
+		
+		logger.debug("Querying index returned: " + result.length + " places");
+		
+		// get places for the result ids from db
+		List<Place> places = new ArrayList<Place>();
+		for (int i = 0; i < result.length; i++) {
+			places.add(placeDao.findOne(result[i]));
+		}
+		
+		ModelAndView mav = new ModelAndView("place/list");
+		mav.addObject("places", places);
+		mav.addObject("baseUri", baseUri);
+		mav.addObject("language", locale.getISO3Language());
+		mav.addObject("limit", limit);
+		mav.addObject("offset", offset);
+		mav.addObject("hits", query.getHits());
+		mav.addObject("googleMapsApiKey", googleMapsApiKey);
 		
 		return mav;
 		
