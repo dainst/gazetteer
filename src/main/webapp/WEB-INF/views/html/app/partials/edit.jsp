@@ -19,33 +19,51 @@
 				<s:message code="ui.back" />
 			</a>
 		</li>
-		<li class="active">
-			<a href="#general" data-toggle="tab">
-				<s:message code="domain.place.general" text="domain.place.general"/>
+		<li class="pull-right">	
+			<a href="#/merge/{{place.gazId}}">
+				<i class="icon-filter"></i> <s:message code="ui.merge" text="ui.merge"/>
 			</a>
 		</li>
-		<li>
-			<a href="#identification" data-toggle="tab">
-				<s:message code="domain.place.identification" text="domain.place.identification"/>
+		<li class="pull-right active">
+			<a href="#/edit/{{place.gazId}}">
+				<i class="icon-edit"></i> <s:message code="ui.edit" text="ui.edit"/>
 			</a>
 		</li>
-		<li>
-			<a href="#names" data-toggle="tab">
-				<s:message code="domain.place.names" text="domain.place.names"/>
-			</a>
-		</li>
-		<li>
-			<a href="#locations" data-toggle="tab">
-				<s:message code="domain.place.locations" text="domain.place.locations"/>
-			</a>
-		</li>
-		<li>
-			<a href="#connections" data-toggle="tab">
-				<s:message code="domain.place.connections" text="domain.place.connections"/>
+		<li class="pull-right">
+			<a href="#/get/{{place.gazId}}">
+				<i class="icon-th-list"></i> <s:message code="ui.show" text="ui.show"/>
 			</a>
 		</li>
 	</ul>
 </div>
+
+<ul class="nav nav-tabs">
+	<li class="active">
+		<a href="#general" data-toggle="tab">
+			<s:message code="domain.place.general" text="domain.place.general"/>
+		</a>
+	</li>
+	<li>
+		<a href="#identification" data-toggle="tab">
+			<s:message code="domain.place.identification" text="domain.place.identification"/>
+		</a>
+	</li>
+	<li>
+		<a href="#names" data-toggle="tab">
+			<s:message code="domain.place.names" text="domain.place.names"/>
+		</a>
+	</li>
+	<li>
+		<a href="#locations" data-toggle="tab">
+			<s:message code="domain.place.locations" text="domain.place.locations"/>
+		</a>
+	</li>
+	<li>
+		<a href="#connections" data-toggle="tab">
+			<s:message code="domain.place.connections" text="domain.place.connections"/>
+		</a>
+	</li>
+</ul>
 
 <form novalidate class="form-horizontal" name="editForm">
 	

@@ -9,6 +9,21 @@
 				<s:message code="ui.back" />
 			</a>
 		</li>
+		<li class="pull-right">	
+			<a href="#/merge/{{place.gazId}}">
+				<i class="icon-filter"></i> <s:message code="ui.merge" text="ui.merge"/>
+			</a>
+		</li>
+		<li class="pull-right">
+			<a href="#/edit/{{place.gazId}}">
+				<i class="icon-edit"></i> <s:message code="ui.edit" text="ui.edit"/>
+			</a>
+		</li>
+		<li class="pull-right active">
+			<a href="#/get/{{place.gazId}}">
+				<i class="icon-th-list"></i> <s:message code="ui.show" text="ui.show"/>
+			</a>
+		</li>
 	</ul>
 </div>
 
@@ -29,12 +44,6 @@
 		$("#copyUriInput").focus().select();
 	});
 </script>
-
-<div class="pull-right">
-	<a class="btn btn-primary" href="#/edit/{{place.gazId}}">
-		<i class="icon-edit icon-white"></i>
-	</a>
-</div>
 
 <h3><s:message code="ui.information" text="ui.information"/></h3>
 

@@ -11,7 +11,9 @@ function AppCtrl($scope, $location, $rootScope) {
 	$rootScope.activePlaces = [];
 	
 	$scope.$watch("q", function() {
-		$location.path('/search').search({q:$scope.q, type: "prefix"});
+		if ($scope.q != "" || $location.path() == "/search") {
+			$location.path('/search').search({q:$scope.q, type: "prefix"});
+		}
 	});
 	
 	$scope.submit = function() {
@@ -24,7 +26,8 @@ function AppCtrl($scope, $location, $rootScope) {
 			return $location.search().q;
 		},
 		function() {
-			if ($location.path() == "/search") {
+			if ($location.path() == "/search"
+					&& $scope.q != $location.search().q) {
 				$scope.q = $location.search().q;
 			}
 		}
@@ -209,12 +212,14 @@ function PlaceCtrl($scope, $rootScope, $routeParams, Place, $http) {
 
 function MergeCtrl($scope, $routeParams, Place, $http) {
 	
+	console.log("merge");
+	
 	if ($routeParams.id) {
 		$scope.place = Place.get({
 			id: $routeParams.id
 		}, function(result) {
 			// TODO: more like this query
-			Place.query({q: result.prefName.title, type: fuzzy}, function(result) {
+			Place.query({q: result.prefName.title, type: 'fuzzy'}, function(result) {
 				$scope.candidatePlaces = result.result;
 			});
 		});
