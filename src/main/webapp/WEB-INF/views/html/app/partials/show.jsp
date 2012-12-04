@@ -54,7 +54,7 @@
 	<span ng-hide="!parent">
 		<dt><s:message code="domain.place.parent" text="domain.place.parent" /></dt>
 		<dd>
-			<a href="#/get/{{parent.gazId}}">
+			<a href="#/show/{{parent.gazId}}">
 				{{parent.prefName.title}}
 				<em ng-hide="!parent.type">(<span gaz-translate="'place.types.' + parent.type"></span>)</em>
 			</a>

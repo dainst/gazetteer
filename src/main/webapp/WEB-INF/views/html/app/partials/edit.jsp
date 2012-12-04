@@ -3,13 +3,6 @@
 <%@ page contentType="text/html; charset=utf-8" session="false"%>
 
 <s:message code="ui.language.notSpecified" text="ui.language.notSpecified" var="langNotSpecified" />
-<s:message code="ui.place.save.success" text="ui.success" var="successMsg"/>
-<s:message code="ui.place.save.failure" text="ui.failure" var="failureMsg"/>
-
-<div>
-	<div ng-show="success" class='alert alert-success'><strong>${successMsg}.</strong></div>
-	<div ng-show="failure != null" class='alert alert-error'><strong>${failureMsg}: </strong>{{failure}}</div>
-</div>
 
 <gaz-place-nav active-tab="edit" place="place"></gaz-place-nav>
 

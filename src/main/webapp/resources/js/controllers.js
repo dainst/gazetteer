@@ -10,6 +10,8 @@ function AppCtrl($scope, $location, $rootScope) {
 	
 	$rootScope.activePlaces = [];
 	
+	$rootScope.alerts = [];
+	
 	$scope.$watch("q", function() {
 		if ($location.search().q.indexOf(':') == -1
 				&& ($scope.q != "" || $location.path() == "/search") ) {
@@ -19,6 +21,13 @@ function AppCtrl($scope, $location, $rootScope) {
 	
 	$scope.submit = function() {
 		$location.path('/search').search({q:$scope.q, type: ""});
+	};
+	
+	$rootScope.addAlert = function(body, head, type) {
+		var alert = { body: body };
+		if (head != null) alert.head = head;
+		if (type != null) alert.alertClass = "alert-" + type;
+		$rootScope.alerts.push(alert);
 	};
 	
 	// needed to keep $scope.q and $location.search().q in sync
@@ -117,12 +126,10 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 }
 
 
-function PlaceCtrl($scope, $rootScope, $routeParams, Place, $http) {
+function PlaceCtrl($scope, $rootScope, $routeParams, Place, $http, messages) {
 	
 	$scope.location = { confidence: 0 };
 	$scope.link = { predicate: "owl:sameAs" };
-	$scope.success = false;
-	$scope.failure = null;
 	
 	if ($routeParams.id) {
 		$scope.place = Place.get({
@@ -149,13 +156,12 @@ function PlaceCtrl($scope, $rootScope, $routeParams, Place, $http) {
 				if (data.gazId) {
 					$scope.place = data;
 				}
-				$scope.success = true; 
-				$scope.failure = null; 
+				$rootScope.addAlert(messages["ui.place.save.success"], null, "success");
 				window.scrollTo(0,0);
 			},
 			function(result) {
 				$scope.failure = result.data.message; 
-				$scope.success = false; 
+				$rootScope.addAlert(messages["ui.place.save.failure"], null, "error");
 				window.scrollTo(0,0);
 			}
 		);
@@ -211,7 +217,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, Place, $http) {
 
 }
 
-function MergeCtrl($scope, $rootScope, $routeParams, Place, $http) {
+function MergeCtrl($scope, $rootScope, $routeParams, $location, Place, $http, messages) {
 	
 	if ($routeParams.id) {
 		$scope.place = Place.get({
@@ -250,5 +256,13 @@ function MergeCtrl($scope, $rootScope, $routeParams, Place, $http) {
 		$rootScope.activePlaces = $rootScope.activePlaces.concat($scope.candidatePlaces);
 		$rootScope.activePlaces.push($scope.place);
 	});
+	
+	$scope.merge = function(place1, place2) {
+		place1.$merge({id2: place2.gazId }, function(result) {
+			$rootScope.addAlert(messages["ui.merge.success.body"],
+					messages["ui.merge.success.head"], "success");
+			$location.path("/edit/" + result.gazId);
+		});
+	};
 	
 }

@@ -69,6 +69,14 @@
 	
 	<div class="container-fluid">
 	
+		<div ng-hide="alerts.length == 0">
+			<div ng-repeat="alert in alerts" class="alert" ng-class="alert.alertClass">
+				<button type="button" class="close" ng-click="alerts.splice($index,1)">×</button>
+				<h4 ng-show="alert.head">{{alert.head}}</h4>
+				{{alert.body}}
+			</div>
+		</div>
+	
 		<!-- Page title -->
 		<div class="page-header">
 			<h1>

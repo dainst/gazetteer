@@ -4,6 +4,10 @@ messages.factory('messages', function(){
 	return {
 		"ui.search.results": "Suchergebnis",
 		"ui.search.hits": "Treffer",
+		"ui.place.save.success": "Ort erfolgreich gespeichert",
+		"ui.place.save.failure": "Ort konnte nicht gespeichert werden",
+		"ui.merge.success.head": "Zusammenfassen erfolgreich",
+		"ui.merge.success.body": "Bitte überprüfen Sie unten die Angaben des neu angelegten Orts",
 		"place.types.continent": "Kontinent",
 		"place.types.country": "Land",
 		"place.types.city": "Stadt",

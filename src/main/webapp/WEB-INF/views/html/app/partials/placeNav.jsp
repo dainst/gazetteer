@@ -11,7 +11,7 @@
 		</li>
 		<li class="pull-right" ng-class="isActive('merge')">	
 			<a href="#/merge/{{place.gazId}}">
-				<i class="icon-globe"></i> <s:message code="ui.merge" text="ui.merge"/>
+				<i class="icon-globe"></i> <s:message code="ui.similarPlaces" text="ui.merge"/>
 			</a>
 		</li>
 		<li class="pull-right" ng-class="isActive('edit')">

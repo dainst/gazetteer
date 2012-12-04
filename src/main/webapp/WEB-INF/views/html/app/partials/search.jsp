@@ -72,7 +72,7 @@
 			<td>{{place.thesaurus}}</td>
 			<td>
 				<s:message code="ui.copyToClipboard" var="copyMsg" />
-				<div class="modal hide" id="copyUriModal">
+				<div class="modal hide" id="copyUriModal-{{place.gazId}}">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal">×</button>
 						<h3>
@@ -89,7 +89,7 @@
 						$("#copyUriInput").focus().select();
 					});
 				</script>
-				<a data-toggle="modal" href="#copyUriModal"><i class="icon-share"></i></a>
+				<a data-toggle="modal" href="#copyUriModal-{{place.gazId}}"><i class="icon-share"></i></a>
 			</td>
 		</tr>
 	</tbody>
