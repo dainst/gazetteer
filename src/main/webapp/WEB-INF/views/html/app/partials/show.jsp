@@ -54,17 +54,14 @@
 	<span ng-hide="!parent">
 		<dt><s:message code="domain.place.parent" text="domain.place.parent" /></dt>
 		<dd>
-			<a href="#/show/{{parent.gazId}}">
-				{{parent.prefName.title}}
-				<em ng-hide="!parent.type">(<span gaz-translate="'place.types.' + parent.type"></span>)</em>
-			</a>
+			<gaz-place-title place="parent"></gaz-place-title>
 		</dd>
 		<br/>
 	</span>
 	
 	<span ng-hide="!place.children">
 		<dt><s:message code="domain.place.children" text="domain.place.children" /></dt>
-		<dd >
+		<dd>
 			<a href="#/search?q=parent:{{place.gazId}}">
 				<s:message code="ui.numberOfPlaces" text="ui.numberOfPlaces" arguments="{{place.children.length}}" />
 			</a>
@@ -75,12 +72,7 @@
 	<span ng-hide="!relatedPlaces || relatedPlaces.length < 1">
 		<dt><s:message code="domain.place.relatedPlaces" text="domain.place.relatedPlaces" /></dt>
 			<dd ng-repeat="relatedPlace in relatedPlaces | orderBy:'prefName.title'">
-				<a href="#/get/{{relatedPlace.gazId}}">
-					{{relatedPlace.prefName.title}}
-					<em ng-hide="!relatedPlace.type">
-						(<span gaz-translate="'place.types.' + relatedPlace.type"></span>)
-					</em>
-				</a>
+				<gaz-place-title place="relatedPlace"></gaz-place-title>
 			</dd>
 		<br/>
 	</span>

@@ -68,7 +68,7 @@
 	<tbody>
 		<tr ng-repeat="place in places">
 			<td>{{place.gazId}}</td>
-			<td><a href="#/show/{{place.gazId}}">{{place.prefName.title}}</a></td>
+			<td><gaz-place-title place="place"></gaz-place-title></td>
 			<td>{{place.thesaurus}}</td>
 			<td>
 				<s:message code="ui.copyToClipboard" var="copyMsg" />

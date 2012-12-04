@@ -32,10 +32,7 @@
 			<span ng-hide="place.gazId">
 				<em><s:message code="ui.picker.pickAPlace" text="ui.picker.pickAPlace"/></em>
 			</span>
-			<a ng-show="place.gazId" href="#/show/{{parent.gazId}}">
-				{{place.prefName.title}}
-				<em ng-hide="!place.type">(<span gaz-translate="'place.types.' + place.type"></span>)</em>
-			</a>
+			<gaz-place-title ng-show="place.gazId" place="place"></gaz-place-title>
 		</div><button class="btn gaz-pick-button place-picker-btn" type="button" ng-click="openOverlay()">
 			<i class="icon-search"></i><i class="icon-globe"></i>
 		</button>
@@ -53,7 +50,7 @@
 		</div>
 		<div class="gaz-pick-results">
 			<div class="gaz-pick-result-row" ng-repeat="place in places">
-				<a ng-click="selectPlace(place)">{{place.prefName.title}} <em>(&#35;{{place.gazId}})</em></a>
+				<a ng-click="selectPlace(place)">{{place.prefName.title}} <em><small>&#35;{{place.gazId}}</small></em></a>
 			</div>
 		</div>
 	</div>

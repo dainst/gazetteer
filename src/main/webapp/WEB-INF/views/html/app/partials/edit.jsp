@@ -279,7 +279,7 @@
 							</div>
 							<div ng-repeat="relatedPlace in relatedPlaces | orderBy:'prefName.title'">
 								<a ng-click="relatedPlaces.splice($index,1)"><i class="icon-remove-sign"></i></a>
-								<td><a href="#/show/{{relatedPlace.gazId}}">{{relatedPlace.prefName.title}}</a></td>
+								<gaz-place-title place="relatedPlace"></gaz-place-title>
 							</div>
 						</div>
 					</div>

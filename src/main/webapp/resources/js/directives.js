@@ -43,6 +43,15 @@ directives.directive('gazPlaceNav', function() {
 	};
 });
 
+directives.directive('gazPlaceTitle', function() {
+	return {
+		restrict: 'E',
+		replace: true,
+		scope: { place: '=' },
+		templateUrl: 'partials/placeTitle.html'
+	};
+});
+
 directives.directive('gazPlacePicker', function() {
 	return {
 		restrict: 'E',

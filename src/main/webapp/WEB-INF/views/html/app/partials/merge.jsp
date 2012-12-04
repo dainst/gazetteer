@@ -34,7 +34,7 @@
 		<tbody>
 			<tr ng-repeat="candidatePlace in candidatePlaces">
 				<td>{{candidatePlace.gazId}}</td>
-				<td><a href="#/show/{{candidatePlace.gazId}}">{{candidatePlace.prefName.title}}</a></td>
+				<td><gaz-place-title place="candidatePlace"></gaz-place-title></td>
 				<td>{{candidatePlace.thesaurus}}</td>
 				<td>
 					<s:message code="ui.copyToClipboard" var="copyMsg" />
