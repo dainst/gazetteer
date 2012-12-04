@@ -12,8 +12,9 @@ function AppCtrl($scope, $location, $rootScope) {
 	
 	$rootScope.alerts = [];
 	
+	// search while typing
 	$scope.$watch("q", function() {
-		if ($location.search().q.indexOf(':') == -1
+		if ($scope.q.indexOf(':') == -1
 				&& ($scope.q != "" || $location.path() == "/search") ) {
 			$location.path('/search').search({q:$scope.q, type: "prefix"});
 		}
