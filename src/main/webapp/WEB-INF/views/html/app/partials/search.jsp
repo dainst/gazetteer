@@ -59,10 +59,22 @@
 <table class="table table-striped">
 	<thead>
 		<tr>
-			<td>#</td>
-			<td><s:message code="domain.placename.title" text="domain.placename.title" /></td>
-			<td><s:message code="domain.thesaurus" text="domain.thesaurus" /></td>
-			<td><s:message code="domain.place.uri" text="domain.place.uri" /></td>
+			<th>
+				<a ng-click="orderBy('_id')">#</a>
+				<i ng-show="search.sort == '_id' && search.order == 'asc'" class="icon-chevron-up"></i>
+				<i ng-show="search.sort == '_id' && search.order == 'desc'" class="icon-chevron-down"></i>
+			</th>
+			<th>
+				<a ng-click="orderBy('prefName.title.sort')"><s:message code="domain.placename.title" text="domain.placename.title" /></a>
+				<i ng-show="search.sort == 'prefName.title.sort' && search.order == 'asc'" class="icon-chevron-up"></i>
+				<i ng-show="search.sort == 'prefName.title.sort' && search.order == 'desc'" class="icon-chevron-down"></i>
+			</th>
+			<th>
+				<a ng-click="orderBy('thesaurus')"><s:message code="domain.thesaurus" text="domain.thesaurus" /></a>
+				<i ng-show="search.sort == 'thesaurus' && search.order == 'asc'" class="icon-chevron-up"></i>
+				<i ng-show="search.sort == 'thesaurus' && search.order == 'desc'" class="icon-chevron-down"></i>
+			</th>
+			<th><s:message code="domain.place.uri" text="domain.place.uri" /></th>
 		</tr>
 	</thead>
 	<tbody>

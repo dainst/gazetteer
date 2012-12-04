@@ -79,7 +79,7 @@ public class SearchController {
 		query.addBoostForChildren();
 		query.limit(limit);
 		query.offset(offset);
-		if (sort != null) {
+		if (sort != null && !sort.isEmpty()) {
 			query.addSort(sort, order);
 		}
 		query.addFilter("deleted:false");

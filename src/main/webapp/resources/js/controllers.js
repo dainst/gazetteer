@@ -63,7 +63,9 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 			offset: ($location.search().offset) ? parseInt($location.search().offset) : 0,
 			limit: ($location.search().limit) ? parseInt($location.search().limit) : 10,
 			q: ($location.search().q) ? ($location.search().q) : "",
-			type: ($location.search().type) ? ($location.search().type) : ""
+			type: ($location.search().type) ? ($location.search().type) : "",
+			sort: ($location.search().sort) ? ($location.search().sort) : "",
+			order: ($location.search().order) ? ($location.search().order) : ""
 	};
 	
 	$scope.places = [];
@@ -97,6 +99,17 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 		}
 	};
 	
+	$scope.orderBy = function(sort) {
+		if ($scope.search.sort == sort) {
+			$scope.search.order = ($scope.search.order == "asc") ? "desc" : "asc";
+		} else {
+			$scope.search.sort = sort;
+			$scope.search.order = "asc";
+		}
+		$scope.search.offset = 0;
+		$location.search($scope.search);
+	};
+	
 	$scope.submit = function() {
 		Place.query($scope.search, function(result) {
 			$scope.places = result.result;
@@ -117,7 +130,9 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 					offset: ($location.search().offset) ? parseInt($location.search().offset) : 0,
 					limit: ($location.search().limit) ? parseInt($location.search().limit) : 10,
 					q: ($location.search().q) ? ($location.search().q) : "",
-					type: ($location.search().type) ? ($location.search().type) : ""
+					type: ($location.search().type) ? ($location.search().type) : "",
+					sort: ($location.search().sort) ? ($location.search().sort) : "",
+					order: ($location.search().order) ? ($location.search().order) : ""
 				};
 				$scope.submit();
 			}
