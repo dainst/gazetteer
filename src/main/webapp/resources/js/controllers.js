@@ -222,11 +222,20 @@ function PlaceCtrl($scope, $rootScope, $routeParams, Place, $http, messages) {
 	
 	$scope.addRelatedPlace = function() {
 		if (!$scope.relatedPlace['@id']) return;
-		if ($scope.place.relatedPlaces == undefined)
-			$scope.place.relatedPlaces = [];
-		$scope.place.relatedPlaces.push($scope.relatedPlace['@id']);
-		$scope.relatedPlace = {};
+		var relatedPlaces = $scope.relatedPlaces;
+		if (relatedPlaces == undefined)
+			relatedPlaces = [];
+		relatedPlaces.push($scope.relatedPlace);
+		$scope.relatedPlace = { "@id" : null };
+		$scope.relatedPlaces = relatedPlaces;
 	};
+	
+	// update relatedPlaces attribute of place when relatedPlaces in scope changes
+	$scope.$watch("relatedPlaces.length", function() {
+		$scope.place.relatedPlaces = [];
+		for (var i in $scope.relatedPlaces)
+			$scope.place.relatedPlaces.push($scope.relatedPlaces[i]["@id"]);
+	});
 
 }
 

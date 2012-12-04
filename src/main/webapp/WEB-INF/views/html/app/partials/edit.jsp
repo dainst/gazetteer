@@ -277,9 +277,9 @@
 							<div class="btn btn-primary plus" ng-click="addRelatedPlace()" ng-disabled="!relatedPlace['@id']">
 								<i class="icon-plus icon-white"></i>
 							</div>
-							<div ng-repeat="relatedPlace in place.relatedPlaces">
-								<a ng-click="place.relatedPlaces.splice($index,1)"><i class="icon-remove-sign"></i></a>
-								{{relatedPlace}}
+							<div ng-repeat="relatedPlace in relatedPlaces">
+								<a ng-click="relatedPlaces.splice($index,1)"><i class="icon-remove-sign"></i></a>
+								<td><a href="#/show/{{relatedPlace.gazId}}">{{relatedPlace.prefName.title}}</a></td>
 							</div>
 						</div>
 					</div>
