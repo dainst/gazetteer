@@ -33,7 +33,7 @@
 			(<span gaz-translate="'languages.' + place.prefName.language"></span>)
 		</em>
 	</dd>
-	<dd ng-repeat="placename in place.names">
+	<dd ng-repeat="placename in place.names | orderBy:['language','title']">
 		{{placename.title}}
 		<em ng-hide="!placename.language">
 			(<span gaz-translate="'languages.' + placename.language"></span>)
@@ -74,7 +74,7 @@
 	
 	<span ng-hide="!relatedPlaces || relatedPlaces.length < 1">
 		<dt><s:message code="domain.place.relatedPlaces" text="domain.place.relatedPlaces" /></dt>
-			<dd ng-repeat="relatedPlace in relatedPlaces">
+			<dd ng-repeat="relatedPlace in relatedPlaces | orderBy:'prefName.title'">
 				<a href="#/get/{{relatedPlace.gazId}}">
 					{{relatedPlace.prefName.title}}
 					<em ng-hide="!relatedPlace.type">
@@ -116,7 +116,7 @@
 	
 	<span ng-hide="!place.identifiers">
 		<dt><s:message code="domain.place.identifiers" text="domain.place.identifiers" /></dt>
-		<dd ng-repeat="identifier in place.identifiers">
+		<dd ng-repeat="identifier in place.identifiers | orderBy:['context','value']">
 			<em>{{identifier.context}}:</em> {{identifier.value}}
 		</dd>
 		<br/>
@@ -124,7 +124,7 @@
 	
 	<span ng-hide="!place.links">
 		<dt><s:message code="domain.place.links" text="domain.place.links" /></dt>
-		<dd ng-repeat="link in place.links">
+		<dd ng-repeat="link in place.links | orderBy:['predicate','object']">
 			<em>{{link.predicate}}:</em> <a href="{{link.object}}" target="_blank">{{link.object}}</a>
 		</dd>
 		<br/>

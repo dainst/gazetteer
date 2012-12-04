@@ -124,7 +124,7 @@
 								<i class="icon-plus icon-white"></i>
 							</div>
 							<div type="text" ng.hide="!place.identifiers">
-								<div ng-repeat="identifier in place.identifiers">
+								<div ng-repeat="identifier in place.identifiers | orderBy:['context','value']">
 									<a ng-click="place.identifiers.splice($index,1)"><i class="icon-remove-sign"></i></a>
 									<em>{{identifier.context}}:</em> {{identifier.value}}
 								</div>
@@ -148,7 +148,7 @@
 								<i class="icon-plus icon-white"></i>
 							</div>
 							<div type="text" ng.hide="!place.linkss">
-								<div ng-repeat="link in place.links">
+								<div ng-repeat="link in place.links | orderBy:['predicate','object']">
 									<a ng-click="place.links.splice($index,1)"><i class="icon-remove-sign"></i></a>
 									<em>{{link.predicate}}:</em> <a href="{{link.object}}" target="_blank">{{link.object}}</a>
 								</div>
@@ -194,7 +194,7 @@
 							<div class="btn btn-primary plus" ng-click="addName()" ng-disabled="!name.title">
 								<i class="icon-plus icon-white"></i>
 							</div>
-							<div ng-repeat="placename in place.names">
+							<div ng-repeat="placename in place.names | orderBy:['language','title']">
 								<a ng-click="place.names.splice($index,1)"><i class="icon-remove-sign"></i></a> {{placename.title}}
 								<em ng-hide="!placename.language">
 									(<span gaz-translate="'languages.' + placename.language"></span>)
@@ -277,7 +277,7 @@
 							<div class="btn btn-primary plus" ng-click="addRelatedPlace()" ng-disabled="!relatedPlace['@id']">
 								<i class="icon-plus icon-white"></i>
 							</div>
-							<div ng-repeat="relatedPlace in relatedPlaces">
+							<div ng-repeat="relatedPlace in relatedPlaces | orderBy:'prefName.title'">
 								<a ng-click="relatedPlaces.splice($index,1)"><i class="icon-remove-sign"></i></a>
 								<td><a href="#/show/{{relatedPlace.gazId}}">{{relatedPlace.prefName.title}}</a></td>
 							</div>
