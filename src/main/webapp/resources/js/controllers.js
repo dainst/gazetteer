@@ -150,6 +150,18 @@ function PlaceCtrl($scope, $rootScope, $routeParams, Place, $http, messages) {
 		});
 	}
 	
+	// show live changes of title
+	$scope.$watch("place.prefName.title", function() {
+		if ($scope.place && $scope.place.prefName)
+			$rootScope.title = $scope.place.prefName.title;
+	});
+	
+	// show live changes of location
+	$scope.$watch("place.prefLocation.coordinates", function() {
+		if ($scope.place && $scope.place.prefLocation)
+			$rootScope.activePlaces = [$scope.place];
+	});
+	
 	$scope.save = function() {
 		Place.save(
 			$scope.place,
@@ -253,9 +265,11 @@ function MergeCtrl($scope, $rootScope, $routeParams, $location, Place, $http, me
 	};
 	
 	$scope.$watch("candidatePlaces", function() {
-		$rootScope.activePlaces = [];
-		$rootScope.activePlaces = $rootScope.activePlaces.concat($scope.candidatePlaces);
-		$rootScope.activePlaces.push($scope.place);
+		var activePlaces = [];
+		if ($scope.candidatePlaces)
+			activePlaces = activePlaces.concat($scope.candidatePlaces);
+		activePlaces.push($scope.place);
+		$rootScope.activePlaces = activePlaces;
 	});
 	
 	$scope.merge = function(place1, place2) {

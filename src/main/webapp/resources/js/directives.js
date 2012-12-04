@@ -118,8 +118,9 @@ directives.directive('gazMap', function() {
 				var ll = new google.maps.LatLng("0","0");
 				var numLocations = 0;
 				for (var i in scope.places) {	
-					var place = scope.places[i];				
-					var title = place.prefName.title;
+					var place = scope.places[i];		
+					var title = "";
+					if (place.prefName) title = place.prefName.title;
 					if (place.prefLocation) {
 						ll = new google.maps.LatLng(place.prefLocation.coordinates[1], place.prefLocation.coordinates[0]);
 						markers[i] = new google.maps.Marker({
