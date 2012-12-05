@@ -9,7 +9,7 @@
 <title>iDAI.gazetteer</title>
 <link rel="stylesheet" href="../resources/css/app.css" />
 <link href="../resources/bootstrap/css/bootstrap.css" rel="stylesheet">
-<link href="../resources/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">	
+<link href="../resources/bootstrap/css/font-awesome.css" rel="stylesheet">	
 <!-- In production use:
  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js"></script>
  -->

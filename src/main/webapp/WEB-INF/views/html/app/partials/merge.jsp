@@ -56,7 +56,7 @@
 						</div>
 					</div>
 					<div style="text-align:center;">
-						<a data-toggle="modal" href="#mergeModal-{{candidatePlace.gazId}}"><i class="icon-retweet"></i></a>
+						<a data-toggle="modal" href="#mergeModal-{{candidatePlace.gazId}}"><i class="icon-link"></i></a>
 					</div>
 				</td>
 			</tr>

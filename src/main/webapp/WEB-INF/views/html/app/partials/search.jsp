@@ -1,16 +1,16 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s"%>
 <%@ page contentType="text/html; charset=utf-8" session="false"%>
 
-<div class="subnav">
-	<ul class="nav nav-pills">
+<div>
+	<ul class="nav nav-pills" style="display:inline-block; margin-bottom: 0;">
 		<li ng-click="setLimit(10)">
-		    <a style="border: none"><i class="icon-stop"></i> 10</a>
+		    <a><i class="icon-stop"></i> 10</a>
 		</li>
 		<li ng-click="setLimit(100)">
-			<a href="" style="border: none"><i class="icon-th-large"></i> 100</a>
+			<a><i class="icon-th-large"></i> 100</a>
 		</li>
 		<li ng-click="setLimit(1000)">
-			<a href="" style="border-left: none"><i class="icon-th"></i> 1000</a>
+			<a><i class="icon-th"></i> 1000</a>
 		</li>
 		<!-- <li class="dropdown">
 			<a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -36,29 +36,33 @@
 				</li>
 			</ul>
 		</li> -->
-		<li class="pull-right">
-			<ul class="pagination">
-				<li ng-class="{disabled:(page() == 1)}" ng-click="prevPage()">
-					<a>&larr; <s:message code="ui.previous" /></a>
-				</li>
-				<li>
-					<a>
-						<s:message code="ui.page" text="Seite" />
-						{{page()}} / {{totalPages()}}
-					</a>
-				</li>
-				<li ng-class="{disabled:(page() == totalPages())}" ng-click="nextPage()">
-					<a><s:message code="ui.next" text="Vor"/> &rarr;</a>
-				</li>
-			</ul>
+	</ul>
+	<ul class="nav nav-pills pull-right" style="display:inline-block; margin-bottom: 0;">
+		<li ng-class="{disabled:(page() == 1)}" ng-click="prevPage()">
+			<a>&larr; <s:message code="ui.previous" /></a>
+		</li>
+		<li class="divider-vertical"></li>
+		<li>
+			<a>
+				<s:message code="ui.page" text="Seite" />
+				{{page()}} / {{totalPages()}}
+			</a>
+		</li>
+		<li class="divider-vertical"></li>
+		<li ng-class="{disabled:(page() == totalPages())}" ng-click="nextPage()">
+			<a><s:message code="ui.next" text="Vor"/> &rarr;</a>
 		</li>
 	</ul>
-
+	<hr>
 </div>
 
 <table class="table table-striped">
 	<thead>
 		<tr>
+			<th>
+				<!-- TODO add tooltip -->
+				<i class="icon-signal"></i>
+			</th>
 			<th>
 				<a ng-click="orderBy('_id')">#</a>
 				<i ng-show="search.sort == '_id' && search.order == 'asc'" class="icon-chevron-up"></i>
@@ -79,6 +83,8 @@
 	</thead>
 	<tbody>
 		<tr ng-repeat="place in places">
+			<!-- TODO icon for score -->
+			<td><i class="icon-signal"></i></td>
 			<td>{{place.gazId}}</td>
 			<td><gaz-place-title place="place"></gaz-place-title></td>
 			<td>{{place.thesaurus}}</td>
