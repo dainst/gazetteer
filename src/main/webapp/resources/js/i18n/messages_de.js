@@ -4,6 +4,13 @@ messages.factory('messages', function(){
 	return {
 		"ui.search.results": "Suchergebnis",
 		"ui.search.hits": "Treffer",
+		"ui.search.limit.10.tooltip": "10 Treffer pro Seite zeigen",
+		"ui.search.limit.100.tooltip": "100 Treffer pro Seite zeigen",
+		"ui.search.limit.1000.tooltip": "1000 Treffer pro Seite zeigen",
+		"ui.search.sort.score.tooltip": "Nach Relevanz sortieren",
+		"ui.search.sort.id.tooltip": "Nach ID sortieren",
+		"ui.search.sort.name.tooltip": "Nach Namen sortieren",
+		"ui.search.sort.thesaurus.tooltip": "Nach Thesaurus sortieren",
 		"ui.place.save.success": "Ort erfolgreich gespeichert",
 		"ui.place.save.failure": "Ort konnte nicht gespeichert werden",
 		"ui.merge.success.head": "Zusammenfassen erfolgreich",

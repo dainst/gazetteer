@@ -15,6 +15,16 @@ directives.directive('gazTranslate', function(messages) {
 	};
 });
 
+directives.directive('gazTooltip', function(messages) {
+	return {
+		link: function(scope, element, attrs) {
+			scope.$watch(attrs.gazTooltip, function(code) {
+				$(element).tooltip({title: messages[code.toLowerCase()]});
+			});
+		}
+	};
+});
+
 directives.directive('gazLocationPicker', function() {	
 	return {
 		restrict: 'E',
@@ -27,6 +37,21 @@ directives.directive('gazLocationPicker', function() {
 			$(element).find('input.lnglat').locationPicker();
 		}
 	};	
+});
+
+directives.directive('gazCopyUri', function() {
+	return {
+		restrict: 'E',
+		replace: true,
+		scope: { uri: '=' },
+		templateUrl: 'partials/copyUri.html',
+		link: function(scope, element, attrs) {
+			$(element).find('a').click(function() {
+				$(element).find('.modal').modal();
+				$(element).find('input.uri').focus().select();
+			});
+		}
+	};
 });
 
 directives.directive('gazPlaceNav', function() {

@@ -3,13 +3,13 @@
 
 <div>
 	<ul class="nav nav-pills" style="display:inline-block; margin-bottom: 0;">
-		<li ng-click="setLimit(10)">
+		<li ng-click="setLimit(10)" ng-class="{active:(search.limit == 10)}" gaz-tooltip="'ui.search.limit.10.tooltip'">
 		    <a><i class="icon-stop"></i> 10</a>
 		</li>
-		<li ng-click="setLimit(100)">
+		<li ng-click="setLimit(100)" ng-class="{active:(search.limit == 100)}" gaz-tooltip="'ui.search.limit.100.tooltip'">
 			<a><i class="icon-th-large"></i> 100</a>
 		</li>
-		<li ng-click="setLimit(1000)">
+		<li ng-click="setLimit(1000)" ng-class="{active:(search.limit == 1000)}" gaz-tooltip="'ui.search.limit.1000.tooltip'">
 			<a><i class="icon-th"></i> 1000</a>
 		</li>
 		<!-- <li class="dropdown">
@@ -42,7 +42,7 @@
 			<a>&larr; <s:message code="ui.previous" /></a>
 		</li>
 		<li class="divider-vertical"></li>
-		<li>
+		<li class="disabled">
 			<a>
 				<s:message code="ui.page" text="Seite" />
 				{{page()}} / {{totalPages()}}
@@ -61,22 +61,22 @@
 		<tr>
 			<th>
 				<!-- TODO add tooltip -->
-				<a ng-click="orderBy('_score')"><i class="icon-signal"></i></a>
+				<a ng-click="orderBy('_score')" gaz-tooltip="'ui.search.sort.score.tooltip'"><i class="icon-signal"></i></a>
 				<i ng-show="search.sort == '_score' && search.order == 'asc'" class="icon-chevron-up"></i>
 				<i ng-show="search.sort == '_score' && search.order == 'desc'" class="icon-chevron-down"></i>
 			</th>
 			<th>
-				<a ng-click="orderBy('_id')">#</a>
+				<a ng-click="orderBy('_id')" gaz-tooltip="'ui.search.sort.id.tooltip'">#</a>
 				<i ng-show="search.sort == '_id' && search.order == 'asc'" class="icon-chevron-up"></i>
 				<i ng-show="search.sort == '_id' && search.order == 'desc'" class="icon-chevron-down"></i>
 			</th>
 			<th>
-				<a ng-click="orderBy('prefName.title.sort')"><s:message code="domain.placename.title" text="domain.placename.title" /></a>
+				<a ng-click="orderBy('prefName.title.sort')" gaz-tooltip="'ui.search.sort.name.tooltip'"><s:message code="domain.placename.title" text="domain.placename.title" /></a>
 				<i ng-show="search.sort == 'prefName.title.sort' && search.order == 'asc'" class="icon-chevron-up"></i>
 				<i ng-show="search.sort == 'prefName.title.sort' && search.order == 'desc'" class="icon-chevron-down"></i>
 			</th>
 			<th>
-				<a ng-click="orderBy('thesaurus')"><s:message code="domain.thesaurus" text="domain.thesaurus" /></a>
+				<a ng-click="orderBy('thesaurus')" gaz-tooltip="'ui.search.sort.thesaurus.tooltip'"><s:message code="domain.thesaurus" text="domain.thesaurus" /></a>
 				<i ng-show="search.sort == 'thesaurus' && search.order == 'asc'" class="icon-chevron-up"></i>
 				<i ng-show="search.sort == 'thesaurus' && search.order == 'desc'" class="icon-chevron-down"></i>
 			</th>
@@ -85,31 +85,12 @@
 	</thead>
 	<tbody>
 		<tr ng-repeat="place in places">
-			<!-- TODO icon for score -->
 			<td></td>
 			<td>{{place.gazId}}</td>
 			<td><gaz-place-title place="place"></gaz-place-title></td>
 			<td>{{place.thesaurus}}</td>
 			<td>
-				<s:message code="ui.copyToClipboard" var="copyMsg" />
-				<div class="modal hide" id="copyUriModal-{{place.gazId}}">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal">×</button>
-						<h3>
-							<s:message code="ui.copyToClipboardHeading" />
-						</h3>
-					</div>
-					<div class="modal-body">
-						<label>${copyMsg}</label>
-						<input class="input-xxlarge" style="width:97%" type="text" value="${baseUri}place/{{place.gazId}}" id="copyUriInput">
-					</div>
-				</div>
-				<script type="text/javascript">
-					$("#copyUriModal").on("shown",function() {
-						$("#copyUriInput").focus().select();
-					});
-				</script>
-				<a data-toggle="modal" href="#copyUriModal-{{place.gazId}}"><i class="icon-share"></i></a>
+				<gaz-copy-uri uri="place['@id']"></gaz-copy-uri>
 			</td>
 		</tr>
 	</tbody>

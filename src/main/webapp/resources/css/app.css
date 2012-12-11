@@ -43,4 +43,8 @@ body {
 	top: 2px;
 }
 
-.gmap img { max-width: none; } 
+.gmap img { max-width: none; }
+
+.tooltip-inner {
+	font-weight: normal;
+}
