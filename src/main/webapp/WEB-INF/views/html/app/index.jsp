@@ -9,7 +9,8 @@
 <title>iDAI.gazetteer</title>
 <link rel="stylesheet" href="../resources/css/app.css" />
 <link href="../resources/bootstrap/css/bootstrap.css" rel="stylesheet">
-<link href="../resources/bootstrap/css/font-awesome.css" rel="stylesheet">	
+<link href="../resources/bootstrap/css/font-awesome.css" rel="stylesheet">		
+<script	src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <!-- In production use:
  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js"></script>
  -->
@@ -107,7 +108,6 @@
 		
 	</div>
 	
-	<script	src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 	<script src='http://maps.google.com/maps/api/js?key=${googleMapsApiKey}&amp;sensor=false'></script>
 	<script src='../resources/js/lib/jquery.locationpicker.js'></script>
 	<script src='../resources/js/lib/jquery.jstree.js'></script>

@@ -45,7 +45,7 @@ public class ThesaurusController {
 		
 		Thesaurus thesaurus = thesaurusRepository.findOne(key);
 		List<Place> places = placeRepository
-				.findByThesaurusAndParentIsNullAndDeletedIsFalse(key, new Sort("prefName"));
+				.findByThesaurusAndTypeAndDeletedIsFalse(key, "continent", new Sort("prefName"));
 		
 		ModelAndView mav = new ModelAndView("thesaurus/get");
 		mav.addObject("thesaurus", thesaurus);

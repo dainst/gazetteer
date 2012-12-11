@@ -61,7 +61,9 @@
 		<tr>
 			<th>
 				<!-- TODO add tooltip -->
-				<i class="icon-signal"></i>
+				<a ng-click="orderBy('_score')"><i class="icon-signal"></i></a>
+				<i ng-show="search.sort == '_score' && search.order == 'asc'" class="icon-chevron-up"></i>
+				<i ng-show="search.sort == '_score' && search.order == 'desc'" class="icon-chevron-down"></i>
 			</th>
 			<th>
 				<a ng-click="orderBy('_id')">#</a>
@@ -84,7 +86,7 @@
 	<tbody>
 		<tr ng-repeat="place in places">
 			<!-- TODO icon for score -->
-			<td><i class="icon-signal"></i></td>
+			<td></td>
 			<td>{{place.gazId}}</td>
 			<td><gaz-place-title place="place"></gaz-place-title></td>
 			<td>{{place.thesaurus}}</td>
@@ -99,7 +101,7 @@
 					</div>
 					<div class="modal-body">
 						<label>${copyMsg}</label>
-						<input class="input-xxlarge" type="text" value="${baseUri}place/{{place.gazId}}" id="copyUriInput">
+						<input class="input-xxlarge" style="width:97%" type="text" value="${baseUri}place/{{place.gazId}}" id="copyUriInput">
 					</div>
 				</div>
 				<script type="text/javascript">

@@ -19,7 +19,7 @@ StringBuilder sb = new StringBuilder("{");
 sb.append("\"total\": ").append(hits);
 sb.append(", \"result\": [");
 int i = 0;
-for(Place place : places) {
+for (Place place : places) {
 	sb.append(serializer.serialize(place, 1));
 	if(++i < places.size()) sb.append(",");
 }

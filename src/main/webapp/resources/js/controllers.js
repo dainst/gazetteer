@@ -160,7 +160,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, Place, $http, messages) {
 				$scope.relatedPlaces = result.result;
 			});
 			$rootScope.title = result.prefName.title,
-			$rootScope.subtitle = result["@id"]	+ '<a data-toggle="modal" href="#copyUriModal"><i class="icon-share"></i></a>';
+			$rootScope.subtitle = result["@id"]	+ '<a data-toggle="modal" href="#copyUriModal"><i class="icon-share" style="font-size:0.7em"></i></a>';
 			$rootScope.activePlaces = [ result ];
 		});
 	}

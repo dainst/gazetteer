@@ -12,7 +12,7 @@
 	</div>
 	<div class="modal-body">
 		<label>${copyMsg}</label>
-		<input class="input-xxlarge" type="text" value="${baseUri}place/{{place.gazId}}" id="copyUriInput">
+		<input class="input-xxlarge" style="width:97%" type="text" value="${baseUri}place/{{place.gazId}}" id="copyUriInput"></input>
 	</div>
 </div>
 <script type="text/javascript">
