@@ -158,10 +158,12 @@ function PlaceCtrl($scope, $rootScope, $routeParams, Place, $http, messages) {
 			}
 			Place.query({q: "relatedPlaces:" + $scope.place.gazId}, function(result) {
 				$scope.relatedPlaces = result.result;
+				console.log($scope.relatedPlaces.length < 1);
 			});
-			Place.query({q: "parent:" + $scope.place.gazId}, function(result) {
+			Place.query({q: "parent:" + $scope.place.gazId, sort:"prefName.title.sort"}, function(result) {
 				$scope.totalChildren = result.total;
 				$scope.children = result.result;
+				$scope.offsetChildren = 0;
 			});
 			$rootScope.title = result.prefName.title,
 			$rootScope.subtitle = result["@id"]	+ '<a data-toggle="modal" href="#copyUriModal"><i class="icon-share" style="font-size:0.7em"></i></a>';
@@ -180,6 +182,20 @@ function PlaceCtrl($scope, $rootScope, $routeParams, Place, $http, messages) {
 		if ($scope.place && $scope.place.prefLocation)
 			$rootScope.activePlaces = [$scope.place];
 	});
+	
+	$scope.prevChildren = function() {
+		$scope.offsetChildren -= 10;
+		Place.query({q: "parent:" + $scope.place.gazId, sort:"prefName.title.sort", offset:$scope.offsetChildren }, function(result) {
+			$scope.children = result.result;
+		});
+	};
+	
+	$scope.nextChildren = function() {
+		$scope.offsetChildren += 10;
+		Place.query({q: "parent:" + $scope.place.gazId, sort:"prefName.title.sort", offset:$scope.offsetChildren }, function(result) {
+			$scope.children = result.result;
+		});
+	};
 	
 	$scope.save = function() {
 		Place.save(
