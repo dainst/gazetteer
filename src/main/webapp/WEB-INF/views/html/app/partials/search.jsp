@@ -59,13 +59,13 @@
 <table class="table table-striped">
 	<thead>
 		<tr>
-			<th>
+			<th style="width:30px">
 				<!-- TODO add tooltip -->
 				<a ng-click="orderBy('_score')" gaz-tooltip="'ui.search.sort.score.tooltip'"><i class="icon-signal"></i></a>
 				<i ng-show="search.sort == '_score' && search.order == 'asc'" class="icon-chevron-up"></i>
 				<i ng-show="search.sort == '_score' && search.order == 'desc'" class="icon-chevron-down"></i>
 			</th>
-			<th>
+			<th style="width:50px">
 				<a ng-click="orderBy('_id')" gaz-tooltip="'ui.search.sort.id.tooltip'">#</a>
 				<i ng-show="search.sort == '_id' && search.order == 'asc'" class="icon-chevron-up"></i>
 				<i ng-show="search.sort == '_id' && search.order == 'desc'" class="icon-chevron-down"></i>
@@ -75,7 +75,7 @@
 				<i ng-show="search.sort == 'prefName.title.sort' && search.order == 'asc'" class="icon-chevron-up"></i>
 				<i ng-show="search.sort == 'prefName.title.sort' && search.order == 'desc'" class="icon-chevron-down"></i>
 			</th>
-			<th>
+			<th style="width:100px">
 				<a ng-click="orderBy('thesaurus')" gaz-tooltip="'ui.search.sort.thesaurus.tooltip'"><s:message code="domain.thesaurus" text="domain.thesaurus" /></a>
 				<i ng-show="search.sort == 'thesaurus' && search.order == 'asc'" class="icon-chevron-up"></i>
 				<i ng-show="search.sort == 'thesaurus' && search.order == 'desc'" class="icon-chevron-down"></i>
