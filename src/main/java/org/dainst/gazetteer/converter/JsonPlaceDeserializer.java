@@ -78,40 +78,11 @@ public class JsonPlaceDeserializer {
 			
 			// set parent place from URI 
 			JsonNode parentNode = objectNode.get("parent");
-			String oldParent = place.getParent();
 			if (parentNode != null) {
 				Place parent = getPlaceForNode(parentNode);
 				if (parent != null) {
 					place.setParent(parent.getId());
-					parent.addChild(place.getId());
 					placeDao.save(parent);
-				}
-			}
-			// delete place in children of old parent if necessary
-			if (oldParent != null && !oldParent.equals(place.getParent())) {
-				Place parent = placeDao.findOne(oldParent);
-				parent.getChildren().remove(place.getId());
-				placeDao.save(parent);
-			}
-			
-			// set child places from URIs
-			JsonNode childrenNode = objectNode.get("children");
-			Set<String> oldChildren = place.getChildren();
-			place.setChildren(new HashSet<String>());
-			if (childrenNode != null) for (JsonNode childNode : childrenNode) {
-				Place child = getPlaceForNode(childNode);
-				if (child != null) {
-					place.addChild(child.getId());
-					child.setParent(place.getId());
-					placeDao.save(child);
-				}
-			}
-			// delete place as parent of old children if necessary
-			for (String oldChild : oldChildren) {
-				if (!place.getChildren().contains(oldChild)) {
-					Place child = placeDao.findOne(oldChild);
-					child.setParent(null);
-					placeDao.save(child);
 				}
 			}
 			

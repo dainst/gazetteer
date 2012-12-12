@@ -23,6 +23,8 @@ public interface PlaceRepository extends PagingAndSortingRepository<Place, Strin
 	public Place findByIds(Identifier id);
 
 	public Place findByIdsAndType(Identifier id, String type);
+	
+	public List<Place> findByParent(String parentId);
 
 	public List<Place> findByIdIn(Set<String> ids);
 

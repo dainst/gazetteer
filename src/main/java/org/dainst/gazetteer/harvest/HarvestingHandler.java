@@ -115,10 +115,6 @@ public class HarvestingHandler implements Runnable {
 							if (place.getParent() != null && place.getParent().equals(candidatePlace.getId())) {
 								place.setParent(mergedPlace.getId());
 							}
-							if (place.getChildren().contains(candidatePlace.getId())) {
-								place.getChildren().remove(candidatePlace.getId());
-								place.getChildren().add(mergedPlace.getId());
-							}
 						}
 						places.add(mergedPlace);
 					} else {

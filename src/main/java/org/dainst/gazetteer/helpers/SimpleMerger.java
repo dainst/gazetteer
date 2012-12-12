@@ -9,8 +9,6 @@ public class SimpleMerger implements Merger {
 		
 		Place result = new Place();
 		
-		result.getChildren().addAll(place1.getChildren());
-		result.getChildren().addAll(place2.getChildren());
 		result.getComments().addAll(place1.getComments());
 		result.getComments().addAll(place2.getComments());
 		result.getIdentifiers().addAll(place1.getIdentifiers());

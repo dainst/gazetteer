@@ -45,19 +45,6 @@ public class MergeController {
 		newPlace.setId(idGenerator.generate(newPlace));
 		placeDao.save(newPlace);
 		
-		Place parent = placeDao.findOne(newPlace.getParent());
-		if (parent != null) {
-			parent.getChildren().remove(id1);
-			parent.getChildren().remove(id2);
-			parent.addChild(newPlace.getId());
-		}
-		
-		for (String childId : newPlace.getChildren()) {
-			Place child = placeDao.findOne(childId);
-			child.setParent(newPlace.getId());
-			placeDao.save(child);
-		}
-		
 		for (String relatedPlaceId : newPlace.getRelatedPlaces()) {
 			Place relatedPlace = placeDao.findOne(relatedPlaceId);
 			relatedPlace.getRelatedPlaces().remove(id1);
@@ -72,6 +59,8 @@ public class MergeController {
 		place2.setReplacedBy(newPlace.getId());
 		place2.setDeleted(true);
 		placeDao.save(place2);
+		
+		logger.debug("finished merging " + place1.getId() + " and " + place2.getId() + " to " + newPlace.getId());
 		
 		response.setStatus(201);
 		response.setHeader("location", baseUri + "place/" + newPlace.getId());

@@ -69,9 +69,6 @@ public class AdminController {
 		placeDao.save(place3);
 		logger.info("saved {}", place3);
 		
-		place2.getChildren().add(place3.getId());
-		placeDao.save(place2);
-		
 //		Random random = new Random();
 //		for (int i = 0; i < 768; i++) {
 //			double d1 = random.nextDouble();

@@ -1,9 +1,7 @@
 package org.dainst.gazetteer.controller;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Controller;
@@ -96,7 +93,7 @@ public class DocumentController {
 			
 		} else {
 			
-			List<Place> children = placeDao.findByIdIn(place.getChildren());
+			List<Place> children = placeDao.findByParent(place.getId());
 			List<Place> relatedPlaces = placeDao.findByIdIn(place.getRelatedPlaces());
 			Place parent = null;
 			if (place.getParent() != null) parent = placeDao.findOne(place.getParent());

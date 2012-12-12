@@ -59,11 +59,11 @@
 		<br/>
 	</span>
 	
-	<span ng-hide="!place.children">
+	<span ng-hide="!children || children.length < 1">
 		<dt><s:message code="domain.place.children" text="domain.place.children" /></dt>
 		<dd>
 			<a href="#/search?q=parent:{{place.gazId}}">
-				<s:message code="ui.numberOfPlaces" text="ui.numberOfPlaces" arguments="{{place.children.length}}" />
+				<s:message code="ui.numberOfPlaces" text="ui.numberOfPlaces" arguments="{{totalChildren}}" />
 			</a>
 		</dd>
 		<br/>

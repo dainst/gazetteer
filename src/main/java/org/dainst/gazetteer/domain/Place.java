@@ -28,8 +28,6 @@ public class Place {
 
 	private String parent;
 
-	private Set<String> children = new HashSet<String>();
-
 	private Set<String> relatedPlaces = new HashSet<String>();
 	
 	private Set<Comment> comments = new HashSet<Comment>();
@@ -104,18 +102,6 @@ public class Place {
 
 	public void setParent(String parent) {
 		this.parent = parent;
-	}
-	
-	public Set<String> getChildren() {
-		return children;
-	}
-
-	public void setChildren(Set<String> children) {
-		this.children = children;
-	}
-	
-	public void addChild(String child) {
-		children.add(child);
 	}
 
 	public boolean isDeleted() {
@@ -231,7 +217,6 @@ public class Place {
 		return "Place [id=" + id + ", prefName=" + prefName + ", names=" + names
 				+ ", type=" + type + ", links=" + links
 				+ ", locations=" + locations + ", parent=" + parent
-				+ ", children=" + children + ", relatedPlaces=" + relatedPlaces
 				+ ", comments=" + comments + ", tags=" + tags + ", ids=" + ids
 				+ ", thesaurus=" + thesaurus + ", needsReview=" + needsReview
 				+ ", deleted=" + deleted + ", replacedBy=" + replacedBy + "]";
@@ -241,8 +226,6 @@ public class Place {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((children == null) ? 0 : children.hashCode());
 		result = prime * result
 				+ ((comments == null) ? 0 : comments.hashCode());
 		result = prime * result + (deleted ? 1231 : 1237);
@@ -276,11 +259,6 @@ public class Place {
 		if (getClass() != obj.getClass())
 			return false;
 		Place other = (Place) obj;
-		if (children == null) {
-			if (other.children != null)
-				return false;
-		} else if (!children.equals(other.children))
-			return false;
 		if (comments == null) {
 			if (other.comments != null)
 				return false;

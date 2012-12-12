@@ -115,17 +115,6 @@ public class JsonPlaceSerializer {
 		if (place.getParent() != null && !place.getParent().isEmpty())
 			placeNode.put("parent", baseUri + "place/" + place.getParent());
 		
-		if (lod > 0) {
-			// children
-			if (!place.getChildren().isEmpty()) {
-				ArrayNode childrenNode = mapper.createArrayNode();
-				for (String childId : place.getChildren()) {
-					childrenNode.add(baseUri + "place/" + childId);
-				}
-				placeNode.put("children", childrenNode);
-			}
-		}
-		
 		// related places
 		if (!place.getRelatedPlaces().isEmpty()) {
 			ArrayNode relatedPlacesNode = mapper.createArrayNode();
