@@ -53,6 +53,7 @@
 	 				<input type="text" class="search-query" placeholder="${titleSimpleSearch}" ng-model="q">
 	 				<i class="icon-search icon-white"></i>
 				</form>
+				<img ng-show="loading > 0" src="../resources/img/loading48.gif" style="width:24px; height:24px; margin-top:8px;">
 			</div>
 		</div>
 	</div>

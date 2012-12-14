@@ -12,6 +12,8 @@ function AppCtrl($scope, $location, $rootScope) {
 	
 	$rootScope.alerts = [];
 	
+	$rootScope.loading = 0;
+	
 	// search while typing
 	$scope.$watch("q", function() {
 		if ($scope.q.indexOf(':') == -1
@@ -111,10 +113,12 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 	};
 	
 	$scope.submit = function() {
+		$rootScope.loading++;
 		Place.query($scope.search, function(result) {
 			$scope.places = result.result;
 			if ($scope.total != result.total)
 				$scope.total = result.total;
+			$rootScope.loading--;
 		});
 	};
 	
@@ -148,26 +152,34 @@ function PlaceCtrl($scope, $rootScope, $routeParams, Place, $http, messages) {
 	$scope.link = { predicate: "owl:sameAs" };
 	
 	if ($routeParams.id) {
+		$rootScope.loading++;
 		$scope.place = Place.get({
 			id: $routeParams.id
 		}, function(result) {
 			if (result.parent) {
+				$rootScope.loading++;
 				$http.get(result.parent).success(function(result) {
 					$scope.parent = result;
 				});
+				$rootScope.loading--;
 			}
+			$rootScope.loading++;
 			Place.query({q: "relatedPlaces:" + $scope.place.gazId}, function(result) {
 				$scope.relatedPlaces = result.result;
 				console.log($scope.relatedPlaces.length < 1);
+				$rootScope.loading--;
 			});
+			$rootScope.loading++;
 			Place.query({q: "parent:" + $scope.place.gazId, sort:"prefName.title.sort"}, function(result) {
 				$scope.totalChildren = result.total;
 				$scope.children = result.result;
 				$scope.offsetChildren = 0;
+				$rootScope.loading--;
 			});
 			$rootScope.title = result.prefName.title,
 			$rootScope.subtitle = result["@id"]	+ '<a data-toggle="modal" href="#copyUriModal"><i class="icon-share" style="font-size:0.7em"></i></a>';
 			$rootScope.activePlaces = [ result ];
+			$rootScope.loading--;
 		});
 	}
 	
@@ -185,19 +197,24 @@ function PlaceCtrl($scope, $rootScope, $routeParams, Place, $http, messages) {
 	
 	$scope.prevChildren = function() {
 		$scope.offsetChildren -= 10;
+		$rootScope.loading++;
 		Place.query({q: "parent:" + $scope.place.gazId, sort:"prefName.title.sort", offset:$scope.offsetChildren }, function(result) {
 			$scope.children = result.result;
+			$rootScope.loading--;
 		});
 	};
 	
 	$scope.nextChildren = function() {
 		$scope.offsetChildren += 10;
+		$rootScope.loading++;
 		Place.query({q: "parent:" + $scope.place.gazId, sort:"prefName.title.sort", offset:$scope.offsetChildren }, function(result) {
 			$scope.children = result.result;
+			$rootScope.loading--;
 		});
 	};
 	
 	$scope.save = function() {
+		$rootScope.loading++;
 		Place.save(
 			$scope.place,
 			function(data) {
@@ -206,11 +223,13 @@ function PlaceCtrl($scope, $rootScope, $routeParams, Place, $http, messages) {
 				}
 				$rootScope.addAlert(messages["ui.place.save.success"], null, "success");
 				window.scrollTo(0,0);
+				$rootScope.loading--;
 			},
 			function(result) {
 				$scope.failure = result.data.message; 
 				$rootScope.addAlert(messages["ui.place.save.failure"], null, "error");
 				window.scrollTo(0,0);
+				$rootScope.loading--;
 			}
 		);
 	};
@@ -277,12 +296,14 @@ function PlaceCtrl($scope, $rootScope, $routeParams, Place, $http, messages) {
 function MergeCtrl($scope, $rootScope, $routeParams, $location, Place, $http, messages) {
 	
 	if ($routeParams.id) {
+		$rootScope.loading++;
 		$scope.place = Place.get({
 			id: $routeParams.id
 		}, function(result) {
 			$rootScope.title = result.prefName.title,
 			$rootScope.subtitle = result["@id"]	+ '<a data-toggle="modal" href="#copyUriModal"><i class="icon-share"></i></a>';
 			$scope.getCandidatesByName();
+			$rootScope.loading--;
 		});
 	}
 	
@@ -292,12 +313,15 @@ function MergeCtrl($scope, $rootScope, $routeParams, $location, Place, $http, me
 			query += " OR \"" + $scope.place.names[i].title + "\"~0.5";
 		}
 		query += ") AND NOT _id:" + $scope.place.gazId;
+		$rootScope.loading++;
 		Place.query({q: query, type: 'queryString'}, function(result) {
 			$scope.candidatePlaces = result.result;
+			$rootScope.loading--;
 		});
 	};
 	
 	$scope.getCandidatesByLocation = function() {
+		$rootScope.loading++;
 		Place.distance({
 			lon: $scope.place.prefLocation.coordinates[0],
 			lat: $scope.place.prefLocation.coordinates[1],
@@ -305,6 +329,7 @@ function MergeCtrl($scope, $rootScope, $routeParams, $location, Place, $http, me
 			filter: "type:"+ $scope.place.type + " AND NOT _id:" + $scope.place.gazId
 		}, function(result) {
 			$scope.candidatePlaces = result.result;
+			$rootScope.loading--;
 		});
 	};
 	
@@ -317,10 +342,12 @@ function MergeCtrl($scope, $rootScope, $routeParams, $location, Place, $http, me
 	});
 	
 	$scope.merge = function(place1, place2) {
+		$rootScope.loading++;
 		place1.$merge({id2: place2.gazId }, function(result) {
 			$rootScope.addAlert(messages["ui.merge.success.body"],
 					messages["ui.merge.success.head"], "success");
 			$location.path("/edit/" + result.gazId);
+			$rootScope.loading--;
 		});
 	};
 	
