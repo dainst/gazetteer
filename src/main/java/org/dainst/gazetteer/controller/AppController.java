@@ -1,5 +1,6 @@
 package org.dainst.gazetteer.controller;
 
+import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +23,9 @@ public class AppController {
 	@Value("${googleMapsApiKey}")
 	private String googleMapsApiKey;
 	
+	@Value("${idTypes}")
+	private String[] idTypes;
+	
 	@Autowired
 	LocalizedLanguagesHelper langHelper;
 
@@ -37,6 +41,7 @@ public class AppController {
 		model.addAttribute("language", locale.getLanguage());
 		model.addAttribute("languages", langHelper.getLocalizedLanguages(locale));
 		model.addAttribute("googleMapsApiKey", googleMapsApiKey);
+		model.addAttribute("idTypes",idTypes);
 		return "app/index";
 	}
 	
@@ -47,6 +52,7 @@ public class AppController {
 		model.addAttribute("language", locale.getLanguage());
 		model.addAttribute("languages", langHelper.getLocalizedLanguages(locale));
 		model.addAttribute("googleMapsApiKey", googleMapsApiKey);
+		model.addAttribute("idTypes",idTypes);
 		return "app/" + view;
 	}
 	
@@ -56,6 +62,7 @@ public class AppController {
 		Locale locale = new RequestContext(request).getLocale();
 		model.addAttribute("language", locale.getLanguage());
 		model.addAttribute("languages", langHelper.getLocalizedLanguages(locale));
+		model.addAttribute("idTypes",idTypes);
 		return "app/partials/" + view;
 	}
 	

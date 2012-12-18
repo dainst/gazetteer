@@ -117,9 +117,13 @@
 							<s:message code="domain.identifier.value" text="domain.identifier.value" />
 						</label>
 						<div class="controls">
-							<input type="text" ng-model="identifier.value" class="input-medium">
+							<input type="text" ng-model="identifier.value" class="input-small">
 							<s:message code="domain.identifier.context" text="domain.identifier.context" />
-							<input type="text" ng-model="identifier.context" class="input-small">
+							<select ng-model="identifier.context" class="input-medium">
+								<c:forEach var="idType" items="${idTypes}">
+									<option value="${idType}" label="${idType}">
+								</c:forEach>
+							</select>
 							<div class="btn btn-primary plus" ng-click="addIdentifier()" ng-disabled="!identifier.value || !identifier.context">
 								<i class="icon-plus icon-white"></i>
 							</div>
