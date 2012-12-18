@@ -2,6 +2,7 @@ package org.dainst.gazetteer.domain;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -36,7 +37,7 @@ public class Place {
 	
 	private Set<Identifier> ids = new HashSet<Identifier>();
 	
-	private String thesaurus;
+	private Set<String> thesauri = new HashSet<String>();
 	
 	private boolean needsReview = false;
 	
@@ -180,12 +181,16 @@ public class Place {
 		this.ids.add(id);
 	}
 
-	public String getThesaurus() {
-		return thesaurus;
+	public Set<String> getThesauri() {
+		return thesauri;
 	}
 
-	public void setThesaurus(String thesaurus) {
-		this.thesaurus = thesaurus;
+	public void setThesauri(Set<String> thesauri) {
+		this.thesauri = thesauri;
+	}
+	
+	public void addThesaurus(String thesaurus) {
+		this.thesauri.add(thesaurus);
 	}
 
 	public boolean isNeedsReview() {
@@ -218,7 +223,7 @@ public class Place {
 				+ ", type=" + type + ", links=" + links
 				+ ", locations=" + locations + ", parent=" + parent
 				+ ", comments=" + comments + ", tags=" + tags + ", ids=" + ids
-				+ ", thesaurus=" + thesaurus + ", needsReview=" + needsReview
+				+ ", thesauri=" + thesauri + ", needsReview=" + needsReview
 				+ ", deleted=" + deleted + ", replacedBy=" + replacedBy + "]";
 	}
 
@@ -245,7 +250,7 @@ public class Place {
 				+ ((replacedBy == null) ? 0 : replacedBy.hashCode());
 		result = prime * result + ((tags == null) ? 0 : tags.hashCode());
 		result = prime * result
-				+ ((thesaurus == null) ? 0 : thesaurus.hashCode());
+				+ ((thesauri == null) ? 0 : thesauri.hashCode());
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
@@ -318,10 +323,10 @@ public class Place {
 				return false;
 		} else if (!tags.equals(other.tags))
 			return false;
-		if (thesaurus == null) {
-			if (other.thesaurus != null)
+		if (thesauri == null) {
+			if (other.thesauri != null)
 				return false;
-		} else if (!thesaurus.equals(other.thesaurus))
+		} else if (!thesauri.equals(other.thesauri))
 			return false;
 		if (type == null) {
 			if (other.type != null)

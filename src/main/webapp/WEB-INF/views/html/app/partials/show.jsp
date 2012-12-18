@@ -114,9 +114,9 @@
 		<br/>
 	</span>
 	
-	<span ng-hide="!place.thesaurus">
-		<dt><s:message code="domain.thesaurus" text="domain.thesaurus" /></dt>
-		<dd>{{place.thesaurus}}</dd>
+	<span ng-hide="!place.thesauri">
+		<dt><s:message code="domain.thesauri" text="domain.thesauri" /></dt>
+		<dd ng-repeat="thesaurus in place.thesauri | orderBy:['title']">{{getThesaurusForKey(thesaurus).title}}</dd>
 		<br/>
 	</span>
 	

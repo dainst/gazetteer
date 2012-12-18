@@ -37,8 +37,15 @@ public class JsonPlaceSerializer {
 		placeNode.put("gazId", place.getId());
 		if (place.getType() != null && !place.getType().isEmpty())
 			placeNode.put("type", place.getType());
-		if (place.getThesaurus() != null && !place.getThesaurus().isEmpty())
-			placeNode.put("thesaurus", place.getThesaurus());
+		
+		// thesauri
+		if (!place.getThesauri().isEmpty()) {
+			ArrayNode thesauriNode = mapper.createArrayNode();
+			for (String thesaurus : place.getThesauri()) {
+				thesauriNode.add(thesaurus);
+			}
+			placeNode.put("thesauri", thesauriNode);
+		}
 		
 		// preferred name
 		if (place.getPrefName() != null) {

@@ -14,11 +14,11 @@ public interface PlaceRepository extends PagingAndSortingRepository<Place, Strin
 
 	public List<Place> findByPrefNameTitleAndType(String name, String type);
 
-	public List<Place> findByThesaurus(String thesaurus);
+	public List<Place> findByThesauri(String thesaurus);
 
-	public List<Place> findByThesaurusAndParentIsNullAndDeletedIsFalse(String key, Sort sort);
+	public List<Place> findByThesauriAndParentIsNullAndDeletedIsFalse(String key, Sort sort);
 
-	public List<Place> findByThesaurusAndTypeAndDeletedIsFalse(String key, String type, Sort sort);
+	public List<Place> findByThesauriAndTypeAndDeletedIsFalse(String key, String type, Sort sort);
 
 	public Place findByIds(Identifier id);
 

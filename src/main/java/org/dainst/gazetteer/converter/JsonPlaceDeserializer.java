@@ -113,11 +113,11 @@ public class JsonPlaceDeserializer {
 			}
 			
 			// set thesaurus
-			if (objectNode.has("thesaurus")) {
-				Thesaurus thesaurus = thesaurusDao.getThesaurusByKey(objectNode.get("thesaurus").asText());
+			if (objectNode.has("thesauri")) for (JsonNode thesaurusNode : objectNode.get("thesauri")) {
+				Thesaurus thesaurus = thesaurusDao.getThesaurusByKey(thesaurusNode.asText());
 				if (thesaurus == null)
 					throw new HttpMessageNotReadableException("Invalid thesaurus key.");
-				place.setThesaurus(thesaurus.getKey());
+				place.addThesaurus(thesaurus.getKey());
 			}
 			
 			// update name objects

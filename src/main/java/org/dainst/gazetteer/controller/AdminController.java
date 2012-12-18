@@ -125,7 +125,7 @@ public class AdminController {
             while (rs.next ())
             {
             	Place place = new Place();
-            	place.setThesaurus(thesaurus.getKey());
+            	place.addThesaurus(thesaurus.getKey());
             	place.addName(new PlaceName(rs.getString("Stadt"), "de"));
             	if (!"".equals(rs.getString("Ort_antik")))
             		place.addName(new PlaceName(rs.getString("Ort_antik"), ""));
@@ -173,7 +173,7 @@ public class AdminController {
 	public String resetThesaurus(@PathVariable String key) {
 		
 		Thesaurus thesaurus = thesaurusDao.getThesaurusByKey(key);
-		placeDao.delete(placeDao.findByThesaurus(key));
+		placeDao.delete(placeDao.findByThesauri(key));
 		thesaurusDao.delete(thesaurus);
 		
 		Thesaurus thesaurus2 = new Thesaurus();

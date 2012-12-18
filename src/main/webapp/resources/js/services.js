@@ -16,3 +16,7 @@ services.factory('Place', function($resource){
 				merge: { method: 'POST', params: {method:'merge'} }
 			});
 });
+
+services.factory('Thesaurus', function($resource){
+	return $resource("../thesaurus/:id", { id: '@key' });
+});
