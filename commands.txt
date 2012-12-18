@@ -55,11 +55,11 @@ rs.initiate({ _id : "rs0", members : [ { _id : 0, host : "localhost:27017" } ] }
 					}
                 }
             },
-            "thesaurus": {
+            "thesauri": {
                 "type": "string"
             },
             "children": {
-                "type": "string",
+                "type": "integer",
 				"include_in_all": false
             },
             "deleted": {

@@ -14,6 +14,8 @@ messages.factory('messages', function(){
 		"ui.place.children.search": "Orte in Suche anzeigen",
 		"ui.place.save.success": "Ort erfolgreich gespeichert",
 		"ui.place.save.failure": "Ort konnte nicht gespeichert werden",
+		"ui.link.tooltip": "Mit aktuellem Ort verknüpfen",
+		"ui.merge.tooltip": "Diesen und aktuellen Ort zusammenfassen",
 		"ui.merge.success.head": "Zusammenfassen erfolgreich",
 		"ui.merge.success.body": "Bitte überprüfen Sie unten die Angaben des neu angelegten Orts",
 		"place.types.continent": "Kontinent",

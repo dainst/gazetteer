@@ -2,7 +2,6 @@ package org.dainst.gazetteer.domain;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -44,6 +43,8 @@ public class Place {
 	private boolean deleted = false;
 	
 	private String replacedBy;
+	
+	private int children = 0;
 	
 	public String getId() {
 		return id;
@@ -342,6 +343,14 @@ public class Place {
 
 	public void setPrefLocation(Location prefLocation) {
 		this.prefLocation = prefLocation;
+	}
+
+	public int getChildren() {
+		return children;
+	}
+
+	public void setChildren(int children) {
+		this.children = children;
 	}
 	
 	

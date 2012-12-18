@@ -123,7 +123,7 @@ public class HarvestingHandler implements Runnable {
 				}
 				
 				// save places
-				for (Place place : places) {					
+				for (Place place : places) {
 					place.addThesaurus(thesaurus.getKey());				
 					placeDao.save(place);
 					logger.info("saved place: {}", place.getId());

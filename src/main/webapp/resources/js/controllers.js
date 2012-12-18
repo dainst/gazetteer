@@ -357,6 +357,31 @@ function MergeCtrl($scope, $rootScope, $routeParams, $location, Place, $http, me
 		$rootScope.activePlaces = activePlaces;
 	});
 	
+	$scope.link = function(place1, place2) {
+		if (place1.relatedPlaces == undefined)
+			place1.relatedPlaces = [];
+		place1.relatedPlaces.push(place2["@id"]);
+		$rootScope.loading++;
+		Place.save(place1, function(result) {
+			$rootScope.addAlert(messages["ui.place.save.success"], place1.prefName.title, "success");
+			$rootScope.loading--;
+		}, function(result) {
+			$rootScope.addAlert(messages["ui.place.save.failure"], place1.prefName.title, "error");
+			$rootScope.loading--;
+		});
+		if (place2.relatedPlaces == undefined)
+			place2.relatedPlaces = [];
+		place2.relatedPlaces.push(place1["@id"]);
+		$rootScope.loading++;
+		Place.save(place2, function(result) {
+			$rootScope.addAlert(messages["ui.place.save.success"], place2.prefName.title, "success");
+			$rootScope.loading--;
+		}, function(result) {
+			$rootScope.addAlert(messages["ui.place.save.failure"], place2.prefName.title, "error");
+			$rootScope.loading--;
+		});
+	};
+	
 	$scope.merge = function(place1, place2) {
 		$rootScope.loading++;
 		place1.$merge({id2: place2.gazId }, function(result) {

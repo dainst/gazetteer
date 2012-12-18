@@ -75,12 +75,7 @@
 				<i ng-show="search.sort == 'prefName.title.sort' && search.order == 'asc'" class="icon-chevron-up"></i>
 				<i ng-show="search.sort == 'prefName.title.sort' && search.order == 'desc'" class="icon-chevron-down"></i>
 			</th>
-			<th style="width:100px">
-				<a ng-click="orderBy('thesaurus')" gaz-tooltip="'ui.search.sort.thesaurus.tooltip'"><s:message code="domain.thesaurus" text="domain.thesaurus" /></a>
-				<i ng-show="search.sort == 'thesaurus' && search.order == 'asc'" class="icon-chevron-up"></i>
-				<i ng-show="search.sort == 'thesaurus' && search.order == 'desc'" class="icon-chevron-down"></i>
-			</th>
-			<th><s:message code="domain.place.uri" text="domain.place.uri" /></th>
+			<th style="width:30px"><s:message code="domain.place.uri" text="domain.place.uri" /></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -88,8 +83,7 @@
 			<td></td>
 			<td>{{place.gazId}}</td>
 			<td><gaz-place-title place="place"></gaz-place-title></td>
-			<td>{{place.thesaurus}}</td>
-			<td>
+			<td style="text-align:center;">
 				<gaz-copy-uri uri="place['@id']"></gaz-copy-uri>
 			</td>
 		</tr>

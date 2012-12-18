@@ -77,6 +77,7 @@ public class JsonPlaceDeserializer {
 			}
 			
 			// set parent place from URI 
+			place.setParent(null);
 			JsonNode parentNode = objectNode.get("parent");
 			if (parentNode != null) {
 				Place parent = getPlaceForNode(parentNode);
@@ -113,6 +114,7 @@ public class JsonPlaceDeserializer {
 			}
 			
 			// set thesaurus
+			place.setThesauri(new HashSet<String>());
 			if (objectNode.has("thesauri")) for (JsonNode thesaurusNode : objectNode.get("thesauri")) {
 				Thesaurus thesaurus = thesaurusDao.getThesaurusByKey(thesaurusNode.asText());
 				if (thesaurus == null)

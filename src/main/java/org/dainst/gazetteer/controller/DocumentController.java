@@ -126,8 +126,16 @@ public class DocumentController {
 	public ModelAndView createPlace(@RequestBody Place place,
 			HttpServletResponse response) {
 		
-		place.setId(idGenerator.generate(place));		
+		place.setId(idGenerator.generate(place));
 		place = placeDao.save(place);
+		
+		// add count for children (for scoring)
+		while (true) {
+			place = placeDao.findOne(place.getParent());
+			if (place == null) break;
+			place.setChildren(place.getChildren()+1);
+			placeDao.save(place);
+		}
 		
 		response.setStatus(201);
 		response.setHeader("Location", baseUri + "place/" + place.getId());
@@ -146,6 +154,13 @@ public class DocumentController {
 		
 		place.setId(placeId);
 		place = placeDao.save(place);
+		
+		// add count for children (for scoring)
+		while (place.getParent() != null) {
+			place = placeDao.findOne(place.getParent());
+			place.setChildren(place.getChildren()+1);
+			placeDao.save(place);
+		}
 		
 		response.setStatus(201);
 		response.setHeader("location", baseUri + "place/" + place.getId());

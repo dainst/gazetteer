@@ -121,8 +121,6 @@ directives.directive('gazMap', function() {
 	
 	var map = null;
 	var markers = [];
-	var infowindows = [];
-	var activeinfowindow = null;
 	
 	return {
 		restrict: 'E',
@@ -148,7 +146,6 @@ directives.directive('gazMap', function() {
 				
 				// add markers for locations and auto zoom and center map
 				var bounds = new google.maps.LatLngBounds();
-				var activeinfowindow = false;
 				var ll = new google.maps.LatLng("0","0");
 				var numLocations = 0;
 				for (var i in scope.places) {	
@@ -162,14 +159,6 @@ directives.directive('gazMap', function() {
 							title: title,
 							map: map
 						});
-						/*infowindows[i] = new google.maps.InfoWindow({
-						    content: "<h4><a href=\"#show/" + place.gazId +">"+ place.prefName.title + "</h4>"
-						});
-						google.maps.event.addListener(markers[i], 'click', function() {
-							if (activeinfowindow) activeinfowindow.close();  
-							infowindows[i].open(map,markers[i]);
-							activeinfowindow = infowindows[i];
-						});*/
 						bounds.extend(ll);
 						numLocations++;
 					}
