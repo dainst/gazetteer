@@ -25,10 +25,10 @@
 	<table class="table table-striped" ng-show="candidatePlaces.length > 0">
 		<thead>
 			<tr>
-				<td>#</td>
+				<td style="width:50px;">#</td>
 				<td><s:message code="domain.placename.title" text="domain.placename.title" /></td>
-				<td></td>
-				<td></td>
+				<td style="width:30px;"></td>
+				<td style="width:30px;"></td>
 			</tr>
 		</thead>
 		<tbody>
