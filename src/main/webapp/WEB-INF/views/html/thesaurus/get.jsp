@@ -33,7 +33,7 @@
 			}).bind("dehover_node.jstree", function(event, data) {
 				resetMarker();
 			}).bind("select_node.jstree", function(event, data) {
-				window.location.href = "${baseUri}doc/" + $(data.rslt.obj[0]).data("id") + ".html";
+				window.location.href = "${baseUri}app/#/show/" + $(data.rslt.obj[0]).data("id");
 			}).jstree({ 
 				"json_data" : {
 					"data": [
@@ -41,7 +41,7 @@
 							{
 								"data": {
 									"title": "${place.prefName.title}",
-									"attr": { "href": "${baseUri}doc/${place.id}.html" }
+									"attr": { "href": "${baseUri}app/#/show/${place.id}" }
 								},
 								"metadata": { id: "${place.id}" },
 								"state" : "closed"
@@ -61,12 +61,12 @@
 									data: { 
 										title: place.prefName.title,
 										attr: { 
-											href: "${baseUri}doc/" + place.gazId + ".html"
+											href: "${baseUri}app/#/show/" + place.gazId
 										}
 									},
 									metadata: { id: place.gazId }
 								};
-								if (place.children) result[index].state = "closed";
+								result[index].state = "closed";
 							});
 							return result;
 						}

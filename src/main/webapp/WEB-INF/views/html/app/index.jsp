@@ -81,10 +81,10 @@
 	
 		<!-- Page title -->
 		<div class="page-header">
-			<h1>
+			<h2>
 				<span class="ng-cloak">{{title}}</span>
 				<small ng-bind-html-unsafe="subtitle"></small>
-			</h1>
+			</h2>
 		</div>
 		
 		<div class="row-fluid">
