@@ -90,7 +90,7 @@
 		<div class="row-fluid">
 		
 			<div class="span5 well">
-				<gaz-map places="activePlaces" width="500" height="500" zoom="5"></gaz-map>
+				<gaz-map places="activePlaces" width="500" height="500" zoom="zoom" bbox="bbox"></gaz-map>
 			</div>
 			
 			<div ng-view class="span7">

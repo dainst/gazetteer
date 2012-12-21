@@ -127,17 +127,44 @@ directives.directive('gazMap', function() {
 		replace: true,
 		scope: { 
 			places: '=',
+			bbox: '=',
+			zoom: '=',
 			height: '@'
 		},
-		template: '<div id="map_canvas" style="height: {{height}}px;"></div>',
-		link: function(scope, elements, attrs) { 
-
+		template: '<div id="map_canvas" style="height: {{height}}px;" asdf="{{zoom}}"></div>',
+		link: function(scope, elements, attrs) {
+			
+			var autoScaledMap = true;
+			
 			// initialize map
 			var mapOptions = {
 				mapTypeId: google.maps.MapTypeId.TERRAIN
 			};
 			map = new google.maps.Map(elements[0], mapOptions);
 			map.setZoom(parseInt(attrs.zoom));
+			map.setCenter(new google.maps.LatLng("0","0"));
+			
+			// attach event listener to monitor manual bounds changes
+			google.maps.event.addListener(map, "idle", function() {
+				if (!autoScaledMap) {
+					var b = map.getBounds();
+					scope.$apply(function(scope) {
+						scope.zoom = map.getZoom();
+						scope.bbox = [b.getNorthEast().lat(),b.getNorthEast().lng(),
+					              b.getSouthWest().lat(),b.getSouthWest().lng()];
+					});
+				} else {
+					autoScaledMap = false;
+				}
+			});
+			
+			scope.$watch("zoom", function() {
+				if (scope.zoom != map.getZoom()) {
+					autoScaledMap = true;
+					map.setZoom(parseInt(scope.zoom));
+					map.setCenter(new google.maps.LatLng("0","0"));
+				}
+			});
 			
 			scope.$watch("places", function() {
 				
@@ -164,10 +191,11 @@ directives.directive('gazMap', function() {
 					}
 				}
 				
+				/*autoScaledMap = true;
 				if (numLocations > 1)
 					map.fitBounds(bounds);
 				else if (numLocations > 0)
-					map.setCenter(ll);
+					map.setCenter(ll);*/
 				
 			});
 			

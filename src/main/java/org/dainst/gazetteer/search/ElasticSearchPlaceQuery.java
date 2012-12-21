@@ -4,6 +4,7 @@ import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.index.query.FilterBuilders;
+import org.elasticsearch.index.query.GeoBoundingBoxFilterBuilder;
 import org.elasticsearch.index.query.GeoDistanceFilterBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -95,6 +96,15 @@ public class ElasticSearchPlaceQuery {
 	
 	public ElasticSearchPlaceQuery addFilter(String filterQuery) {
 		QueryFilterBuilder filterBuilder = FilterBuilders.queryFilter(QueryBuilders.queryString(filterQuery));
+		queryBuilder = QueryBuilders.filteredQuery(queryBuilder, filterBuilder);
+		return this;
+	}
+	
+	public ElasticSearchPlaceQuery addBBoxFilter(
+			double northLat, double eastLon, 
+			double southLat, double westLon) {
+		GeoBoundingBoxFilterBuilder filterBuilder = FilterBuilders.geoBoundingBoxFilter("prefLocation.coordinates")
+				.topLeft(northLat, westLon).bottomRight(southLat, eastLon);
 		queryBuilder = QueryBuilders.filteredQuery(queryBuilder, filterBuilder);
 		return this;
 	}

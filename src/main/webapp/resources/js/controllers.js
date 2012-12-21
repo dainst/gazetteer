@@ -14,15 +14,20 @@ function AppCtrl($scope, $location, $rootScope) {
 	
 	$rootScope.loading = 0;
 	
+	$rootScope.bbox = [];
+	$rootScope.zoom = 1;
+	
 	// search while typing
 	$scope.$watch("q", function() {
 		if ($scope.q.indexOf(':') == -1
 				&& ($scope.q != "" || $location.path() == "/search") ) {
+			$scope.zoom = 1;
 			$location.path('/search').search({q:$scope.q, type: "prefix"});
 		}
 	});
 	
 	$scope.submit = function() {
+		$scope.zoom = 1;
 		$location.path('/search').search({q:$scope.q, type: ""});
 	};
 	
@@ -53,6 +58,26 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 	$rootScope.title = messages["ui.search.results"];
 	$rootScope.subtitle = "";
 	
+	$scope.search = {
+			offset: ($location.search().offset) ? parseInt($location.search().offset) : 0,
+			limit: ($location.search().limit) ? parseInt($location.search().limit) : 10,
+			q: ($location.search().q) ? ($location.search().q) : "",
+			type: ($location.search().type) ? ($location.search().type) : "",
+			sort: ($location.search().sort) ? ($location.search().sort) : "",
+			order: ($location.search().order) ? ($location.search().order) : "",
+			bbox: ($location.search().bbox) ? ($location.search().bbox) : ""
+	};
+	
+	$scope.places = [];
+	$scope.total = 0;
+	$scope.zoom = 1;
+	
+	// search while zooming
+	$scope.$watch(function() { return $scope.bbox.join(","); }, function() {
+		$scope.search.bbox = $scope.bbox.join(",");
+		$location.search($scope.search);
+	});
+	
 	$scope.$watch("total", function() {
 		$rootScope.subtitle = $scope.total + " " + messages["ui.search.hits"];
 	});
@@ -60,18 +85,6 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 	$scope.$watch(("places"), function() {
 		$rootScope.activePlaces = $scope.places;
 	});
-	
-	$scope.search = {
-			offset: ($location.search().offset) ? parseInt($location.search().offset) : 0,
-			limit: ($location.search().limit) ? parseInt($location.search().limit) : 10,
-			q: ($location.search().q) ? ($location.search().q) : "",
-			type: ($location.search().type) ? ($location.search().type) : "",
-			sort: ($location.search().sort) ? ($location.search().sort) : "",
-			order: ($location.search().order) ? ($location.search().order) : ""
-	};
-	
-	$scope.places = [];
-	$scope.total = 0;
 	
 	$scope.page = function() {
 		return $scope.search.offset / $scope.search.limit + 1;
@@ -136,7 +149,8 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 					q: ($location.search().q) ? ($location.search().q) : "",
 					type: ($location.search().type) ? ($location.search().type) : "",
 					sort: ($location.search().sort) ? ($location.search().sort) : "",
-					order: ($location.search().order) ? ($location.search().order) : ""
+					order: ($location.search().order) ? ($location.search().order) : "",
+					bbox: ($location.search().bbox) ? ($location.search().bbox) : ""
 				};
 				$scope.submit();
 			}

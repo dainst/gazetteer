@@ -1,6 +1,7 @@
 package org.dainst.gazetteer.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -59,8 +60,11 @@ public class SearchController {
 			@RequestParam(required=false) String type,
 			@RequestParam(required=false, defaultValue="map,table") String view,
 			@RequestParam(required=false) String callback,
+			@RequestParam(required=false) double[] bbox,
 			HttpServletRequest request,
 			HttpServletResponse response) {
+		
+		logger.info("bbox:" + Arrays.toString(bbox));
 		
 		RequestContext requestContext = new RequestContext(request);
 		Locale locale = requestContext.getLocale();
@@ -83,6 +87,10 @@ public class SearchController {
 			query.addSort(sort, order);
 		}
 		query.addFilter("deleted:false");
+		
+		if (bbox != null && bbox.length > 0) {
+			query.addBBoxFilter(bbox[0], bbox[1], bbox[2], bbox[3]);
+		}
 		
 		// get ids from elastic search
 		String[] result = query.execute();
