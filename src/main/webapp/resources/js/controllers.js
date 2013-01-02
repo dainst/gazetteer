@@ -1,10 +1,8 @@
 'use strict';
 
-/* Controllers */
-
 function AppCtrl($scope, $location, $rootScope) {
 	
-	$scope.q = "";
+	$scope.q = null;
 	$rootScope.title = "";
 	$rootScope.subtitle = "";
 	
@@ -19,9 +17,9 @@ function AppCtrl($scope, $location, $rootScope) {
 	
 	// search while typing
 	$scope.$watch("q", function() {
-		if ($scope.q.indexOf(':') == -1
-				&& ($scope.q != "" || $location.path() == "/search") ) {
+		if ($scope.q != null && $scope.q.indexOf(':') == -1) {
 			$scope.zoom = 1;
+			console.log("AppCtrl.watch q:", $scope.q);
 			$location.path('/search').search({q:$scope.q, type: "prefix"});
 		}
 	});
@@ -29,6 +27,7 @@ function AppCtrl($scope, $location, $rootScope) {
 	$scope.submit = function() {
 		$scope.zoom = 1;
 		$location.path('/search').search({q:$scope.q, type: ""});
+		$scope.q = null;
 	};
 	
 	$rootScope.addAlert = function(body, head, type) {
@@ -38,6 +37,7 @@ function AppCtrl($scope, $location, $rootScope) {
 		$rootScope.alerts.push(alert);
 	};
 	
+	/*
 	// needed to keep $scope.q and $location.search().q in sync
 	$scope.$watch(
 		function(){ 
@@ -46,10 +46,12 @@ function AppCtrl($scope, $location, $rootScope) {
 		function() {
 			if ($location.path() == "/search"
 					&& $scope.q != $location.search().q) {
+				console.log("AppCtrl.location.q:", $location.search().q);
 				$scope.q = $location.search().q;
 			}
 		}
 	);
+	*/
 	
 }
 
@@ -68,14 +70,19 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 			bbox: ($location.search().bbox) ? ($location.search().bbox) : ""
 	};
 	
+	console.log("SearchCtrl init location.search.q:", $location.search().q);
+	console.log("SearchCtrl init scope.search.q:", $scope.search.q);
+	
 	$scope.places = [];
 	$scope.total = 0;
 	$scope.zoom = 1;
 	
 	// search while zooming
 	$scope.$watch(function() { return $scope.bbox.join(","); }, function() {
-		$scope.search.bbox = $scope.bbox.join(",");
-		$location.search($scope.search);
+		if ($scope.bbox.length == 2) {
+			$scope.search.bbox = $scope.bbox.join(",");
+			$location.search($scope.search);
+		}
 	});
 	
 	$scope.$watch("total", function() {

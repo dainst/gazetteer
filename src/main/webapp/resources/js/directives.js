@@ -1,8 +1,5 @@
 'use strict';
 
-/* Directives */
-
-
 var directives = angular.module('gazetteer.directives', ['gazetteer.messages']);
 
 directives.directive('gazTranslate', function(messages) {
