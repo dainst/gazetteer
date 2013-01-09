@@ -14,7 +14,7 @@
 	<logger name="org.dainst.gazetteer">
 		<level value="info" />
 	</logger>
-	<logger name="org.dainst.gazetteer.controller">
+	<logger name="org.dainst.gazetteer.harvest">
 		<level value="debug" />
 	</logger>
 

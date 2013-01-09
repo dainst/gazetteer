@@ -86,8 +86,8 @@ public class HarvestingHandler implements Runnable {
 			@SuppressWarnings("unchecked")
 			Class<Harvester> clazz = (Class<Harvester>) Class.forName(harvesterDefinition.getHarvesterType());
 			Harvester harvester = clazz.newInstance();
-			harvester.harvest(harvesterDefinition.getLastHarvestedDate());
 			harvester.setIdGenerator(idGenerator);
+			harvester.harvest(harvesterDefinition.getLastHarvestedDate());
 			
 			while (true) {
 				
