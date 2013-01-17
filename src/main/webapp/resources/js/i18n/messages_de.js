@@ -21,6 +21,10 @@ messages.factory('messages', function(){
 		"place.types.continent": "Kontinent",
 		"place.types.country": "Land",
 		"place.types.city": "Stadt",
+		"place.types.region": "Region",
+		"place.types.lake": "See",
+		"place.types.river": "Fluss",
+		"place.types.ocean": "Ozean",
 		"location.confidence.0": "Keine Angabe",
 		"location.confidence.1": "Ungenau",
 		"location.confidence.2": "Genau",
@@ -32,6 +36,7 @@ messages.factory('messages', function(){
 		"languages.ell": "Griechisch (Modern)",
 		"languages.lat": "Lateinisch",
 		"languages.grc": "Altgriechisch",
-		"languages.sqi": "Albanisch"
+		"languages.sqi": "Albanisch",
+		"languages.pol": "Polnisch"
 	};
 });

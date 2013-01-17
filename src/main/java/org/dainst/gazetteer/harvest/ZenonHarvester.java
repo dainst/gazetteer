@@ -3,9 +3,14 @@ package org.dainst.gazetteer.harvest;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
+import java.util.Set;
 
 import javax.ws.rs.core.MediaType;
 
@@ -17,6 +22,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import com.sun.jersey.api.client.Client;
@@ -29,7 +36,7 @@ import com.sun.jersey.api.client.config.DefaultClientConfig;
 
 public class ZenonHarvester implements Harvester {
 
-	private static Logger logger = LoggerFactory.getLogger(ArachneHarvester.class);
+	private static Logger logger = LoggerFactory.getLogger(ZenonHarvester.class);
 	
 	public final static String RESOURCE_URI = "http://testopac.dainst.org:8080/elwms-zenon/thesaurus/";
 	
@@ -41,11 +48,40 @@ public class ZenonHarvester implements Harvester {
 		"Orte [A-Z]+-[A-Z]+"
 	);
 	
+	public final static Map<String,String> PLACE_TYPES;
+	static {
+		Map<String, String> placeTypes = new HashMap<String,String>();
+		placeTypes.put("Kontinent", "continent");
+		placeTypes.put("ZZ--Regionen", "region");
+		placeTypes.put("Regionen", "region");
+		placeTypes.put("Orte", "city");
+		placeTypes.put("Gebiete", "region");
+		placeTypes.put("Orte [A-Z]+-[A-Z]+", "city");
+		placeTypes.put("Kreis", "district");
+		placeTypes.put("Ort", "city");
+		placeTypes.put("Region", "region");
+		placeTypes.put("Landschaft", "region");
+		placeTypes.put("Fluss", "river");
+		placeTypes.put("Meer", "ocean");
+		placeTypes.put("See", "lake");
+		placeTypes.put("Staat", "country");
+		PLACE_TYPES = Collections.unmodifiableMap(placeTypes);
+	}
+	
+	public final static Map<String,String> COUNTRIES;
+	static {
+		Map<String, String> countries = new HashMap<String,String>();
+		countries.put("ger", "deu");
+		countries.put("fre", "fra");
+		COUNTRIES = Collections.unmodifiableMap(countries);
+	}
+	
 	public final static List<String> ROOT_IDS = Arrays.asList(
-		"xTopLand" // Klassische Archäologie -> Topographie -> Länder mit Gebieten und Orten
+		//"xTopLand", // Klassische Archäologie -> Topographie -> Länder mit Gebieten und Orten
 		//"3.00.01", // Iberische Halbinsel -> Topographie
 		//"zTopog", // Topograhpie
 		//"4.02" // Thesaurus Eurasien-Abteilung -> Regionen/Länder/Orte
+		"zTopogAfrik"
 	);
 	
 	private WebResource api;
@@ -53,6 +89,8 @@ public class ZenonHarvester implements Harvester {
 	private IdGenerator idGenerator;
 	
 	private Queue<Place> queue = new ArrayDeque<Place>();
+	
+	private Set<String> types = new HashSet<String>();
 	
 	public ZenonHarvester() {
 		ClientConfig config = new DefaultClientConfig();
@@ -65,7 +103,7 @@ public class ZenonHarvester implements Harvester {
 	public void harvest(Date date) {
 		
 		for (String rootId : ROOT_IDS) {
-			createPlacesRecursively(rootId, null);
+			createPlacesRecursively(rootId, null, null);
 		}
 		
 	}
@@ -87,6 +125,7 @@ public class ZenonHarvester implements Harvester {
 
 	@Override
 	public void close() {
+		logger.debug("types: {}", types);
 		// nothing to do
 	}
 
@@ -95,7 +134,7 @@ public class ZenonHarvester implements Harvester {
 		this.idGenerator = idGenerator;
 	}
 
-	private void createPlacesRecursively(String id, Place parent) {
+	private void createPlacesRecursively(String id, Place parent, String type) {
 		
 		logger.debug("creating place with id {}", id);
 
@@ -119,8 +158,22 @@ public class ZenonHarvester implements Harvester {
 		place.setId(idGenerator.generate(place));
 		place.addThesaurus("zenon");
 		
+		if (type != null) place.setType(type);
+		
+		// ID
+		JsonNode controlNodes = placeNode.get("data").get("marc:controlfield");
+		for (JsonNode controlNode : jsonWrap(controlNodes)) {			
+			String tag = controlNode.get("@tag").asText();		
+			if ("001".equals(tag)) {
+				Identifier zenonId = new Identifier(controlNode.get("#text").asText(), "zenon-id");
+				place.addIdentifier(zenonId);
+			}			
+		}
+
+		List<Place> children = new ArrayList<Place>();
 		JsonNode marcNodes = placeNode.get("data").get("marc:datafield");
-		for (JsonNode marcNode : marcNodes) {
+		for (JsonNode marcNode : jsonWrap(marcNodes)) {
+			
 			String tag = marcNode.get("@tag").asText();
 
 			// inline children
@@ -130,9 +183,8 @@ public class ZenonHarvester implements Harvester {
 				if (text != null && !text.isEmpty()) {
 					PlaceName name = new PlaceName(text);
 					child.setPrefName(name);
-					child.setParent(place.getId());
 					child.setId(idGenerator.generate(child));
-					queue.add(child);
+					children.add(child);
 					logger.debug("added inline child to queue: {}", child);
 				}
 			
@@ -140,17 +192,58 @@ public class ZenonHarvester implements Harvester {
 			} else if ("551".equals(tag)) {
 				PlaceName name = new PlaceName();
 				JsonNode marcSubNodes = marcNode.get("marc:subfield");
-				for (JsonNode marcSubNode : marcSubNodes) {
+				for (JsonNode marcSubNode : jsonWrap(marcSubNodes)) {
 					String code = marcSubNode.get("@code").asText();
 					String text = marcSubNode.get("#text").asText();
 					if ("a".equals(code)) {
 						name.setTitle(text);
 					} else if ("9".equals(code)) {
+						if (COUNTRIES.containsKey(text))
+							text = COUNTRIES.get(text);
 						name.setLanguage(text);
 					}
-					if (name.getTitle() != null && !name.getTitle().isEmpty()) {
-						if (place.getPrefName() == null) place.setPrefName(name);
-						else place.addName(name);
+				}
+				if (name.getTitle() != null && !name.getTitle().isEmpty()) {
+					if (place.getPrefName() == null) place.setPrefName(name);
+					else place.addName(name);
+				}
+			
+			// IDs
+			} else if ("034".equals(tag)) {
+				Identifier identifier = new Identifier();
+				JsonNode marcSubNodes = marcNode.get("marc:subfield");
+				for (JsonNode marcSubNode : jsonWrap(marcSubNodes)) {
+					String code = marcSubNode.get("@code").asText();
+					String text = marcSubNode.get("#text").asText();
+					if ("0".equals(code)) {
+						identifier.setValue(text);
+					} else if ("2".equals(code)) {
+						identifier.setContext(text);
+					}
+				}
+				place.addIdentifier(identifier);
+				
+			// IDs
+			} else if ("565".equals(tag)) {
+				JsonNode marcSubNodes = marcNode.get("marc:subfield");
+				for (JsonNode marcSubNode : jsonWrap(marcSubNodes)) {
+					String code = marcSubNode.get("@code").asText();
+					String text = marcSubNode.get("#text").asText();
+					if ("b".equals(code) && text.length() <= 3) {
+						Identifier identifier = new Identifier(text.toUpperCase(), "ISO 3166-1");
+						place.addIdentifier(identifier);
+					}
+				}
+			
+			// Type
+			} else if ("563".equals(tag)) {
+				JsonNode marcSubNodes = marcNode.get("marc:subfield");
+				for (JsonNode marcSubNode : jsonWrap(marcSubNodes)) {
+					String code = marcSubNode.get("@code").asText();
+					String text = marcSubNode.get("#text").asText();
+					if ("a".equals(code)) {
+						place.setType(PLACE_TYPES.get(text));
+						types.add(text);
 					}
 				}
 				
@@ -167,8 +260,28 @@ public class ZenonHarvester implements Harvester {
 		
 		logger.debug("place: {}", place);
 		
-		if (parent != null) place.setParent(parent.getId());
-		queue.add(place);
+		Place nextParent = place;
+		boolean skip = false;
+		String nextType = null;
+		for (String skipTitle : SKIP_TITLES) {
+			if (place.getPrefName().getTitle().matches(skipTitle)) {
+				skip = true;
+				nextParent = parent;
+				nextType = PLACE_TYPES.get(skipTitle);
+				logger.debug("found skipTitle {}, adding Type {} to children", skipTitle, PLACE_TYPES.get(skipTitle));
+				break;
+			}
+		}
+		if (!skip) {
+			if (parent != null) place.setParent(parent.getId());
+			queue.add(place);
+		}
+		
+		for (Place child : children) {
+			child.setParent(nextParent.getId());
+			child.setType(nextType);
+			queue.add(child);
+		}
 		
 		// recurse into subtree
 		logger.debug("getting {}", api.path("children/" + id + "/").queryParam("format", "standard").toString());
@@ -200,11 +313,21 @@ public class ZenonHarvester implements Harvester {
 			JsonNode leafNode = childNode.get("leaf");
 			if (leafNode != null) childLeaf = leafNode.asBoolean();
 			if (!childLeaf) {
-				createPlacesRecursively(childId, place);
+				createPlacesRecursively(childId, nextParent, nextType);
 			}
 			
 		}
 		
+	}
+
+	// wrap single objects in array in order to allow iteration
+	private JsonNode jsonWrap(JsonNode jsonNode) {
+		if (jsonNode.isArray()) return jsonNode;
+		else {
+			ArrayNode arrayNode = new ArrayNode(JsonNodeFactory.instance);
+			arrayNode.add(jsonNode);
+			return arrayNode;
+		}
 	}
 
 }

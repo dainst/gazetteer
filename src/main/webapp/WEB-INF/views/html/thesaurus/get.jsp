@@ -49,7 +49,10 @@
 						</c:forEach>
 					],
 					"ajax": {
-						"url": function(n) { return "${baseUri}search?sort=prefName.title.sort&limit=10000&q=parent:" + n.data("id"); },
+						"url": function(n) { 
+							return "${baseUri}search?sort=prefName.title.sort&limit=10000"
+									+ "&q=parent:" + n.data("id") + " AND thesauri:${thesaurus.key}"; 
+						},
 						"error":  function(data) {
 							console.log("ERROR:");
 							console.log(data);

@@ -134,12 +134,10 @@ public class HarvestingHandler implements Runnable {
 			harvester.close();
 			
 			harvesterDefinition.setLastHarvestedDate(new Date());
-			harvesterDefinition.setEnabled(true);
+			//harvesterDefinition.setEnabled(true);
 			harvesterDefinitionDao.save(harvesterDefinition);
 			
 		} catch (Exception e) {
-			//harvesterDefinition.setRunning(false);
-			//harvesterDefinitionDao.save(harvesterDefinition);
 			throw new RuntimeException("error while creating harvester", e);
 		}
 		
