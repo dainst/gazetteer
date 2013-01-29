@@ -59,12 +59,14 @@ public class ZenonHarvester implements Harvester {
 		placeTypes.put("Orte [A-Z]+-[A-Z]+", "city");
 		placeTypes.put("Kreis", "district");
 		placeTypes.put("Ort", "city");
+		placeTypes.put("Stadt", "city");
 		placeTypes.put("Region", "region");
 		placeTypes.put("Landschaft", "region");
 		placeTypes.put("Fluss", "river");
 		placeTypes.put("Meer", "ocean");
 		placeTypes.put("See", "lake");
 		placeTypes.put("Staat", "country");
+		placeTypes.put("Bundesland", "state");
 		PLACE_TYPES = Collections.unmodifiableMap(placeTypes);
 	}
 	
@@ -79,9 +81,9 @@ public class ZenonHarvester implements Harvester {
 	public final static List<String> ROOT_IDS = Arrays.asList(
 		//"xTopLand", // Klassische Archäologie -> Topographie -> Länder mit Gebieten und Orten
 		//"3.00.01", // Iberische Halbinsel -> Topographie
-		//"zTopog", // Topograhpie
+		"zTopog" // Topograhpie
 		//"4.02" // Thesaurus Eurasien-Abteilung -> Regionen/Länder/Orte
-		"zTopogAfrik"
+		//"zTopogEuropMitteDeuts"
 	);
 	
 	private WebResource api;

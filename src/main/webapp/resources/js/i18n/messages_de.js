@@ -25,6 +25,8 @@ messages.factory('messages', function(){
 		"place.types.lake": "See",
 		"place.types.river": "Fluss",
 		"place.types.ocean": "Ozean",
+		"place.types.district": "Kreis",
+		"place.types.state": "Bundesland",
 		"location.confidence.0": "Keine Angabe",
 		"location.confidence.1": "Ungenau",
 		"location.confidence.2": "Genau",
