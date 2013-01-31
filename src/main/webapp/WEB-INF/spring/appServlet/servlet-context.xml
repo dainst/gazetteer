@@ -30,8 +30,7 @@
 		<entry key="js" value="application/javascript" />
 	</util:map>
 
-	<bean
-		class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+	<bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
 		<property name="mediaTypes" ref="mediaTypes"/>
 		<property name="viewResolvers">
 			<list>	
@@ -70,7 +69,7 @@
 				<value>en</value>
 			</set>
 		</property>
-		<property name="defaultLanguage" value="de"/>
+		<property name="defaultLanguage" value="en"/>
 	</bean>
 
 	<context:component-scan base-package="org.dainst.gazetteer" />

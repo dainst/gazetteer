@@ -9,6 +9,15 @@
 				<s:message code="ui.back" />
 			</a>
 		</li>
+		<li class="dropdown pull-right">
+			<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+				<s:message code="ui.otherFormats" text="ui.otherFormats"/> <b class="caret"></b>
+			</a>
+			<ul class="dropdown-menu">
+				<li><a href="${baseUri}doc/{{place.gazId}}.kml" target="_blank">KML</a></li>
+				<li><a href="${baseUri}doc/{{place.gazId}}.json" target="_blank">JSON</a></li>
+			</ul>
+		</li>
 		<li class="pull-right" ng-class="isActive('merge')">	
 			<a href="#/merge/{{place.gazId}}">
 				<i class="icon-globe"></i> <s:message code="ui.similarPlaces" text="ui.merge"/>
