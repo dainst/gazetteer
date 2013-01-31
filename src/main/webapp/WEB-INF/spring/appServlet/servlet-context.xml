@@ -62,6 +62,16 @@
 			</list>
 		</property>
 	</bean>
+	
+	<bean id="localeResolver" class="org.dainst.gazetteer.helpers.ConfigurableAcceptHeaderLocaleResolver">
+		<property name="availableLanguages">
+			<set>
+				<value>de</value>
+				<value>en</value>
+			</set>
+		</property>
+		<property name="defaultLanguage" value="de"/>
+	</bean>
 
 	<context:component-scan base-package="org.dainst.gazetteer" />
 
