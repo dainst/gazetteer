@@ -45,7 +45,8 @@ public class ZenonHarvester implements Harvester {
 		"Regionen",
 		"Orte",
 		"Gebiete",
-		"Orte [A-Z]+-[A-Z]+"
+		"Orte [A-Z]+-[A-Z]+",
+		"Topograhpie"
 	);
 	
 	public final static Map<String,String> PLACE_TYPES;
@@ -81,9 +82,9 @@ public class ZenonHarvester implements Harvester {
 	public final static List<String> ROOT_IDS = Arrays.asList(
 		//"xTopLand", // Klassische Archäologie -> Topographie -> Länder mit Gebieten und Orten
 		//"3.00.01", // Iberische Halbinsel -> Topographie
-		"zTopog" // Topograhpie
+		//"zTopog" // Topograhpie
 		//"4.02" // Thesaurus Eurasien-Abteilung -> Regionen/Länder/Orte
-		//"zTopogEuropMitteDeuts"
+		"zTopogEurop"
 	);
 	
 	private WebResource api;
@@ -260,8 +261,6 @@ public class ZenonHarvester implements Harvester {
 		zenonId.setValue(id);
 		place.addIdentifier(zenonId);
 		
-		logger.debug("place: {}", place);
-		
 		Place nextParent = place;
 		boolean skip = false;
 		String nextType = null;
@@ -276,13 +275,15 @@ public class ZenonHarvester implements Harvester {
 		}
 		if (!skip) {
 			if (parent != null) place.setParent(parent.getId());
-			queue.add(place);
+			queue.add(place);			
+			logger.debug("added place to queue: {}", place);
 		}
 		
 		for (Place child : children) {
 			child.setParent(nextParent.getId());
 			child.setType(nextType);
 			queue.add(child);
+			logger.debug("added child to queue: {}", child);
 		}
 		
 		// recurse into subtree
