@@ -114,6 +114,23 @@
 		<br/>
 	</span>
 	
+	<span ng-show="getIdByContext('zenon-thesaurus') || getIdByContext('arachne-place-id')">
+		<dt><s:message code="ui.contexts" text="ui.contexts"/></dt>
+		<dd ng-show="getIdByContext('arachne-place-id')">
+			<a href="http://arachne.uni-koeln.de/arachne/index.php?view[layout]=search_result_overview&view[category]=overview&search[constraints]=FS_OrtID:{{getIdByContext('arachne-place-id').value}}" target="_blank">
+				<s:message code="ui.link.arachne" text="ui.link.arachne"/>
+				<i class="icon-external-link"></i>
+			</a>
+		</dd>
+		<dd ng-show="getIdByContext('zenon-thesaurus')">
+			<a href="http://testopac.dainst.org/#search?q=f999_1:{{getIdByContext('zenon-thesaurus').value}}" target="_blank">
+				<s:message code="ui.link.zenon" text="ui.link.zenon"/>
+				<i class="icon-external-link"></i>
+			</a>
+		</dd>
+		<br/>
+	</span>
+	
 	<span ng-hide="!place.identifiers">
 		<dt><s:message code="domain.place.identifiers" text="domain.place.identifiers" /></dt>
 		<dd ng-repeat="identifier in place.identifiers | orderBy:['context','value']">

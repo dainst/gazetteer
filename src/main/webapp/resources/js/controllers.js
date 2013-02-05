@@ -167,12 +167,10 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 }
 
 
-function PlaceCtrl($scope, $rootScope, $routeParams, Place, Thesaurus, $http, messages) {
+function PlaceCtrl($scope, $rootScope, $routeParams, Place, $http, messages) {
 	
 	$scope.location = { confidence: 0 };
 	$scope.link = { predicate: "owl:sameAs" };
-	
-	$scope.thesauri = Thesaurus.query();
 	
 	if ($routeParams.id) {
 		$rootScope.loading++;
@@ -256,21 +254,6 @@ function PlaceCtrl($scope, $rootScope, $routeParams, Place, Thesaurus, $http, me
 		);
 	};
 	
-	$scope.addThesaurus = function() {
-		if (!$scope.thesaurus.key) return;
-		if ($scope.place.thesauri == undefined)
-			$scope.place.thesauri = [];
-		$scope.place.thesauri.push($scope.thesaurus.key);
-		$scope.thesaurus = {};
-	};
-	
-	$scope.getThesaurusForKey = function(key) {
-		for (var i=0; i < $scope.thesauri.length; i++) {
-			if ($scope.thesauri[i].key == key)
-				return $scope.thesauri[i];
-		}
-	};
-	
 	$scope.addComment = function() {
 		if (!$scope.comment.text || !$scope.comment.language) return;
 		if ($scope.place.comments == undefined)
@@ -319,6 +302,14 @@ function PlaceCtrl($scope, $rootScope, $routeParams, Place, Thesaurus, $http, me
 		relatedPlaces.push($scope.relatedPlace);
 		$scope.relatedPlace = { "@id" : null };
 		$scope.relatedPlaces = relatedPlaces;
+	};
+	
+	$scope.getIdByContext = function(context) {
+		var ids = $scope.place.identifiers;
+		for (var i in ids)
+			if (ids[i].context == context)
+				return ids[i];
+		return false;
 	};
 	
 	// update relatedPlaces attribute of place when relatedPlaces in scope changes
