@@ -14,12 +14,6 @@ public interface PlaceRepository extends PagingAndSortingRepository<Place, Strin
 
 	public List<Place> findByPrefNameTitleAndType(String name, String type);
 
-	public List<Place> findByThesauri(String thesaurus);
-
-	public List<Place> findByThesauriAndParentIsNullAndDeletedIsFalse(String key, Sort sort);
-
-	public List<Place> findByThesauriAndTypeAndDeletedIsFalse(String key, String type, Sort sort);
-
 	public Place findByIds(Identifier id);
 
 	public Place findByIdsAndType(Identifier id, String type);
@@ -27,5 +21,7 @@ public interface PlaceRepository extends PagingAndSortingRepository<Place, Strin
 	public List<Place> findByParent(String parentId);
 
 	public List<Place> findByIdIn(Set<String> ids);
+
+	public List<Place> findByParentIsNullAndDeletedIsFalse(Sort sort);
 
 }

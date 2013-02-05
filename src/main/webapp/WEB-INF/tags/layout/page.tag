@@ -19,11 +19,8 @@
 <script src="/gazetteer/widget/lib.js"></script>
 <script src='/gazetteer/resources/js/lib/jquery.locationpicker.js'></script>
 <script src='/gazetteer/resources/js/lib/jquery.jstree.js'></script>
-<script src="/gazetteer/resources/bootstrap/js/bootstrap-dropdown.js"></script>
-<script src="/gazetteer/resources/bootstrap/js/bootstrap-alert.js"></script>
-<script src="/gazetteer/resources/bootstrap/js/bootstrap-modal.js"></script>
+<script src='/gazetteer/resources/bootstrap/js/bootstrap.min.js'></script>
 <link href="/gazetteer/resources/bootstrap/css/bootstrap.css" rel="stylesheet">
-<link href="/gazetteer/resources/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 <link href="/gazetteer/resources/css/app.css" rel="stylesheet">
 <style type="text/css">
       body {

@@ -69,25 +69,6 @@
 						</div>
 					</div>
 					
-					<!-- thesaurus -->
-					<div class="control-group">
-						<label class="control-label">
-							<s:message code="domain.thesauri" text="domain.thesauri" />
-						</label>
-						<div class="controls">
-							<select ng-model="thesaurus" ng-options="thesaurus.title for thesaurus in thesauri"></select>
-							<div class="btn btn-primary plus" ng-click="addThesaurus()" ng-disabled="!thesaurus.key">
-								<i class="icon-plus icon-white"></i>
-							</div>
-							<div ng-hide="!place.thesauri" style="margin-top: 1em">
-								<div ng-repeat="thesaurus in place.thesauri">
-									<a ng-click="place.thesauri.splice($index,1)"><i class="icon-remove-sign"></i></a>
-									{{getThesaurusForKey(thesaurus).title}}
-								</div>
-							</div>
-						</div>
-					</div>
-					
 					<!-- comments -->
 					<div class="control-group">
 						<label class="control-label">

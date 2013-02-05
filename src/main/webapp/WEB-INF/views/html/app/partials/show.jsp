@@ -114,12 +114,6 @@
 		<br/>
 	</span>
 	
-	<span ng-hide="!place.thesauri">
-		<dt><s:message code="domain.thesauri" text="domain.thesauri" /></dt>
-		<dd ng-repeat="thesaurus in place.thesauri | orderBy:['title']">{{getThesaurusForKey(thesaurus).title}}</dd>
-		<br/>
-	</span>
-	
 	<span ng-hide="!place.identifiers">
 		<dt><s:message code="domain.place.identifiers" text="domain.place.identifiers" /></dt>
 		<dd ng-repeat="identifier in place.identifiers | orderBy:['context','value']">

@@ -2,10 +2,9 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s"%>
 <%@ taglib tagdir="/WEB-INF/tags/layout" prefix="l"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<%@ page import="java.util.*, org.dainst.gazetteer.domain.Thesaurus"%>
 <%@ page contentType="text/html; charset=utf-8" session="false"%>
 
-<l:page title="${thesaurus.title}">
+<l:page title="Thesaurus">
 
 	<jsp:attribute name="subtitle">
 		
@@ -51,7 +50,7 @@
 					"ajax": {
 						"url": function(n) { 
 							return "${baseUri}search?sort=prefName.title.sort&limit=10000"
-									+ "&q=parent:" + n.data("id") + " AND thesauri:${thesaurus.key}"; 
+									+ "&q=parent:" + n.data("id"); 
 						},
 						"error":  function(data) {
 							console.log("ERROR:");

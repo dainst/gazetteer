@@ -7,10 +7,8 @@ import java.util.List;
 
 import org.dainst.gazetteer.dao.HarvesterDefinitionRepository;
 import org.dainst.gazetteer.dao.PlaceRepository;
-import org.dainst.gazetteer.dao.ThesaurusRepository;
 import org.dainst.gazetteer.domain.HarvesterDefinition;
 import org.dainst.gazetteer.domain.Place;
-import org.dainst.gazetteer.domain.Thesaurus;
 import org.dainst.gazetteer.helpers.EntityIdentifier;
 import org.dainst.gazetteer.helpers.IdGenerator;
 import org.dainst.gazetteer.helpers.Merger;
@@ -25,8 +23,6 @@ public class HarvestingHandler implements Runnable {
 	
 	private PlaceRepository placeDao;
 
-	private ThesaurusRepository thesaurusDao;
-
 	private HarvesterDefinitionRepository harvesterDefinitionDao;
 
 	private EntityIdentifier entityIdentifier;
@@ -36,15 +32,14 @@ public class HarvestingHandler implements Runnable {
 	private Merger merger;
 	
 	public HarvestingHandler(HarvesterDefinition harvesterDefinition,
-			PlaceRepository placeDao, ThesaurusRepository thesaurusDao, 
+			PlaceRepository placeDao, 
 			HarvesterDefinitionRepository harvesterDefinitionDao,
 			IdGenerator idGenerator,
 			EntityIdentifier entityIdentifier,
 			Merger merger) {
 		
 		this.harvesterDefinition = harvesterDefinition;
-		this.placeDao = placeDao;	
-		this.thesaurusDao = thesaurusDao;
+		this.placeDao = placeDao;
 		this.harvesterDefinitionDao = harvesterDefinitionDao;
 		this.idGenerator = idGenerator;
 		this.entityIdentifier = entityIdentifier;
@@ -78,11 +73,6 @@ public class HarvestingHandler implements Runnable {
 			harvesterDefinition.setEnabled(false);
 			harvesterDefinitionDao.save(harvesterDefinition);
 			
-			Thesaurus thesaurus = thesaurusDao.getThesaurusByKey(harvesterDefinition.getTargetThesaurus());
-			if (thesaurus == null) {
-				throw new IllegalStateException("Target thesaurus not found in database");
-			}
-			
 			@SuppressWarnings("unchecked")
 			Class<Harvester> clazz = (Class<Harvester>) Class.forName(harvesterDefinition.getHarvesterType());
 			Harvester harvester = clazz.newInstance();
@@ -102,7 +92,7 @@ public class HarvestingHandler implements Runnable {
 					
 					logger.debug("got place from harvester: {}", candidatePlace);
 					
-					Place identifiedPlace = entityIdentifier.identify(candidatePlace, thesaurus);
+					Place identifiedPlace = entityIdentifier.identify(candidatePlace);
 					if (identifiedPlace != null) {
 						logger.info("identified place: {}", identifiedPlace);
 						Place mergedPlace = merger.merge(identifiedPlace, candidatePlace);
@@ -123,8 +113,7 @@ public class HarvestingHandler implements Runnable {
 				}
 				
 				// save places
-				for (Place place : places) {
-					place.addThesaurus(thesaurus.getKey());				
+				for (Place place : places) {	
 					placeDao.save(place);
 					logger.info("saved place: {}", place.getId());
 				}

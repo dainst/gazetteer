@@ -2,7 +2,6 @@ package org.dainst.gazetteer.harvest;
 
 import org.dainst.gazetteer.dao.HarvesterDefinitionRepository;
 import org.dainst.gazetteer.dao.PlaceRepository;
-import org.dainst.gazetteer.dao.ThesaurusRepository;
 import org.dainst.gazetteer.domain.HarvesterDefinition;
 import org.dainst.gazetteer.helpers.EntityIdentifier;
 import org.dainst.gazetteer.helpers.IdGenerator;
@@ -29,9 +28,6 @@ public class HarvestingManager {
 
 	@Autowired
 	private TaskScheduler taskScheduler;
-
-	@Autowired
-	private ThesaurusRepository thesaurusDao;
 	
 	@Autowired
 	private EntityIdentifier entityIdentifier;
@@ -49,7 +45,7 @@ public class HarvestingManager {
 			logger.info("scheduling harvesting handler for definition: " + def.getName());
 			CronTrigger trigger = new CronTrigger(def.getCronExpression());
 			HarvestingHandler handler = new HarvestingHandler(def, placeDao,
-					thesaurusDao, harvesterDefinitionDao, idGenerator, entityIdentifier, merger);
+					harvesterDefinitionDao, idGenerator, entityIdentifier, merger);
 			taskScheduler.schedule(handler, trigger);
 		}
 	}

@@ -5,7 +5,6 @@ import java.util.List;
 import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.domain.Identifier;
 import org.dainst.gazetteer.domain.Place;
-import org.dainst.gazetteer.domain.Thesaurus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,7 @@ public class SimpleNameAndIdBasedEntityIdentifier implements EntityIdentifier {
 	PlaceRepository placeDao;
 
 	@Override
-	public Place identify(Place place, Thesaurus thesaurus) {
+	public Place identify(Place place) {
 		
 		// identifier equality is a perfect match
 		for (Identifier id : place.getIdentifiers()) {

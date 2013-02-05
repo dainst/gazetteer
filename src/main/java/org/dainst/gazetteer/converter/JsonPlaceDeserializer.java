@@ -5,13 +5,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.dainst.gazetteer.dao.PlaceRepository;
-import org.dainst.gazetteer.dao.ThesaurusRepository;
 import org.dainst.gazetteer.domain.Comment;
 import org.dainst.gazetteer.domain.Identifier;
 import org.dainst.gazetteer.domain.Location;
 import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.PlaceName;
-import org.dainst.gazetteer.domain.Thesaurus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +31,6 @@ public class JsonPlaceDeserializer {
 	
 	@Autowired
 	private PlaceRepository placeDao;
-	
-	@Autowired
-	private ThesaurusRepository thesaurusDao;
 	
 	public Place deserializeLazily(InputStream jsonStream) throws InvalidIdException {
 		try {
@@ -111,15 +106,6 @@ public class JsonPlaceDeserializer {
 			// set place type
 			if (objectNode.has("type")) {
 				place.setType(objectNode.get("type").asText());
-			}
-			
-			// set thesaurus
-			place.setThesauri(new HashSet<String>());
-			if (objectNode.has("thesauri")) for (JsonNode thesaurusNode : objectNode.get("thesauri")) {
-				Thesaurus thesaurus = thesaurusDao.getThesaurusByKey(thesaurusNode.asText());
-				if (thesaurus == null)
-					throw new HttpMessageNotReadableException("Invalid thesaurus key.");
-				place.addThesaurus(thesaurus.getKey());
 			}
 			
 			// update name objects
