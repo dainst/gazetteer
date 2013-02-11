@@ -3,6 +3,7 @@
 function AppCtrl($scope, $location, $rootScope) {
 	
 	$scope.q = null;
+	$scope.type = "";
 	$rootScope.title = "";
 	$rootScope.subtitle = "";
 	
@@ -26,9 +27,14 @@ function AppCtrl($scope, $location, $rootScope) {
 	
 	$scope.submit = function() {
 		$scope.zoom = 1;
-		$location.path('/search').search({q:$scope.q, type: ""});
+		$location.path('/search').search({q:$scope.q, type: $scope.type});
 		$scope.q = null;
 	};
+	
+	$scope.submitExtended = function() {
+		$scope.submit();
+		$("#extendedSearchBtn").click();
+	}
 	
 	$rootScope.addAlert = function(body, head, type) {
 		var alert = { body: body };

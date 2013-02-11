@@ -21,6 +21,7 @@
 <script src='/gazetteer/resources/js/lib/jquery.jstree.js'></script>
 <script src='/gazetteer/resources/bootstrap/js/bootstrap.min.js'></script>
 <link href="/gazetteer/resources/bootstrap/css/bootstrap.css" rel="stylesheet">
+<link href="/gazetteer/resources/bootstrap/css/font-awesome.css" rel="stylesheet">	
 <link href="/gazetteer/resources/css/app.css" rel="stylesheet">
 <style type="text/css">
       body {
@@ -60,7 +61,7 @@
 					</li>
 				</ul>
 			</div><!--/.nav-collapse -->
-			<form:form class="navbar-search pull-left" action="${searchAction}" method="GET">
+			<form:form class="navbar-search pull-left" id="simpleSearchForm" action="${searchAction}" method="GET">
 				<s:message code="ui.search.simpleSearch" text="Einfache Suche" var="titleSimpleSearch"/>
  				<input type="text" class="search-query" placeholder="${titleSimpleSearch}" name="q">
  				<i class="icon-search icon-white"></i>
@@ -70,7 +71,7 @@
 </div>
 
 <div id="extendedSearchDiv">
-	<form:form class="form-inline" action="${searchAction}" method="GET">
+	<form:form class="form-inline" id="extendedSearchForm" action="${searchAction}" method="GET">
 		<input type="text" class="search-query input-large" name="q">
 		<label class="checkbox">
 			<input type="checkbox" name="fuzzy" value="true">

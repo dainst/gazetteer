@@ -1,10 +1,28 @@
 $(document).ready(function(){
 
 	// Toggle extended search
-	$("#extendedSearchBtn").click(function() {
+	$("#extendedSearchBtn").click(function(e) {
 		$("#extendedSearchDiv").slideToggle();
 		$("#extendedSearchBtn i").toggleClass("icon-circle-arrow-down icon-circle-arrow-up");
 		$("#extendedSearchBtn").toggleClass("active");
+		e.preventDefault();
+	});
+	
+	
+	$("#simpleSearchForm").submit(function(e) {
+		e.preventDefault();
+		var query = $("#simpleSearchForm").find("input[name=q]").val();
+		window.location = $("#simpleSearchForm").attr("action") + "?q=" + query;
+	});
+	
+	$("#extendedSearchForm").submit(function(e) {
+		e.preventDefault();
+		var query = $("#extendedSearchForm").find("input[name=q]").val();
+		var type = "";
+		if ($("#extendedSearchForm").find("input[name=fuzzy]").val()) {
+			type = "fuzzy"
+		}
+		window.location = $("#simpleSearchForm").attr("action") + "?q=" + query + "&type=" + type;
 	});
 	
 });

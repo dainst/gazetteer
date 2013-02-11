@@ -59,14 +59,14 @@
 	</div>
 	
 	<div id="extendedSearchDiv">
-		<form:form class="form-inline" action="${searchAction}" method="GET">
-			<input type="text" class="search-query input-large" name="q">
+		<form class="form-inline" ng-submit="submitExtended()">
+			<input type="text" class="search-query input-large" ng-model="q">
 			<label class="checkbox">
-				<input type="checkbox" name="fuzzy" value="true">
+				<input type="checkbox" ng-model="type" ng-true-value="fuzzy">
 				<s:message code="ui.search.fuzzySearch" text="Unscharfe Suche" />
 			</label>
 			<button type="submit" class="btn"><s:message code="ui.search.submit" text="Suchen"/></button>
-		</form:form>
+		</form>
 	</div>
 	
 	<div class="container-fluid">
