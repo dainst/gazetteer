@@ -142,7 +142,8 @@ directives.directive('gazMap', function() {
 			map.setCenter(new google.maps.LatLng("0","0"));
 			
 			// attach event listener to monitor manual bounds changes
-			google.maps.event.addListener(map, "idle", function() {
+			/*google.maps.event.addListener(map, "idle", function() {
+				console.log("autoScaledMap in idle:" ,autoScaledMap);
 				if (!autoScaledMap) {
 					var b = map.getBounds();
 					scope.$apply(function(scope) {
@@ -152,23 +153,27 @@ directives.directive('gazMap', function() {
 					});
 				} else {
 					autoScaledMap = false;
+					console.log("set autoScaledMap to:" ,autoScaledMap);
 				}
-			});
+			});*/
 			
+			//
 			scope.$watch("zoom", function() {
 				if (scope.zoom != map.getZoom()) {
-					autoScaledMap = true;
+					console.log("set autoScaledMap to:" ,autoScaledMap);
 					map.setZoom(parseInt(scope.zoom));
 					map.setCenter(new google.maps.LatLng("0","0"));
 				}
 			});
-			
+
+			// add markers for locations and auto zoom and center map
 			scope.$watch("places", function() {
 				
 				for (var i in markers)
 					markers[i].setMap(null);
 				
-				// add markers for locations and auto zoom and center map
+				if (scope.places.length == 0) return;
+				
 				var bounds = new google.maps.LatLngBounds();
 				var ll = new google.maps.LatLng("0","0");
 				var numLocations = 0;
@@ -188,11 +193,11 @@ directives.directive('gazMap', function() {
 					}
 				}
 				
-				/*autoScaledMap = true;
 				if (numLocations > 1)
 					map.fitBounds(bounds);
 				else if (numLocations > 0)
-					map.setCenter(ll);*/
+					map.setCenter(ll);
+				
 				
 			});
 			
