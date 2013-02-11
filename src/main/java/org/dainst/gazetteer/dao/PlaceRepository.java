@@ -24,4 +24,6 @@ public interface PlaceRepository extends PagingAndSortingRepository<Place, Strin
 
 	public List<Place> findByParentIsNullAndDeletedIsFalse(Sort sort);
 
+	public List<Place> findByTypeAndDeletedIsFalse(String string, Sort sort);
+
 }

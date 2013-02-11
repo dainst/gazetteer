@@ -2,26 +2,34 @@
 <!DOCTYPE log4j:configuration PUBLIC "-//APACHE//DTD LOG4J 1.2//EN" "log4j.dtd">
 <log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
 
-	<!-- Appenders -->
-	<appender name="console" class="org.apache.log4j.ConsoleAppender">
-		<param name="Target" value="System.out" />
-		<layout class="org.apache.log4j.PatternLayout">
-			<param name="ConversionPattern" value="%-5p: %c - %m%n" />
-		</layout>
-	</appender>
-	
-	<!-- Application Loggers -->
-	<logger name="org.dainst.gazetteer">
-		<level value="info" />
-	</logger>
-	<logger name="org.dainst.gazetteer.harvest">
-		<level value="debug" />
-	</logger>
+        <!-- Appenders -->
+        <appender name="console" class="org.apache.log4j.ConsoleAppender">
+                <param name="Target" value="System.out" />
+                <layout class="org.apache.log4j.PatternLayout">
+                        <param name="ConversionPattern" value="%-5p: %c - %m%n" />
+                </layout>
+        </appender>
 
-	<!-- Root Logger -->
-	<root>
-		<priority value="warn" />
-		<appender-ref ref="console" />
-	</root>
-	
+        <appender name="file" class="org.apache.log4j.DailyRollingFileAppender">
+                <param name="file" value="/var/log/gazetteer/gazetteer.log"/>
+                <param name="DatePattern" value=".yyyy-MM-dd"/>
+                <layout class="org.apache.log4j.PatternLayout">
+                        <param name="ConversionPattern" value="%-5p: %c - %m%n" />
+                </layout>
+        </appender>
+
+        <!-- Application Loggers -->
+        <logger name="org.dainst.gazetteer">
+                <level value="info" />
+        </logger>
+        <logger name="org.dainst.gazetteer.harvest">
+                <level value="debug" />
+        </logger>
+
+        <!-- Root Logger -->
+        <root>
+                <priority value="warn" />
+                <appender-ref ref="console" />
+        </root>
+
 </log4j:configuration>
