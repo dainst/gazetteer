@@ -273,11 +273,15 @@ public class ZenonHarvester implements Harvester {
 			}
 		}
 		if (!skip) {
-			if (parent != null) place.setParent(parent.getId());
+			if (parent != null) {
+				place.setParent(parent.getId());
+				parent.setChildren(parent.getChildren()+1);
+			}
 			queue.add(place);			
 			logger.debug("added place to queue: {}", place);
 		}
 		
+		nextParent.setChildren(nextParent.getChildren() + children.size());
 		for (Place child : children) {
 			child.setParent(nextParent.getId());
 			child.setType(nextType);
