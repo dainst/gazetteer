@@ -66,8 +66,8 @@
 			<a gaz-tooltip="'ui.place.children.search'" href="#/search?q=parent:{{place.gazId}}"><i class="icon-search"></i></a>
 			<i class="icon-circle-arrow-left" ng-show="offsetChildren == 0"></i>
 			<a ng-click="prevChildren()" ng-hide="offsetChildren == 0"><i class="icon-circle-arrow-left"/></i></a>
-			<i class="icon-circle-arrow-right" ng-show="offsetChildren+10 > totalChildren"></i>
-			<a ng-click="nextChildren()" ng-hide="offsetChildren+10 > totalChildren"><i class="icon-circle-arrow-right"/></i></a>
+			<i class="icon-circle-arrow-right" ng-show="offsetChildren+10 >= totalChildren"></i>
+			<a ng-click="nextChildren()" ng-hide="offsetChildren+10 >= totalChildren"><i class="icon-circle-arrow-right"/></i></a>
 		</dd>
 		<dd>
 			<ul>

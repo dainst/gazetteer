@@ -1,8 +1,17 @@
 package org.dainst.gazetteer.helpers;
 
+import java.util.List;
+
+import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.domain.Place;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SimpleMerger implements Merger {
+	
+	private static Logger logger = LoggerFactory.getLogger(SimpleMerger.class);
+	
+	private PlaceRepository placeRepository;
 
 	@Override
 	public Place merge(Place place1, Place place2) {
@@ -23,9 +32,6 @@ public class SimpleMerger implements Merger {
 		result.getRelatedPlaces().addAll(place2.getRelatedPlaces());
 		result.getTags().addAll(place1.getTags());
 		result.getTags().addAll(place2.getTags());
-		
-		result.getThesauri().addAll(place1.getThesauri());
-		result.getThesauri().addAll(place2.getThesauri());
 		
 		result.setChildren(place1.getChildren() + place2.getChildren());
 		
@@ -56,8 +62,25 @@ public class SimpleMerger implements Merger {
 		else
 			result.setType(place2.getType());
 		
+		result.setId(place1.getId());
+		
+		List<Place> children = getPlaceRepository().findByParent(place2.getId());
+		logger.info("got {} children", children.size());
+		for (Place child : children) {
+			child.setParent(result.getId());
+		}
+		getPlaceRepository().save(children);
+		
 		return result;
 		
+	}
+
+	public PlaceRepository getPlaceRepository() {
+		return placeRepository;
+	}
+
+	public void setPlaceRepository(PlaceRepository placeRepository) {
+		this.placeRepository = placeRepository;
 	}
 
 }

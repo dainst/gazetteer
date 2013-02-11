@@ -30,6 +30,8 @@
 		<property name="blockSize" value="1000" />
 	</bean>
 	
-	<bean id="merger" class="org.dainst.gazetteer.helpers.SimpleMerger" />
+	<bean id="merger" class="org.dainst.gazetteer.helpers.SimpleMerger">
+		<property name="placeRepository" ref="placeRepository"/>
+	</bean>
 
 </beans>

@@ -74,7 +74,7 @@ public class ElasticSearchPlaceQuery {
 	public ElasticSearchPlaceQuery addBoostForChildren() {
 		// places with many children should get a higher score
 		queryBuilder = QueryBuilders.customScoreQuery(queryBuilder)
-				.script("_score + (doc['children'].value / 1000)");
+				.script("_score + (doc['children'].value / 100)");
 		return this;
 	}
 	

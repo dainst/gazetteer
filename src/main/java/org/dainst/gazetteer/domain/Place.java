@@ -36,8 +36,6 @@ public class Place {
 	
 	private Set<Identifier> ids = new HashSet<Identifier>();
 	
-	private Set<String> thesauri = new HashSet<String>();
-	
 	private boolean needsReview = false;
 	
 	private boolean deleted = false;
@@ -182,18 +180,6 @@ public class Place {
 		this.ids.add(id);
 	}
 
-	public Set<String> getThesauri() {
-		return thesauri;
-	}
-
-	public void setThesauri(Set<String> thesauri) {
-		this.thesauri = thesauri;
-	}
-	
-	public void addThesaurus(String thesaurus) {
-		this.thesauri.add(thesaurus);
-	}
-
 	public boolean isNeedsReview() {
 		return needsReview;
 	}
@@ -224,7 +210,6 @@ public class Place {
 				+ ", type=" + type + ", links=" + links
 				+ ", locations=" + locations + ", parent=" + parent
 				+ ", comments=" + comments + ", tags=" + tags + ", ids=" + ids
-				+ ", thesauri=" + thesauri + ", needsReview=" + needsReview
 				+ ", deleted=" + deleted + ", replacedBy=" + replacedBy + "]";
 	}
 
@@ -250,8 +235,6 @@ public class Place {
 		result = prime * result
 				+ ((replacedBy == null) ? 0 : replacedBy.hashCode());
 		result = prime * result + ((tags == null) ? 0 : tags.hashCode());
-		result = prime * result
-				+ ((thesauri == null) ? 0 : thesauri.hashCode());
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
@@ -323,11 +306,6 @@ public class Place {
 			if (other.tags != null)
 				return false;
 		} else if (!tags.equals(other.tags))
-			return false;
-		if (thesauri == null) {
-			if (other.thesauri != null)
-				return false;
-		} else if (!thesauri.equals(other.thesauri))
 			return false;
 		if (type == null) {
 			if (other.type != null)
