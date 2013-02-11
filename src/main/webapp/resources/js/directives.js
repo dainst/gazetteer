@@ -188,7 +188,7 @@ directives.directive('gazMap', function() {
 							title: title,
 							map: map
 						});
-						addMarkerListener(marker, place);
+						addMarkerListener(markers[i], place);
 						bounds.extend(ll);
 						numLocations++;
 					}
@@ -207,7 +207,7 @@ directives.directive('gazMap', function() {
 });
 
 function addMarkerListener(marker, place) {
-	google.maps.event.addListener(markers[i],"click", function() {
+	google.maps.event.addListener(marker,"click", function() {
 		window.location.href = "#/show/" + place.gazId;
 	});
 }
