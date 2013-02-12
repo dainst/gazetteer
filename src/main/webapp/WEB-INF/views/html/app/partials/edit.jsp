@@ -77,9 +77,9 @@
 						<div class="controls">
 							<textarea ng-model="comment.text"></textarea>
 							<select ng-model="comment.language" class="input-small">
-								<option value="" label="${langNotSpecified}">
+								<option value="">${langNotSpecified}</option>
 								<c:forEach var="language" items="${languages}">
-									<option value="${language.key}" label="${language.value}">
+									<option value="${language.key}">${language.value}</option>
 								</c:forEach>
 							</select>
 							<div class="btn btn-primary plus" ng-click="addComment()" ng-disabled="!comment.text || !comment.language">
@@ -111,7 +111,7 @@
 							<s:message code="domain.identifier.context" text="domain.identifier.context" />
 							<select ng-model="identifier.context" class="input-medium">
 								<c:forEach var="idType" items="${idTypes}">
-									<option value="${idType}" label="${idType}">
+									<option value="${idType}">${idType}</option>
 								</c:forEach>
 							</select>
 							<div class="btn btn-primary plus" ng-click="addIdentifier()" ng-disabled="!identifier.value || !identifier.context">
@@ -134,8 +134,8 @@
 						<div class="controls">
 							<input type="url" name="link-object" ng-model="link.object" required>
 							<select ng-model="link.predicate" class="input-small">
-								<option value="owl:sameAs" label="owl:sameAs">
-								<option value="rdfs:seeAlso" label="rdfs:seeAlso">
+								<option value="owl:sameAs">owl:sameAs</option>
+								<option value="rdfs:seeAlso">rdfs:seeAlso</option>
 							</select>
 							<div class="btn btn-primary plus" ng-click="addLink()"
 									ng-disabled="!link.object || !link.predicate">
@@ -164,9 +164,9 @@
 						<div class="controls">
 							<input type="text" ng-model="place.prefName.title" required />
 							<select ng-model="place.prefName.language" class="input-small">
-								<option value="" label="${langNotSpecified}">
+								<option value="">${langNotSpecified}</option>
 								<c:forEach var="language" items="${languages}">
-									<option value="${language.key}" label="${language.value}">
+									<option value="${language.key}">${language.value}</option>
 								</c:forEach>
 							</select>
 						</div>
@@ -180,9 +180,9 @@
 						<div class="controls">
 							<input type="text" ng-model="name.title" />
 							<select ng-model="name.language" class="input-small">
-								<option value="" label="${langNotSpecified}">
+								<option value="">${langNotSpecified}</option>
 								<c:forEach var="language" items="${languages}">
-									<option value="${language.key}" label="${language.value}">
+									<option value="${language.key}">${language.value}</option>
 								</c:forEach>
 							</select>
 							<div class="btn btn-primary plus" ng-click="addName()" ng-disabled="!name.title">

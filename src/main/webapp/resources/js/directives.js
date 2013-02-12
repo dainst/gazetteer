@@ -160,7 +160,6 @@ directives.directive('gazMap', function() {
 			//
 			scope.$watch("zoom", function() {
 				if (scope.zoom != map.getZoom()) {
-					console.log("set autoScaledMap to:" ,autoScaledMap);
 					map.setZoom(parseInt(scope.zoom));
 					map.setCenter(new google.maps.LatLng("0","0"));
 				}
