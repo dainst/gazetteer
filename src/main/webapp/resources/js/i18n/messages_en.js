@@ -27,6 +27,7 @@ messages.factory('messages', function(){
 		"place.types.ocean": "Ocean",
 		"place.types.district": "District",
 		"place.types.state": "State",
+		"place.name.ancient": "Ancient",
 		"location.confidence.0": "Not specified",
 		"location.confidence.1": "Uncertain",
 		"location.confidence.2": "Certain",

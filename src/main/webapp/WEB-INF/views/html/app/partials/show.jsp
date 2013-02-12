@@ -29,8 +29,11 @@
 	<dd>
 		<em><s:message code="domain.place.prefName" text="domain.place.prefName"/>: </em>
 		{{place.prefName.title}}
-		<em ng-hide="!place.prefName.language">
-			(<span gaz-translate="'languages.' + place.prefName.language"></span>)
+		<small ng-show="place.prefName.language">
+			<span gaz-translate="'languages.' + place.prefName.language"></span>
+		</small>
+		<em ng-show="place.prefName.ancient">
+			(<span gaz-translate="'place.name.ancient'"></span>)
 		</em>
 	</dd>
 	<dd ng-repeat="placename in place.names | orderBy:['language','title']">

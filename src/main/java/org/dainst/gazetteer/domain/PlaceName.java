@@ -9,7 +9,7 @@ public class PlaceName {
 	
 	private String script;
 	
-	private boolean modern = true;
+	private boolean ancient = false;
 	
 	private int ordering = 0;
 	
@@ -49,12 +49,12 @@ public class PlaceName {
 		this.script = script;
 	}
 
-	public boolean isModern() {
-		return modern;
+	public boolean isAncient() {
+		return ancient;
 	}
 
-	public void setModern(boolean modern) {
-		this.modern = modern;
+	public void setAncient(boolean ancient) {
+		this.ancient = ancient;
 	}
 
 	public int getOrdering() {
@@ -68,7 +68,7 @@ public class PlaceName {
 	@Override
 	public String toString() {
 		return "PlaceName [title=" + title + ", language=" + language
-				+ ", modern=" + modern + "]";
+				+ ", ancient=" + ancient + "]";
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class PlaceName {
 		int result = 1;
 		result = prime * result
 				+ ((language == null) ? 0 : language.hashCode());
-		result = prime * result + (modern ? 1231 : 1237);
+		result = prime * result + (ancient ? 1231 : 1237);
 		result = prime * result + ((title == null) ? 0 : title.hashCode());
 		return result;
 	}
@@ -96,7 +96,7 @@ public class PlaceName {
 				return false;
 		} else if (!language.equals(other.language))
 			return false;
-		if (modern != other.modern)
+		if (ancient != other.ancient)
 			return false;
 		if (title == null) {
 			if (other.title != null)

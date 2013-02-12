@@ -84,7 +84,7 @@ public class ZenonHarvester implements Harvester {
 	public final static List<String> ROOT_IDS = Arrays.asList(
 		//"xTopLand", // Klassische Archäologie -> Topographie -> Länder mit Gebieten und Orten
 		//"3.00.01", // Iberische Halbinsel -> Topographie
-		"zTopogEuropMitteKroat" // Topograhpie
+		"zTopog" // Topograhpie
 		//"4.02" // Thesaurus Eurasien-Abteilung -> Regionen/Länder/Orte
 	);
 	

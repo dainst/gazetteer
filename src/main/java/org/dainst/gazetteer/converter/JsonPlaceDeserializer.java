@@ -114,9 +114,11 @@ public class JsonPlaceDeserializer {
 				PlaceName prefName = new PlaceName();
 				JsonNode languageNode = prefNameNode.get("language"); 
 				JsonNode titleNode = prefNameNode.get("title");
+				JsonNode ancientNode = prefNameNode.get("ancient");
 				if (titleNode == null)
 					throw new HttpMessageNotReadableException("Invalid prefName object. Attribute \"title\" has to be set.");
 				if (languageNode != null) prefName.setLanguage(languageNode.asText());
+				if (ancientNode != null) prefName.setAncient(ancientNode.asBoolean());
 				prefName.setTitle(titleNode.asText());
 				logger.debug("updated placename: {}", prefName);
 				place.setPrefName(prefName);
@@ -128,9 +130,11 @@ public class JsonPlaceDeserializer {
 				names.add(name);				
 				JsonNode languageNode = nameNode.get("language"); 
 				JsonNode titleNode = nameNode.get("title");
+				JsonNode ancientNode = nameNode.get("ancient");
 				if (titleNode == null)
 					throw new HttpMessageNotReadableException("Invalid name object. Attribute \"title\" has to be set.");
 				if (languageNode != null) name.setLanguage(languageNode.asText());
+				if (ancientNode != null) name.setAncient(ancientNode.asBoolean());
 				name.setTitle(titleNode.asText());
 				logger.debug("updated placename: {}", name);
 			}

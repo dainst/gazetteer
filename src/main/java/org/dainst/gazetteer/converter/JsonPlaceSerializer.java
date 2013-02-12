@@ -44,6 +44,8 @@ public class JsonPlaceSerializer {
 			prefNameNode.put("title", place.getPrefName().getTitle());
 			if (place.getPrefName().getLanguage() != null)
 				prefNameNode.put("language", place.getPrefName().getLanguage());
+			if (place.getPrefName().isAncient())
+				prefNameNode.put("ancient", true);
 			placeNode.put("prefName", prefNameNode);
 		}
 		
@@ -53,7 +55,10 @@ public class JsonPlaceSerializer {
 			for (PlaceName name : place.getNames()) {
 				ObjectNode nameNode = mapper.createObjectNode();
 				nameNode.put("title", name.getTitle());
-				if (name.getLanguage() != null) nameNode.put("language", name.getLanguage());
+				if (name.getLanguage() != null) 
+					nameNode.put("language", name.getLanguage());
+				if (name.isAncient())
+					nameNode.put("ancient", true);
 				namesNode.add(nameNode);
 			}
 			placeNode.put("names", namesNode);

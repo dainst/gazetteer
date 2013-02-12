@@ -27,6 +27,7 @@ messages.factory('messages', function(){
 		"place.types.ocean": "Ozean",
 		"place.types.district": "Kreis",
 		"place.types.state": "Bundesland",
+		"place.name.ancient": "Antik",
 		"location.confidence.0": "Keine Angabe",
 		"location.confidence.1": "Ungenau",
 		"location.confidence.2": "Genau",
