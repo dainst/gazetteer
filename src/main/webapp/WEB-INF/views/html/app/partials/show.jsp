@@ -29,18 +29,21 @@
 	<dd>
 		<em><s:message code="domain.place.prefName" text="domain.place.prefName"/>: </em>
 		{{place.prefName.title}}
-		<small ng-show="place.prefName.language">
-			<span gaz-translate="'languages.' + place.prefName.language"></span>
-		</small>
 		<em ng-show="place.prefName.ancient">
-			(<span gaz-translate="'place.name.ancient'"></span>)
+			(<small gaz-translate="'place.name.ancient'"></small>)
 		</em>
+		<small ng-show="place.prefName.language">
+			<em gaz-translate="'languages.' + place.prefName.language"></em>
+		</small>
 	</dd>
 	<dd ng-repeat="placename in place.names | orderBy:['language','title']">
 		{{placename.title}}
-		<em ng-hide="!placename.language">
-			(<span gaz-translate="'languages.' + placename.language"></span>)
+		<em ng-show="place.prefName.ancient">
+			(<small gaz-translate="'place.name.ancient'"></small>)
 		</em>
+		<small ng-hide="!placename.language">
+			<em gaz-translate="'languages.' + placename.language"></em>
+		</small>
 	</dd>
 	<br/>
 	
