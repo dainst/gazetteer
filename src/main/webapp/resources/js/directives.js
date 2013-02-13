@@ -24,7 +24,6 @@ directives.directive('gazTooltip', function(messages) {
 
 directives.directive('gazLocationPicker', function() {	
 	return {
-		restrict: 'E',
 		replace: true,
 		scope: { coordinates: '=' },
 		template: '<div class="input-append"><input type="text" ng-model="coordinates" ng-list class="lnglat"></input>'
@@ -38,7 +37,6 @@ directives.directive('gazLocationPicker', function() {
 
 directives.directive('gazCopyUri', function() {
 	return {
-		restrict: 'E',
 		replace: true,
 		scope: { uri: '=' },
 		templateUrl: 'partials/copyUri.html',
@@ -53,7 +51,6 @@ directives.directive('gazCopyUri', function() {
 
 directives.directive('gazPlaceNav', function() {
 	return {
-		restrict: 'E',
 		replace: true,
 		scope: { place: '=' },
 		templateUrl: 'partials/placeNav.html',
@@ -67,7 +64,6 @@ directives.directive('gazPlaceNav', function() {
 
 directives.directive('gazPlaceTitle', function() {
 	return {
-		restrict: 'E',
 		replace: true,
 		scope: { place: '=' },
 		templateUrl: 'partials/placeTitle.html'
@@ -76,7 +72,6 @@ directives.directive('gazPlaceTitle', function() {
 
 directives.directive('gazPlacePicker', function() {
 	return {
-		restrict: 'E',
 		replace: true,
 		scope: { place: '=', id: '=' },
 		templateUrl: 'partials/placePicker.html',
@@ -120,7 +115,6 @@ directives.directive('gazMap', function() {
 	var markers = [];
 	
 	return {
-		restrict: 'E',
 		replace: true,
 		scope: { 
 			places: '=',
@@ -128,10 +122,8 @@ directives.directive('gazMap', function() {
 			zoom: '=',
 			height: '@'
 		},
-		template: '<div id="map_canvas" style="height: {{height}}px;" asdf="{{zoom}}"></div>',
+		template: '<div id="map_canvas" style="height: {{height}}px"></div>',
 		link: function(scope, elements, attrs) {
-			
-			var autoScaledMap = true;
 			
 			// initialize map
 			var mapOptions = {
@@ -139,7 +131,11 @@ directives.directive('gazMap', function() {
 			};
 			map = new google.maps.Map(elements[0], mapOptions);
 			map.setZoom(parseInt(attrs.zoom));
-			map.setCenter(new google.maps.LatLng("0","0"));
+			
+			attrs.$observe('height', function(height) {
+				elements[0].style.height = height + "px";
+				google.maps.event.trigger(map, 'resize');
+			});
 			
 			// attach event listener to monitor manual bounds changes
 			/*google.maps.event.addListener(map, "idle", function() {
@@ -197,7 +193,6 @@ directives.directive('gazMap', function() {
 					map.fitBounds(bounds);
 				else if (numLocations > 0)
 					map.setCenter(ll);
-				
 				
 			});
 			

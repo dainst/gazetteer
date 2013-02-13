@@ -1,7 +1,7 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s"%>
 <%@ page contentType="text/html; charset=utf-8" session="false"%>
 
-<gaz-place-nav active-tab="merge" place="place"></gaz-place-nav>
+<div gaz-place-nav active-tab="merge" place="place"></div>
 
 <ul class="nav nav-tabs">
 	<li class="active">
@@ -34,7 +34,7 @@
 		<tbody>
 			<tr ng-repeat="candidatePlace in candidatePlaces">
 				<td>{{candidatePlace.gazId}}</td>
-				<td><gaz-place-title place="candidatePlace"></gaz-place-title></td>
+				<td><div gaz-place-title place="candidatePlace"></div></td>
 				<td>
 					<div class="modal hide" id="linkModal-{{candidatePlace.gazId}}">
 						<div class="modal-header">

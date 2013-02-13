@@ -1,7 +1,7 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s"%>
 <%@ page contentType="text/html; charset=utf-8" session="false"%>
 
-<gaz-place-nav active-tab="show" place="place"></gaz-place-nav>
+<div gaz-place-nav active-tab="show" place="place"></div>
 
 <s:message code="ui.copyToClipboard" var="copyMsg"/>
 			
@@ -60,7 +60,7 @@
 	<span ng-hide="!parent">
 		<dt><s:message code="domain.place.parent" text="domain.place.parent" /></dt>
 		<dd>
-			<gaz-place-title place="parent"></gaz-place-title>
+			<div gaz-place-title place="parent"></div>
 		</dd>
 		<br/>
 	</span>
@@ -78,7 +78,7 @@
 		<dd>
 			<ul>
 				<li ng-repeat="child in children">
-					<gaz-place-title place="child"></gaz-place-title>
+					<div gaz-place-title place="child"></div>
 				</li>
 			</ul>
 		</dd>
@@ -90,7 +90,7 @@
 		<dd>
 			<ul>
 				<li ng-repeat="relatedPlace in relatedPlaces | orderBy:'prefName.title'">
-					<gaz-place-title place="relatedPlace"></gaz-place-title>
+					<div place-title place="relatedPlace"></div>
 				</li>
 			</ul>
 		</dd>

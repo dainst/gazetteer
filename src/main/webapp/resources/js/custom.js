@@ -51,7 +51,9 @@ $(document).scroll(function(){
 
 var mapsApiCallback;
 
-function requireGoogleMaps(callback, apiKey) {
+function requireGoogleMaps(apiKey, callback) {
+	
+	console.log("requireGoogleMaps");
 	
 	/******** Load google maps api if not present *********/
 	if (typeof window.google === "undefined") {

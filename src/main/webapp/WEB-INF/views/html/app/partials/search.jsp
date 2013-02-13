@@ -87,10 +87,10 @@
 		<tr ng-repeat="place in places">
 			<td></td>
 			<td>{{place.gazId}}</td>
-			<td><gaz-place-title place="place"></gaz-place-title></td>
+			<td><div gaz-place-title place="place"></div></td>
 			<td><span ng-show="place.type" gaz-translate="'place.types.' + place.type"></span></td>
 			<td style="text-align:center;">
-				<gaz-copy-uri uri="place['@id']"></gaz-copy-uri>
+				<div gaz-copy-uri uri="place['@id']"></div>
 			</td>
 		</tr>
 	</tbody>

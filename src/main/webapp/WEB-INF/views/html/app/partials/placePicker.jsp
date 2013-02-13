@@ -32,7 +32,7 @@
 			<span ng-hide="place.gazId">
 				<em><s:message code="ui.picker.pickAPlace" text="ui.picker.pickAPlace"/></em>
 			</span>
-			<gaz-place-title ng-show="place.gazId" place="place"></gaz-place-title>
+			<div gaz-place-title ng-show="place.gazId" place="place"></div>
 		</div><button class="btn gaz-pick-button place-picker-btn" type="button" ng-click="openOverlay()">
 			<i class="icon-search"></i><i class="icon-globe"></i>
 		</button>

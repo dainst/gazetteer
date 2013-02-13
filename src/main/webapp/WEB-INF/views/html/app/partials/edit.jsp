@@ -4,7 +4,7 @@
 
 <s:message code="ui.language.notSpecified" text="ui.language.notSpecified" var="langNotSpecified" />
 
-<gaz-place-nav active-tab="edit" place="place"></gaz-place-nav>
+<div gaz-place-nav active-tab="edit" place="place"></div>
 
 <ul class="nav nav-tabs">
 	<li class="active">
@@ -224,7 +224,7 @@
 							<s:message code="domain.place.prefLocation" text="domain.place.prefLocation" />
 						</label>
 						<div class="controls">
-							<gaz-location-picker coordinates="place.prefLocation.coordinates"></gaz-location-picker>
+							<div gaz-location-picker coordinates="place.prefLocation.coordinates"></div>
 							<select path="prefLocation.confidence" class="input-small">
 								<option value="0" gaz-translate="'location.confidence.0'">
 								<option value="1" gaz-translate="'location.confidence.1'">
@@ -240,7 +240,7 @@
 							<s:message code="domain.place.otherLocations" text="domain.place.otherLocations" />
 						</label>
 						<div class="controls">
-							<gaz-location-picker coordinates="location.coordinates"></gaz-location-picker>
+							<div gaz-location-picker coordinates="location.coordinates"></div>
 							<select ng-model="location.confidence" class="input-small">
 								<option value="0" gaz-translate="'location.confidence.0'">
 								<option value="1" gaz-translate="'location.confidence.1'">
@@ -272,7 +272,7 @@
 							<s:message code="domain.place.parent" text="domain.place.parent" />
 						</label>
 						<div class="controls">
-							<gaz-place-picker place="parent" id="place.parent"></gaz-place-picker>
+							<div gaz-place-picker place="parent" id="place.parent"></div>
 						</div>
 					</div>
 					
@@ -282,13 +282,13 @@
 							<s:message code="domain.place.relatedPlaces" text="domain.place.relatedPlaces" />
 						</label>
 						<div class="controls">
-							<gaz-place-picker place="relatedPlace" id="relatedPlace['@id']"></gaz-place-picker>
+							<div gaz-place-picker place="relatedPlace" id="relatedPlace['@id']"></div>
 							<div class="btn btn-primary plus" ng-click="addRelatedPlace()" ng-disabled="!relatedPlace['@id']">
 								<i class="icon-plus icon-white"></i>
 							</div>
 							<div ng-repeat="relatedPlace in relatedPlaces | orderBy:'prefName.title'">
 								<a ng-click="relatedPlaces.splice($index,1)"><i class="icon-remove-sign"></i></a>
-								<gaz-place-title place="relatedPlace"></gaz-place-title>
+								<div gaz-place-title place="relatedPlace"></div>
 							</div>
 						</div>
 					</div>
