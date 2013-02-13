@@ -9,10 +9,10 @@ $(document).ready(function(){
 	});
 	
 	
-	$("#simpleSearchForm").submit(function(e) {
+	$(".simpleSearchForm").submit(function(e) {
 		e.preventDefault();
-		var query = $("#simpleSearchForm").find("input[name=q]").val();
-		window.location = $("#simpleSearchForm").attr("action") + "?q=" + query;
+		var query = $(e.delegateTarget).find("input[name=q]").val();
+		window.location = $(e.delegateTarget).attr("action") + "?q=" + query;
 	});
 	
 	$("#extendedSearchForm").submit(function(e) {
@@ -48,25 +48,3 @@ $(document).scroll(function(){
 	}
 	
 });
-
-var mapsApiCallback;
-
-function requireGoogleMaps(apiKey, callback) {
-	
-	console.log("requireGoogleMaps");
-	
-	/******** Load google maps api if not present *********/
-	if (typeof window.google === "undefined") {
-		mapsApiCallback = callback;
-	    var script_tag = document.createElement('script');
-	    script_tag.setAttribute("type","text/javascript");
-	    var src = "https://maps.google.com/maps/api/js?sensor=false&callback=mapsApiCallback&key=" + apiKey;
-	    script_tag.setAttribute("src", src);
-	    // Try to find the head, otherwise default to the documentElement
-	    (document.getElementsByTagName("head")[0] || document.documentElement).appendChild(script_tag);
-	} else {
-	    // called if google maps api already present
-	    callback();
-	}
-	
-}

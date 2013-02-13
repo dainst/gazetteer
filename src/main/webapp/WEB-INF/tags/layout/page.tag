@@ -61,7 +61,7 @@
 					</li>
 				</ul>
 			</div><!--/.nav-collapse -->
-			<form:form class="navbar-search pull-left" id="simpleSearchForm" action="${searchAction}" method="GET">
+			<form:form class="navbar-search pull-left simpleSearchForm" action="${searchAction}" method="GET">
 				<s:message code="ui.search.simpleSearch" text="Einfache Suche" var="titleSimpleSearch"/>
  				<input type="text" class="search-query" placeholder="${titleSimpleSearch}" name="q">
  				<i class="icon-search icon-white"></i>
