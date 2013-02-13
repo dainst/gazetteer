@@ -18,6 +18,7 @@ messages.factory('messages', function(){
 		"ui.merge.tooltip": "Diesen und aktuellen Ort zusammenfassen",
 		"ui.merge.success.head": "Zusammenfassen erfolgreich",
 		"ui.merge.success.body": "Bitte überprüfen Sie unten die Angaben des neu angelegten Orts",
+		"ui.extendedSearch": "Erweiterte Suche",
 		"place.types.continent": "Kontinent",
 		"place.types.country": "Land",
 		"place.types.city": "Stadt",

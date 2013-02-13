@@ -38,11 +38,10 @@
 				</div>
 				<div class="nav-collapse">
 					<ul class="nav">
-						<li><a href="/gazetteer/thesaurus"><s:message code="ui.thesaurus.list" text="ui.thesaurus.list"/></a></li>
-						<li id="extendedSearchBtn">
-							<a href="#">
+						<li><a href="thesaurus"><s:message code="ui.thesaurus.list" text="ui.thesaurus.list"/></a></li>
+						<li>
+							<a href="app/#/extended-search">
 								<s:message code="ui.search.extendedSearch" text="Erweiterte Suche"/>
-								<i class="icon-circle-arrow-down icon-white"></i>
 							</a>
 						</li>
 					</ul>
@@ -54,19 +53,7 @@
 				</form>
 			</div>
 		</div>
-	</div>
-	
-	<div id="extendedSearchDiv">
-		<form class="form-inline" ng-submit="submitExtended()">
-			<input type="text" class="search-query input-large" ng-model="q">
-			<label class="checkbox">
-				<input type="checkbox" ng-model="type" ng-true-value="fuzzy">
-				<s:message code="ui.search.fuzzySearch" text="Unscharfe Suche" />
-			</label>
-			<button type="submit" class="btn"><s:message code="ui.search.submit" text="Suchen"/></button>
-		</form>
-	</div>
-	
+	</div>	
 	
 	<div id="map_canvas"></div>		
 	

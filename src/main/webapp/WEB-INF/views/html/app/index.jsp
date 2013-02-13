@@ -9,6 +9,7 @@
 <title>iDAI.gazetteer</title>
 <link rel="stylesheet" href="../resources/css/app.css" />
 <link href="../resources/bootstrap/css/bootstrap.css" rel="stylesheet">
+<link href="../resources/css/angular-ui.css" rel="stylesheet">
 <link href="../resources/bootstrap/css/font-awesome.css" rel="stylesheet">		
 <script	src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <!-- In production use:
@@ -16,6 +17,7 @@
  -->
 <script src="../resources/js/lib/angular/angular.js"></script>
 <script src="../resources/js/lib/angular/angular-resource.js"></script>
+<script src="../resources/js/lib/angular/angular-ui.js"></script>
 </head>
 <body class="ng-cloak" ng-controller="AppCtrl">
 
@@ -40,10 +42,9 @@
 				<div class="nav-collapse">
 					<ul class="nav">
 						<li><a href="/gazetteer/thesaurus"><s:message code="ui.thesaurus.list" text="ui.thesaurus.list"/></a></li>
-						<li id="extendedSearchBtn">
-							<a href="#">
+						<li>
+							<a href="#extended-search">
 								<s:message code="ui.search.extendedSearch" text="Erweiterte Suche"/>
-								<i class="icon-circle-arrow-down icon-white"></i>
 							</a>
 						</li>
 					</ul>
@@ -56,17 +57,6 @@
 				<img ng-show="loading > 0" src="../resources/img/loading48.gif" style="width:24px; height:24px; margin-top:8px;">
 			</div>
 		</div>
-	</div>
-	
-	<div id="extendedSearchDiv">
-		<form class="form-inline" ng-submit="submitExtended()">
-			<input type="text" class="search-query input-large" ng-model="q">
-			<label class="checkbox">
-				<input type="checkbox" ng-model="type" ng-true-value="fuzzy">
-				<s:message code="ui.search.fuzzySearch" text="Unscharfe Suche" />
-			</label>
-			<button type="submit" class="btn"><s:message code="ui.search.submit" text="Suchen"/></button>
-		</form>
 	</div>
 	
 	<div class="container-fluid">
@@ -89,11 +79,11 @@
 		
 		<div class="row-fluid">
 		
-			<div class="span5 well">
+			<div class="span5 well" ui-if="showMap">
 				<div gaz-map places="activePlaces" height="500" zoom="zoom" bbox="bbox"></div>
 			</div>
 			
-			<div ng-view class="span7">
+			<div ng-view ng-class="{ 'span7': showMap, 'span12': !showMap }">
 			
 			</div>
 			

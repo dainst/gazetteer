@@ -61,10 +61,19 @@ function AppCtrl($scope, $location, $rootScope) {
 	
 }
 
+function ExtendedSearchCtrl($scope, $rootScope, messages) {
+	
+	$rootScope.title = messages["ui.extendedSearch"];
+	$rootScope.subtitle = "";
+	$rootScope.showMap = false;
+	
+}
+
 function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages) {
 	
 	$rootScope.title = messages["ui.search.results"];
 	$rootScope.subtitle = "";
+	$rootScope.showMap = true;
 	
 	$scope.search = {
 			offset: ($location.search().offset) ? parseInt($location.search().offset) : 0,
@@ -177,6 +186,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, Place, $http, messages) {
 	
 	$scope.location = { confidence: 0 };
 	$scope.link = { predicate: "owl:sameAs" };
+	$rootScope.showMap = true;
 	
 	if ($routeParams.id) {
 		$rootScope.loading++;

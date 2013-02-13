@@ -53,10 +53,9 @@
 			<div class="nav-collapse">
 				<ul class="nav">
 					<li><a href="/gazetteer/thesaurus"><s:message code="ui.thesaurus.list" text="ui.thesaurus.list"/></a></li>
-					<li id="extendedSearchBtn">
-						<a href="#">
+					<li>
+						<a href="/gazetteer/app/#/extended-search">
 							<s:message code="ui.search.extendedSearch" text="Erweiterte Suche"/>
-							<i class="icon-circle-arrow-down icon-white"></i>
 						</a>
 					</li>
 				</ul>
@@ -68,17 +67,6 @@
 			</form:form>
 		</div>
 	</div>
-</div>
-
-<div id="extendedSearchDiv">
-	<form:form class="form-inline" id="extendedSearchForm" action="${searchAction}" method="GET">
-		<input type="text" class="search-query input-large" name="q">
-		<label class="checkbox">
-			<input type="checkbox" name="fuzzy" value="true">
-			<s:message code="ui.search.fuzzySearch" text="Unscharfe Suche" />
-		</label>
-		<button type="submit" class="btn"><s:message code="ui.search.submit" text="Suchen"/></button>
-	</form:form>
 </div>
 
 <div class="container-fluid">

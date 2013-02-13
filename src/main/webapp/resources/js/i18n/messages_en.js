@@ -18,6 +18,7 @@ messages.factory('messages', function(){
 		"ui.merge.tooltip": "Merge this and the current place",
 		"ui.merge.success.head": "Successfully merged places",
 		"ui.merge.success.body": "Please review the information of the newly created place",
+		"ui.extendedSearch": "Extended search",
 		"place.types.continent": "Continent",
 		"place.types.country": "Country",
 		"place.types.city": "City",
