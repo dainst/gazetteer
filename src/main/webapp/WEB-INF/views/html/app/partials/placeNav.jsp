@@ -11,7 +11,7 @@
 		</li>
 		<li class="dropdown pull-right">
 			<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-				<s:message code="ui.otherFormats" text="ui.otherFormats"/> <b class="caret"></b>
+				<i class="icon-file"></i> <b class="caret"></b>
 			</a>
 			<ul class="dropdown-menu">
 				<li><a href="${baseUri}doc/{{place.gazId}}.kml" target="_blank">KML</a></li>
