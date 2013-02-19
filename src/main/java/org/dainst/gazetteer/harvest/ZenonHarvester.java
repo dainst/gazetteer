@@ -269,6 +269,8 @@ public class ZenonHarvester implements Harvester {
 					String text = marcSubNode.get("#text").asText();
 					if ("a".equals(code)) {
 						place.addTag(text);
+					} else if ("b".equals(code)) {
+						place.addTag(text);
 					}
 				}
 			}
