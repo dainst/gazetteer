@@ -66,6 +66,7 @@ rs.initiate({ _id : "rs0", members : [ { _id : 0, host : "localhost:27017" } ] }
                 "type": "boolean"
             },
             "ids": {
+            	"type": "nested",
                 "properties": {
                     "context": {
                         "type": "string",
@@ -78,6 +79,7 @@ rs.initiate({ _id : "rs0", members : [ { _id : 0, host : "localhost:27017" } ] }
                 }
             },
             "links": {
+            	"type": "nested",
                 "properties": {
                     "object": {
                         "type": "string",
@@ -91,6 +93,7 @@ rs.initiate({ _id : "rs0", members : [ { _id : 0, host : "localhost:27017" } ] }
                 }
             },
             "locations": {
+            	"type": "nested",
                 "properties": {
                     "confidence": {
                         "type": "long",
@@ -102,6 +105,7 @@ rs.initiate({ _id : "rs0", members : [ { _id : 0, host : "localhost:27017" } ] }
                 }
             },
             "names": {
+            	"type": "nested",
                 "properties": {
                     "language": {
                         "type": "string",

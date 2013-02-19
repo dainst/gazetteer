@@ -31,11 +31,6 @@ function AppCtrl($scope, $location, $rootScope) {
 		$scope.q = null;
 	};
 	
-	$scope.submitExtended = function() {
-		$scope.submit();
-		$("#extendedSearchBtn").click();
-	}
-	
 	$rootScope.addAlert = function(body, head, type) {
 		var alert = { body: body };
 		if (head != null) alert.head = head;
@@ -61,11 +56,129 @@ function AppCtrl($scope, $location, $rootScope) {
 	
 }
 
-function ExtendedSearchCtrl($scope, $rootScope, messages) {
+function ExtendedSearchCtrl($scope, $rootScope, $location, messages) {
 	
 	$rootScope.title = messages["ui.extendedSearch"];
 	$rootScope.subtitle = "";
 	$rootScope.showMap = false;
+	
+	$scope.meta = null;
+	$scope.type = "";
+	$scope.names = { title: "", language: "" };
+	$scope.parent = null;
+	$scope.type = "";
+	$scope.ids = { value: "", context: ""};
+	$scope.fuzzy = false;
+	$scope.hasCoordinates = false;
+	
+	$scope.submit = function() {
+		
+		var queries = [];		
+		
+		// all fields
+		if ($scope.meta !== null) {
+			if ($scope.fuzzy)
+				queries.push({ fuzzy: { "_all": $scope.meta } });
+			else
+				queries.push({ match: { "_all": $scope.meta } });
+		}
+		
+		// names
+		if ($scope.names.title !== "" && $scope.names.language !== "") {
+			queries.push({ 
+				bool: { 
+					should: [
+						{ 
+							nested: {
+								path: "names",
+								query: {
+									bool: {
+										must: [
+										   { match: { "names.title": { query: $scope.names.title, operator: "and", fuzziness: fuzziness } } },
+										   { match: { "names.language": $scope.names.language } }
+										]
+									}
+								}
+							}
+						},
+						{
+							bool: {
+								must: [
+								   { match: { "prefName.title": { query: $scope.names.title, operator: "and" } } },
+								   { match: { "prefName.language": $scope.names.language } }
+								]
+							}
+						}
+					]
+				}
+			});
+		} else if ($scope.names.title !== "") {
+			queries.push({
+				bool: {
+					should: [
+					    { nested: { path: "names", query: { match: { "names.title": { query: $scope.names.title, operator: "and" } } } } },
+					    { match: { "prefName.title": { query: $scope.names.title, operator: "and" } } }
+					]
+				}
+			});
+		} else if ($scope.names.language !== "") {
+			queries.push({
+				bool: {
+					should: [
+					    { nested: { path: "names", query: { match: { "names.language": $scope.names.language } } } },
+					    { match: { "prefName.language": $scope.names.language } }
+					]
+				}
+			});
+		}
+		
+		// parent
+		if ($scope.parent !== null) {
+			queries.push({ match: { "parent": $scope.parent	} });
+		}
+		
+		// type
+		if ($scope.type !== "") {
+			queries.push({ match: { "type": $scope.type	} });
+		}
+		
+		// ids
+		if ($scope.ids.value !== "" && $scope.ids.context !== "") {
+			queries.push({
+				nested: {
+					path: "ids",
+					query: {
+						bool: {
+							must: [
+							   { match: { "ids.value": { query: $scope.ids.value, operator: "and" } } },
+							   { match: { "ids.context": $scope.ids.context } }
+							]
+						}
+					}
+				}
+			});
+		} else if ($scope.ids.value !== "") {
+			queries.push({
+				nested: { path: "ids", query: { match: { "ids.value": $scope.ids.value } } }
+			});
+		} else if ($scope.ids.context !== "" ) {
+			queries.push({
+				nested: { path: "ids", query: { match: { "ids.context": $scope.ids.context } } }
+			});
+		}
+		
+		// hasCoordinates
+		if ($scope.hasCoordinates) {
+			queries.push({
+				query_string: { query: "_exists_:prefLocation.coordinates" }
+			});
+		}
+		
+		var query = { "bool": { "must": queries } };
+		
+		$location.path('/search').search({q:query, type: "extended"});
+		
+	};
 	
 }
 
@@ -149,12 +262,21 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 	
 	$scope.submit = function() {
 		$rootScope.loading++;
-		Place.query($scope.search, function(result) {
-			$scope.places = result.result;
-			if ($scope.total != result.total)
-				$scope.total = result.total;
-			$rootScope.loading--;
-		});
+		if ($scope.search.type === "extended") {
+			Place.extendedQuery({limit: $scope.search.limit, offset: $scope.search.offset}, $scope.search.q, function(result) {
+				$scope.places = result.result;
+				if ($scope.total != result.total)
+					$scope.total = result.total;
+				$rootScope.loading--;
+			});
+		} else {
+			Place.query($scope.search, function(result) {
+				$scope.places = result.result;
+				if ($scope.total != result.total)
+					$scope.total = result.total;
+				$rootScope.loading--;
+			});
+		}
 	};
 	
 	// needed to keep $scope.search and $location.search() in sync

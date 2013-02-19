@@ -2,41 +2,6 @@ body {
 	padding-top: 60px;
 	padding-bottom: 40px;
 }
-
-#extendedSearchDiv {
-	display: none;
-	padding: 15px;
-	position: fixed;
-	top: 40px;
-	left: 0;
-	right: 0;
-	z-index: 1025; /* 5 less than .navbar-fixed to prevent any overlap */
-	border-color: #d5d5d5;
-	border-width: 0 0 1px; /* drop the border on the fixed edges */
-	-webkit-border-radius: 0;
-	-moz-border-radius: 0;
-	border-radius: 0;
-	-webkit-box-shadow: inset 0 1px 0 #fff, 0 1px 5px rgba(0, 0, 0, .1);
-	-moz-box-shadow: inset 0 1px 0 #fff, 0 1px 5px rgba(0, 0, 0, .1);
-	box-shadow: inset 0 1px 0 #fff, 0 1px 5px rgba(0, 0, 0, .1);
-	filter: progid:DXImageTransform.Microsoft.gradient(enabled=false );
-	background-color: #eeeeee; /* Old browsers */
-	background-repeat: repeat-x; /* Repeat the gradient */
-	background-image: -moz-linear-gradient(top, #f5f5f5 0%, #eeeeee 100%);
-	/* FF3.6+ */
-	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f5f5f5),
-		color-stop(100%, #eeeeee) ); /* Chrome,Safari4+ */
-	background-image: -webkit-linear-gradient(top, #f5f5f5 0%, #eeeeee 100%);
-	/* Chrome 10+,Safari 5.1+ */
-	background-image: -ms-linear-gradient(top, #f5f5f5 0%, #eeeeee 100%);
-	/* IE10+ */
-	background-image: -o-linear-gradient(top, #f5f5f5 0%, #eeeeee 100%);
-	/* Opera 11.10+ */
-	filter: progid:DXImageTransform.Microsoft.gradient(  startColorstr='#f5f5f5',
-		endColorstr='#eeeeee', GradientType=0 ); /* IE6-9 */
-	background-image: linear-gradient(top, #f5f5f5 0%, #eeeeee 100%);
-}
-
 .navbar-search .icon-search {
 	position: relative;
 	left: -30px;
@@ -46,5 +11,17 @@ body {
 .gmap img { max-width: none; }
 
 .tooltip-inner {
+	font-weight: normal;
+}
+
+.no-left-margin {
+	margin-left: 0 !important;
+}
+
+.extended-search label {
+	font-weight: bold;
+}
+
+.extended-search .controls label {
 	font-weight: normal;
 }

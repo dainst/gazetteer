@@ -79,11 +79,11 @@
 		
 		<div class="row-fluid">
 		
-			<div class="span5 well" ui-if="showMap">
+			<div class="span5 well" ng-show="showMap">
 				<div gaz-map places="activePlaces" height="500" zoom="zoom" bbox="bbox"></div>
 			</div>
 			
-			<div ng-view ng-class="{ 'span7': showMap, 'span12': !showMap }">
+			<div ng-view ng-class="{ 'span7': showMap, 'span12 no-left-margin': !showMap }">
 			
 			</div>
 			

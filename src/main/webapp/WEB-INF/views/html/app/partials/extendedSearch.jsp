@@ -4,16 +4,23 @@
 
 <s:message code="ui.language.notSpecified" text="ui.language.notSpecified" var="langNotSpecified" />
 
-<div class="well">
+<div class="well extended-search">
 
-	<form class="form-horizontal">
+	<br/>
+
+	<form class="form-horizontal text-center" ng-submit="submit()">
 	
 		<div class="control-group">
 			<label class="control-label" for="inputMeta"> <s:message
 					code="ui.extendedSearch.meta" text="ui.extendedSearch.meta" />
 			</label>
 			<div class="controls">
-				<input type="text" class="input-xlarge" id="inputMeta">
+				<div class="inline">
+					<input type="text" class="input-xlarge" id="inputMeta" ng-model="meta">
+					<label class="checkbox inline" style="width: 220px; padding-top: 0;"> <input type="checkbox" ng-model="fuzzy">
+						<s:message code="ui.extendedSearch.fuzzy" text="ui.extendedSearch.fuzzy" />
+					</label>
+				</div>
 			</div>
 		</div>
 		
@@ -22,8 +29,8 @@
 					code="ui.extendedSearch.names" text="ui.extendedSearch.names" />
 			</label>
 			<div class="controls">
-				<input type="text" class="input-xlarge" id="inputNames">
-				<select ng-model="comment.language">
+				<input type="text" class="input-xlarge" id="inputNames" ng-model="names.title">
+				<select ng-model="names.language">
 					<option value="">${langNotSpecified}</option>
 					<c:forEach var="language" items="${languages}">
 						<option value="${language.key}">${language.value}</option>
@@ -37,7 +44,7 @@
 					code="ui.extendedSearch.parent" text="ui.extendedSearch.parent" />
 			</label>
 			<div class="controls">
-				<input type="text" class="input-xlarge" id="inputParent">
+				<input type="text" class="input-xlarge" id="inputParent" ng-model="parent">
 			</div>
 		</div>
 		
@@ -46,12 +53,7 @@
 					code="ui.extendedSearch.types" text="ui.extendedSearch.types" />
 			</label>
 			<div class="controls">
-				<input type="text" class="input-xlarge" id="inputTypes">
-				<select ng-model="identifier.context">
-					<c:forEach var="idType" items="${idTypes}">
-						<option value="${idType}">${idType}</option>
-					</c:forEach>
-				</select>
+				<input type="text" class="input-xlarge" id="inputTypes" ng-model="type">
 			</div>
 		</div>
 		
@@ -60,14 +62,19 @@
 					code="ui.extendedSearch.ids" text="ui.extendedSearch.ids" />
 			</label>
 			<div class="controls">
-				<input type="text" class="input-xlarge" id="inputIDs">
+				<input type="text" class="input-xlarge" id="inputIDs" ng-model="ids.value">
+				<select ng-model="ids.context">
+					<c:forEach var="idType" items="${idTypes}">
+						<option value="${idType}">${idType}</option>
+					</c:forEach>
+				</select>
 			</div>
 		</div>
 		
 		<div class="control-group">
 			<div class="controls">
-				<label class="checkbox"> <input type="checkbox"> <s:message
-						code="ui.extendedSearch.fuzzy" text="ui.extendedSearch.fuzzy" />
+				<label class="checkbox"> <input type="checkbox" ng-model="hasCoordinates">
+					<s:message code="ui.extendedSearch.hasCoordinates" text="ui.extendedSearch.hasCoordinates" />
 				</label>
 			</div>
 		</div>
