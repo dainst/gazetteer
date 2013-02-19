@@ -1,6 +1,5 @@
 package org.dainst.gazetteer.harvest;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -9,7 +8,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Set;
 import java.util.Stack;
 
@@ -262,6 +260,15 @@ public class ZenonHarvester implements Harvester {
 						if (COUNTRIES.containsKey(text))
 							text = COUNTRIES.get(text);
 						comment.setLanguage(text);
+					}
+				}
+			} else if ("591".equals(tag)) {
+				JsonNode marcSubNodes = marcNode.get("marc:subfield");
+				for (JsonNode marcSubNode : jsonWrap(marcSubNodes)) {
+					String code = marcSubNode.get("@code").asText();
+					String text = marcSubNode.get("#text").asText();
+					if ("a".equals(code)) {
+						place.addTag(text);
 					}
 				}
 			}
