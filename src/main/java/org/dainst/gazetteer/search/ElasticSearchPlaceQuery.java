@@ -3,6 +3,8 @@ package org.dainst.gazetteer.search;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
+import org.elasticsearch.client.Requests;
+import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.FilterBuilders;
 import org.elasticsearch.index.query.GeoBoundingBoxFilterBuilder;
 import org.elasticsearch.index.query.GeoDistanceFilterBuilder;
@@ -39,6 +41,11 @@ public class ElasticSearchPlaceQuery {
 				
 		return this;
 		
+	}
+	
+	public ElasticSearchPlaceQuery extendedSearch(String jsonQuery) {
+		queryBuilder = QueryBuilders.wrapperQuery(jsonQuery);
+		return this;
 	}
 	
 	public ElasticSearchPlaceQuery queryStringSearch(String query) {
@@ -127,19 +134,20 @@ public class ElasticSearchPlaceQuery {
 		return totalHits;
 	}
 	
-	public String[] execute() {
-		
+	public String[] execute() {		
 		requestBuilder.setQuery(queryBuilder);
 		SearchResponse response = requestBuilder.execute().actionGet();
+		return responseAsList(response);	
+	}
+	
+	private String[] responseAsList(SearchResponse response) {
 		SearchHits hits = response.hits();
 		totalHits = hits.getTotalHits();
 		String[] result = new String[hits.hits().length];
 		for (int i = 0; i < result.length; i++) {
 			result[i] = hits.getAt(i).getId();
-		}
-		
+		}		
 		return result;
-		
 	}
 
 }

@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -52,7 +53,7 @@ public class SearchController {
 	MessageSource messageSource;
 	
 	@RequestMapping(value="/search", method=RequestMethod.GET)
-	public ModelAndView listPlaces(@RequestParam(defaultValue="10") int limit,
+	public ModelAndView simpleSearch(@RequestParam(defaultValue="10") int limit,
 			@RequestParam(defaultValue="0") int offset,
 			@RequestParam(required=false) String q,
 			@RequestParam(required=false) String sort,
@@ -98,10 +99,7 @@ public class SearchController {
 		logger.debug("Querying index returned: " + result.length + " places");
 		
 		// get places for the result ids from db
-		List<Place> places = new ArrayList<Place>();
-		for (int i = 0; i < result.length; i++) {
-			places.add(placeDao.findOne(result[i]));
-		}
+		List<Place> places = placesForList(result);
 		
 		ModelAndView mav = new ModelAndView("place/list");
 		mav.addObject("places", places);
@@ -115,6 +113,40 @@ public class SearchController {
 		mav.addObject("googleMapsApiKey", googleMapsApiKey);
 		mav.addObject("callback", callback);
 		
+		return mav;
+		
+	}
+
+	@RequestMapping(value="/search", method=RequestMethod.POST)
+	public ModelAndView extendedSearch(@RequestParam(defaultValue="10") int limit,
+			@RequestParam(defaultValue="0") int offset,
+			@RequestBody String jsonQuery,
+			HttpServletRequest request) {
+		
+		RequestContext requestContext = new RequestContext(request);
+		Locale locale = requestContext.getLocale();
+		
+		ElasticSearchPlaceQuery query = new ElasticSearchPlaceQuery(elasticSearchServer.getClient());
+		query.extendedSearch(jsonQuery);
+		query.limit(limit);
+		query.offset(offset);
+		query.addBoostForChildren();
+		
+		logger.debug("executing extended search with query: {}", jsonQuery);
+		
+		// get ids from elastic search
+		String[] result = query.execute();
+		
+		List<Place> places = placesForList(result);
+		
+		ModelAndView mav = new ModelAndView("place/list");
+		mav.addObject("places", places);
+		mav.addObject("baseUri", baseUri);
+		mav.addObject("language", locale.getISO3Language());
+		mav.addObject("limit", limit);
+		mav.addObject("offset", offset);
+		mav.addObject("hits", query.getHits());
+		mav.addObject("googleMapsApiKey", googleMapsApiKey);
 		return mav;
 		
 	}
@@ -148,11 +180,7 @@ public class SearchController {
 		
 		logger.debug("Querying index returned: " + result.length + " places");
 		
-		// get places for the result ids from db
-		List<Place> places = new ArrayList<Place>();
-		for (int i = 0; i < result.length; i++) {
-			places.add(placeDao.findOne(result[i]));
-		}
+		List<Place> places = placesForList(result);
 		
 		ModelAndView mav = new ModelAndView("place/list");
 		mav.addObject("places", places);
@@ -165,6 +193,15 @@ public class SearchController {
 		
 		return mav;
 		
+	}
+	
+	// get places for the result ids from db
+	private List<Place> placesForList(String[] result) {
+		List<Place> places = new ArrayList<Place>();
+		for (int i = 0; i < result.length; i++) {
+			places.add(placeDao.findOne(result[i]));
+		}
+		return places;
 	}
 	
 }
