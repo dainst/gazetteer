@@ -38,21 +38,10 @@ function AppCtrl($scope, $location, $rootScope) {
 		$rootScope.alerts.push(alert);
 	};
 	
-	/*
-	// needed to keep $scope.q and $location.search().q in sync
-	$scope.$watch(
-		function(){ 
-			return $location.search().q;
-		},
-		function() {
-			if ($location.path() == "/search"
-					&& $scope.q != $location.search().q) {
-				console.log("AppCtrl.location.q:", $location.search().q);
-				$scope.q = $location.search().q;
-			}
-		}
-	);
-	*/
+	// remove alerts if location changes
+	$scope.$watch(function(){ return $location.absUrl(); }, function() {
+		$rootScope.alerts = [];
+	});
 	
 }
 
@@ -268,12 +257,18 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 				if ($scope.total != result.total)
 					$scope.total = result.total;
 				$rootScope.loading--;
+			}, function() {
+				$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
+				$rootScope.loading--;
 			});
 		} else {
 			Place.query($scope.search, function(result) {
 				$scope.places = result.result;
 				if ($scope.total != result.total)
 					$scope.total = result.total;
+				$rootScope.loading--;
+			}, function() {
+				$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
 				$rootScope.loading--;
 			});
 		}

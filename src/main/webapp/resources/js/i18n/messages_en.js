@@ -2,6 +2,8 @@ var messages = angular.module('gazetteer.messages', []);
 
 messages.factory('messages', function(){
 	return {
+		"ui.error": "Error",
+		"ui.contactAdmin": "Please contact arachne@uni-koeln.de if the problem persists.",
 		"ui.search.results": "Search result",
 		"ui.search.hits": "Hits",
 		"ui.search.limit.10.tooltip": "Show 10 hits per page",
