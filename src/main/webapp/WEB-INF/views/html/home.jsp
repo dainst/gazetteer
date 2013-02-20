@@ -114,7 +114,10 @@
 		map = new google.maps.Map(map_canvas, {
 			center: new google.maps.LatLng(20,0),
 			zoom: 2,
-			mapTypeId: google.maps.MapTypeId.TERRAIN
+			mapTypeId: google.maps.MapTypeId.TERRAIN,
+			zoomControlOptions: {
+				style: google.maps.ZoomControlStyle.SMALL
+			}
 		});
 
 		var heatmapData = [
