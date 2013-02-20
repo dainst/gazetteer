@@ -83,7 +83,7 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages) {
 								query: {
 									bool: {
 										must: [
-										   { match: { "names.title": { query: $scope.names.title, operator: "and", fuzziness: fuzziness } } },
+										   { match: { "names.title": { query: $scope.names.title, operator: "and" } } },
 										   { match: { "names.language": $scope.names.language } }
 										]
 									}
@@ -165,7 +165,7 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages) {
 		
 		var query = { "bool": { "must": queries } };
 		
-		$location.path('/search').search({q:query, type: "extended"});
+		$location.path('/search').search({q:angular.toJson(query), type: "extended"});
 		
 	};
 	
@@ -251,9 +251,11 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 	
 	$scope.submit = function() {
 		$rootScope.loading++;
-		if ($scope.search.type === "extended") {
-			Place.extendedQuery({limit: $scope.search.limit, offset: $scope.search.offset}, $scope.search.q, function(result) {
+		if ($scope.search.type == "extended") {
+			
+			Place.extendedQuery({limit: $scope.search.limit, offset: $scope.search.offset}, angular.fromJson($scope.search.q), function(result) {
 				$scope.places = result.result;
+				$scope.facets = result.facets;
 				if ($scope.total != result.total)
 					$scope.total = result.total;
 				$rootScope.loading--;
@@ -264,14 +266,30 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 		} else {
 			Place.query($scope.search, function(result) {
 				$scope.places = result.result;
+				$scope.facets = result.facets;
 				if ($scope.total != result.total)
 					$scope.total = result.total;
 				$rootScope.loading--;
 			}, function() {
-				$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
+				if($scope.search.type !== "prefix")
+					$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
 				$rootScope.loading--;
 			});
 		}
+	};
+	
+	$scope.setFacet = function(facetName, term) {
+		if ($scope.search.type == "extended") {
+			var query = angular.fromJson($scope.search.q);
+			var match = { match: {} };
+			match.match[facetName] = term;
+			query.bool.must.push(match);
+			$scope.search.q = angular.toJson(query);
+		} else {
+			$scope.search.q = $scope.search.q + " AND " + facetName + ":" + term;
+		}
+		$scope.search.offset = 0;
+		$location.search($scope.search);
 	};
 	
 	// needed to keep $scope.search and $location.search() in sync
@@ -321,6 +339,9 @@ function PlaceCtrl($scope, $rootScope, $routeParams, Place, $http, messages) {
 			Place.query({q: "relatedPlaces:" + $scope.place.gazId}, function(result) {
 				$scope.relatedPlaces = result.result;
 				$rootScope.loading--;
+			}, function() {
+				$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
+				$rootScope.loading--;
 			});
 			$rootScope.loading++;
 			Place.query({q: "parent:" + $scope.place.gazId, sort:"prefName.title.sort"}, function(result) {
@@ -328,10 +349,16 @@ function PlaceCtrl($scope, $rootScope, $routeParams, Place, $http, messages) {
 				$scope.children = result.result;
 				$scope.offsetChildren = 0;
 				$rootScope.loading--;
+			}, function() {
+				$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
+				$rootScope.loading--;
 			});
 			$rootScope.title = result.prefName.title,
 			$rootScope.subtitle = result["@id"]	+ '<a data-toggle="modal" href="#copyUriModal"><i class="icon-share" style="font-size:0.7em"></i></a>';
 			$rootScope.activePlaces = [ result ];
+			$rootScope.loading--;
+		}, function() {
+			$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
 			$rootScope.loading--;
 		});
 	}
@@ -354,6 +381,9 @@ function PlaceCtrl($scope, $rootScope, $routeParams, Place, $http, messages) {
 		Place.query({q: "parent:" + $scope.place.gazId, sort:"prefName.title.sort", offset:$scope.offsetChildren }, function(result) {
 			$scope.children = result.result;
 			$rootScope.loading--;
+		}, function() {
+			$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
+			$rootScope.loading--;
 		});
 	};
 	
@@ -362,6 +392,9 @@ function PlaceCtrl($scope, $rootScope, $routeParams, Place, $http, messages) {
 		$rootScope.loading++;
 		Place.query({q: "parent:" + $scope.place.gazId, sort:"prefName.title.sort", offset:$scope.offsetChildren }, function(result) {
 			$scope.children = result.result;
+			$rootScope.loading--;
+		}, function() {
+			$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
 			$rootScope.loading--;
 		});
 	};
@@ -382,6 +415,10 @@ function PlaceCtrl($scope, $rootScope, $routeParams, Place, $http, messages) {
 				$scope.failure = result.data.message; 
 				$rootScope.addAlert(messages["ui.place.save.failure"], null, "error");
 				window.scrollTo(0,0);
+				$rootScope.loading--;
+			},
+			function() {
+				$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
 				$rootScope.loading--;
 			}
 		);

@@ -2,8 +2,10 @@ package org.dainst.gazetteer.controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,6 +15,8 @@ import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.search.ElasticSearchPlaceQuery;
 import org.dainst.gazetteer.search.ElasticSearchServer;
+import org.elasticsearch.search.facet.Facet;
+import org.elasticsearch.search.facet.terms.TermsFacet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,6 +92,9 @@ public class SearchController {
 			query.addSort(sort, order);
 		}
 		query.addFilter("deleted:false");
+		query.addFacet("parent");
+		query.addFacet("type");
+		query.addFacet("tags");
 		
 		if (bbox != null && bbox.length > 0) {
 			query.addBBoxFilter(bbox[0], bbox[1], bbox[2], bbox[3]);
@@ -100,9 +107,11 @@ public class SearchController {
 		
 		// get places for the result ids from db
 		List<Place> places = placesForList(result);
+		Map<String,List<String[]>> facets = processFacets(query, locale);
 		
 		ModelAndView mav = new ModelAndView("place/list");
 		mav.addObject("places", places);
+		mav.addObject("facets", facets);
 		mav.addObject("baseUri", baseUri);
 		mav.addObject("language", locale.getISO3Language());
 		mav.addObject("limit", limit);
@@ -131,6 +140,9 @@ public class SearchController {
 		query.limit(limit);
 		query.offset(offset);
 		query.addBoostForChildren();
+		query.addFacet("parent");
+		query.addFacet("type");
+		query.addFacet("tags");
 		
 		logger.debug("executing extended search with query: {}", jsonQuery);
 		
@@ -138,9 +150,11 @@ public class SearchController {
 		String[] result = query.execute();
 		
 		List<Place> places = placesForList(result);
+		Map<String,List<String[]>> facets = processFacets(query, locale);
 		
 		ModelAndView mav = new ModelAndView("place/list");
 		mav.addObject("places", places);
+		mav.addObject("facets", facets);
 		mav.addObject("baseUri", baseUri);
 		mav.addObject("language", locale.getISO3Language());
 		mav.addObject("limit", limit);
@@ -170,6 +184,9 @@ public class SearchController {
 		query.limit(limit);
 		query.offset(offset);
 		query.addFilter("deleted:false");
+		query.addFacet("parent");
+		query.addFacet("type");
+		query.addFacet("tags");
 		
 		if (filter != null) {
 			query.addFilter(filter);
@@ -177,6 +194,7 @@ public class SearchController {
 		
 		// get ids from elastic search
 		String[] result = query.execute();
+		Map<String,List<String[]>> facets = processFacets(query, locale);
 		
 		logger.debug("Querying index returned: " + result.length + " places");
 		
@@ -184,6 +202,7 @@ public class SearchController {
 		
 		ModelAndView mav = new ModelAndView("place/list");
 		mav.addObject("places", places);
+		mav.addObject("facets", facets);
 		mav.addObject("baseUri", baseUri);
 		mav.addObject("language", locale.getISO3Language());
 		mav.addObject("limit", limit);
@@ -202,6 +221,54 @@ public class SearchController {
 			places.add(placeDao.findOne(result[i]));
 		}
 		return places;
+	}
+
+	private Map<String,List<String[]>> processFacets(ElasticSearchPlaceQuery query, Locale locale) {
+		
+		Map<String,List<String[]>> result = new HashMap<String,List<String[]>>();
+		List<Facet> facets = query.getFacets().facets();
+		
+		if (facets != null) for (Facet facet : facets) {
+			
+			List<String[]> terms = new ArrayList<String[]>();
+			
+			TermsFacet f = (TermsFacet) facet;
+			
+			// replace parent ids with prefName
+			if (facet.name().equals("parent")) {
+				for (TermsFacet.Entry entry : f) {
+					Place place = placeDao.findOne(entry.term());
+					String[] term = new String[3];
+					term[0] = place.getPrefName().getTitle();
+					term[1] = entry.term();
+					term[2] = String.valueOf(entry.count());
+					terms.add(term);
+				}
+			} else if (facet.name().equals("type")) {
+				for (TermsFacet.Entry entry : f) {
+					String message = messageSource.getMessage("place.types."+entry.getTerm(), null, locale);
+					String[] term = new String[3];
+					term[0] = message;
+					term[1] = entry.term();
+					term[2] = String.valueOf(entry.count());
+					terms.add(term);
+				}
+			} else {
+				for (TermsFacet.Entry entry : f) {
+					String[] term = new String[3];
+					term[0] = entry.term();
+					term[1] = entry.term();
+					term[2] = String.valueOf(entry.count());
+					terms.add(term);
+				}
+			}	
+			
+			result.put(facet.getName(), terms);
+			
+		}
+		
+		return result;
+		
 	}
 	
 }

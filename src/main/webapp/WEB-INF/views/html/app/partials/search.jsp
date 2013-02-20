@@ -2,6 +2,7 @@
 <%@ page contentType="text/html; charset=utf-8" session="false"%>
 
 <div>
+
 	<ul class="nav nav-pills" style="display:inline-block; margin-bottom: 0;">
 		<li ng-click="setLimit(10)" ng-class="{active:(search.limit == 10)}" gaz-tooltip="'ui.search.limit.10.tooltip'">
 		    <a><i class="icon-stop"></i> 10</a>
@@ -53,7 +54,50 @@
 			<a><s:message code="ui.next" text="Vor"/> &rarr;</a>
 		</li>
 	</ul>
-	<hr>
+
+	<div class="well" style="padding:10px; margin-bottom: 10px;">
+		<table class="table" style="margin-bottom:0;">
+			<thead>
+				<tr>
+					<th ng-repeat="(facetName,facet) in facets" style="padding:2px;">
+						<span gaz-translate="'domain.place.'+facetName"></span>
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td ng-repeat="(facetName,facet) in facets" style="border: 0; vertical-align:top; padding:2px;">
+						<table>
+							<tr>
+								<td ng-show="facet.length == 1">
+									<ul class="unstyled" style="margin:0;">
+										<li>
+											<small><i class="icon-angle-right"></i>{{facet[0].label}}</small>
+										</li>
+									</ul>
+								</td>
+								<td style="vertical-align:top;" ng-show="facet.length > 1">
+									<ul class="unstyled" style="margin:0;">
+										<li ng-repeat="entry in facet | orderBy:'count':true | limitTo:5">
+											<small><i class="icon-angle-right"></i><a ng-click="setFacet(facetName, entry.term)">{{entry.label}}</a> <em class="muted">{{entry.count}}</em></small>
+										</li>
+									</ul>
+								</td>
+								<td ng-show="facet.length > 5">
+									<ul class="unstyled" style="margin:0; padding-left:5px;">
+										<li ng-repeat="entry in facet | orderBy:'count':true | limitTo:-5">
+											<small><i class="icon-angle-right"></i><a ng-click="setFacet(facetName, entry.term)">{{entry.label}}</a> <em class="muted">{{entry.count}}</em></small>
+										</li>
+									</ul>
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	
 </div>
 
 <table class="table table-striped">

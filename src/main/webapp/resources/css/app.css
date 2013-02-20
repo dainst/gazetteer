@@ -1,7 +1,16 @@
 body {
-	padding-top: 60px;
+	padding-top: 50px;
 	padding-bottom: 40px;
 }
+
+.page-header {
+	margin-bottom: 20px;
+}
+
+.page-header h2 {
+	margin-bottom: 10px;
+}
+
 .navbar-search .icon-search {
 	position: relative;
 	left: -30px;

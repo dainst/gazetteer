@@ -7,10 +7,10 @@
 <head>
 <meta charset="utf-8">
 <title>iDAI.gazetteer</title>
-<link rel="stylesheet" href="../resources/css/app.css" />
 <link href="../resources/bootstrap/css/bootstrap.css" rel="stylesheet">
 <link href="../resources/css/angular-ui.css" rel="stylesheet">
-<link href="../resources/bootstrap/css/font-awesome.css" rel="stylesheet">		
+<link href="../resources/bootstrap/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="../resources/css/app.css" />
 <script	src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <!-- In production use:
  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js"></script>

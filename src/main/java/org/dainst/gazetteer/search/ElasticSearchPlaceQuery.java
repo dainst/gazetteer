@@ -3,8 +3,6 @@ package org.dainst.gazetteer.search;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
-import org.elasticsearch.client.Requests;
-import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.FilterBuilders;
 import org.elasticsearch.index.query.GeoBoundingBoxFilterBuilder;
 import org.elasticsearch.index.query.GeoDistanceFilterBuilder;
@@ -12,6 +10,8 @@ import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.QueryFilterBuilder;
 import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.facet.FacetBuilders;
+import org.elasticsearch.search.facet.Facets;
 import org.elasticsearch.search.sort.GeoDistanceSortBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
@@ -23,6 +23,7 @@ public class ElasticSearchPlaceQuery {
 	private SearchRequestBuilder requestBuilder;
 	private QueryBuilder queryBuilder;
 	private long totalHits = -1;
+	private Facets facets;
 
 	public ElasticSearchPlaceQuery(Client client) {
 		requestBuilder = client.prepareSearch("gazetteer").addField("_id");
@@ -93,6 +94,11 @@ public class ElasticSearchPlaceQuery {
 		return this;
 	}
 	
+	public ElasticSearchPlaceQuery addFacet(String field) {
+		requestBuilder.addFacet(FacetBuilders.termsFacet(field).field(field));
+		return this;
+	}
+	
 	public ElasticSearchPlaceQuery addGeoDistanceSort(double lon, double lat) {
 		GeoDistanceSortBuilder sortBuilder = SortBuilders.geoDistanceSort("prefLocation.coordinates");
 		sortBuilder.order(SortOrder.ASC);
@@ -137,7 +143,12 @@ public class ElasticSearchPlaceQuery {
 	public String[] execute() {		
 		requestBuilder.setQuery(queryBuilder);
 		SearchResponse response = requestBuilder.execute().actionGet();
+		facets = response.getFacets();
 		return responseAsList(response);	
+	}
+	
+	public Facets getFacets() {
+		return facets;
 	}
 	
 	private String[] responseAsList(SearchResponse response) {

@@ -43,6 +43,9 @@ messages.factory('messages', function(){
 		"languages.lat": "Lateinisch",
 		"languages.grc": "Altgriechisch",
 		"languages.sqi": "Albanisch",
-		"languages.pol": "Polnisch"
+		"languages.pol": "Polnisch",
+		"domain.place.parent": "Liegt in",
+		"domain.place.type": "Art",
+		"domain.place.tags": "Tags"
 	};
 });

@@ -13,7 +13,7 @@
 <title>iDAI.gazetteer</title>
 <link rel="stylesheet" href="resources/css/app.css" />
 <link href="resources/bootstrap/css/bootstrap.css" rel="stylesheet">
-<link href="resources/bootstrap/css/font-awesome.css" rel="stylesheet">		
+<link href="resources/bootstrap/css/font-awesome.min.css" rel="stylesheet">		
 <script	src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 </head>
 <body style="padding-top:40px;">
