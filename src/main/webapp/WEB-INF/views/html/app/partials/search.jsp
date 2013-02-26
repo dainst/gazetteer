@@ -96,7 +96,17 @@
 								<td ng-show="facet.length > 5">
 									<ul class="unstyled" style="margin:0; padding-left:5px;">
 										<li ng-repeat="entry in facet | orderBy:'count':true | limitTo:-5">
-											<small><i class="icon-angle-right"></i><a ng-click="setFacet(facetName, entry.term)">{{entry.label}}</a>&nbsp;<em class="muted">{{entry.count}}</em></small>
+											<small>
+												<i class="icon-angle-right"></i>
+												<a ng-click="setFacet(facetName, entry.term)">
+													<span ng-show="entry.label.length < 15">
+														{{entry.label}}
+													</span>
+													<abbr title="{{entry.label}}" ng-show="entry.label.length >= 15">
+														{{entry.label.substring(0, 14)}}...
+													</abbr>
+												</a>&nbsp;<em class="muted">{{entry.count}}</em>
+											</small>
 										</li>
 									</ul>
 								</td>
