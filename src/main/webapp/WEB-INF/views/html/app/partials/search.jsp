@@ -86,7 +86,7 @@
 														{{entry.label}}
 													</span>
 													<abbr title="{{entry.label}}" ng-show="entry.label.length >= 15">
-														{{entry.label.substring(0, 14)}}
+														{{entry.label.substring(0, 14)}}...
 													</abbr>
 												</a>&nbsp;<em class="muted">{{entry.count}}</em>
 											</small>
