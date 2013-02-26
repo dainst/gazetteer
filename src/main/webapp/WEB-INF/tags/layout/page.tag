@@ -17,9 +17,9 @@
 <script type="text/javascript" src='http://maps.google.com/maps/api/js?sensor=false'></script>
 <script src="resources/js/custom.js"></script>
 <script src="widget/lib.js"></script>
-<script src='/gazetteer/resources/js/lib/jquery.locationpicker.js'></script>
-<script src='/gazetteer/resources/js/lib/jquery.jstree.js'></script>
-<script src='/gazetteer/resources/bootstrap/js/bootstrap.min.js'></script>
+<script src='resources/js/lib/jquery.locationpicker.js'></script>
+<script src='resources/js/lib/jquery.jstree.js'></script>
+<script src='resources/bootstrap/js/bootstrap.min.js'></script>
 <link href="resources/bootstrap/css/bootstrap.css" rel="stylesheet">
 <link href="resources/bootstrap/css/font-awesome.css" rel="stylesheet">	
 <link href="resources/css/app.css" rel="stylesheet">
