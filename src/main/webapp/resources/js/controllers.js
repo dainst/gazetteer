@@ -20,7 +20,6 @@ function AppCtrl($scope, $location, $rootScope) {
 	$scope.$watch("q", function() {
 		if ($scope.q != null && $scope.q.indexOf(':') == -1 && $scope.q.indexOf('*') == -1) {
 			$scope.zoom = 2;
-			//console.log("AppCtrl.watch q:", $scope.q);
 			$location.path('/search').search({q:$scope.q, type: "prefix"});
 		}
 	});
