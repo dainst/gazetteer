@@ -22,7 +22,7 @@
         <logger name="org.dainst.gazetteer">
                 <level value="info" />
         </logger>
-        <logger name="org.dainst.gazetteer.controller">
+        <logger name="org.springframework.security">
                 <level value="debug" />
         </logger>
 
@@ -30,6 +30,7 @@
         <root>
                 <priority value="warn" />
                 <appender-ref ref="console" />
+                <!-- <appender-ref ref="file" /> -->
         </root>
 
 </log4j:configuration>
