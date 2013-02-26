@@ -15,14 +15,14 @@
 <title>iDAI.gazetteer - ${title}</title>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script type="text/javascript" src='http://maps.google.com/maps/api/js?sensor=false'></script>
-<script src="/gazetteer/resources/js/custom.js"></script>
-<script src="/gazetteer/widget/lib.js"></script>
+<script src="resources/js/custom.js"></script>
+<script src="widget/lib.js"></script>
 <script src='/gazetteer/resources/js/lib/jquery.locationpicker.js'></script>
 <script src='/gazetteer/resources/js/lib/jquery.jstree.js'></script>
 <script src='/gazetteer/resources/bootstrap/js/bootstrap.min.js'></script>
-<link href="/gazetteer/resources/bootstrap/css/bootstrap.css" rel="stylesheet">
-<link href="/gazetteer/resources/bootstrap/css/font-awesome.css" rel="stylesheet">	
-<link href="/gazetteer/resources/css/app.css" rel="stylesheet">
+<link href="resources/bootstrap/css/bootstrap.css" rel="stylesheet">
+<link href="resources/bootstrap/css/font-awesome.css" rel="stylesheet">	
+<link href="resources/css/app.css" rel="stylesheet">
 <style type="text/css">
       body {
         padding-top: 60px;
@@ -52,9 +52,9 @@
 			</div>
 			<div class="nav-collapse">
 				<ul class="nav">
-					<li><a href="/gazetteer/thesaurus"><s:message code="ui.thesaurus.list" text="ui.thesaurus.list"/></a></li>
+					<li><a href="thesaurus"><s:message code="ui.thesaurus.list" text="ui.thesaurus.list"/></a></li>
 					<li>
-						<a href="/gazetteer/app/#/extended-search">
+						<a href="app/#/extended-search">
 							<s:message code="ui.search.extendedSearch" text="Erweiterte Suche"/>
 						</a>
 					</li>
