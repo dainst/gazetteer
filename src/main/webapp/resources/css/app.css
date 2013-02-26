@@ -34,3 +34,11 @@ body {
 .extended-search .controls label {
 	font-weight: normal;
 }
+
+.extended-search .form-horizontal .control-label {
+	width: 110px;
+}
+
+.extended-search .form-horizontal .controls {
+	margin-left: 130px;
+}

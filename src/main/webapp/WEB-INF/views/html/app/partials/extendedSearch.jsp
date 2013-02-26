@@ -17,7 +17,7 @@
 			<div class="controls">
 				<div class="inline">
 					<input type="text" class="input-xlarge" id="inputMeta" ng-model="meta">
-					<label class="checkbox inline" style="width: 220px; padding-top: 0;"> <input type="checkbox" ng-model="fuzzy">
+					<label class="checkbox inline" style="width: 140px; padding-top: 0;"> <input type="checkbox" ng-model="fuzzy">
 						<s:message code="ui.extendedSearch.fuzzy" text="ui.extendedSearch.fuzzy" />
 					</label>
 				</div>
@@ -30,7 +30,7 @@
 			</label>
 			<div class="controls">
 				<input type="text" class="input-xlarge" id="inputNames" ng-model="names.title">
-				<select ng-model="names.language">
+				<select ng-model="names.language" class="input-medium">
 					<option value="">${langNotSpecified}</option>
 					<c:forEach var="language" items="${languages}">
 						<option value="${language.key}">${language.value}</option>
@@ -63,7 +63,7 @@
 			</label>
 			<div class="controls">
 				<input type="text" class="input-xlarge" id="inputIDs" ng-model="ids.value">
-				<select ng-model="ids.context">
+				<select ng-model="ids.context" class="input-medium">
 					<c:forEach var="idType" items="${idTypes}">
 						<option value="${idType}">${idType}</option>
 					</c:forEach>

@@ -50,6 +50,7 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages) {
 	$rootScope.title = messages["ui.extendedSearch"];
 	$rootScope.subtitle = "";
 	$rootScope.showMap = false;
+	$rootScope.activePlaces = [];
 	
 	$scope.meta = null;
 	$scope.type = "";
