@@ -55,7 +55,7 @@
 		</li>
 	</ul>
 
-	<div class="well" style="padding:10px; margin-bottom: 10px;">
+	<div class="well" style="padding:10px; margin-bottom: 10px;" ng-show="facets">
 		<table class="table" style="width: auto; margin-bottom:0;">
 			<thead>
 				<tr>

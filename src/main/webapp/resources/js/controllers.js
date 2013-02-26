@@ -18,7 +18,7 @@ function AppCtrl($scope, $location, $rootScope) {
 	
 	// search while typing
 	$scope.$watch("q", function() {
-		if ($scope.q != null && $scope.q.indexOf(':') == -1) {
+		if ($scope.q != null && $scope.q.indexOf(':') == -1 && $scope.q.indexOf('*') == -1) {
 			$scope.zoom = 2;
 			//console.log("AppCtrl.watch q:", $scope.q);
 			$location.path('/search').search({q:$scope.q, type: "prefix"});
@@ -194,6 +194,7 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 	$scope.places = [];
 	$scope.total = 0;
 	$scope.zoom = 2;
+	$scope.facets = null;
 	
 	// search while zooming
 	$scope.$watch(function() { return $scope.bbox.join(","); }, function() {
@@ -267,7 +268,10 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 		} else {
 			Place.query($scope.search, function(result) {
 				$scope.places = result.result;
-				$scope.facets = result.facets;
+				if ($scope.search.type != 'prefix')
+					$scope.facets = result.facets;
+				else
+					$scope.facets = null;
 				if ($scope.total != result.total)
 					$scope.total = result.total;
 				$rootScope.loading--;
