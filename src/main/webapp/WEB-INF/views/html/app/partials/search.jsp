@@ -56,17 +56,17 @@
 	</ul>
 
 	<div class="well" style="padding:10px; margin-bottom: 10px;">
-		<table class="table" style="margin-bottom:0;">
+		<table class="table" style="width: auto; margin-bottom:0;">
 			<thead>
 				<tr>
-					<th ng-repeat="(facetName,facet) in facets" style="padding:2px;">
+					<th ng-repeat="(facetName,facet) in facets" style="padding:2px 8px;">
 						<span gaz-translate="'domain.place.'+facetName"></span>
 					</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
-					<td ng-repeat="(facetName,facet) in facets" style="border: 0; vertical-align:top; padding:2px;">
+					<td ng-repeat="(facetName,facet) in facets" style="border: 0; vertical-align:top; padding:2px 8px;">
 						<table>
 							<tr>
 								<td ng-show="facet.length == 1">

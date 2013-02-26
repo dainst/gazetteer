@@ -94,7 +94,7 @@ public class SearchController {
 		query.addFilter("deleted:false");
 		query.addFacet("parent");
 		query.addFacet("type");
-		query.addFacet("tags");
+		//query.addFacet("tags");
 		
 		if (bbox != null && bbox.length > 0) {
 			query.addBBoxFilter(bbox[0], bbox[1], bbox[2], bbox[3]);
@@ -142,7 +142,7 @@ public class SearchController {
 		query.addBoostForChildren();
 		query.addFacet("parent");
 		query.addFacet("type");
-		query.addFacet("tags");
+		//query.addFacet("tags");
 		
 		logger.debug("executing extended search with query: {}", jsonQuery);
 		
@@ -186,7 +186,7 @@ public class SearchController {
 		query.addFilter("deleted:false");
 		query.addFacet("parent");
 		query.addFacet("type");
-		query.addFacet("tags");
+		//query.addFacet("tags");
 		
 		if (filter != null) {
 			query.addFilter(filter);
