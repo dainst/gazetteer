@@ -32,7 +32,7 @@
 			}).bind("dehover_node.jstree", function(event, data) {
 				resetMarker();
 			}).bind("select_node.jstree", function(event, data) {
-				window.location.href = "${baseUri}app/#/show/" + $(data.rslt.obj[0]).data("id");
+				window.location.href = "app/#/show/" + $(data.rslt.obj[0]).data("id");
 			}).jstree({ 
 				"json_data" : {
 					"data": [
@@ -40,7 +40,7 @@
 							{
 								"data": {
 									"title": "${place.prefName.title}",
-									"attr": { "href": "${baseUri}app/#/show/${place.id}" }
+									"attr": { "href": "app/#/show/${place.id}" }
 								},
 								"metadata": { id: "${place.id}" },
 								"state" : "closed"
@@ -49,7 +49,7 @@
 					],
 					"ajax": {
 						"url": function(n) { 
-							return "${baseUri}search?sort=prefName.title.sort&limit=10000"
+							return "search?sort=prefName.title.sort&limit=10000"
 									+ "&q=parent:" + n.data("id"); 
 						},
 						"error":  function(data) {
@@ -63,7 +63,7 @@
 									data: { 
 										title: place.prefName.title,
 										attr: { 
-											href: "${baseUri}app/#/show/" + place.gazId
+											href: "app/#/show/" + place.gazId
 										}
 									},
 									metadata: { id: place.gazId }
