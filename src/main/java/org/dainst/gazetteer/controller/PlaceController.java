@@ -42,7 +42,7 @@ public class PlaceController {
 			
 		} else if (place.getReplacedBy() != null && !place.getReplacedBy().isEmpty()) {
 			
-			view = new RedirectView("/place/" + place.getReplacedBy(), true, true);
+			view = new RedirectView(place.getReplacedBy(), false, true);
 			view.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
 			
 		// 303 redirect to document describing the place
@@ -55,7 +55,7 @@ public class PlaceController {
 					suffix = entry.getKey();
 			}
 			
-			view = new RedirectView("/doc/" + id + "." + suffix, true, true);
+			view = new RedirectView("../doc/" + id + "." + suffix, false, true);
 			view.setStatusCode(HttpStatus.SEE_OTHER);
 			
 		}
