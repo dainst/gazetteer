@@ -22,7 +22,9 @@
         <logger name="org.dainst.gazetteer">
                 <level value="info" />
         </logger>
-        <logger name="org.springframework.security">
+
+        <!-- Application Loggers -->
+        <logger name="org.dainst.gazetteer.controller">
                 <level value="debug" />
         </logger>
 

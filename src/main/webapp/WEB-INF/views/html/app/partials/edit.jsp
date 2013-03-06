@@ -302,7 +302,22 @@
 	    <div class="form-actions">
            	<button ng-click="save()" class="save btn btn-primary"><s:message code="ui.save" text="ui.save"/></button>
            	<a class="btn" href="javascript:history.back()"><s:message code="ui.cancel" text="ui.cancel"/></a>
-       	</div>
+           	<button href="#deleteModal" class="btn btn-danger" data-toggle="modal"><s:message code="ui.delete" text="ui.delete"/></button>
+			<div class="modal hide fade" id="deleteModal">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal"
+						aria-hidden="true">&times;</button>
+					<h3><s:message code="ui.delete" text="ui.delete"/>?</h3>
+				</div>
+				<div class="modal-body">
+					<p><s:message code="ui.delete.really" text="ui.delete.really"/></p>
+				</div>
+				<div class="modal-footer">
+					<a href="#" class="btn" data-dismiss="modal" aria-hidden="true">Close</a>
+					<a ng-click="remove()" data-dismiss="modal" class="btn btn-danger"><s:message code="ui.delete" text="ui.delete"/></a>
+				</div>
+			</div>
+	</div>
        	
 	</form>
 	

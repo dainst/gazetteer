@@ -37,6 +37,11 @@
 								<s:message code="ui.search.extendedSearch" text="Erweiterte Suche"/>
 							</a>
 						</li>
+						<li>
+							<a href="#edit/">
+								<s:message code="ui.place.create" text="ui.place.create"/>
+							</a>
+						</li>
 					</ul>
 				</div><!--/.nav-collapse -->
 				<form novalidate class="navbar-search pull-left" ng-submit="submit()">

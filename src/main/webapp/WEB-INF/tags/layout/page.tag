@@ -42,6 +42,11 @@
 							<s:message code="ui.search.extendedSearch" text="Erweiterte Suche"/>
 						</a>
 					</li>
+					<li>
+						<a href="app/#/edit/">
+							<s:message code="ui.place.create" text="ui.place.create"/>
+						</a>
+					</li>
 				</ul>
 			</div><!--/.nav-collapse -->
 			<form:form class="navbar-search pull-left simpleSearchForm" action="${searchAction}" method="GET">

@@ -187,9 +187,6 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 			bbox: ($location.search().bbox) ? ($location.search().bbox) : ""
 	};
 	
-	//console.log("SearchCtrl init location.search.q:", $location.search().q);
-	//console.log("SearchCtrl init scope.search.q:", $scope.search.q);
-	
 	$scope.places = [];
 	$scope.total = 0;
 	$scope.zoom = 2;
@@ -321,17 +318,23 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 }
 
 
-function PlaceCtrl($scope, $rootScope, $routeParams, Place, $http, messages) {
+function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, $http, messages) {
 	
 	$scope.location = { confidence: 0 };
 	$scope.link = { predicate: "owl:sameAs" };
 	$rootScope.showMap = true;
+	
+	$rootScope.title = "";
+	$rootScope.subtitle = "";
 	
 	if ($routeParams.id) {
 		$rootScope.loading++;
 		$scope.place = Place.get({
 			id: $routeParams.id
 		}, function(result) {
+			if (result.deleted) {
+				$rootScope.addAlert(messages["ui.place.deleted"], null, "error");
+			}
 			if (result.parent) {
 				$rootScope.loading++;
 				$http.get(result.parent).success(function(result) {
@@ -357,8 +360,6 @@ function PlaceCtrl($scope, $rootScope, $routeParams, Place, $http, messages) {
 				$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
 				$rootScope.loading--;
 			});
-			$rootScope.title = result.prefName.title,
-			$rootScope.subtitle = result["@id"]	+ '<a data-toggle="modal" href="#copyUriModal"><i class="icon-share" style="font-size:0.7em"></i></a>';
 			$rootScope.activePlaces = [ result ];
 			$rootScope.loading--;
 		}, function() {
@@ -377,6 +378,12 @@ function PlaceCtrl($scope, $rootScope, $routeParams, Place, $http, messages) {
 	$scope.$watch("place.prefLocation.coordinates", function() {
 		if ($scope.place && $scope.place.prefLocation)
 			$rootScope.activePlaces = [$scope.place];
+	});
+	
+	// show live changes of id
+	$scope.$watch("place.gazId", function() {
+		if ($scope.place && $scope.place["@id"])
+			$rootScope.subtitle = $scope.place["@id"]	+ '<a data-toggle="modal" href="#copyUriModal"><i class="icon-share" style="font-size:0.7em"></i></a>';
 	});
 	
 	$scope.prevChildren = function() {
@@ -403,6 +410,19 @@ function PlaceCtrl($scope, $rootScope, $routeParams, Place, $http, messages) {
 		});
 	};
 	
+	$scope.remove = function() {
+		Place.remove({ id: $scope.place.gazId }, function(data) {
+			window.scrollTo(0,0);
+			$rootScope.loading--;
+			$location.path("show/" + $scope.place.gazId);
+		}, function(result) {
+			$scope.failure = result.data.message; 
+			$rootScope.addAlert(messages["ui.place.delete.failure"], null, "error");
+			window.scrollTo(0,0);
+			$rootScope.loading--;
+		});
+	};
+	
 	$scope.save = function() {
 		$rootScope.loading++;
 		Place.save(
@@ -419,10 +439,6 @@ function PlaceCtrl($scope, $rootScope, $routeParams, Place, $http, messages) {
 				$scope.failure = result.data.message; 
 				$rootScope.addAlert(messages["ui.place.save.failure"], null, "error");
 				window.scrollTo(0,0);
-				$rootScope.loading--;
-			},
-			function() {
-				$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
 				$rootScope.loading--;
 			}
 		);

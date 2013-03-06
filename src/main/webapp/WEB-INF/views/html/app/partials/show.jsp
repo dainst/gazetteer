@@ -90,7 +90,7 @@
 		<dd>
 			<ul>
 				<li ng-repeat="relatedPlace in relatedPlaces | orderBy:'prefName.title'">
-					<div place-title place="relatedPlace"></div>
+					<div gaz-place-title place="relatedPlace"></div>
 				</li>
 			</ul>
 		</dd>

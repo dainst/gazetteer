@@ -14,6 +14,7 @@ services.factory('Place', function($resource){
 				distance: { method:'GET', params: { method:'geoSearch'}, isArray:false },
 				get: { method:'GET', params: { method:'doc'} },
 				save: { method:'PUT', params: { method:'doc'} },
+				remove: { method: 'DELETE', params: { method: 'doc'} },
 				merge: { method: 'POST', params: { method:'merge' } }
 			});
 });

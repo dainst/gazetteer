@@ -35,6 +35,17 @@ public class JsonPlaceSerializer {
 		ObjectNode placeNode = mapper.createObjectNode();
 		placeNode.put("@id", baseUri + "place/" + place.getId());
 		placeNode.put("gazId", place.getId());
+		
+		if (place.isDeleted()) {
+			placeNode.put("deleted", true);
+			try {
+				return mapper.writeValueAsString(placeNode);
+			} catch (Exception e) {
+				logger.error("Unable to serialize place in JSON.", e);
+				return "";
+			}
+		}
+		
 		if (place.getType() != null && !place.getType().isEmpty())
 			placeNode.put("type", place.getType());
 		

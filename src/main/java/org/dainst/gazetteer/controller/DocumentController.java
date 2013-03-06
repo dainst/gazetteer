@@ -129,8 +129,10 @@ public class DocumentController {
 		place.setId(idGenerator.generate(place));
 		place = placeDao.save(place);
 		
+		logger.debug(place.getId());
+		
 		// add count for children (for scoring)
-		while (true) {
+		while (true && place.getParent() != null) {
 			place = placeDao.findOne(place.getParent());
 			if (place == null) break;
 			place.setChildren(place.getChildren()+1);
@@ -196,6 +198,18 @@ public class DocumentController {
 		Place place = placeDao.findOne(placeId);
 		place.setDeleted(true);
 		placeDao.save(place);
+		
+		List<Place> children = placeDao.findByParent(placeId);
+		for (Place child : children) {
+			child.setParent(null);
+			placeDao.save(child);
+		}
+		
+		List<Place> relatedPlaces = placeDao.findByRelatedPlaces(placeId);
+		for (Place relatedPlace : relatedPlaces) {
+			relatedPlace.getRelatedPlaces().remove(placeId);
+			placeDao.save(relatedPlace);
+		}
 		
 		response.setStatus(204);
 		
