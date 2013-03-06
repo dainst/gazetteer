@@ -5,6 +5,7 @@ import java.util.List;
 import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.domain.Identifier;
 import org.dainst.gazetteer.domain.Place;
+import org.dainst.gazetteer.domain.PlaceName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,11 +45,16 @@ public class SimpleNameAndIdBasedEntityIdentifier implements EntityIdentifier {
 			logger.debug("matched countries: " + resultList.size());
 			if (resultList.size() == 1) return resultList.get(0);
 			
-		} else if ("city".equals(place.getType())) {
+		} else {
 
 			// XXX we suppose that the names of cities in the same country are unique
-			List<Place> resultList = placeDao.findByPrefNameTitleAndType(
-					place.getPrefName().getTitle(), "city");
+			List<Place> resultList = placeDao.findByPrefNameTitle(
+					place.getPrefName().getTitle());
+			resultList.addAll(placeDao.findByNamesTitle(place.getPrefName().getTitle()));
+			for (PlaceName name : place.getNames()) {
+				resultList.addAll(placeDao.findByPrefNameTitle(name.getTitle()));
+				resultList.addAll(placeDao.findByNamesTitle(name.getTitle()));
+			}
 			logger.debug("matched cities: " + resultList.size());
 			
 			if (place.getParent() == null) {

@@ -11,6 +11,10 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 public interface PlaceRepository extends PagingAndSortingRepository<Place, String> {
 
 	public Place getByLinksObjectAndLinksPredicate(String object, String predicate);
+	
+	public List<Place> findByPrefNameTitle(String name);
+	
+	public List<Place> findByNamesTitle(String name);
 
 	public List<Place> findByPrefNameTitleAndType(String name, String type);
 
