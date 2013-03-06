@@ -1,6 +1,24 @@
 body {
-	padding-top: 50px;
+	padding-top: 40px;
 	padding-bottom: 40px;
+}
+
+@media (max-width: 979px) {
+	body {
+		padding-top: 0;
+	}
+	.navbar-fixed-top {
+		margin-bottom: 0;
+	}
+	.navbar .nav-collapse {
+		clear: none;
+	}
+}
+
+@media (max-width: 767px) {
+	.navbar-fixed-top {
+		margin-bottom: 20px;
+	}
 }
 
 .page-header {
@@ -15,6 +33,10 @@ body {
 	position: relative;
 	left: -30px;
 	top: 2px;
+}
+
+.alerts {
+	margin-top: 10px;
 }
 
 .gmap img { max-width: none; }

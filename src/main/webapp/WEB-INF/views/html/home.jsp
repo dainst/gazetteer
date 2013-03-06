@@ -11,12 +11,12 @@
 <head>
 <meta charset="utf-8">
 <title>iDAI.gazetteer</title>
-<link rel="stylesheet" href="resources/css/app.css" />
 <link href="resources/bootstrap/css/bootstrap.css" rel="stylesheet">
 <link href="resources/bootstrap/css/font-awesome.min.css" rel="stylesheet">		
+<link rel="stylesheet" href="resources/css/app.css" />
 <script	src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 </head>
-<body style="padding-top:40px;">
+<body>
 
 	<!-- Top Navigation Bar -->
 	<div class="navbar navbar-fixed-top navbar-inverse">
@@ -26,17 +26,7 @@
 					data-target=".nav-collapse"> <span class="icon-bar"></span> <span
 					class="icon-bar"></span> <span class="icon-bar"></span>
 				</a> <a class="brand" href="">iDAI.gazetteer</a>
-				<div class="btn-group pull-right">
-					<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-						<i class="icon-user"></i> Username <span class="caret"></span>
-					</a>
-					<ul class="dropdown-menu">
-						<li><a href="#">Profile</a></li>
-						<li class="divider"></li>
-						<li><a href="#">Sign Out</a></li>
-					</ul>
-				</div>
-				<div class="nav-collapse">
+				<div class="nav-collapse pull-left">
 					<ul class="nav">
 						<li><a href="thesaurus"><s:message code="ui.thesaurus.list" text="ui.thesaurus.list"/></a></li>
 						<li>

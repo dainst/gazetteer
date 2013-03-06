@@ -29,16 +29,6 @@
 					data-target=".nav-collapse"> <span class="icon-bar"></span> <span
 					class="icon-bar"></span> <span class="icon-bar"></span>
 				</a> <a class="brand" href="../">iDAI.gazetteer</a>
-				<div class="btn-group pull-right">
-					<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-						<i class="icon-user"></i> Username <span class="caret"></span>
-					</a>
-					<ul class="dropdown-menu">
-						<li><a href="#">Profile</a></li>
-						<li class="divider"></li>
-						<li><a href="#">Sign Out</a></li>
-					</ul>
-				</div>
 				<div class="nav-collapse">
 					<ul class="nav">
 						<li><a href="../thesaurus"><s:message code="ui.thesaurus.list" text="ui.thesaurus.list"/></a></li>
@@ -61,7 +51,7 @@
 	
 	<div class="container-fluid">
 	
-		<div ng-hide="alerts.length == 0">
+		<div class="alerts" ng-hide="alerts.length == 0">
 			<div ng-repeat="alert in alerts" class="alert" ng-class="alert.alertClass">
 				<button type="button" class="close" ng-click="alerts.splice($index,1)">×</button>
 				<h4 ng-show="alert.head">{{alert.head}}</h4>
