@@ -506,6 +506,10 @@ function MergeCtrl($scope, $rootScope, $routeParams, $location, Place, $http, me
 			$rootScope.subtitle = result["@id"]	+ '<a data-toggle="modal" href="#copyUriModal"><i class="icon-share" style="font-size:0.7em"></i></a>';
 			$scope.getCandidatesByName();
 			$rootScope.loading--;
+		},
+		function() {
+			$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
+			$rootScope.loading--;
 		});
 	}
 	
@@ -519,6 +523,9 @@ function MergeCtrl($scope, $rootScope, $routeParams, $location, Place, $http, me
 		Place.query({q: query, type: 'queryString'}, function(result) {
 			$scope.candidatePlaces = result.result;
 			$rootScope.loading--;
+		}, function() {
+			$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
+			$rootScope.loading--;
 		});
 	};
 	
@@ -531,6 +538,9 @@ function MergeCtrl($scope, $rootScope, $routeParams, $location, Place, $http, me
 			filter: "type:"+ $scope.place.type + " AND NOT _id:" + $scope.place.gazId
 		}, function(result) {
 			$scope.candidatePlaces = result.result;
+			$rootScope.loading--;
+		}, function() {
+			$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
 			$rootScope.loading--;
 		});
 	};
@@ -574,6 +584,9 @@ function MergeCtrl($scope, $rootScope, $routeParams, $location, Place, $http, me
 			$rootScope.addAlert(messages["ui.merge.success.body"],
 					messages["ui.merge.success.head"], "success");
 			$location.path("/edit/" + result.gazId);
+			$rootScope.loading--;
+		}, function() {
+			$rootScope.addAlert(messages["ui.place.save.failure"], place1.prefName.title, "error");
 			$rootScope.loading--;
 		});
 	};
