@@ -239,7 +239,12 @@ public class SearchController {
 				for (TermsFacet.Entry entry : f) {
 					Place place = placeDao.findOne(entry.term());
 					String[] term = new String[3];
-					term[0] = place.getPrefName().getTitle();
+					try {
+						term[0] = place.getPrefName().getTitle();
+					} catch (NullPointerException e) {
+						logger.warn("could not resolve parent name for facet. place: " + place, e);
+						continue;
+					}
 					term[1] = entry.term();
 					term[2] = String.valueOf(entry.count());
 					terms.add(term);

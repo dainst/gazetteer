@@ -179,6 +179,13 @@ public class Place {
 	public void addIdentifier(Identifier id) {
 		this.ids.add(id);
 	}
+	
+	public String getIdentifier(String context) {
+		for (Identifier id : ids)
+			if (context.equals(id.getContext()))
+				return id.getValue();
+		return null;
+	}
 
 	public boolean isNeedsReview() {
 		return needsReview;
