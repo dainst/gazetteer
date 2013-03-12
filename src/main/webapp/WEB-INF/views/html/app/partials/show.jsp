@@ -120,10 +120,10 @@
 		<br/>
 	</span>
 	
-	<span ng-show="getIdByContext('zenon-thesaurus') || getIdByContext('arachne-place-id')">
+	<span ng-show="getIdByContext('zenon-thesaurus') || getIdByContext('arachne-place')">
 		<dt><s:message code="ui.contexts" text="ui.contexts"/></dt>
-		<dd ng-show="getIdByContext('arachne-place-id')">
-			<a href="http://arachne.uni-koeln.de/arachne/index.php?view[layout]=search_result_overview&view[category]=overview&search[constraints]=FS_OrtID:%22{{getIdByContext('arachne-place-id').value}}%22" target="_blank">
+		<dd ng-show="getIdByContext('arachne-place')">
+			<a href="http://arachne.uni-koeln.de/arachne/index.php?view[layout]=search_result_overview&view[category]=overview&search[constraints]=FS_OrtID:%22{{getIdByContext('arachne-place').value}}%22" target="_blank">
 				<s:message code="ui.link.arachne" text="ui.link.arachne"/>
 				<i class="icon-external-link"></i>
 			</a>
