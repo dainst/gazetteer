@@ -132,7 +132,7 @@
 				<ul>
 					<c:forEach var="tag" items="${place.tags}">
 						<li>
-							${tag.text}
+							${tag}
 						</li>
 					</c:forEach>
 				</ul>

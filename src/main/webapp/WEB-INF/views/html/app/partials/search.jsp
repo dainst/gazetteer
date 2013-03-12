@@ -13,6 +13,15 @@
 		<li ng-click="setLimit(1000)" ng-class="{active:(search.limit == 1000)}" gaz-tooltip="'ui.search.limit.1000.tooltip'">
 			<a><i class="icon-th"></i> 1000</a>
 		</li>
+		<li class="dropdown pull-right">
+			<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+				<i class="icon-file"></i> <b class="caret"></b>
+			</a>
+			<ul class="dropdown-menu">
+				<li><a href="../search.kml?q={{search.q}}&limit=1000" target="_blank">KML</a></li>
+				<li><a href="../search.json?q={{search.q}}&limit=1000" target="_blank">JSON</a></li>
+			</ul>
+		</li>
 		<!-- <li class="dropdown">
 			<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 				<s:message code="ui.search.views" text="ui.search.views" />
