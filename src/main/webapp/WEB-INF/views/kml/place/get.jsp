@@ -96,6 +96,28 @@
 				<p><s:message code="types.${place.type}" text="${place.type}"/></p>
 			</c:if>
 			
+			<c:if test="${not empty place.arachneId or not empty place.zenonId}">
+				<h2><s:message code="ui.contexts" text="ui.contexts"/></h2>
+				<ul>
+					<c:if test="${not empty place.arachneId}">
+						<li>
+							<a href="http://arachne.uni-koeln.de/arachne/index.php?view[layout]=search_result_overview&view[category]=overview&search[constraints]=FS_OrtID:%22${place.arachneId}%22" target="_blank">
+								<s:message code="ui.link.arachne" text="ui.link.arachne"/>
+								<i class="icon-external-link"></i>
+							</a>
+						</li>
+					</c:if>
+					<c:if test="${not empty place.zenonId}">
+						<li>
+							<a href="http://testopac.dainst.org/#search?q=f999_1:${place.zenonId}" target="_blank">
+								<s:message code="ui.link.zenon" text="ui.link.zenon"/>
+								<i class="icon-external-link"></i>
+							</a>
+						</li>
+					</c:if>
+				</ul>
+			</c:if>
+			
 			<c:if test="${!empty(place.identifiers)}">
 				<h2><s:message code="domain.place.identifiers" text="domain.place.identifiers" /></h2>
 				<ul>

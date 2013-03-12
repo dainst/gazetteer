@@ -186,6 +186,14 @@ public class Place {
 				return id.getValue();
 		return null;
 	}
+	
+	public String getArachneId() {
+		return getIdentifier("arachne-place");
+	}
+	
+	public String getZenonId() {
+		return getIdentifier("zenon-thesaurus");
+	}
 
 	public boolean isNeedsReview() {
 		return needsReview;
