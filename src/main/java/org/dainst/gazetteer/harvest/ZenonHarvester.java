@@ -82,7 +82,7 @@ public class ZenonHarvester implements Harvester {
 	public final static List<String> ROOT_IDS = Arrays.asList(
 		//"xTopLand", // Klassische Archäologie -> Topographie -> Länder mit Gebieten und Orten
 		//"3.00.01", // Iberische Halbinsel -> Topographie
-		"zTopog" // Topograhpie
+		"zTopogEuropMitteDeuts" // Topograhpie
 		//"4.02" // Thesaurus Eurasien-Abteilung -> Regionen/Länder/Orte
 	);
 	
@@ -98,6 +98,8 @@ public class ZenonHarvester implements Harvester {
 		ClientConfig config = new DefaultClientConfig();
 		config.getClasses().add(JacksonJsonProvider.class);
 		Client client = Client.create(config);
+		client.setConnectTimeout(5000);
+		client.setReadTimeout(5000);
 		api = client.resource(RESOURCE_URI);
 	}
 	
@@ -146,8 +148,12 @@ public class ZenonHarvester implements Harvester {
 		try {
 			placeNode = builder.get(ObjectNode.class);
 		} catch (Exception e) {
-			logger.warn("Unable to resolve resource " + id +". Skipping ...", e);
-			return;
+			try {
+				placeNode = builder.get(ObjectNode.class);
+			} catch (Exception e2) {
+				logger.warn("Unable to resolve resource " + id +". Skipping ...", e2);
+				return;
+			}
 		}
 		
 		if (placeNode == null) {
@@ -162,16 +168,17 @@ public class ZenonHarvester implements Harvester {
 		if (type != null) place.setType(type);
 		
 		// ID
-		/*JsonNode controlNodes = placeNode.get("data").get("marc:controlfield");
+		JsonNode controlNodes = placeNode.get("data").get("marc:controlfield");
 		for (JsonNode controlNode : jsonWrap(controlNodes)) {			
 			String tag = controlNode.get("@tag").asText();		
 			if ("001".equals(tag)) {
-				Identifier zenonId = new Identifier(controlNode.get("#text").asText(), "zenon-id");
+				Identifier zenonId = new Identifier(controlNode.get("#text").asText(), "zenon-systemnr");
 				place.addIdentifier(zenonId);
 			}			
-		}*/
+		}
 
 		List<Place> children = new ArrayList<Place>();
+		Set<String> uniqueNames = new HashSet<String>();
 		JsonNode marcNodes = placeNode.get("data").get("marc:datafield");
 		for (JsonNode marcNode : jsonWrap(marcNodes)) {
 			
@@ -204,9 +211,32 @@ public class ZenonHarvester implements Harvester {
 						name.setLanguage(text);
 					}
 				}
-				if (name.getTitle() != null && !name.getTitle().isEmpty()) {
+				if (name.getTitle() != null && !name.getTitle().isEmpty() 
+						&& !uniqueNames.contains(name.getTitle())) {
 					if (place.getPrefName() == null) place.setPrefName(name);
 					else place.addName(name);
+					uniqueNames.add(name.getTitle());
+				}
+				
+			} else if ("558".equals(tag)) {
+				PlaceName name = new PlaceName();
+				JsonNode marcSubNodes = marcNode.get("marc:subfield");
+				for (JsonNode marcSubNode : jsonWrap(marcSubNodes)) {
+					String code = marcSubNode.get("@code").asText();
+					String text = marcSubNode.get("#text").asText();
+					if ("a".equals(code)) {
+						name.setTitle(text);
+					} else if ("9".equals(code)) {
+						if (COUNTRIES.containsKey(text))
+							text = COUNTRIES.get(text);
+						name.setLanguage(text);
+					}
+				}
+				if (name.getTitle() != null && !name.getTitle().isEmpty() 
+						&& !uniqueNames.contains(name.getTitle())) {
+					if (place.getPrefName() == null) place.setPrefName(name);
+					else place.addName(name);
+					uniqueNames.add(name.getTitle());
 				}
 			
 			// IDs
@@ -222,19 +252,8 @@ public class ZenonHarvester implements Harvester {
 						identifier.setContext(text);
 					}
 				}
-				place.addIdentifier(identifier);
-				
-			// IDs
-			} else if ("565".equals(tag)) {
-				JsonNode marcSubNodes = marcNode.get("marc:subfield");
-				for (JsonNode marcSubNode : jsonWrap(marcSubNodes)) {
-					String code = marcSubNode.get("@code").asText();
-					String text = marcSubNode.get("#text").asText();
-					if ("b".equals(code) && text.length() <= 3) {
-						Identifier identifier = new Identifier(text.toUpperCase(), "ISO 3166-1");
-						place.addIdentifier(identifier);
-					}
-				}
+				if (identifier.getValue() != null && !identifier.getValue().isEmpty())
+					place.addIdentifier(identifier);
 			
 			// Type
 			} else if ("563".equals(tag)) {
@@ -322,8 +341,12 @@ public class ZenonHarvester implements Harvester {
 			logger.warn("Unable to get children for resource " + id +". Skipping ...", e);
 			return;
 		} catch(ClientHandlerException e) {
-			logger.warn("Unable to get children for resource " + id +". Skipping ...", e);
-			return;
+			try {
+				childNodes = builder.get(ObjectNode.class).get("data");
+			} catch (Exception e2) {
+				logger.warn("Unable to get children for resource " + id +". Skipping ...", e2);
+				return;
+			}
 		} catch (NullPointerException e) {
 			logger.warn("Unable to parse JSON for children for resource {}. Skipping ...", id);
 			return;
