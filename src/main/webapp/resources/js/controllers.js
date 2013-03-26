@@ -171,7 +171,7 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages) {
 	
 }
 
-function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages) {
+function SearchCtrl($scope, $rootScope, $location, $routeParams, $http, Place, messages) {
 	
 	$rootScope.title = messages["ui.search.results"];
 	$rootScope.subtitle = "";
@@ -188,6 +188,7 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 	};
 	
 	$scope.places = [];
+	$scope.parents = {};
 	$scope.total = 0;
 	$scope.zoom = 2;
 	$scope.facets = null;
@@ -249,6 +250,7 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 	
 	$scope.submit = function() {
 		$rootScope.loading++;
+		$scope.parents = {};
 		Place.query($scope.search, function(result) {
 			$scope.places = result.result;
 			if ($scope.search.type != 'prefix')
@@ -258,6 +260,15 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 			if ($scope.total != result.total)
 				$scope.total = result.total;
 			$rootScope.loading--;
+			for (var i=0; i < $scope.places.length; i++) {
+				$rootScope.loading++;
+				if (!$scope.parents[$scope.places[i].parent]) {
+					$http.get($scope.places[i].parent).success(function(result) {
+						$scope.parents[result["@id"]] = result;
+					});
+				}
+				$rootScope.loading--;
+			}
 		}, function() {
 			if($scope.search.type !== "prefix")
 				$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
