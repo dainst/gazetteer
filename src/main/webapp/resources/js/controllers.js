@@ -250,8 +250,8 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, $http, Place, m
 	
 	$scope.submit = function() {
 		$rootScope.loading++;
-		$scope.parents = {};
 		Place.query($scope.search, function(result) {
+			$scope.parents = {};
 			$scope.places = result.result;
 			if ($scope.search.type != 'prefix')
 				$scope.facets = result.facets;
