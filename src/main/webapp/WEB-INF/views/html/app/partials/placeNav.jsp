@@ -16,6 +16,7 @@
 			<ul class="dropdown-menu">
 				<li><a href="${baseUri}doc/{{place.gazId}}.kml" target="_blank">KML</a></li>
 				<li><a href="${baseUri}doc/{{place.gazId}}.json" target="_blank">JSON</a></li>
+				<li><a href="${baseUri}doc/{{place.gazId}}.rdf" target="_blank">RDF/XML</a></li>
 			</ul>
 		</li>
 		<li class="pull-right" ng-class="isActive('merge')">	

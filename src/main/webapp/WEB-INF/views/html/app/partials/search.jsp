@@ -18,8 +18,8 @@
 				<i class="icon-file"></i> <b class="caret"></b>
 			</a>
 			<ul class="dropdown-menu">
-				<li><a href="../search.kml?q={{search.q}}&limit=1000" target="_blank">KML</a></li>
-				<li><a href="../search.json?q={{search.q}}&limit=1000" target="_blank">JSON</a></li>
+				<li><a href="../search.kml?q={{search.q}}&limit=1000&type={{search.type}}" target="_blank">KML</a></li>
+				<li><a href="../search.json?q={{search.q}}&limit=1000&type={{search.type}}" target="_blank">JSON</a></li>
 			</ul>
 		</li>
 		<!-- <li class="dropdown">

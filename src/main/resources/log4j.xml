@@ -23,16 +23,10 @@
                 <level value="info" />
         </logger>
 
-        <!-- Application Loggers -->
-        <logger name="org.dainst.gazetteer.controller">
-                <level value="debug" />
-        </logger>
-
         <!-- Root Logger -->
         <root>
                 <priority value="warn" />
-                <appender-ref ref="console" />
-                <!-- <appender-ref ref="file" /> -->
+                <appender-ref ref="file" />
         </root>
 
 </log4j:configuration>

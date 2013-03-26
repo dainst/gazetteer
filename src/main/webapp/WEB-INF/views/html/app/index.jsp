@@ -56,7 +56,7 @@
 	
 	<div class="container-fluid">
 	
-		<div class="alerts" ng-hide="alerts.length == 0">
+		<div class="alerts" ng-cloak ng-hide="alerts.length == 0">
 			<div ng-repeat="alert in alerts" class="alert" ng-class="alert.alertClass">
 				<button type="button" class="close" ng-click="alerts.splice($index,1)">×</button>
 				<h4 ng-show="alert.head">{{alert.head}}</h4>

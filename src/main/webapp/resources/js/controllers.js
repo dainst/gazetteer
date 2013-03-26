@@ -249,34 +249,20 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 	
 	$scope.submit = function() {
 		$rootScope.loading++;
-		if ($scope.search.type == "extended") {
-			
-			Place.extendedQuery({limit: $scope.search.limit, offset: $scope.search.offset}, angular.fromJson($scope.search.q), function(result) {
-				$scope.places = result.result;
+		Place.query($scope.search, function(result) {
+			$scope.places = result.result;
+			if ($scope.search.type != 'prefix')
 				$scope.facets = result.facets;
-				if ($scope.total != result.total)
-					$scope.total = result.total;
-				$rootScope.loading--;
-			}, function() {
+			else
+				$scope.facets = null;
+			if ($scope.total != result.total)
+				$scope.total = result.total;
+			$rootScope.loading--;
+		}, function() {
+			if($scope.search.type !== "prefix")
 				$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
-				$rootScope.loading--;
-			});
-		} else {
-			Place.query($scope.search, function(result) {
-				$scope.places = result.result;
-				if ($scope.search.type != 'prefix')
-					$scope.facets = result.facets;
-				else
-					$scope.facets = null;
-				if ($scope.total != result.total)
-					$scope.total = result.total;
-				$rootScope.loading--;
-			}, function() {
-				if($scope.search.type !== "prefix")
-					$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
-				$rootScope.loading--;
-			});
-		}
+			$rootScope.loading--;
+		});
 	};
 	
 	$scope.setFacet = function(facetName, term) {
