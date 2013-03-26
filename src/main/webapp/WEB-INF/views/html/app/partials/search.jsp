@@ -7,11 +7,11 @@
 		<li ng-click="setLimit(10)" ng-class="{active:(search.limit == 10)}" gaz-tooltip="'ui.search.limit.10.tooltip'">
 		    <a><i class="icon-stop"></i> 10</a>
 		</li>
-		<li ng-click="setLimit(100)" ng-class="{active:(search.limit == 100)}" gaz-tooltip="'ui.search.limit.100.tooltip'">
-			<a><i class="icon-th-large"></i> 100</a>
+		<li ng-click="setLimit(50)" ng-class="{active:(search.limit == 50)}" gaz-tooltip="'ui.search.limit.50.tooltip'">
+			<a><i class="icon-th-large"></i> 50</a>
 		</li>
-		<li ng-click="setLimit(1000)" ng-class="{active:(search.limit == 1000)}" gaz-tooltip="'ui.search.limit.1000.tooltip'">
-			<a><i class="icon-th"></i> 1000</a>
+		<li ng-click="setLimit(100)" ng-class="{active:(search.limit == 100)}" gaz-tooltip="'ui.search.limit.100.tooltip'">
+			<a><i class="icon-th"></i> 100</a>
 		</li>
 		<li class="dropdown pull-right">
 			<a class="dropdown-toggle" data-toggle="dropdown" href="#">

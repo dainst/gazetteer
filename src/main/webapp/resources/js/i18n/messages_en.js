@@ -7,6 +7,7 @@ messages.factory('messages', function(){
 		"ui.search.results": "Search result",
 		"ui.search.hits": "Hits",
 		"ui.search.limit.10.tooltip": "Show 10 hits per page",
+		"ui.search.limit.50.tooltip": "Show 50 hits per page",
 		"ui.search.limit.100.tooltip": "Show 100 hits per page",
 		"ui.search.limit.1000.tooltip": "Show 1000 hits per page",
 		"ui.search.sort.score.tooltip": "Sort by relevance",
