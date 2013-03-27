@@ -8,6 +8,8 @@
 <meta charset="utf-8">
 <title>iDAI.gazetteer</title>
 <link href="../resources/bootstrap/css/bootstrap.css" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="../resources/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 <link href="../resources/css/angular-ui.css" rel="stylesheet">
 <link href="../resources/bootstrap/css/font-awesome.min.css" rel="stylesheet">
 <link rel="stylesheet" href="../resources/css/app.css" />
@@ -58,7 +60,7 @@
 	
 		<div class="alerts" ng-cloak ng-hide="alerts.length == 0">
 			<div ng-repeat="alert in alerts" class="alert" ng-class="alert.alertClass">
-				<button type="button" class="close" ng-click="alerts.splice($index,1)">×</button>
+				<button type="button" class="close" ng-click="alerts.splice($index,1)">&times;</button>
 				<h4 ng-show="alert.head">{{alert.head}}</h4>
 				{{alert.body}}
 			</div>
@@ -75,7 +77,7 @@
 		<div class="row-fluid">
 		
 			<div class="span5 well">
-				<div gaz-map places="activePlaces" height="500" zoom="zoom" bbox="bbox"></div>
+				<div gaz-map places="activePlaces" height="500" zoom="zoom" bbox="bbox" highlight="highlight"></div>
 			</div>
 			
 			<div ng-view class="span7">

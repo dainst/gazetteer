@@ -157,7 +157,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr ng-repeat="place in places">
+		<tr ng-repeat="place in places" ng-click="$location.path('show/'+place.gazId)" ng-mouseover="setHighlight(place.gazId)" ng-mouseout="setHighlight(null)" ng-class="{info: place.gazId==highlight}">
 			<td></td>
 			<td>{{place.gazId}}</td>
 			<td><div gaz-place-title place="place"></div><small class="muted">{{parents[place.parent].prefName.title}}</small></td>

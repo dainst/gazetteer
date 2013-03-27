@@ -102,106 +102,113 @@ directives.directive('gazPlacePicker', function() {
 				});
 			});
 			
-		},
-		link: function(scope, element, attrs) {
-			
 		}
 	};
 });
 
-directives.directive('gazMap', function() {
+directives.directive('gazMap', function($location) {
 	
-	var map = null;
-	var markers = [];
+	var blueIcon = "http://www.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png";
+	var defaultIcon = "http://www.google.com/intl/en_us/mapfiles/ms/micons/red-dot.png";
+	var defaultShadow = new google.maps.MarkerImage(
+		'http://maps.gstatic.com/intl/en_us/mapfiles/markers/marker_sprite.png',
+		new google.maps.Size(37,34),
+		new google.maps.Point(20, 0),
+		new google.maps.Point(10, 34)
+	);
 	
 	return {
 		replace: true,
-		scope: { 
-			places: '=',
-			bbox: '=',
-			zoom: '=',
-			height: '@'
+		scope: {
+			places: "=",
+			zoom: "=",
+			bbox: "=",
+			highlight: "=",
+			height: "@"
 		},
-		template: '<div id="map_canvas" style="height: {{height}}px"></div>',
-		link: function(scope, elements, attrs) {
+		templateUrl: 'partials/map.html',
+		controller: function($scope, $attrs, $element) {
 			
-			// initialize map
-			var mapOptions = {
+			$scope.markers = [];
+			$scope.markerMap = {};
+			$scope.highlightedMarker = null;
+			$scope.mapOptions = {
+				center: new google.maps.LatLng(0, 0),
+				zoom: $scope.zoom,
 				mapTypeId: google.maps.MapTypeId.TERRAIN
 			};
-			map = new google.maps.Map(elements[0], mapOptions);
-			map.setZoom(parseInt(attrs.zoom));
 			
-			attrs.$observe('height', function(height) {
-				elements[0].style.height = height + "px";
-				google.maps.event.trigger(map, 'resize');
+			$attrs.$observe('height', function(height) {
+				$element[0].style.height = height + "px";
+				google.maps.event.trigger($scope.map, 'resize');
 			});
 			
-			// attach event listener to monitor manual bounds changes
-			/*google.maps.event.addListener(map, "idle", function() {
-				console.log("autoScaledMap in idle:" ,autoScaledMap);
-				if (!autoScaledMap) {
-					var b = map.getBounds();
-					scope.$apply(function(scope) {
-						scope.zoom = map.getZoom();
-						scope.bbox = [b.getNorthEast().lat(),b.getNorthEast().lng(),
-					              b.getSouthWest().lat(),b.getSouthWest().lng()];
-					});
-				} else {
-					autoScaledMap = false;
-					console.log("set autoScaledMap to:" ,autoScaledMap);
-				}
-			});*/
-			
-			//
-			scope.$watch("zoom", function() {
-				if (scope.zoom != map.getZoom()) {
-					map.setZoom(parseInt(scope.zoom));
-					map.setCenter(new google.maps.LatLng("0","0"));
+			$scope.$watch("zoom", function() {
+				if ($scope.zoom != $scope.map.getZoom()) {
+					$scope.map.setZoom(parseInt($scope.zoom));
+					$scope.map.setCenter(new google.maps.LatLng("0","0"));
 				}
 			});
-
+			
+			$scope.markerClick = function(id) {
+				$location.path("/show/" + id);
+			};
+			
+			$scope.markerOver = function(id) {
+				$scope.highlight = id;
+			};
+			
+			$scope.markerOut = function(id) {
+				$scope.highlight = null;
+			};
+			
+			$scope.$watch("highlight", function() {
+				if ($scope.highlightedMarker != null)
+					$scope.highlightedMarker.setIcon(defaultIcon);
+				if ($scope.highlight != null && $scope.markerMap[$scope.highlight]) {
+					$scope.markerMap[$scope.highlight].setIcon(blueIcon);
+					$scope.highlightedMarker = $scope.markerMap[$scope.highlight];
+				}
+			});
+			
 			// add markers for locations and auto zoom and center map
-			scope.$watch("places", function() {
+			$scope.$watch("places", function() {
 				
-				for (var i in markers)
-					markers[i].setMap(null);
+				$scope.markerMap = {};
+				for (var i in $scope.markers)
+					$scope.markers[i].setMap(null);
 				
-				if (scope.places.length == 0) return;
+				if ($scope.places.length == 0) return;
 				
 				var bounds = new google.maps.LatLngBounds();
 				var ll = new google.maps.LatLng("0","0");
 				var numLocations = 0;
-				for (var i in scope.places) {	
-					var place = scope.places[i];		
+				for (var i in $scope.places) {	
+					var place = $scope.places[i];		
 					var title = "";
 					if (place.prefName) title = place.prefName.title;
 					if (place.prefLocation) {
 						ll = new google.maps.LatLng(place.prefLocation.coordinates[1], place.prefLocation.coordinates[0]);
-						markers[i] = new google.maps.Marker({
+						$scope.markers[i] = new google.maps.Marker({
 							position: ll,
 							title: title,
-							map: map
+							map: $scope.map,
+							icon: defaultIcon,
+							shadow: defaultShadow
 						});
-						addMarkerListener(markers[i], place);
+						$scope.markerMap[place.gazId] = $scope.markers[i];
 						bounds.extend(ll);
 						numLocations++;
 					}
 				}
 				
 				if (numLocations > 1)
-					map.fitBounds(bounds);
+					$scope.map.fitBounds(bounds);
 				else if (numLocations > 0)
-					map.setCenter(ll);
+					$scope.map.setCenter(ll);
 				
 			});
 			
 		}
 	};
 });
-
-function addMarkerListener(marker, place) {
-	google.maps.event.addListener(marker,"click", function() {
-		window.location.href = "#/show/" + place.gazId;
-	});
-}

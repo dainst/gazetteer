@@ -606,7 +606,7 @@ angular.module('ui.directives').directive('uiKeyup', ['keypressHelper', function
         //We create an $apply if it isn't happening. we need better support for this
         //We don't want to use timeout because tons of these events fire at once,
         //and we only need one $apply
-        if (!scope.$$phase) scope.$apply();
+        //if (!scope.$$phase) scope.$apply();
       });
     });
   }

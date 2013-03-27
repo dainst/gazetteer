@@ -15,6 +15,7 @@ function AppCtrl($scope, $location, $rootScope) {
 	
 	$rootScope.bbox = [];
 	$rootScope.zoom = 2;
+	$scope.highlight = null;
 	
 	// search while typing
 	$scope.$watch("q", function() {
@@ -41,6 +42,10 @@ function AppCtrl($scope, $location, $rootScope) {
 	$scope.$watch(function(){ return $location.absUrl(); }, function() {
 		$rootScope.alerts = [];
 	});
+	
+	$scope.setHighlight = function(id) {
+		$scope.highlight = id;
+	};
 	
 }
 
