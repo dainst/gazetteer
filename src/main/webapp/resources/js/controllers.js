@@ -610,3 +610,43 @@ function MergeCtrl($scope, $rootScope, $routeParams, $location, Place, $http, me
 	};
 	
 }
+
+function ThesaurusCtrl($scope, $rootScope, $location, $http, Place, messages) {
+	
+	$rootScope.title = messages["ui.thesaurus"];
+	$rootScope.subtitle = "";
+	$rootScope.showMap = true;
+	
+	$rootScope.loading++;
+	Place.query({
+		sort: 'prefName.title.sort',
+		limit: 10000,
+		q: 'type:continent'
+	}, function(result) {
+		$rootScope.loading--;
+		$scope.places = result.result;
+	}, function() {
+		$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
+		$rootScope.loading--;
+	});
+	
+	$scope.open = function(place) {
+		place.isOpen = true;
+		Place.query({
+			sort: 'prefName.title.sort',
+			limit: 10000,
+			q: 'parent:' + place.gazId
+		}, function(result) {
+			place.children = result.result;
+		}, function() {
+			$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
+			$rootScope.loading--;
+		});
+	};
+	
+	$scope.close = function(place) {
+		place.children = null;
+		place.isOpen = false;
+	};
+	
+}

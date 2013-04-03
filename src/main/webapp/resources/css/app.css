@@ -64,3 +64,16 @@ body {
 .extended-search .form-horizontal .controls {
 	margin-left: 130px;
 }
+
+.thesaurus-row {
+	padding: 5px;
+	border-bottom: 1px solid lightgrey;
+}
+
+.thesaurus-row:nth-child(2n) {
+	background-color: #ffffff;
+}
+
+.thesaurus-row:nth-child(2n+1) {
+	background-color: #f9f9f9;
+}

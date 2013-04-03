@@ -5,20 +5,17 @@
 <!doctype html>
 <html ng-app="gazetteer">
 <head>
-<meta charset="utf-8">
 <title>iDAI.gazetteer</title>
-<link href="../resources/bootstrap/css/bootstrap.css" rel="stylesheet">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="../resources/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+<link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet">
+<link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome-ie7.css" rel="stylesheet">
 <link href="../resources/css/angular-ui.css" rel="stylesheet">
-<link href="../resources/bootstrap/css/font-awesome.min.css" rel="stylesheet">
-<link rel="stylesheet" href="../resources/css/app.css" />
-<script	src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-<!-- In production use:
- <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js"></script>
- -->
-<script src="../resources/js/lib/angular/angular.js"></script>
-<script src="../resources/js/lib/angular/angular-resource.js"></script>
+<link href="../resources/css/app.css" rel="stylesheet">
+<script	src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular-resource.min.js"></script>
 <script src="../resources/js/lib/angular/angular-ui.js"></script>
 </head>
 <body class="ng-cloak" ng-controller="AppCtrl">
@@ -96,9 +93,9 @@
 		
 	</div>
 	
-	<script src='http://maps.google.com/maps/api/js?key=${googleMapsApiKey}&amp;sensor=false'></script>
+	<script src='//maps.google.com/maps/api/js?key=${googleMapsApiKey}&amp;sensor=false&libraries=visualization'></script>
+	
 	<script src='../resources/js/lib/jquery.locationpicker.js'></script>
-	<script src='../resources/js/lib/jquery.jstree.js'></script>
 	<script src="../resources/bootstrap/js/bootstrap.min.js"></script>
 	
 	<script src="../resources/js/custom.js"></script>

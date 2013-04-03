@@ -19,6 +19,7 @@ messages.factory('messages', function(){
 		"ui.place.save.failure": "Could not create place",
 		"ui.place.remove.success": "Successfully deleted place",
 		"ui.place.remove.failure": "Could not delete place",
+		"ui.thesaurus": "Thesaurus",
 		"ui.link.tooltip": "Link to current place",
 		"ui.place.deleted": "This place has been deleted",
 		"ui.merge.tooltip": "Merge this and the current place",

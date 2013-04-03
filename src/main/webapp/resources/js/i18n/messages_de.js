@@ -19,6 +19,7 @@ messages.factory('messages', function(){
 		"ui.place.save.failure": "Ort konnte nicht gespeichert werden",
 		"ui.place.remove.success": "Ort erfolgreich gelöscht",
 		"ui.place.remove.failure": "Ort konnte nicht gelöscht werden",
+		"ui.thesaurus": "Thesaurus",
 		"ui.link.tooltip": "Mit aktuellem Ort verknüpfen",
 		"ui.place.deleted": "Dieser Ort wurde gelöscht",
 		"ui.merge.tooltip": "Diesen und aktuellen Ort zusammenfassen",

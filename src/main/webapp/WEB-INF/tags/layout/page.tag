@@ -11,18 +11,18 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>iDAI.gazetteer - ${title}</title>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-<script type="text/javascript" src='http://maps.google.com/maps/api/js?sensor=false'></script>
+<title>iDAI.gazetteer</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+<link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet">
+<link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome-ie7.css" rel="stylesheet">
+<link href="resources/css/app.css" rel="stylesheet">
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src='//maps.google.com/maps/api/js?key=${googleMapsApiKey}&amp;sensor=false'></script>
 <script src="resources/js/custom.js"></script>
-<script src="widget/lib.js"></script>
-<script src='resources/js/lib/jquery.locationpicker.js'></script>
 <script src='resources/js/lib/jquery.jstree.js'></script>
 <script src='resources/bootstrap/js/bootstrap.min.js'></script>
-<link href="resources/bootstrap/css/bootstrap.css" rel="stylesheet">
-<link href="resources/bootstrap/css/font-awesome.min.css" rel="stylesheet">	
-<link href="resources/css/app.css" rel="stylesheet">
 </head>
 <body>
 
