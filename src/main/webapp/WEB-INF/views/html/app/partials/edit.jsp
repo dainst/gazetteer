@@ -202,7 +202,7 @@
 							</div>
 							<div ng-repeat="placename in place.names | orderBy:['language','title']">
 								<a ng-click="place.names.splice($index,1)"><i class="icon-remove-sign"></i></a> {{placename.title}}
-								<em ng-show="place.prefName.ancient">
+								<em ng-show="placename.ancient">
 									(<small gaz-translate="'place.name.ancient'"></small>)
 								</em>
 								<small ng-hide="!placename.language">
