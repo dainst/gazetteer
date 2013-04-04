@@ -38,7 +38,7 @@
 	</dd>
 	<dd ng-repeat="placename in place.names | orderBy:['language','title']">
 		{{placename.title}}
-		<em ng-show="place.prefName.ancient">
+		<em ng-show="placename.ancient">
 			(<small gaz-translate="'place.name.ancient'"></small>)
 		</em>
 		<small ng-hide="!placename.language">
