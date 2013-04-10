@@ -621,7 +621,7 @@ function ThesaurusCtrl($scope, $rootScope, $location, $http, Place, messages) {
 	Place.query({
 		sort: 'prefName.title.sort',
 		limit: 10000,
-		q: 'type:continent'
+		q: 'type:country'
 	}, function(result) {
 		$rootScope.loading--;
 		$scope.places = result.result;
@@ -647,6 +647,17 @@ function ThesaurusCtrl($scope, $rootScope, $location, $http, Place, messages) {
 	$scope.close = function(place) {
 		place.children = null;
 		place.isOpen = false;
+	};
+	
+	$scope.showMarker = function(place) {
+		if (place.prefLocation) {
+			$rootScope.activePlaces = [ place ];
+			$rootScope.zoom = 6;
+		}
+	};
+	
+	$scope.hideMarker = function() {
+		$rootScope.activePlaces = [];
 	};
 	
 }

@@ -2,14 +2,19 @@
 <%@ page contentType="text/html; charset=utf-8" session="false"%>
 
 <script type="text/ng-template" id="thesaurus-item.html">
-	<i class="icon-caret-right" ng-show="!place.isOpen" ng-click="open(place)"></i>
-	<i class="icon-caret-down" ng-show="place.isOpen" ng-click="close(place)"></i>
-	<span gaz-place-title place="place"></span>
-	<ul style="list-style:none">
-		<li class="thesaurus-row" ng-repeat="place in place.children" ng-include="'thesaurus-item.html'"></tr>
-	</ul>
+	<span ng-mouseover="showMarker(place)" ng-mouseout="hideMarker()">
+		<i class="icon-circle-arrow-right" ng-show="!place.isOpen" ng-click="open(place)"></i>
+		<i class="icon-circle-arrow-down" ng-show="place.isOpen && place.children" ng-click="close(place)"></i>
+		<i class="icon-circle-arrow-right icon-spin" ng-show="place.isOpen && !place.children"></i>
+		<i class="icon-circle" ng-show="place.isOpen && place.children.length == 0"></i>
+		<span gaz-place-title place="place"></span>
+		<i class="icon-map-marker" ng-show="place.prefLocation"></i>
+		<ul style="list-style:none">
+			<li class="thesaurus-row" ng-repeat="place in place.children" ng-include="'thesaurus-item.html'"></li>
+		</ul>
+	</span>
 </script>
 
 <ul style="list-style:none">
-	<li class="thesaurus-row" ng-repeat="place in places" ng-include="'thesaurus-item.html'"></tr>
+	<li class="thesaurus-row" ng-repeat="place in places" ng-include="'thesaurus-item.html'"></li>
 </ul>

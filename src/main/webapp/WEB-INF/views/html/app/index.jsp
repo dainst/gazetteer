@@ -30,7 +30,7 @@
 				</a> <a class="brand" href="../">iDAI.gazetteer</a>
 				<div class="nav-collapse">
 					<ul class="nav">
-						<li><a href="../thesaurus"><s:message code="ui.thesaurus.list" text="ui.thesaurus.list"/></a></li>
+						<li><a href="#thesaurus"><s:message code="ui.thesaurus.list" text="ui.thesaurus.list"/></a></li>
 						<li>
 							<a href="#extended-search">
 								<s:message code="ui.search.extendedSearch" text="Erweiterte Suche"/>
