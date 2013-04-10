@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
+import org.springframework.context.NoSuchMessageException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -252,7 +253,13 @@ public class SearchController {
 				}
 			} else if (facet.name().equals("type")) {
 				for (TermsFacet.Entry entry : f) {
-					String message = messageSource.getMessage("place.types."+entry.getTerm(), null, locale);
+					String message;
+					try {
+						message = messageSource.getMessage("place.types."+entry.getTerm(), null, locale);
+					} catch (NoSuchMessageException e) {
+						logger.warn("No message for type '" + entry.getTerm() + "'.", e);
+						message = entry.getTerm();
+					}
 					String[] term = new String[3];
 					term[0] = message;
 					term[1] = entry.term();
