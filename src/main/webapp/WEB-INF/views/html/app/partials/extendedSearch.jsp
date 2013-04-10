@@ -8,7 +8,7 @@
 
 	<br/>
 
-	<form class="form-horizontal text-center" ng-submit="submit()">
+	<form class="form-horizontal" ng-submit="submit()">
 	
 		<div class="control-group">
 			<label class="control-label" for="inputMeta"> <s:message
