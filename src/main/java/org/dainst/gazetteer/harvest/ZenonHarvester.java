@@ -15,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.dainst.gazetteer.domain.Comment;
 import org.dainst.gazetteer.domain.Identifier;
+import org.dainst.gazetteer.domain.Link;
 import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.PlaceName;
 import org.dainst.gazetteer.helpers.IdGenerator;
@@ -252,8 +253,15 @@ public class ZenonHarvester implements Harvester {
 						identifier.setContext(text);
 					}
 				}
-				if (identifier.getValue() != null && !identifier.getValue().isEmpty())
+				if (identifier.getValue() != null && !identifier.getValue().isEmpty()) {
+					if ("geonames".equals(identifier.getContext())) {
+						Link link = new Link();
+						link.setObject("http://sws.geonames.org/" + identifier.getValue());
+						link.setPredicate("owl:sameAs");
+						place.addLink(link);
+					}
 					place.addIdentifier(identifier);
+				}
 			
 			// Type
 			} else if ("563".equals(tag)) {
