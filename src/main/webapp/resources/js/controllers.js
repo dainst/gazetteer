@@ -621,7 +621,7 @@ function ThesaurusCtrl($scope, $rootScope, $location, $http, Place, messages) {
 	Place.query({
 		sort: 'prefName.title.sort',
 		limit: 10000,
-		q: 'type:country'
+		q: 'type:continent'
 	}, function(result) {
 		$rootScope.loading--;
 		$scope.places = result.result;

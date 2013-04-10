@@ -163,11 +163,15 @@ directives.directive('gazMap', function($location) {
 			};
 			
 			$scope.$watch("highlight", function() {
-				if ($scope.highlightedMarker != null)
+				if ($scope.highlightedMarker != null) {
 					$scope.highlightedMarker.setIcon(defaultIcon);
+					$scope.highlightedMarker.setZIndex($scope.lastZIndex);
+				}
 				if ($scope.highlight != null && $scope.markerMap[$scope.highlight]) {
 					$scope.markerMap[$scope.highlight].setIcon(blueIcon);
 					$scope.highlightedMarker = $scope.markerMap[$scope.highlight];
+					$scope.lastZIndex = $scope.highlightedMarker.getZIndex();
+					$scope.highlightedMarker.setZIndex(1000);
 				}
 			});
 			
