@@ -283,7 +283,7 @@
 						</label>
 						<div class="controls">
 							<div gaz-place-picker place="relatedPlace" id="relatedPlace['@id']"></div>
-							<div class="btn btn-primary plus" ng-click="addRelatedPlace()" ng-disabled="!relatedPlace['@id']">
+							<div class="btn btn-primary plus" style="vertical-align:top" ng-click="addRelatedPlace()" ng-disabled="!relatedPlace['@id']">
 								<i class="icon-plus icon-white"></i>
 							</div>
 							<div ng-repeat="relatedPlace in relatedPlaces | orderBy:'prefName.title'">

@@ -6,9 +6,7 @@
 	<style type="text/css">
 		.place-picker-field {
 			background-colour: #fff;
-			-webkit-border-radius: 3px 0 0 3px;
-			-moz-border-radius: 3px 0 0 3px;
-			border-radius: 3px 0 0 3px;
+			border-radius: 0 0 0 0;
 			border: 1px solid #CCC;
 			height: 20px;
 			padding: 4px 6px;
@@ -18,10 +16,9 @@
 			display: inline-block;
 		}
 		.place-picker-btn {
-			webkit-border-radius: 0 3px 3px 0;
-			-moz-border-radius: 0 3px 3px 0;
-			border-radius: 0 3px 3px 0;
 			margin-left: -1px;
+			border-radius: 0 0 0 0;
+			border: 1px solid #cccccc;
 			vertical-align: top;
 		}
 	</style>

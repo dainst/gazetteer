@@ -12,7 +12,8 @@
 <title>iDAI.gazetteer</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+<link href="http://arachne.uni-koeln.de/archaeostrap/assets/css/bootstrap.css" rel="stylesheet">
+<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet">
 <link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet">
 <link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome-ie7.css" rel="stylesheet">
 <link href="resources/css/app.css" rel="stylesheet">
@@ -48,7 +49,7 @@
 				<form novalidate class="navbar-search pull-left simpleSearchForm" action="${searchAction}">
 					<s:message code="ui.search.simpleSearch" text="Einfache Suche" var="titleSimpleSearch"/>
 	 				<input type="text" class="search-query" name="q" placeholder="${titleSimpleSearch}">
-	 				<i class="icon-search icon-white"></i>
+	 				<i class="icon-search"></i>
 				</form>
 			</div>
 		</div>
@@ -107,10 +108,42 @@
 		map = new google.maps.Map(map_canvas, {
 			center: new google.maps.LatLng(20,0),
 			zoom: 2,
-			mapTypeId: google.maps.MapTypeId.SATELLITE,
+			mapTypeId: google.maps.MapTypeId.ROADMAP,
 			zoomControlOptions: {
 				style: google.maps.ZoomControlStyle.SMALL
-			}
+			},
+			styles: [
+         	{
+        	    "featureType": "administrative",
+        	    "stylers": [
+        	      { "visibility": "off" }
+        	    ]
+        	  },{
+        	    "featureType": "landscape",
+        	    "stylers": [
+        	      { "visibility": "simplified" },
+        	      { "saturation": -100 },
+        	      { "lightness": -31 }
+        	    ]
+        	  },{
+        	    "featureType": "water",
+        	    "stylers": [
+        	      { "saturation": -100 },
+        	      { "lightness": 32 }
+        	    ]
+        	  },{
+        	    "featureType": "road",
+        	    "stylers": [
+        	      { "visibility": "off" }
+        	    ]
+        	  },{
+        	    "featureType": "poi",
+        	    "stylers": [
+        	      { "visibility": "off" }
+        	    ]
+        	  },{
+        	    "elementType": "labels"  }
+        	]
 		});
 
 		var heatmapData = [
@@ -120,7 +153,11 @@
 		];
 		
 		var heatmap = new google.maps.visualization.HeatmapLayer({
-			data: heatmapData
+			data: heatmapData,
+			opacity: 0.8,
+			dissipating: false,
+			radius: 0.1,
+			gradient: ['transparent', '#5283d2', '#ffffff']
 		});
 		heatmap.setMap(map);
 		

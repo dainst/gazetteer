@@ -12,20 +12,10 @@
 		<c:if test="${showInfo}">
 			<c:forEach var="place" items="${places}">
 				<div class="gaz-info">
-					<h4><a href="${baseUri}place/${place.id}">#${place.id} - ${fn:join(place.namesAsArray, " / ")}</a></h4>
+					<h4><a href="${baseUri}place/${place.id}">#${place.id} - ${place.prefName.title}</a></h4>
 					<ul>
-						<c:forEach var="location" items="${place.locations}" varStatus="status">
-						<li>
-							<strong>
-								<c:if test="${status.count > 1}"><s:message code="domain.placename.alternative" text="Alternative"/></c:if>
-								<s:message code="domain.placename.title" text="Lage" />:
-							</strong>
-							<ul>
-								<li><em><s:message code="domain.location.latitude" text="Breite"/></em>: ${location.lat}</li>
-								<li><em><s:message code="domain.location.longitude" text="Länge"/></em>: ${location.lng}</li>
-							</ul>
-						</li>
-						</c:forEach>
+						<li><em><s:message code="domain.location.latitude" text="Breite"/></em>: ${place.prefLocation.lat}</li>
+						<li><em><s:message code="domain.location.longitude" text="Länge"/></em>: ${place.prefLocation.lng}</li>
 					</ul>
 				</div>
 			</c:forEach>

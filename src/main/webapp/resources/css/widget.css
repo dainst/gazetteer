@@ -5,14 +5,14 @@
 .gaz-title {
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 	font-size: 10px;
-	background-color: black;
-	color: #999;
+	background-color: #6786ad;
+	color: white;
 	padding: 1px 4px;
 }
 
 .gaz-title a {
 	text-decoration: none;
-	color: #999;
+	color: white;
 }
 
 .gaz-pick-overlay {

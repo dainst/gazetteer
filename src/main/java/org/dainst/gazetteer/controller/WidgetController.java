@@ -8,6 +8,8 @@ import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.search.ElasticSearchPlaceQuery;
 import org.dainst.gazetteer.search.ElasticSearchServer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -17,6 +19,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class WidgetController {
+	
+	private static final Logger logger = LoggerFactory.getLogger(WidgetController.class);
 	
 	@Value("${baseUri}")
 	private String baseUri;
@@ -55,6 +59,8 @@ public class WidgetController {
 			Place place = placeDao.findOne(ids[i]);
 			if(place != null) places.add(place);
 		}
+		
+		logger.debug("places:", places);
 		
 		ModelAndView mav = new ModelAndView("widget/show");
 		mav.addObject("places", places);

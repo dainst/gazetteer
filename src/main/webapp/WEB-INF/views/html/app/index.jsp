@@ -8,7 +8,8 @@
 <title>iDAI.gazetteer</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+<link href="http://arachne.uni-koeln.de/archaeostrap/assets/css/bootstrap.css" rel="stylesheet">
+<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet">
 <link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet">
 <link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome-ie7.css" rel="stylesheet">
 <link href="../resources/css/angular-ui.css" rel="stylesheet">
@@ -46,9 +47,11 @@
 				<form novalidate class="navbar-search pull-left" ng-submit="submit()">
 					<s:message code="ui.search.simpleSearch" text="Einfache Suche" var="titleSimpleSearch"/>
 	 				<input type="text" class="search-query" placeholder="${titleSimpleSearch}" ng-model="q">
-	 				<i class="icon-search icon-white"></i>
+	 				<i class="icon-search"></i>
 				</form>
-				<img ng-show="loading > 0" src="../resources/img/loading48.gif" style="width:24px; height:24px; margin-top:8px;">
+				<div style="margin-top:8px; position:relative" ng-show="loading > 0">
+					<i ng-show="true" class="icon-spinner icon-spin icon-large" style="color:white"></i>
+				</div> 
 			</div>
 		</div>
 	</div>

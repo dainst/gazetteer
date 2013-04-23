@@ -4,13 +4,13 @@
 <div>
 
 	<ul class="nav nav-pills" style="display:inline-block; margin-bottom: 0;">
-		<li ng-click="setLimit(10)" ng-class="{active:(search.limit == 10)}" gaz-tooltip="'ui.search.limit.10.tooltip'">
+		<li ng-click="setLimit(10)" ng-class="{active:(search.limit == 10)}" gaz-tooltip="'ui.search.limit.10.tooltip'" style="cursor:pointer">
 		    <a><i class="icon-stop"></i> 10</a>
 		</li>
-		<li ng-click="setLimit(50)" ng-class="{active:(search.limit == 50)}" gaz-tooltip="'ui.search.limit.50.tooltip'">
+		<li ng-click="setLimit(50)" ng-class="{active:(search.limit == 50)}" gaz-tooltip="'ui.search.limit.50.tooltip'" style="cursor:pointer">
 			<a><i class="icon-th-large"></i> 50</a>
 		</li>
-		<li ng-click="setLimit(100)" ng-class="{active:(search.limit == 100)}" gaz-tooltip="'ui.search.limit.100.tooltip'">
+		<li ng-click="setLimit(100)" ng-class="{active:(search.limit == 100)}" gaz-tooltip="'ui.search.limit.100.tooltip'" style="cursor:pointer">
 			<a><i class="icon-th"></i> 100</a>
 		</li>
 		<li class="dropdown pull-right">
@@ -48,8 +48,8 @@
 		</li> -->
 	</ul>
 	<ul class="nav nav-pills pull-right" style="display:inline-block; margin-bottom: 0;">
-		<li ng-class="{disabled:(page() == 1)}" ng-click="prevPage()">
-			<a>&larr; <s:message code="ui.previous" /></a>
+		<li ng-class="{disabled:(page() == 1)}" ng-click="prevPage()" style="cursor:pointer">
+			<a style="cursor:pointer">&larr; <s:message code="ui.previous" /></a>
 		</li>
 		<li class="divider-vertical"></li>
 		<li class="disabled">
@@ -59,7 +59,7 @@
 			</a>
 		</li>
 		<li class="divider-vertical"></li>
-		<li ng-class="{disabled:(page() == totalPages())}" ng-click="nextPage()">
+		<li ng-class="{disabled:(page() == totalPages())}" ng-click="nextPage()" style="cursor:pointer">
 			<a><s:message code="ui.next" text="Vor"/> &rarr;</a>
 		</li>
 	</ul>

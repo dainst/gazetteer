@@ -27,7 +27,7 @@ directives.directive('gazLocationPicker', function() {
 		replace: true,
 		scope: { coordinates: '=' },
 		template: '<div class="input-append"><input type="text" ng-model="coordinates" ng-list class="lnglat"></input>'
-			+ '<button class="picker-search-button btn" type="button">'
+			+ '<button class="btn" type="button">'
 			+ '<i class="icon-map-marker"></i></button></div>',
 		link: function(scope, element, attrs) {
 			$(element).find('input.lnglat').locationPicker();
@@ -140,7 +140,7 @@ directives.directive('gazMap', function($location) {
 			
 			$attrs.$observe('height', function(height) {
 				$element[0].style.height = height + "px";
-				google.maps.event.trigger($scope.map, 'resize');
+				//google.maps.event.trigger($scope.map, 'resize');
 			});
 			
 			$scope.$watch("zoom", function() {
