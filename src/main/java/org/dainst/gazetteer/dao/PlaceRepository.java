@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.dainst.gazetteer.domain.Identifier;
 import org.dainst.gazetteer.domain.Place;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
@@ -33,8 +34,10 @@ public interface PlaceRepository extends PagingAndSortingRepository<Place, Strin
 	public List<Place> findByPrefLocationIsNull();
 
 	public List<Place> findByPrefLocationIsNullAndIdsContext(String context);
-	
+
 	public List<Place> findByPrefLocationIsNotNull();
+	
+	public List<Place> findByPrefLocationIsNotNull(Pageable pageable);
 	
 	public List<Place> findByRelatedPlaces(String id);
 

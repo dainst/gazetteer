@@ -46,7 +46,7 @@
 						</li>
 					</ul>
 				</div><!--/.nav-collapse -->
-				<form novalidate class="navbar-search pull-left simpleSearchForm" action="${searchAction}">
+				<form novalidate class="navbar-search pull-right simpleSearchForm" action="${searchAction}">
 					<s:message code="ui.search.simpleSearch" text="Einfache Suche" var="titleSimpleSearch"/>
 	 				<input type="text" class="search-query" name="q" placeholder="${titleSimpleSearch}">
 	 				<i class="icon-search"></i>
@@ -147,18 +147,16 @@
 		});
 
 		var heatmapData = [
-			<c:forEach var="place" items="${places}" varStatus="status">
-				new google.maps.LatLng(${place.prefLocation.lat}, ${place.prefLocation.lng})<c:if test="${status.count lt fn:length(places)}">,</c:if>        
-			</c:forEach>
+			<c:forEach var="place" items="${places}" varStatus="status"> new google.maps.LatLng(${place.prefLocation.lat}, ${place.prefLocation.lng})<c:if test="${status.count lt fn:length(places)}">,</c:if></c:forEach>
 		];
 		
 		var heatmap = new google.maps.visualization.HeatmapLayer({
-			data: heatmapData,
-			opacity: 0.8,
-			dissipating: false,
-			radius: 0.1,
-			gradient: ['transparent', '#5283d2', '#ffffff']
-		});
+            data: heatmapData,
+            opacity: 0.8,
+            maxIntensity: 10,
+            radius: 3,
+            gradient: ['transparent', '#5283d2', '#ffffff']
+    	});
 		heatmap.setMap(map);
 		
 		map_canvas.style.height = "400px";

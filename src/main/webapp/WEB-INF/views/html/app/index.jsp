@@ -44,7 +44,7 @@
 						</li>
 					</ul>
 				</div><!--/.nav-collapse -->
-				<form novalidate class="navbar-search pull-left" ng-submit="submit()">
+				<form novalidate class="navbar-search pull-right" ng-submit="submit()">
 					<s:message code="ui.search.simpleSearch" text="Einfache Suche" var="titleSimpleSearch"/>
 	 				<input type="text" class="search-query" placeholder="${titleSimpleSearch}" ng-model="q">
 	 				<i class="icon-search"></i>

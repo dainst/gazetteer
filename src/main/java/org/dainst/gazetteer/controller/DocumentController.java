@@ -1,5 +1,6 @@
 package org.dainst.gazetteer.controller;
 
+import java.sql.Time;
 import java.util.List;
 import java.util.Locale;
 
@@ -72,7 +73,13 @@ public class DocumentController {
 
 		ModelAndView mav;
 		
+		long time = System.currentTimeMillis();
+		
 		Place place = placeDao.findOne(placeId);
+		
+		logger.debug("findOne: {}", System.currentTimeMillis() - time);
+		time = System.currentTimeMillis();
+		
 		if (place == null) {
 			
 			throw new ResourceNotFoundException();
@@ -93,8 +100,16 @@ public class DocumentController {
 			
 		} else {
 			
-			List<Place> children = placeDao.findByParent(place.getId());
+			//List<Place> children = placeDao.findByParent(place.getId());
+			
+			logger.debug("findByParent: {}", System.currentTimeMillis() - time);
+			time = System.currentTimeMillis();
+			
 			List<Place> relatedPlaces = placeDao.findByIdIn(place.getRelatedPlaces());
+			
+			logger.debug("findByIdIn: {}", System.currentTimeMillis() - time);
+			time = System.currentTimeMillis();
+			
 			Place parent = null;
 			if (place.getParent() != null) parent = placeDao.findOne(place.getParent());
 			
@@ -103,7 +118,7 @@ public class DocumentController {
 				mav.setViewName("place/"+layout);
 			}
 			mav.addObject("place", place);
-			mav.addObject("children", children);
+			//mav.addObject("children", children);
 			mav.addObject("relatedPlaces", relatedPlaces);
 			mav.addObject("parent", parent);
 			mav.addObject("baseUri", baseUri);
