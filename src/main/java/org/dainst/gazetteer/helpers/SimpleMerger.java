@@ -68,8 +68,8 @@ public class SimpleMerger implements Merger {
 		logger.info("got {} children", children.size());
 		for (Place child : children) {
 			child.setParent(result.getId());
+			placeRepository.save(child);
 		}
-		getPlaceRepository().save(children);
 		
 		return result;
 		

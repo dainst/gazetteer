@@ -1,5 +1,6 @@
 package org.dainst.gazetteer.dao;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -40,5 +41,20 @@ public interface PlaceRepository extends PagingAndSortingRepository<Place, Strin
 	public List<Place> findByPrefLocationIsNotNull(Pageable pageable);
 	
 	public List<Place> findByRelatedPlaces(String id);
+
+	public List<Place> findByNamesTitleAndType(String title, String string);
+
+	public List<Place> findByNeedsReview(boolean b);
+
+	public Place findByIdsAndTypeAndNeedsReviewAndIdNot(Identifier identifier,
+			String type, boolean needsReview, String id);
+
+	public List<Place> findByPrefNameTitleAndTypeAndNeedsReviewAndIdNot(
+			String title, String string, boolean b, String id);
+
+	public List<Place> findByPrefNameTitleAndNeedsReviewAndIdNot(String title, boolean b, String string);
+
+	public List<Place> findByNamesTitleAndNeedsReviewAndIdNot(
+			String title, boolean b, String id);
 
 }

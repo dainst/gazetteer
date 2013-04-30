@@ -9,7 +9,7 @@ services.factory('Place', function($resource){
 			"../:method/:id/:id2",
 			{ id: '@gazId' },
 			{
-				query: { method:'GET', params: { method:'search' }, isArray:false },
+				query: { method:'GET', params: { method:'search', showInReview: 'true' }, isArray:false },
 				extendedQuery: { method:'POST', params: { method:'search' }, isArray:false },
 				distance: { method:'GET', params: { method:'geoSearch'}, isArray:false },
 				get: { method:'GET', params: { method:'doc'} },

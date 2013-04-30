@@ -9,10 +9,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Stack;
 
 import javax.ws.rs.core.MediaType;
 
+import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.domain.Comment;
 import org.dainst.gazetteer.domain.Identifier;
 import org.dainst.gazetteer.domain.Link;
@@ -83,7 +83,7 @@ public class ZenonHarvester implements Harvester {
 	public final static List<String> ROOT_IDS = Arrays.asList(
 		//"xTopLand", // Klassische Archäologie -> Topographie -> Länder mit Gebieten und Orten
 		//"3.00.01", // Iberische Halbinsel -> Topographie
-		"zTopog" // Topograhpie
+		"zTopogEuropMitteDeuts" // Topograhpie
 		//"4.02" // Thesaurus Eurasien-Abteilung -> Regionen/Länder/Orte
 	);
 	
@@ -91,9 +91,9 @@ public class ZenonHarvester implements Harvester {
 	
 	private IdGenerator idGenerator;
 	
-	private Stack<Place> stack = new Stack<Place>();
-	
 	private Set<String> types = new HashSet<String>();
+
+	private PlaceRepository placeDao;
 	
 	public ZenonHarvester() {
 		ClientConfig config = new DefaultClientConfig();
@@ -108,22 +108,7 @@ public class ZenonHarvester implements Harvester {
 	public void harvest(Date date) {
 		
 		for (String rootId : ROOT_IDS) {
-			createPlacesRecursively(rootId, null, null);
-		}
-		
-	}
-
-	@Override
-	public List<Place> getNextPlaces() {
-	
-		logger.debug("queue size in getNextPlaces(): {}", stack.size());
-		
-		if (stack.isEmpty()) {
-			return null;
-		} else {
-			ArrayList<Place> result = new ArrayList<Place>();
-			result.add(stack.pop());
-			return result;
+			createPlacesRecursively(rootId, null, null, 0);
 		}
 		
 	}
@@ -139,7 +124,7 @@ public class ZenonHarvester implements Harvester {
 		this.idGenerator = idGenerator;
 	}
 
-	private void createPlacesRecursively(String id, Place parent, String type) {
+	private void createPlacesRecursively(String id, Place parent, String type, int level) {
 		
 		logger.debug("creating place with id {}", id);
 
@@ -304,6 +289,12 @@ public class ZenonHarvester implements Harvester {
 			
 		}
 		
+		if (level == 1 && place.getType() == null) {
+			place.setType("continent");
+		} else if (level == 3 && place.getType() == null) {
+			place.setType("country");
+		}
+		
 		Identifier zenonId = new Identifier();
 		zenonId.setContext("zenon-thesaurus");
 		zenonId.setValue(id);
@@ -326,7 +317,8 @@ public class ZenonHarvester implements Harvester {
 				place.setParent(parent.getId());
 				parent.setChildren(parent.getChildren()+1);
 			}
-			stack.add(place);			
+			place.setNeedsReview(true);
+			placeDao.save(place);
 			logger.debug("added place to queue: {}", place);
 		}
 		
@@ -334,7 +326,8 @@ public class ZenonHarvester implements Harvester {
 		for (Place child : children) {
 			child.setParent(nextParent.getId());
 			child.setType(nextType);
-			stack.add(child);
+			place.setNeedsReview(true);
+			placeDao.save(place);
 			logger.debug("added child to queue: {}", child);
 		}
 		
@@ -372,7 +365,7 @@ public class ZenonHarvester implements Harvester {
 			JsonNode leafNode = childNode.get("leaf");
 			if (leafNode != null) childLeaf = leafNode.asBoolean();
 			if (!childLeaf) {
-				createPlacesRecursively(childId, nextParent, nextType);
+				createPlacesRecursively(childId, nextParent, nextType, level + 1);
 			}
 			
 		}
@@ -387,6 +380,11 @@ public class ZenonHarvester implements Harvester {
 			arrayNode.add(jsonNode);
 			return arrayNode;
 		}
+	}
+
+	@Override
+	public void setPlaceRepository(PlaceRepository placeRepository) {
+		placeDao = placeRepository;
 	}
 
 }

@@ -11,6 +11,11 @@ import org.dainst.gazetteer.domain.HarvesterDefinition;
 import org.dainst.gazetteer.domain.Location;
 import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.helpers.IdGenerator;
+import org.dainst.gazetteer.helpers.Merger;
+import org.dainst.gazetteer.helpers.SimpleMerger;
+import org.dainst.gazetteer.match.Candidate;
+import org.dainst.gazetteer.match.EntityIdentifier;
+import org.dainst.gazetteer.match.SimpleNameAndIdBasedEntityIdentifier;
 import org.dainst.gazetteer.search.ElasticSearchPlaceIndexer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +58,9 @@ public class AdminController {
 	
 	@Autowired
 	private IdGenerator idGenerator;
+	
+	@Autowired
+	private Merger merger;
 	
 	@Value("${geonamesSolrUri}")
 	private String geonamesSolrUri;
@@ -139,6 +147,41 @@ public class AdminController {
 		}
 		
 		return String.format("OK: importet %s locations", count);
+		
+	}
+	
+	@RequestMapping(value="/admin/automatch", method=RequestMethod.POST)
+	@ResponseBody
+	public String automatch() {
+		
+		int mergeCount = 0;
+		EntityIdentifier entityIdentifier = new SimpleNameAndIdBasedEntityIdentifier();
+		entityIdentifier.setPlaceRepository(placeDao);
+		
+		List<Place> places = placeDao.findByNeedsReview(true);
+		for (Place placeInReview : places) {
+			// refresh place in review in case db has changed through merging after calling findByNeedsReview()
+			Place place = placeDao.findOne(placeInReview.getId());
+			List<Candidate> candidates = entityIdentifier.getCandidates(place);
+			if (!candidates.isEmpty()) {
+				if (candidates.get(0).getScore() == 1) {
+					Place mergedPlace = merger.merge(candidates.get(0).getCandidate(), candidates.get(0).getPlace());
+					logger.debug("merging place in review {} with candidate {}",
+							candidates.get(0).getPlace(), candidates.get(0).getCandidate());
+					placeDao.save(mergedPlace);
+					placeDao.delete(place);
+					mergeCount++;
+				} else {
+					// TODO store uncertain candidates for manual check
+				}
+			// places with no matches are probably new and need no further review
+			} else {
+				place.setNeedsReview(false);
+				placeDao.save(place);
+			}
+		}
+		
+		return "auto matching complete. merged " + mergeCount + "places.";
 		
 	}
 

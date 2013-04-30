@@ -66,6 +66,7 @@ public class SearchController {
 			@RequestParam(required=false) String type,
 			@RequestParam(required=false, defaultValue="map,table") String view,
 			@RequestParam(required=false) String callback,
+			@RequestParam(required=false) String showInReview,
 			@RequestParam(required=false) double[] bbox,
 			HttpServletRequest request,
 			HttpServletResponse response) {
@@ -94,6 +95,7 @@ public class SearchController {
 			query.addSort(sort, order);
 		}
 		query.addFilter("deleted:false");
+		if (!"true".equals(showInReview)) query.addFilter("needsReview:false");		
 		query.addFacet("parent");
 		query.addFacet("type");
 		//query.addFacet("tags");
@@ -131,6 +133,7 @@ public class SearchController {
 	@RequestMapping(value="/search", method=RequestMethod.POST)
 	public ModelAndView extendedSearch(@RequestParam(defaultValue="10") int limit,
 			@RequestParam(defaultValue="0") int offset,
+			@RequestParam(required=false) String showInReview,
 			@RequestBody String jsonQuery,
 			HttpServletRequest request) {
 		
@@ -142,6 +145,8 @@ public class SearchController {
 		query.limit(limit);
 		query.offset(offset);
 		query.addBoostForChildren();
+		query.addFilter("deleted:false");
+		if (!"true".equals(showInReview)) query.addFilter("needsReview:false");
 		query.addFacet("parent");
 		query.addFacet("type");
 		//query.addFacet("tags");
@@ -174,6 +179,7 @@ public class SearchController {
 			@RequestParam double lon,
 			@RequestParam(defaultValue="50") int distance,
 			@RequestParam(required=false) String filter,
+			@RequestParam(required=false) String showInReview,
 			HttpServletRequest request,
 			HttpServletResponse response) {
 		
@@ -186,6 +192,7 @@ public class SearchController {
 		query.limit(limit);
 		query.offset(offset);
 		query.addFilter("deleted:false");
+		if (!"true".equals(showInReview)) query.addFilter("needsReview:false");
 		query.addFacet("parent");
 		query.addFacet("type");
 		//query.addFacet("tags");

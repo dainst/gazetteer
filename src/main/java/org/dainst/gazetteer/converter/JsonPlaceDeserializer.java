@@ -65,10 +65,11 @@ public class JsonPlaceDeserializer {
 					String placeIdString = objectNode.get("@id").asText().replace(baseUri + "place/", "");
 					logger.debug("read id from uri: {}", placeIdString);
 					place.setId(placeIdString);
-				} else {
+				} 
+				/*else {
 					place = placeDao.save(place);
 					logger.debug("created new place with id: {}", place.getId());
-				}
+				}*/
 			}
 			
 			// set parent place from URI 

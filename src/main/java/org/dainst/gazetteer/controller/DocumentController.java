@@ -97,6 +97,11 @@ public class DocumentController {
 			RedirectView redirectView = new RedirectView("/doc/" + place.getReplacedBy() + suffix, true, true);
 			redirectView.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
 			mav = new ModelAndView(redirectView);
+		
+		// places that need to be reviewed should not be available to the public
+		//} else if (place.isNeedsReview()) {
+			
+		//	throw new ResourceNotFoundException();
 			
 		} else {
 			
