@@ -18,62 +18,74 @@
 <link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome-ie7.css" rel="stylesheet">
 <link href="resources/css/app.css" rel="stylesheet">
 <script	src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>	
+<script	src="http://arachne.uni-koeln.de/archaeostrap/assets/js/bootstrap.js"></script>	
 <script src='//maps.google.com/maps/api/js?key=${googleMapsApiKey}&amp;sensor=false&libraries=visualization'></script>
 <script src="resources/js/custom.js"></script>
 </head>
 <body>
 
-	<!-- Top Navigation Bar -->
-	<div class="navbar navbar-fixed-top navbar-inverse">
-		<div class="navbar-inner">
-			<div class="container-fluid">
-				<a class="btn btn-navbar" data-toggle="collapse"
-					data-target=".nav-collapse"> <span class="icon-bar"></span> <span
-					class="icon-bar"></span> <span class="icon-bar"></span>
-				</a> <a class="brand" href="">iDAI.gazetteer</a>
-				<div class="nav-collapse pull-left">
-					<ul class="nav">
-						<li><a href="app/#/thesaurus"><s:message code="ui.thesaurus.list" text="ui.thesaurus.list"/></a></li>
-						<li>
-							<a href="app/#/extended-search">
-								<s:message code="ui.search.extendedSearch" text="ui.search.extendedSearch"/>
-							</a>
-						</li>
-						<li>
-							<a href="app/#/edit/">
-								<s:message code="ui.place.create" text="ui.place.create"/>
-							</a>
-						</li>
-					</ul>
-				</div><!--/.nav-collapse -->
-				<form novalidate class="navbar-search pull-right simpleSearchForm" action="${searchAction}">
-					<s:message code="ui.search.simpleSearch" text="Einfache Suche" var="titleSimpleSearch"/>
-	 				<input type="text" class="search-query" name="q" placeholder="${titleSimpleSearch}">
-	 				<i class="icon-search"></i>
-				</form>
-			</div>
+	<div class="archaeo-fixed-menu">
+		<div class="container archaeo-fixed-menu-header">
+			<div id="archaeo-fixed-menu-logo"></div>
+			<h3 class="pull-left">
+				<small>Deutsches Archäologisches Institut</small> <br>
+				iDAI.gazetteer
+			</h3>
 		</div>
-	</div>	
-	
-	<div id="map_canvas"></div>		
-	
-	<div style="position:relative; top:-235px; z-index:10; text-align:center;">
-		<h1 style="font-size: 60px; text-shadow: 0 1px 5px #000000; color:white; margin-bottom: 150px;">
-			iDAI.gazetteer
-		</h1>
-		<form class="form-search simpleSearchForm" action="${searchAction}" style="margin:0;">
-			<div class="well" style="display:inline-block; text-align:left;">
-				<div class="input-append">
-					<input class="search-query input-xxlarge" name="q" type="text" placeholder="${titleSimpleSearch}">
-					<button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
+		<div class="affix-menu-wrapper">
+			<div id="affix-menu" style="z-index: 100000"
+				class="navbar navbar-inverse container" data-spy="affix">
+				<div class="navbar-inner">
+					<div id="archaeo-fixed-menu-icon"></div>
+					<a class="btn btn-navbar" data-toggle="collapse"
+						data-target=".nav-collapse"> <span class="icon-bar"></span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span>
+					</a>
+					<a class="brand" href="">iDAI.gazetteer</a>
+					<div class="nav-collapse pull-left">
+						<ul class="nav">
+							<li><a href="app/#/thesaurus"><s:message
+										code="ui.thesaurus.list" text="ui.thesaurus.list" /></a></li>
+							<li><a href="app/#/extended-search"> <s:message
+										code="ui.search.extendedSearch" text="ui.search.extendedSearch" />
+							</a></li>
+							<li><a href="app/#/edit/"> <s:message
+										code="ui.place.create" text="ui.place.create" />
+							</a></li>
+						</ul>
+					</div>
+					<!--/.nav-collapse -->
+					<form novalidate class="navbar-search pull-right simpleSearchForm"
+						action="${searchAction}">
+						<s:message code="ui.search.simpleSearch" text="Einfache Suche"
+							var="titleSimpleSearch" />
+						<input type="text" class="search-query" name="q"
+							placeholder="${titleSimpleSearch}"> <i class="icon-search"></i>
+					</form>
 				</div>
 			</div>
-		</form>
+		</div>
 	</div>
 	
-	<div class="container-fluid" style="margin-top:-220px">
+	<div class="container">
+
+		<div id="map_canvas"></div>		
 		
-		<div class="row-fluid">
+		<div style="position:relative; top:-235px; z-index:10; text-align:center;">
+			<h1 style="font-size: 60px; text-shadow: 0 1px 5px #000000; color:white; margin-bottom: 150px;">
+				iDAI.gazetteer
+			</h1>
+			<form class="form-search simpleSearchForm" action="${searchAction}" style="margin:0;">
+				<div class="well" style="display:inline-block; text-align:left;">
+					<div class="input-append">
+						<input class="search-query input-xxlarge" name="q" type="text" placeholder="${titleSimpleSearch}">
+						<button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
+					</div>
+				</div>
+			</form>
+		</div>
+		
+		<div class="row-fluid" style="margin-top:-220px">
 			<div class="span6">
 				<p class="lead">Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis mollis, est non commodo luctus.</p>
 	            <p>Nullam quis risus eget urna mollis ornare vel eu leo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nullam id dolor id nibh ultricies vehicula.</p>
@@ -102,6 +114,8 @@
 	</div>
 	
 	<script type="application/javascript">
+	
+		$('#affix-menu').affix({ offset: {top: 176} });
 	
 		var map_canvas = document.getElementById('map_canvas');
 	

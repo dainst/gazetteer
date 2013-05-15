@@ -21,42 +21,50 @@
 </head>
 <body class="ng-cloak" ng-controller="AppCtrl">
 
-	<!-- Top Navigation Bar -->
-	<div class="navbar navbar-fixed-top navbar-inverse">
-		<div class="navbar-inner">
-			<div class="container-fluid">
-				<a class="btn btn-navbar" data-toggle="collapse"
-					data-target=".nav-collapse"> <span class="icon-bar"></span> <span
-					class="icon-bar"></span> <span class="icon-bar"></span>
-				</a> <a class="brand" href="../">iDAI.gazetteer</a>
-				<div class="nav-collapse">
-					<ul class="nav">
-						<li><a href="#thesaurus"><s:message code="ui.thesaurus.list" text="ui.thesaurus.list"/></a></li>
-						<li>
-							<a href="#extended-search">
-								<s:message code="ui.search.extendedSearch" text="Erweiterte Suche"/>
-							</a>
-						</li>
-						<li>
-							<a href="#edit/">
-								<s:message code="ui.place.create" text="ui.place.create"/>
-							</a>
-						</li>
-					</ul>
-				</div><!--/.nav-collapse -->
-				<form novalidate class="navbar-search pull-right" ng-submit="submit()">
-					<s:message code="ui.search.simpleSearch" text="Einfache Suche" var="titleSimpleSearch"/>
-	 				<input type="text" class="search-query" placeholder="${titleSimpleSearch}" ng-model="q">
-	 				<i class="icon-search"></i>
-				</form>
-				<div style="margin-top:8px; position:relative" ng-show="loading > 0">
-					<i ng-show="true" class="icon-spinner icon-spin icon-large" style="color:white"></i>
-				</div> 
+	<div class="archaeo-fixed-menu">
+		<div class="container archaeo-fixed-menu-header">
+			<div id="archaeo-fixed-menu-logo"></div>
+			<h3 class="pull-left">
+				<small>Deutsches Archäologisches Institut</small> <br>
+				iDAI.gazetteer
+			</h3>
+		</div>
+		<div class="affix-menu-wrapper">
+			<div id="affix-menu" style="z-index: 100000"
+				class="navbar navbar-inverse container" data-spy="affix">
+				<div class="navbar-inner">
+					<div id="archaeo-fixed-menu-icon"></div>
+					<a class="btn btn-navbar" data-toggle="collapse"
+						data-target=".nav-collapse"> <span class="icon-bar"></span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span>
+					</a>
+					<a class="brand" href="">iDAI.gazetteer</a>
+					<div class="nav-collapse pull-left">
+						<ul class="nav">
+							<li><a href="#/thesaurus"><s:message
+										code="ui.thesaurus.list" text="ui.thesaurus.list" /></a></li>
+							<li><a href="#/extended-search"> <s:message
+										code="ui.search.extendedSearch" text="ui.search.extendedSearch" />
+							</a></li>
+							<li><a href="#/edit/"> <s:message
+										code="ui.place.create" text="ui.place.create" />
+							</a></li>
+						</ul>
+					</div>
+					<!--/.nav-collapse -->
+					<form novalidate class="navbar-search pull-right simpleSearchForm"
+						action="${searchAction}">
+						<s:message code="ui.search.simpleSearch" text="Einfache Suche"
+							var="titleSimpleSearch" />
+						<input type="text" class="search-query" name="q"
+							placeholder="${titleSimpleSearch}"> <i class="icon-search"></i>
+					</form>
+				</div>
 			</div>
 		</div>
 	</div>
 	
-	<div class="container-fluid">
+	<div class="container">
 	
 		<div class="alerts" ng-cloak ng-hide="alerts.length == 0">
 			<div ng-repeat="alert in alerts" class="alert" ng-class="alert.alertClass">
@@ -76,7 +84,7 @@
 		
 		<div class="row-fluid">
 		
-			<div class="span5">
+			<div class="span5" id="map-well-wrapper">
 				<div class="well" id="map-well"">
 					<div gaz-map places="activePlaces" height="500" zoom="zoom" bbox="bbox" highlight="highlight"></div>
 				</div>

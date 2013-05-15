@@ -6,15 +6,22 @@ $(document).ready(function(){
 		window.location = $(e.delegateTarget).attr("action") + "?q=" + query;
 	});
 	
+	$('#affix-menu').affix({ offset: {top: 176} });
+	
 });
 $(document).scroll(function(){
 
 	if($('#map-well')) {
-		if ($(window).scrollTop() > 90) {
-			$('#map-well').css({'position': 'fixed', 'top': '50px', 'width': $('#map-well').width()});
+		if ($(window).scrollTop() > 276) {
+			$('#map-well').css({'position': 'fixed', 'top': '60px', 'width': $('#map-well').width()});
+			$(window).resize(function() {
+				console.log('resize');
+				$('#map-well').css({'width': $('#map-well-wrapper').width() - 40});
+			});
 		} else {
 			$('#map-well').css({'position': 'relative', 'top': 'auto'});
 		}
+		
 	}
 	
 });
