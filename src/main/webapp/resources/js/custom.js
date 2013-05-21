@@ -12,10 +12,10 @@ $(document).ready(function(){
 $(document).scroll(function(){
 
 	if($('#map-well')) {
-		if ($(window).scrollTop() > 276) {
+		if ($(window).scrollTop() > 276 && $(window).width() > 767) {
+			console.log($(window).width());
 			$('#map-well').css({'position': 'fixed', 'top': '60px', 'width': $('#map-well').width()});
 			$(window).resize(function() {
-				console.log('resize');
 				$('#map-well').css({'width': $('#map-well-wrapper').width() - 40});
 			});
 		} else {

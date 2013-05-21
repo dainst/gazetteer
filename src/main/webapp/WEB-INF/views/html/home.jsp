@@ -29,7 +29,7 @@
 			<div id="archaeo-fixed-menu-logo"></div>
 			<h3 class="pull-left">
 				<small>Deutsches Archäologisches Institut</small> <br>
-				iDAI.gazetteer
+				<a href="../" style="color:inherit">iDAI.gazetteer</a>
 			</h3>
 		</div>
 		<div class="affix-menu-wrapper">
@@ -53,8 +53,6 @@
 										code="ui.place.create" text="ui.place.create" />
 							</a></li>
 						</ul>
-					</div>
-					<!--/.nav-collapse -->
 					<form novalidate class="navbar-search pull-right simpleSearchForm"
 						action="${searchAction}">
 						<s:message code="ui.search.simpleSearch" text="Einfache Suche"
@@ -62,6 +60,8 @@
 						<input type="text" class="search-query" name="q"
 							placeholder="${titleSimpleSearch}"> <i class="icon-search"></i>
 					</form>
+					</div>
+					<!--/.nav-collapse -->
 				</div>
 			</div>
 		</div>
