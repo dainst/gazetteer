@@ -91,7 +91,7 @@
 											<small>
 												<i class="icon-angle-right"></i>
 												<a ng-click="setFacet(facetName, entry.term)" href="">
-													<span ng-show="entry.label.length < 15">
+													<span ng-show="entry.label.length < 13">
 														{{entry.label}}
 													</span>
 													<abbr title="{{entry.label}}" ng-show="entry.label.length >= 13">
