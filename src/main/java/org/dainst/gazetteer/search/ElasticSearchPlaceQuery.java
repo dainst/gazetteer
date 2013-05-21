@@ -38,7 +38,7 @@ public class ElasticSearchPlaceQuery {
 		// added in order to boost it and prevent its score from being
 		// diminished by norms when occurring together with other fields in _all
 		else {
-			String queryString = "" + query + "";
+			String queryString = "(" + query + ")";
 			queryString += " OR _id:\"" + query + "\"";
 			if (!query.contains(":")) queryString += " OR prefName.title:\"" + query + "\"";
 			queryBuilder = QueryBuilders.queryString(queryString).defaultField("_all").defaultOperator(Operator.AND);

@@ -182,17 +182,7 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, $http, Place, m
 	$rootScope.subtitle = "";
 	$rootScope.showMap = true;
 	
-	$scope.search = {
-			offset: ($location.search().offset) ? parseInt($location.search().offset) : 0,
-			limit: ($location.search().limit) ? parseInt($location.search().limit) : 10,
-			q: ($location.search().q) ? ($location.search().q) : "",
-			fq: ($location.search().fq) ? ($location.search().fq) : "",
-			type: ($location.search().type) ? ($location.search().type) : "",
-			sort: ($location.search().sort) ? ($location.search().sort) : "",
-			order: ($location.search().order) ? ($location.search().order) : "",
-			bbox: ($location.search().bbox) ? ($location.search().bbox) : "",
-			showInReview: ($location.search().showInReview) ? ($location.search().showInReview) : ""
-	};
+	setSearchFromLocation();
 	
 	$scope.places = [];
 	$scope.parents = {};
@@ -306,21 +296,25 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, $http, Place, m
 		},
 		function() {
 			if ($location.path() == "/search") {
-				$scope.search = {
-					offset: ($location.search().offset) ? parseInt($location.search().offset) : 0,
-					limit: ($location.search().limit) ? parseInt($location.search().limit) : 10,
-					q: ($location.search().q) ? ($location.search().q) : "",
-					fq: ($location.search().fq) ? ($location.search().fq) : "",
-					type: ($location.search().type) ? ($location.search().type) : "",
-					sort: ($location.search().sort) ? ($location.search().sort) : "",
-					order: ($location.search().order) ? ($location.search().order) : "",
-					bbox: ($location.search().bbox) ? ($location.search().bbox) : "",
-					showInReview: ($location.search().showInReview) ? ($location.search().showInReview) : ""
-				};
-				$scope.submit();
+				setSearchFromLocation();
 			}
 		}
 	);
+	
+	function setSearchFromLocation() {
+		$scope.search = {
+			offset: ($location.search().offset) ? parseInt($location.search().offset) : 0,
+			limit: ($location.search().limit) ? parseInt($location.search().limit) : 10,
+			q: ($location.search().q) ? ($location.search().q) : ""
+		};
+		if ($location.search().fq) $scope.search.fq = $location.search().fq;
+		if ($location.search().type) $scope.search.type = $location.search().type;
+		if ($location.search().sort) $scope.search.sort = $location.search().sort;
+		if ($location.search().order) $scope.search.order = $location.search().order;
+		if ($location.search().bbox) $scope.search.bbox = $location.search().bbox;
+		if ($location.search().showInReview) $scope.search.showInReview = $location.search().showInReview;
+		$scope.submit();
+	}
 
 }
 
