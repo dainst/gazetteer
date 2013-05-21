@@ -9,6 +9,7 @@ import org.elasticsearch.index.query.GeoDistanceFilterBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.QueryFilterBuilder;
+import org.elasticsearch.index.query.QueryStringQueryBuilder.Operator;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.facet.FacetBuilders;
 import org.elasticsearch.search.facet.Facets;
@@ -35,9 +36,10 @@ public class ElasticSearchPlaceQuery {
 		// added in order to boost it and prevent its score from being
 		// diminished by norms when occurring together with other fields in _all
 		else {
-			String queryString = query + " OR _id:\"" + query + "\"";
+			String queryString = "(" + query + ")";
+			queryString += " OR _id:\"" + query + "\"";
 			if (!query.contains(":")) queryString += " OR prefName.title:" + query;
-			queryBuilder = QueryBuilders.queryString(queryString).defaultField("_all");
+			queryBuilder = QueryBuilders.queryString(queryString).defaultField("_all").defaultOperator(Operator.AND);
 		}
 				
 		return this;
