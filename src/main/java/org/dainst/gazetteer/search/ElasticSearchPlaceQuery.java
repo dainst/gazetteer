@@ -16,10 +16,12 @@ import org.elasticsearch.search.facet.Facets;
 import org.elasticsearch.search.sort.GeoDistanceSortBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ElasticSearchPlaceQuery {
 	
-	//private static final Logger logger = LoggerFactory.getLogger(ElasticSearchPlaceQuery.class);
+	private static final Logger logger = LoggerFactory.getLogger(ElasticSearchPlaceQuery.class);
 	
 	private SearchRequestBuilder requestBuilder;
 	private QueryBuilder queryBuilder;
@@ -36,9 +38,9 @@ public class ElasticSearchPlaceQuery {
 		// added in order to boost it and prevent its score from being
 		// diminished by norms when occurring together with other fields in _all
 		else {
-			String queryString = "(" + query + ")";
+			String queryString = "" + query + "";
 			queryString += " OR _id:\"" + query + "\"";
-			if (!query.contains(":")) queryString += " OR prefName.title:" + query;
+			if (!query.contains(":")) queryString += " OR prefName.title:\"" + query + "\"";
 			queryBuilder = QueryBuilders.queryString(queryString).defaultField("_all").defaultOperator(Operator.AND);
 		}
 				
@@ -67,8 +69,8 @@ public class ElasticSearchPlaceQuery {
 	}
 
 	public ElasticSearchPlaceQuery prefixSearch(String query) {
-		query = query.toLowerCase();
-		queryBuilder = QueryBuilders.prefixQuery("_all", query);
+		query = query.toLowerCase() + "*";
+		queryBuilder = QueryBuilders.queryString(query).defaultField("_all").defaultOperator(Operator.AND);
 		return this;
 	}
 	
@@ -144,6 +146,7 @@ public class ElasticSearchPlaceQuery {
 	
 	public String[] execute() {		
 		requestBuilder.setQuery(queryBuilder);
+		logger.debug("Query: {}", queryBuilder.toString());
 		SearchResponse response = requestBuilder.execute().actionGet();
 		facets = response.getFacets();
 		return responseAsList(response);	

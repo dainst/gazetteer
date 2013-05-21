@@ -75,7 +75,8 @@
 		<!-- Page title -->
 		<div class="page-header">
 			<h2>
-				<span class="ng-cloak">{{title}}</span>
+				<span ng-show="title">{{title}}</span>
+				<span ng-hide="title">&nbsp;</span>
 				<small ng-bind-html-unsafe="subtitle"></small>
 			</h2>
 		</div>

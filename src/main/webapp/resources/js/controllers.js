@@ -186,10 +186,12 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, $http, Place, m
 			offset: ($location.search().offset) ? parseInt($location.search().offset) : 0,
 			limit: ($location.search().limit) ? parseInt($location.search().limit) : 10,
 			q: ($location.search().q) ? ($location.search().q) : "",
+			fq: ($location.search().fq) ? ($location.search().fq) : "",
 			type: ($location.search().type) ? ($location.search().type) : "",
 			sort: ($location.search().sort) ? ($location.search().sort) : "",
 			order: ($location.search().order) ? ($location.search().order) : "",
-			bbox: ($location.search().bbox) ? ($location.search().bbox) : ""
+			bbox: ($location.search().bbox) ? ($location.search().bbox) : "",
+			showInReview: ($location.search().showInReview) ? ($location.search().showInReview) : ""
 	};
 	
 	$scope.places = [];
@@ -289,7 +291,8 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, $http, Place, m
 			query.bool.must.push(match);
 			$scope.search.q = angular.toJson(query);
 		} else {
-			$scope.search.q = $scope.search.q + " AND " + facetName + ":" + term;
+			if ($scope.search.fq) $scope.search.fq += " AND " + facetName + ":" + term;
+			else $scope.search.fq = facetName + ":" + term;
 		}
 		$scope.search.offset = 0;
 		$location.search($scope.search);
@@ -307,10 +310,12 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, $http, Place, m
 					offset: ($location.search().offset) ? parseInt($location.search().offset) : 0,
 					limit: ($location.search().limit) ? parseInt($location.search().limit) : 10,
 					q: ($location.search().q) ? ($location.search().q) : "",
+					fq: ($location.search().fq) ? ($location.search().fq) : "",
 					type: ($location.search().type) ? ($location.search().type) : "",
 					sort: ($location.search().sort) ? ($location.search().sort) : "",
 					order: ($location.search().order) ? ($location.search().order) : "",
-					bbox: ($location.search().bbox) ? ($location.search().bbox) : ""
+					bbox: ($location.search().bbox) ? ($location.search().bbox) : "",
+					showInReview: ($location.search().showInReview) ? ($location.search().showInReview) : ""
 				};
 				$scope.submit();
 			}

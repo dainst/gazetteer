@@ -61,6 +61,7 @@ public class SearchController {
 	public ModelAndView simpleSearch(@RequestParam(defaultValue="10") int limit,
 			@RequestParam(defaultValue="0") int offset,
 			@RequestParam(required=false) String q,
+			@RequestParam(required=false) String fq,
 			@RequestParam(required=false) String sort,
 			@RequestParam(defaultValue="asc") String order,
 			@RequestParam(required=false) String type,
@@ -76,7 +77,7 @@ public class SearchController {
 		RequestContext requestContext = new RequestContext(request);
 		Locale locale = requestContext.getLocale();
 		
-		logger.debug("Searching places with query: " + q + " and limit " + limit + ", offset " + offset);
+		logger.debug("Searching places with query: " + q + ", fq: " + fq + ", limit: " + limit + ", offset: " + offset);
 		
 		ElasticSearchPlaceQuery query = new ElasticSearchPlaceQuery(elasticSearchServer.getClient());
 		if (q != null) {
@@ -87,6 +88,9 @@ public class SearchController {
 			else query.metaSearch(q);
 		} else {
 			query.listAll();
+		}
+		if (fq != null && !fq.isEmpty()) {
+			query.addFilter(fq);
 		}
 		query.addBoostForChildren();
 		query.limit(limit);

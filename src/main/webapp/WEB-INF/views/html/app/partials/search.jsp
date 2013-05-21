@@ -90,12 +90,12 @@
 										<li ng-repeat="entry in facet | orderBy:'count':true | limitTo:5">
 											<small>
 												<i class="icon-angle-right"></i>
-												<a ng-click="setFacet(facetName, entry.term)">
+												<a ng-click="setFacet(facetName, entry.term)" href="">
 													<span ng-show="entry.label.length < 15">
 														{{entry.label}}
 													</span>
-													<abbr title="{{entry.label}}" ng-show="entry.label.length >= 15">
-														{{entry.label.substring(0, 14)}}...
+													<abbr title="{{entry.label}}" ng-show="entry.label.length >= 13">
+														{{entry.label.substring(0, 12)}}...
 													</abbr>
 												</a>&nbsp;<em class="muted">{{entry.count}}</em>
 											</small>
