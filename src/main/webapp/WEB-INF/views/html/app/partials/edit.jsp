@@ -118,7 +118,7 @@
 								<i class="icon-plus icon-white"></i>
 							</div>
 							<div type="text" ng.hide="!place.identifiers">
-								<div ng-repeat="identifier in place.identifiers | orderBy:['context','value']">
+								<div ng-repeat="identifier in place.identifiers">
 									<a ng-click="place.identifiers.splice($index,1)"><i class="icon-remove-sign"></i></a>
 									<em>{{identifier.context}}:</em> {{identifier.value}}
 								</div>
@@ -142,7 +142,7 @@
 								<i class="icon-plus icon-white"></i>
 							</div>
 							<div type="text" ng.hide="!place.linkss">
-								<div ng-repeat="link in place.links | orderBy:['predicate','object']">
+								<div ng-repeat="link in place.links">
 									<a ng-click="place.links.splice($index,1)"><i class="icon-remove-sign"></i></a>
 									<em>{{link.predicate}}:</em> <a href="{{link.object}}" target="_blank">{{link.object}}</a>
 								</div>
@@ -200,7 +200,7 @@
 									<i class="icon-plus icon-white"></i>
 								</button>
 							</div>
-							<div ng-repeat="placename in place.names | orderBy:['language','title']">
+							<div ng-repeat="placename in place.names">
 								<a ng-click="place.names.splice($index,1)"><i class="icon-remove-sign"></i></a> {{placename.title}}
 								<em ng-show="placename.ancient">
 									(<small gaz-translate="'place.name.ancient'"></small>)
@@ -286,7 +286,7 @@
 							<div class="btn btn-primary plus" style="vertical-align:top" ng-click="addRelatedPlace()" ng-disabled="!relatedPlace['@id']">
 								<i class="icon-plus icon-white"></i>
 							</div>
-							<div ng-repeat="relatedPlace in relatedPlaces | orderBy:'prefName.title'">
+							<div ng-repeat="relatedPlace in relatedPlaces">
 								<a ng-click="relatedPlaces.splice($index,1)"><i class="icon-remove-sign"></i></a>
 								<div gaz-place-title place="relatedPlace"></div>
 							</div>
