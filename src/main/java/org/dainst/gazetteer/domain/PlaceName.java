@@ -1,8 +1,11 @@
 package org.dainst.gazetteer.domain;
 
+import org.springframework.data.mongodb.core.index.Indexed;
+
 
 public class PlaceName {
 	
+	@Indexed
 	private String title;
 	
 	private String language;

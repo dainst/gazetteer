@@ -6,9 +6,25 @@ import java.util.Map;
 import java.util.Set;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.CompoundIndexes;
+import org.springframework.data.mongodb.core.index.CompoundIndex;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
+@CompoundIndexes({
+	@CompoundIndex(name="linksObject_linksPredicate", def="{'links.object': 1, 'links.predicate': 1}"),
+	@CompoundIndex(name="prefNameTitle_type", def="{'prefName.title': 1, 'type': 1}"),
+	@CompoundIndex(name="ids_type", def="{'ids': 1, 'type': 1}"),
+	@CompoundIndex(name="parent_type", def="{'parent': 1, 'type': 1}"),
+	@CompoundIndex(name="type_deleted", def="{'type': 1, 'deleted': 1}"),
+	@CompoundIndex(name="prefLocation_idsContext", def="{'prefLocation': 1, 'ids.context': 1}"),
+	@CompoundIndex(name="namesTitle_type", def="{'names.title': 1, 'type': 1}"),
+	@CompoundIndex(name="ids_type_needsReview_id", def="{'ids': 1, 'type': 1, 'needsReview': 1, '_id': 1}"),
+	@CompoundIndex(name="prefNameTitle_type_needsReview_id", def="{'prefName.title': 1, 'type': 1, 'needsReview': 1, '_id': 1}"),
+	@CompoundIndex(name="prefNameTitle_needsReview_id", def="{'prefName.title': 1, 'needsReview': 1, '_id': 1}"),
+	@CompoundIndex(name="namesTitle_needsReview_id", def="{'names.title': 1, 'needsReview': 1, '_id': 1}")
+})
 public class Place {
 
 	@Id
@@ -22,20 +38,25 @@ public class Place {
 	
 	private String type;
 	
+	@Indexed
 	private Location prefLocation;
 
 	private Set<Location> locations = new HashSet<Location>();
 
+	@Indexed
 	private String parent;
 
+	@Indexed
 	private Set<String> relatedPlaces = new HashSet<String>();
 	
 	private Set<Comment> comments = new HashSet<Comment>();
 	
 	private Set<String> tags = new HashSet<String>();
 	
+	@Indexed
 	private Set<Identifier> ids = new HashSet<Identifier>();
 	
+	@Indexed
 	private boolean needsReview = false;
 	
 	private boolean deleted = false;

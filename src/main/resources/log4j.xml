@@ -14,13 +14,17 @@
                 <param name="file" value="/var/log/gazetteer/gazetteer.log"/>
                 <param name="DatePattern" value=".yyyy-MM-dd"/>
                 <layout class="org.apache.log4j.PatternLayout">
-                        <param name="ConversionPattern" value="%-5p: %c - %m%n" />
+                        <param name="ConversionPattern" value="%d - %-5p: %c - %m%n" />
                 </layout>
         </appender>
 
         <!-- Application Loggers -->
         <logger name="org.dainst.gazetteer">
                 <level value="info" />
+        </logger>
+        
+        <logger name="org.springframework.data">
+                <level value="debug" />
         </logger>
 
         <!-- Root Logger -->
