@@ -259,7 +259,7 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, $http, Place, m
 			$rootScope.loading--;
 			for (var i=0; i < $scope.places.length; i++) {
 				$rootScope.loading++;
-				if (!$scope.parents[$scope.places[i].parent]) {
+				if ($scope.places[i].parent && !$scope.parents[$scope.places[i].parent]) {
 					$http.get($scope.places[i].parent).success(function(result) {
 						$scope.parents[result["@id"]] = result;
 					});
@@ -297,6 +297,7 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, $http, Place, m
 		function() {
 			if ($location.path() == "/search") {
 				setSearchFromLocation();
+				$scope.submit();
 			}
 		}
 	);
@@ -313,7 +314,6 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, $http, Place, m
 		if ($location.search().order) $scope.search.order = $location.search().order;
 		if ($location.search().bbox) $scope.search.bbox = $location.search().bbox;
 		if ($location.search().showInReview) $scope.search.showInReview = $location.search().showInReview;
-		$scope.submit();
 	}
 
 }

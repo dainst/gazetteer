@@ -1,7 +1,9 @@
 package org.dainst.gazetteer.match;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.domain.Identifier;
@@ -57,8 +59,8 @@ public class SimpleNameAndIdBasedEntityIdentifier implements EntityIdentifier {
 		} else if ("city".equals(place.getType())) {
 
 			// XXX we suppose that the names of cities in the same country are unique
-			List<Place> resultList = placeDao.findByPrefNameTitleAndNeedsReviewAndIdNot(
-					place.getPrefName().getTitle(), false, place.getId());
+			Set<Place> resultList = new HashSet<Place>(placeDao.findByPrefNameTitleAndNeedsReviewAndIdNot(
+					place.getPrefName().getTitle(), false, place.getId()));
 			resultList.addAll(placeDao.findByNamesTitleAndNeedsReviewAndIdNot(
 					place.getPrefName().getTitle(), false, place.getId()));
 			for (PlaceName name : place.getNames()) {
@@ -71,7 +73,7 @@ public class SimpleNameAndIdBasedEntityIdentifier implements EntityIdentifier {
 			
 			if (place.getParent() == null) {
 				if (resultList.size() == 1) {
-					Place candidate = resultList.get(0);
+					Place candidate = resultList.iterator().next();
 					if (candidate.getParent() == null) {
 						candidates.add(new Candidate(place, candidate, 1));
 						return candidates;
@@ -79,12 +81,13 @@ public class SimpleNameAndIdBasedEntityIdentifier implements EntityIdentifier {
 				}
 			} else {
 				for (Place candidate : resultList) {
-					// TODO check ancestors for country with equal name 
+					// check ancestors for country with equal name 
 					if (candidate.getParent() != null) {
 						Place candidateCountry = retrieveCountryFor(candidate);
 						Place placeCountry = retrieveCountryFor(place);
 						if (candidateCountry != null && candidateCountry.equals(placeCountry)) {
 							candidates.add(new Candidate(place, candidate, 1));
+							logger.debug("returning candidates: {}", candidates);
 							return candidates;
 						}
 					}
@@ -93,11 +96,14 @@ public class SimpleNameAndIdBasedEntityIdentifier implements EntityIdentifier {
 			
 		}
 		
+		logger.debug("returning candidates: {}", candidates);
+		
 		return candidates;
 		
 	}
 	
 	private Place retrieveCountryFor(Place place) {
+		if (place.getParent() == null) return null;
 		Place parent = placeDao.findOne(place.getParent());
 		if (parent == null) {
 			return null;
