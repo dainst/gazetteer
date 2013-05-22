@@ -85,7 +85,7 @@ public class SimpleNameAndIdBasedEntityIdentifier implements EntityIdentifier {
 					if (candidate.getParent() != null) {
 						Place candidateCountry = retrieveCountryFor(candidate);
 						Place placeCountry = retrieveCountryFor(place);
-						if (candidateCountry != null && candidateCountry.equals(placeCountry)) {
+						if (candidateCountry != null && namesMatch(placeCountry, candidateCountry)) {
 							candidates.add(new Candidate(place, candidate, 1));
 							logger.debug("returning candidates: {}", candidates);
 							return candidates;
@@ -102,6 +102,17 @@ public class SimpleNameAndIdBasedEntityIdentifier implements EntityIdentifier {
 		
 	}
 	
+	private boolean namesMatch(Place place1, Place place2) {
+		Set<String> names1 = new HashSet<String>();
+		names1.add(place1.getPrefName().getTitle());
+		for (PlaceName name : place1.getNames()) names1.add(name.getTitle());
+		Set<String> names2 = new HashSet<String>();
+		names1.add(place2.getPrefName().getTitle());
+		for (PlaceName name : place2.getNames()) names2.add(name.getTitle());
+		names1.retainAll(names2);
+		return !names1.isEmpty();
+	}
+
 	private Place retrieveCountryFor(Place place) {
 		if (place.getParent() == null) return null;
 		Place parent = placeDao.findOne(place.getParent());
