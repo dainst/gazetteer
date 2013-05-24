@@ -29,7 +29,8 @@ public class SimpleNameAndIdBasedEntityIdentifier implements EntityIdentifier {
 					id, place.getType(), false, place.getId());
 			if (matchedPlace != null && id.getValue() != null) {
 				logger.debug("matched id: " + id);
-				candidates.add(new Candidate(place, matchedPlace, 1));
+				candidates.add(new Candidate(place, matchedPlace, 1));				
+				logger.debug("returning candidates: {}", candidates);
 				return candidates;
 			}
 		}
@@ -76,7 +77,6 @@ public class SimpleNameAndIdBasedEntityIdentifier implements EntityIdentifier {
 					Place candidate = resultList.iterator().next();
 					if (candidate.getParent() == null) {
 						candidates.add(new Candidate(place, candidate, 1));
-						return candidates;
 					}
 				}
 			} else {
@@ -85,10 +85,11 @@ public class SimpleNameAndIdBasedEntityIdentifier implements EntityIdentifier {
 					if (candidate.getParent() != null) {
 						Place candidateCountry = retrieveCountryFor(candidate);
 						Place placeCountry = retrieveCountryFor(place);
-						if (candidateCountry != null && namesMatch(placeCountry, candidateCountry)) {
+						logger.debug("comparing countries: {} == {}", placeCountry, candidateCountry);
+						if (candidateCountry != null && placeCountry != null && 
+								( idsMatch(placeCountry, candidateCountry) || namesMatch(placeCountry, candidateCountry) ) ) {
+							logger.debug("countries matched");
 							candidates.add(new Candidate(place, candidate, 1));
-							logger.debug("returning candidates: {}", candidates);
-							return candidates;
 						}
 					}
 				}
@@ -102,14 +103,29 @@ public class SimpleNameAndIdBasedEntityIdentifier implements EntityIdentifier {
 		
 	}
 	
+	private boolean idsMatch(Place place1, Place place2) {
+		Set<Identifier> ids1 = new HashSet<Identifier>();
+		for (Identifier id : place1.getIdentifiers()) ids1.add(id);
+		logger.debug("place1 ids: {}", ids1);
+		Set<Identifier> ids2 = new HashSet<Identifier>();
+		for (Identifier id : place2.getIdentifiers()) ids2.add(id);
+		logger.debug("place1 ids: {}", ids2);
+		ids1.retainAll(ids2);
+		logger.debug("matching ids {}", ids1);
+		return !ids1.isEmpty();
+	}
+	
 	private boolean namesMatch(Place place1, Place place2) {
 		Set<String> names1 = new HashSet<String>();
 		names1.add(place1.getPrefName().getTitle());
 		for (PlaceName name : place1.getNames()) names1.add(name.getTitle());
+		logger.debug("place1 names: {}", names1);
 		Set<String> names2 = new HashSet<String>();
-		names1.add(place2.getPrefName().getTitle());
+		names2.add(place2.getPrefName().getTitle());
 		for (PlaceName name : place2.getNames()) names2.add(name.getTitle());
+		logger.debug("place2 names: {}", names2);
 		names1.retainAll(names2);
+		logger.debug("matching names {}", names1);
 		return !names1.isEmpty();
 	}
 

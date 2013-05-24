@@ -12,11 +12,7 @@ import org.dainst.gazetteer.domain.Location;
 import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.helpers.IdGenerator;
 import org.dainst.gazetteer.helpers.Merger;
-import org.dainst.gazetteer.helpers.SimpleMerger;
 import org.dainst.gazetteer.match.AutoMatchService;
-import org.dainst.gazetteer.match.Candidate;
-import org.dainst.gazetteer.match.EntityIdentifier;
-import org.dainst.gazetteer.match.SimpleNameAndIdBasedEntityIdentifier;
 import org.dainst.gazetteer.search.ElasticSearchPlaceIndexer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,6 +58,9 @@ public class AdminController {
 	
 	@Autowired
 	private Merger merger;
+	
+	@Autowired
+	private AutoMatchService autoMatchService;
 	
 	@Value("${geonamesSolrUri}")
 	private String geonamesSolrUri;
@@ -147,7 +146,7 @@ public class AdminController {
 			}
 		}
 		
-		return String.format("OK: importet %s locations", count);
+		return String.format("OK: imported %s locations", count);
 		
 	}
 	
@@ -155,7 +154,6 @@ public class AdminController {
 	@ResponseBody
 	public String automatch() {
 		
-		AutoMatchService autoMatchService = new AutoMatchService();
 		autoMatchService.runAutoMatch(placeDao, merger);
 		
 		return "auto matching started in separate thread.";
