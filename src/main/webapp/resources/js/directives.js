@@ -210,6 +210,10 @@ directives.directive('gazMap', function($location) {
 					$scope.map.fitBounds(bounds);
 				else if (numLocations > 0)
 					$scope.map.setCenter(ll);
+				else {
+					$scope.map.setZoom(parseInt($scope.zoom));
+					$scope.map.setCenter(new google.maps.LatLng("0","0"));
+				}
 				
 			});
 			
