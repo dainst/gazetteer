@@ -21,6 +21,9 @@
 <script	src="http://arachne.uni-koeln.de/archaeostrap/assets/js/bootstrap.js"></script>	
 <script src='//maps.google.com/maps/api/js?key=${googleMapsApiKey}&amp;sensor=false&libraries=visualization'></script>
 <script src="../resources/js/custom.js"></script>
+<link rel="alternate" type="application/rdf+xml" href="${baseUri}doc/${place.id}.rdf">
+<link rel="alternate" type="application/json" href="${baseUri}doc/${place.id}.json">
+<link rel="alternate" type="application/vnd.google-earth.kml+xml" href="${baseUri}doc/${place.id}.kml">
 </head>
 <body>
 
@@ -67,38 +70,39 @@
 		</div>
 	</div>
 	
-	<div class="container">
+	<div class="container" itemscope itemtype="http://schema.org/Place">
 	
 	<!-- Page title -->
 		<div class="page-header">
 			<h2>
-				<span>${place.prefName.title}</span>
-				<small>${baseUri}place/${place.id} <a data-toggle="modal" href="#copyUriModal"><i class="icon-share" style="font-size:0.7em"></i></a></small>
+				<span itemprop="name">${place.prefName.title}</span>
+				<small><a href="${baseUri}place/${place.id}" itemprop="url">${baseUri}place/${place.id}</a> <a data-toggle="modal" href="#copyUriModal"><i class="icon-share" style="font-size:0.7em"></i></a></small>
 			</h2>
 		</div>
 
-<s:message code="ui.copyToClipboard" var="copyMsg"/>
-			
-<div class="modal hide" id="copyUriModal">
-	<div class="modal-header">
-		<button type="button" class="close" data-dismiss="modal">×</button>
-		<h3><s:message code="ui.copyToClipboardHeading"/></h3>
-	</div>
-	<div class="modal-body">
-		<label>${copyMsg}</label>
-		<input class="input-xxlarge" style="width:97%" type="text" value="${baseUri}place/${place.id}" id="copyUriInput"></input>
-	</div>
-</div>
-<script type="text/javascript">
-	$("#copyUriModal").on("shown",function() {
-		$("#copyUriInput").focus().select();
-	});
-</script>
-
-<h2><s:message code="ui.otherFormats" text="ui.otherFormats"/></h2>
+		<s:message code="ui.copyToClipboard" var="copyMsg"/>
+					
+		<div class="modal hide" id="copyUriModal">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">×</button>
+				<h3><s:message code="ui.copyToClipboardHeading"/></h3>
+			</div>
+			<div class="modal-body">
+				<label>${copyMsg}</label>
+				<input class="input-xxlarge" style="width:97%" type="text" value="${baseUri}place/${place.id}" id="copyUriInput"></input>
+			</div>
+		</div>
+		<script type="text/javascript">
+			$("#copyUriModal").on("shown",function() {
+				$("#copyUriInput").focus().select();
+			});
+		</script>
+		
+		<h2><s:message code="ui.otherFormats" text="ui.otherFormats"/></h2>
 			<ul>
-				<li><a href="${baseUri}doc/${place.id}.html" target="_blank">HTML</a></li>
+				<li><a href="${baseUri}doc/${place.id}.rdf" target="_blank">RDF/XML</a></li>
 				<li><a href="${baseUri}doc/${place.id}.json" target="_blank">JSON</a></li>
+				<li><a href="${baseUri}doc/${place.id}.kml" target="_blank">KML</a></li>
 			</ul>
 			
 			<!-- names -->
@@ -125,7 +129,7 @@
 			<c:if test="${parent != null}">
 				<h2><s:message code="domain.place.parent" text="domain.place.parent" /></h2>
 				<p>
-					<a href="${baseUri}place/${parent.id}">${parent.prefName.title}
+					<a href="${baseUri}place/${parent.id}" itemprop="containedIn">${parent.prefName.title}
 						<c:if test="${parent.type != null}">
 							<em>(<s:message code="types.${parent.type}" text="${parent.type}"/>)</em>
 						</c:if>
@@ -163,11 +167,13 @@
 			<c:if test="${place.prefLocation != null}">
 				<h2><s:message code="domain.place.locations" text="domain.place.locations" /></h2>
 				<ul>
-					<li>
+					<li itemprop="geo" itemscope itemtype="http://schema.org/GeoCoordinates">
 						<em><s:message code="domain.location.latitude" text="domain.location.latitude" />:</em> ${place.prefLocation.lat},
 						<em><s:message code="domain.location.longitude" text="domain.location.longitude" />:</em> ${place.prefLocation.lng}
 						(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />:</em>
 						<s:message code="confidence.${place.prefLocation.confidence}" text="${place.prefLocation.confidence}"/>)
+						<meta itemprop="latitude" content="${place.prefLocation.lat}" />
+					    <meta itemprop="longitude" content="${place.prefLocation.lng}" />
 					</li>
 					<c:forEach var="location" items="${place.locations}">
 						<li>
