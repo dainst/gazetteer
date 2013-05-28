@@ -10,4 +10,7 @@ angular.module('gazetteer', ['gazetteer.filters', 'gazetteer.services', 'gazette
     $routeProvider.when('/edit/:id', { templateUrl: 'partials/edit.html', controller: PlaceCtrl});
     $routeProvider.when('/merge/:id', { templateUrl: 'partials/merge.html', controller: MergeCtrl});
     $routeProvider.otherwise({ redirectTo: '/search'});
+  }]).
+  config(['$locationProvider', function($locationProvider) {
+	$locationProvider.hashPrefix('!');
   }]);

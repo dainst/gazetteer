@@ -41,12 +41,12 @@
 					<a class="brand" href="../">iDAI.gazetteer</a>
 					<div class="nav-collapse pull-left">
 						<ul class="nav">
-							<li><a href="#/thesaurus"><s:message
+							<li><a href="#!/thesaurus"><s:message
 										code="ui.thesaurus.list" text="ui.thesaurus.list" /></a></li>
-							<li><a href="#/extended-search"> <s:message
+							<li><a href="#!/extended-search"> <s:message
 										code="ui.search.extendedSearch" text="ui.search.extendedSearch" />
 							</a></li>
-							<li><a href="#/edit/"> <s:message
+							<li><a href="#!/edit/"> <s:message
 										code="ui.place.create" text="ui.place.create" />
 							</a></li>
 						</ul>
