@@ -1,5 +1,7 @@
 package org.dainst.gazetteer.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.support.RequestContext;
 
 @Controller
@@ -31,15 +34,22 @@ public class AppController {
 	
 	@Autowired
 	LocalizedLanguagesHelper langHelper;
-	
 	@RequestMapping(value="/app/")
-	public String app(ModelMap model, HttpServletRequest request) {
+	public String app(ModelMap model, HttpServletRequest request, 
+			@RequestParam(value="_escaped_fragment_", required=false) String fragment) throws UnsupportedEncodingException {
+		
+		// render static html for crawlers
+		if (fragment != null && !fragment.isEmpty() && fragment.startsWith("/show")) {
+			String[] split = URLDecoder.decode(fragment, "UTF-8").split("/");
+			return "redirect:/doc/" + split[2] + ".html";
+		}
+		
 		model.addAttribute("baseUri",baseUri);
 		Locale locale = new RequestContext(request).getLocale();
 		model.addAttribute("language", locale.getLanguage());
 		model.addAttribute("languages", langHelper.getLocalizedLanguages(locale));
 		model.addAttribute("googleMapsApiKey", googleMapsApiKey);
-		model.addAttribute("idTypes",idTypes);
+		model.addAttribute("idTypes", idTypes);
 		logger.info("accept: {}", request.getHeader("Accept"));
 		return "app/index";
 	}

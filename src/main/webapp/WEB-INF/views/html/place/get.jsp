@@ -4,7 +4,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ page contentType="text/html; charset=utf-8" session="false"%>
 
-<s:url var="searchAction" value="app/#search" />
+<s:url var="searchAction" value="app/#!/search" />
 
 <!doctype html>
 <html>
@@ -47,12 +47,12 @@
 					<a class="brand" href="">iDAI.gazetteer</a>
 					<div class="nav-collapse pull-left">
 						<ul class="nav">
-							<li><a href="app/#/thesaurus"><s:message
+							<li><a href="app/#!/thesaurus"><s:message
 										code="ui.thesaurus.list" text="ui.thesaurus.list" /></a></li>
-							<li><a href="app/#/extended-search"> <s:message
+							<li><a href="app/#!/extended-search"> <s:message
 										code="ui.search.extendedSearch" text="ui.search.extendedSearch" />
 							</a></li>
-							<li><a href="app/#/edit/"> <s:message
+							<li><a href="app/#!/edit/"> <s:message
 										code="ui.place.create" text="ui.place.create" />
 							</a></li>
 						</ul>
@@ -264,10 +264,6 @@
 		</footer>
 		
 	</div>
-	
-	<script lang="application/javascript">
-		window.location = "${baseUri}app/#/show/${place.id}";
-	</script>
 	
 </body>
 </html>

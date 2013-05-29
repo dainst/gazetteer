@@ -149,13 +149,6 @@
 			<scope>runtime</scope>
 		</dependency>
 
-		<!-- @Inject -->
-		<dependency>
-			<groupId>javax.inject</groupId>
-			<artifactId>javax.inject</artifactId>
-			<version>1</version>
-		</dependency>
-
 		<!-- Servlet -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -173,13 +166,6 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
-		</dependency>
-		
-		<!-- CGLIB -->
-		<dependency>
-			<groupId>cglib</groupId>
-			<artifactId>cglib</artifactId>
-			<version>2.2.2</version>
 		</dependency>
 
 		<!-- Test -->
@@ -202,7 +188,7 @@
 			<groupId>atg.taglib.json</groupId>
 			<artifactId>json-taglib</artifactId>
 			<version>0.4.1</version>
-		</dependency>
+		</dependency>            
 
 	</dependencies>
 	
