@@ -20,7 +20,7 @@
 
         <!-- Application Loggers -->
         <logger name="org.dainst.gazetteer">
-                <level value="debug" />
+                <level value="warn" />
         </logger>
         
         <logger name="org.springframework.data">
@@ -30,7 +30,7 @@
         <!-- Root Logger -->
         <root>
                 <priority value="warn" />
-                <appender-ref ref="console" />
+                <appender-ref ref="file" />
         </root>
 
 </log4j:configuration>
