@@ -40,6 +40,7 @@ public class SitemapController {
 	public ModelAndView sitemap(@PathVariable int no) {
 		ModelAndView mav = new ModelAndView("sitemap/sitemap");
 		Page<Place> places = placeDao.findAll(new PageRequest(no-1, SITEMAP_SIZE));
+		mav.addObject("no", no);
 		mav.addObject("baseUri", baseUri);
 		mav.addObject("places", places.getContent());
 		return mav;
