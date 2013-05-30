@@ -87,21 +87,17 @@
 		</div>
 		
 		<div class="row-fluid" style="margin-top:-220px">
-			<div class="span6">
-				<p class="lead">Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis mollis, est non commodo luctus.</p>
-	            <p>Nullam quis risus eget urna mollis ornare vel eu leo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nullam id dolor id nibh ultricies vehicula.</p>
-	            <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec ullamcorper nulla non metus auctor fringilla. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Donec ullamcorper nulla non metus auctor fringilla.</p>
-	            <p>Maecenas sed diam eget risus varius blandit sit amet non magna. Donec id elit non mi porta gravida at eget metus. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit.</p>
+			<div class="span12">
+				 <p class="lead">Der DAI-Gazetteer ist ein Webservice, der Ortsnamen mit Koordinaten verbindet und in zwei Richtungen wirken soll. Nach innen dient er als Normdatenvokabular für sämtliche ortsbezogenen Informationen und Informationssysteme des DAI. Nach außen soll er diese mit den weltweiten Gazetteer-Systemen verbinden. Weitere Funktionen sind in einem <a href="http://youtu.be/mISUGMFkQvU" target="_blank">Screencast</a> zusammengefasst.</p>
 			</div>
+		</div>
+		
+		<div class="row-fluid"">
 			<div class="span6">
-				<h3>Watch the screencast!</h3>
-				<p><img src="resources/img/screencast.jpg"></p>
-				<p><br/></p>
-				<blockquote>
-				  <p>Der Gazetteer hilft mir bei meiner Studienarbeit zu den archäologisch spannendsten Orten dieser Welt.</p>
-				  <small>Fabian Zavodnik</small>
-				</blockquote>
+	            <p>Der DAI-Gazetteer ist außerdem ein Werkzeug, um die Ortsdaten-Struktur innerhalb des DAI sukzessive zu optimieren, d. h. sowohl die Zahl der mit Ortsdaten versehenen Informationsobjekte zu erhöhen, diese dann in die weltweiten Ortsdatensysteme enizubinden, und auch die im DAI schon vorhandenen Informationsobjekte mit Ortsdaten zu vereinheitlichen. Der DAI-Gazetteer ist somit der Auftakt zu einerm grossen, neuen Querschnitts-Arbeitsfeld.</p>
+	            <p>Geodaten sind ein hinreichend vereinbarungsfähiges, aber auch umfassend genug anwendbares Kontextualisierungskriterium. Ihre Bedeutung für die Kontextualisierung nimmmt zu, wenn über die bidirektionale Verknüpfung hinaus eine Drei- oder Vielecksverknküpfung zustande kommt. Daher ist der Gazetteer u. a. auch eine Kontextualisierungsmaschine, die ortsbasierte Suchen über mehrere Informationssysteme hinweg erlaubt, etwa über <a href="http://arachne.uni-koeln.de" target="_blank">Arachne</a> und <a href="http://opac.dainst.org" target="_blank">ZENON</a>.</p>
 			</div>
+			<iframe height="315" class="span6" src="http://www.youtube.com/embed/mISUGMFkQvU" frameborder="0" allowfullscreen></iframe>
 		</div>
 		
 		<!-- Footer -->
