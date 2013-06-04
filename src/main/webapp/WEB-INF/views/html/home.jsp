@@ -54,13 +54,6 @@
 										code="ui.place.create" text="ui.place.create" />
 							</a></li>
 						</ul>
-					<form novalidate class="navbar-search pull-right simpleSearchForm"
-						action="${searchAction}">
-						<s:message code="ui.search.simpleSearch" text="Einfache Suche"
-							var="titleSimpleSearch" />
-						<input type="text" class="search-query" name="q"
-							placeholder="${titleSimpleSearch}"> <i class="icon-search"></i>
-					</form>
 					</div>
 					<!--/.nav-collapse -->
 				</div>
