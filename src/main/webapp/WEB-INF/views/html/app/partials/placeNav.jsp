@@ -20,17 +20,17 @@
 			</ul>
 		</li>
 		<li class="pull-right" ng-class="isActive('merge')">	
-			<a href="#/merge/{{place.gazId}}">
+			<a href="#!/merge/{{place.gazId}}">
 				<i class="icon-globe"></i> <s:message code="ui.similarPlaces" text="ui.merge"/>
 			</a>
 		</li>
 		<li class="pull-right" ng-class="isActive('edit')">
-			<a href="#/edit/{{place.gazId}}">
+			<a href="#!/edit/{{place.gazId}}">
 				<i class="icon-edit"></i> <s:message code="ui.edit" text="ui.edit"/>
 			</a>
 		</li>
 		<li class="pull-right" ng-class="isActive('show')">
-			<a href="#/show/{{place.gazId}}">
+			<a href="#!/show/{{place.gazId}}">
 				<i class="icon-th-list"></i> <s:message code="ui.show" text="ui.show"/>
 			</a>
 		</li>
