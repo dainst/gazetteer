@@ -9,7 +9,10 @@
 <!doctype html>
 <html>
 <head>
-<title>iDAI.gazetteer</title>
+<title>
+iDAI.gazetteer - ${place.prefName.title}
+<c:forEach var="placename" items="${place.names}"> / ${placename.title}</c:forEach>
+</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="http://arachne.uni-koeln.de/archaeostrap/assets/css/bootstrap.css" rel="stylesheet">
