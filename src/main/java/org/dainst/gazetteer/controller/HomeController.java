@@ -43,7 +43,7 @@ public class HomeController {
 	@RequestMapping(value = "/robots.txt", method = RequestMethod.GET)
 	@ResponseBody
     public String getRobots(HttpServletRequest request) {
-        return "User-agent: *\nDisallow: /";
+        return "User-agent: *\nAllow: /";
     }
 	
 }
