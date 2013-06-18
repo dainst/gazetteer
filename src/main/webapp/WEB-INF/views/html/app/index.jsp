@@ -9,10 +9,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" href="resources/ico/favicon.ico">
-<link rel="apple-touch-icon" sizes="144x144" href="resources/ico/apple-touch-icon-144.png">
-<link rel="apple-touch-icon" sizes="114x114" href="resources/ico/apple-touch-icon-114.png">
-<link rel="apple-touch-icon" sizes="72x72" href="resources/ico/apple-touch-icon-72.png">
-<link rel="apple-touch-icon" href="resources/ico/apple-touch-icon-57.png">
+<link rel="apple-touch-icon" sizes="144x144" href="../resources/ico/apple-touch-icon-144.png">
+<link rel="apple-touch-icon" sizes="114x114" href="../resources/ico/apple-touch-icon-114.png">
+<link rel="apple-touch-icon" sizes="72x72" href="../resources/ico/apple-touch-icon-72.png">
+<link rel="apple-touch-icon" href="../resources/ico/apple-touch-icon-57.png">
 <link href="http://arachne.uni-koeln.de/archaeostrap/assets/css/bootstrap.css" rel="stylesheet">
 <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet">
 <link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet">
