@@ -18,29 +18,29 @@
 				<i class="icon-file"></i> <b class="caret"></b>
 			</a>
 			<ul class="dropdown-menu">
-				<li><a href="../search.kml?q={{search.q}}&limit=1000&type={{search.type}}" target="_blank">KML</a></li>
-				<li><a href="../search.json?q={{search.q}}&limit=1000&type={{search.type}}" target="_blank">JSON</a></li>
+				<li><a ng-href="../search.kml?q={{search.q}}&limit=1000&type={{search.type}}" target="_blank">KML</a></li>
+				<li><a ng-href="../search.json?q={{search.q}}&limit=1000&type={{search.type}}" target="_blank">JSON</a></li>
 			</ul>
 		</li>
 		<!-- <li class="dropdown">
-			<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+			<a ng-href="#" class="dropdown-toggle" data-toggle="dropdown">
 				<s:message code="ui.search.views" text="ui.search.views" />
 				<b class="caret"></b>
 			</a>
 			<ul class="dropdown-menu">
 				<li>
-				    <a href="">
+				    <a ng-href="">
 						<i class="icon-globe"></i> <i class="icon-list"></i>
 						<s:message code="ui.search.view.mapAndTable" text="ui.search.view.mapAndTable" />
 					</a>
 				</li>
 				<li>
-					<a href="">
+					<a ng-href="">
 						<i class="icon-globe"></i> <s:message code="ui.search.view.map" />
 					</a>
 				</li>
 				<li>
-					<a href="">
+					<a ng-href="">
 						<i class="icon-list"></i> <s:message code="ui.search.view.table" />
 					</a>
 				</li>

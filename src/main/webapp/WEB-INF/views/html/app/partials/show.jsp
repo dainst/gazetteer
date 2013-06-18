@@ -69,7 +69,7 @@
 		<dt><s:message code="domain.place.children" text="domain.place.children" /></dt>
 		<dd>
 			<em><s:message code="ui.numberOfPlaces" text="ui.numberOfPlaces" arguments="{{totalChildren}}" />:</em>
-			<a gaz-tooltip="'ui.place.children.search'" href="#/search?q=parent:{{place.gazId}}"><i class="icon-search"></i></a>
+			<a gaz-tooltip="'ui.place.children.search'" ng-href="#!/search?q=parent:{{place.gazId}}"><i class="icon-search"></i></a>
 			<i class="icon-circle-arrow-left" ng-show="offsetChildren == 0"></i>
 			<a ng-click="prevChildren()" ng-hide="offsetChildren == 0"><i class="icon-circle-arrow-left"/></i></a>
 			<i class="icon-circle-arrow-right" ng-show="offsetChildren+10 >= totalChildren"></i>
@@ -123,13 +123,13 @@
 	<span ng-show="getIdByContext('zenon-thesaurus') || getIdByContext('arachne-place')">
 		<dt><s:message code="ui.contexts" text="ui.contexts"/></dt>
 		<dd ng-show="getIdByContext('arachne-place')">
-			<a href="http://arachne.uni-koeln.de/test/arachne/index.php?view[layout]=search_result_overview&view[category]=overview&search[constraints]=FS_OrtID:%22{{getIdByContext('arachne-place').value}}%22" target="_blank">
+			<a ng-href="http://arachne.uni-koeln.de/test/arachne/index.php?view[layout]=search_result_overview&view[category]=overview&search[constraints]=FS_OrtID:%22{{getIdByContext('arachne-place').value}}%22" target="_blank">
 				<s:message code="ui.link.arachne" text="ui.link.arachne"/>
 				<i class="icon-external-link"></i>
 			</a>
 		</dd>
 		<dd ng-show="getIdByContext('zenon-thesaurus')">
-			<a href="http://testopac.dainst.org/#search?q=f999_1:{{getIdByContext('zenon-thesaurus').value}}" target="_blank">
+			<a ng-href="http://testopac.dainst.org/#search?q=f999_1:{{getIdByContext('zenon-thesaurus').value}}" target="_blank">
 				<s:message code="ui.link.zenon" text="ui.link.zenon"/>
 				<i class="icon-external-link"></i>
 			</a>
@@ -148,7 +148,7 @@
 	<span ng-hide="!place.links">
 		<dt><s:message code="domain.place.links" text="domain.place.links" /></dt>
 		<dd ng-repeat="link in place.links | orderBy:['predicate','object']">
-			<em>{{link.predicate}}:</em> <a href="{{link.object}}" target="_blank">{{link.object}}</a>
+			<em>{{link.predicate}}:</em> <a ng-href="{{link.object}}" target="_blank">{{link.object}}</a>
 		</dd>
 		<br/>
 	</span>
