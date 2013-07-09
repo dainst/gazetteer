@@ -24,6 +24,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -66,12 +67,21 @@ public class DocumentController {
 			@RequestParam(required=false) String q,
 			@RequestParam(required=false) String fuzzy,
 			@RequestParam(required=false, defaultValue="map,table") String view,
+			@RequestHeader("User-Agent") String userAgent,
+			@RequestHeader("Accept") String accept,
 			HttpServletRequest request) {
 		
 		RequestContext requestContext = new RequestContext(request);
 		Locale locale = requestContext.getLocale();
 
 		ModelAndView mav;
+		
+		// redirect browsers to app
+		if (accept.contains("text/html") && !userAgent.contains("bot")) {
+			RedirectView redirectView = new RedirectView("/app/#!/show/" + placeId, true, true);
+			redirectView.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
+			return new ModelAndView(redirectView);
+		}
 		
 		long time = System.currentTimeMillis();
 		

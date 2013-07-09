@@ -41,7 +41,7 @@ public class AppController {
 		// render static html for crawlers
 		if (fragment != null && !fragment.isEmpty() && fragment.startsWith("/show")) {
 			String[] split = URLDecoder.decode(fragment, "UTF-8").split("/");
-			return "redirect:/doc/" + split[2] + ".html";
+			return "forward:/doc/" + split[2] + ".html";
 		}
 		
 		model.addAttribute("baseUri",baseUri);
