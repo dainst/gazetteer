@@ -78,7 +78,7 @@ public class DocumentController {
 		
 		// redirect browsers to app
 		if (accept.contains("text/html") && !userAgent.contains("bot")) {
-			RedirectView redirectView = new RedirectView("/app/#!/show/" + placeId, true, true);
+			RedirectView redirectView = new RedirectView(baseUri + "app/#!/show/" + placeId, true, true);
 			redirectView.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
 			return new ModelAndView(redirectView);
 		}
