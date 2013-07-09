@@ -12,9 +12,18 @@ public class SimpleMerger implements Merger {
 	private static Logger logger = LoggerFactory.getLogger(SimpleMerger.class);
 	
 	private PlaceRepository placeRepository;
+	
+	private boolean newHasPriority = false;
 
 	@Override
 	public Place merge(Place place1, Place place2) {
+		
+		// data in place2 should take priority
+		if (newHasPriority) {
+			Place buf = place1;
+			place1 = place2;
+			place2 = buf;
+		}
 		
 		Place result = new Place();
 		
@@ -62,7 +71,9 @@ public class SimpleMerger implements Merger {
 		else
 			result.setType(place2.getType());
 		
-		result.setId(place1.getId());
+		// the id is always determined by the first parameter of this function
+		if (newHasPriority) result.setId(place2.getId());
+		else result.setId(place1.getId());
 		
 		List<Place> children = getPlaceRepository().findByParent(place2.getId());
 		logger.info("got {} children", children.size());
@@ -81,6 +92,14 @@ public class SimpleMerger implements Merger {
 
 	public void setPlaceRepository(PlaceRepository placeRepository) {
 		this.placeRepository = placeRepository;
+	}
+
+	public boolean isNewHasPriority() {
+		return newHasPriority;
+	}
+
+	public void setNewHasPriority(boolean newHasPriority) {
+		this.newHasPriority = newHasPriority;
 	}
 
 }
