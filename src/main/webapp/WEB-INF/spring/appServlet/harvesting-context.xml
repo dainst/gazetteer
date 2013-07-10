@@ -18,8 +18,5 @@
     <bean id="harvestingManager"
     	class="org.dainst.gazetteer.harvest.HarvestingManager"
     	init-method="initialize"/>
-    	
-    <bean id="entityIdentifier"
-    	class="org.dainst.gazetteer.helpers.SimpleNameAndIdBasedEntityIdentifier" />
 		
 </beans>

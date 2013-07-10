@@ -1,15 +1,11 @@
 package org.dainst.gazetteer.harvest;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import org.dainst.gazetteer.dao.HarvesterDefinitionRepository;
 import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.domain.HarvesterDefinition;
-import org.dainst.gazetteer.domain.Place;
-import org.dainst.gazetteer.helpers.EntityIdentifier;
 import org.dainst.gazetteer.helpers.IdGenerator;
 import org.dainst.gazetteer.helpers.Merger;
 import org.slf4j.Logger;
@@ -31,7 +27,6 @@ public class HarvestingHandler implements Runnable {
 			PlaceRepository placeDao, 
 			HarvesterDefinitionRepository harvesterDefinitionDao,
 			IdGenerator idGenerator,
-			EntityIdentifier entityIdentifier,
 			Merger merger) {
 		
 		this.harvesterDefinition = harvesterDefinition;
