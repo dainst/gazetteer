@@ -191,7 +191,8 @@ directives.directive('gazMap', function($location) {
 					var place = $scope.places[i];		
 					var title = "";
 					if (place.prefName) title = place.prefName.title;
-					if (place.prefLocation) {
+					if (place.prefLocation && angular.isNumber(place.prefLocation.coordinates[0])
+							&& angular.isNumber(place.prefLocation.coordinates[1])) {
 						ll = new google.maps.LatLng(place.prefLocation.coordinates[1], place.prefLocation.coordinates[0]);
 						$scope.markers[i] = new google.maps.Marker({
 							position: ll,
