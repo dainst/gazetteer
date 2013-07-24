@@ -1,6 +1,6 @@
 'use strict';
 
-var directives = angular.module('gazetteer.directives', ['gazetteer.messages']);
+var directives = angular.module('gazetteer.directives', ['gazetteer.messages', 'ui.bootstrap']);
 
 directives.directive('gazTranslate', function(messages) {
 	return {
@@ -70,7 +70,7 @@ directives.directive('gazPlaceTitle', function() {
 	};
 });
 
-directives.directive('gazPlacePicker', function() {
+directives.directive('gazPlacePicker', function($document) {
 	return {
 		replace: true,
 		scope: { place: '=', id: '=' },
@@ -88,6 +88,10 @@ directives.directive('gazPlacePicker', function() {
 			
 			$scope.openOverlay = function() {
 				$scope.showOverlay = true;
+			};
+			
+			$scope.closeOverlay = function() {
+				$scope.showOverlay = false;
 			};
 			
 			$scope.selectPlace = function(place) {

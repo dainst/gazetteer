@@ -23,6 +23,7 @@
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular-resource.min.js"></script>
 <script src="../resources/js/lib/angular/angular-ui.js"></script>
+<script src="../resources/js/lib/angular/ui-bootstrap-custom-0.4.0.min.js"></script>
 </head>
 <body class="ng-cloak" ng-controller="AppCtrl">
 
