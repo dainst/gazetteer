@@ -28,7 +28,7 @@ public class SimpleNameAndIdBasedEntityIdentifier implements EntityIdentifier {
 			Place matchedPlace = null;
 			if ("gazetteer".equals(id.getContext())) {
 				matchedPlace = placeDao.findOne(id.getValue());
-			} else {
+			} else if (!"zenon-thesaurus".equals(id.getContext())) {
 				matchedPlace = placeDao.findByIdsAndTypeAndNeedsReviewAndIdNot(
 					id, place.getType(), false, place.getId());
 			}

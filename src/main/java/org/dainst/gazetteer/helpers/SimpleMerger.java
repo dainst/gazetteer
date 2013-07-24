@@ -75,7 +75,10 @@ public class SimpleMerger implements Merger {
 		if (newHasPriority) result.setId(place2.getId());
 		else result.setId(place1.getId());
 		
-		List<Place> children = getPlaceRepository().findByParent(place2.getId());
+		String oldId = place2.getId();
+		if (newHasPriority) oldId = place1.getId();
+		
+		List<Place> children = getPlaceRepository().findByParent(oldId);
 		logger.info("got {} children", children.size());
 		for (Place child : children) {
 			child.setParent(result.getId());

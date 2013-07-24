@@ -83,7 +83,7 @@ public class ZenonHarvester implements Harvester {
 	public final static List<String> ROOT_IDS = Arrays.asList(
 		//"xTopLand", // Klassische Archäologie -> Topographie -> Länder mit Gebieten und Orten
 		//"3.00.01", // Iberische Halbinsel -> Topographie
-		"zTopog" // Topograhpie
+		"zTopogEuropMitteDeutsBrand" // Topograhpie
 		//"4.02" // Thesaurus Eurasien-Abteilung -> Regionen/Länder/Orte
 	);
 	
@@ -128,7 +128,7 @@ public class ZenonHarvester implements Harvester {
 		
 		logger.debug("creating place with id {}", id);
 
-		Builder builder = api.path("resource/" + id + "/").accept(MediaType.APPLICATION_JSON_TYPE);
+		Builder builder = api.path("resource/" + id).accept(MediaType.APPLICATION_JSON_TYPE);
 		
 		ObjectNode placeNode = null;	
 		try {
