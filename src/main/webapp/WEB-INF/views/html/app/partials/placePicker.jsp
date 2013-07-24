@@ -14,6 +14,7 @@
 			line-height: 20px;
 			width: 210px;
 			display: inline-block;
+			overflow: hidden;
 		}
 		.place-picker-btn {
 			margin-left: -1px;
