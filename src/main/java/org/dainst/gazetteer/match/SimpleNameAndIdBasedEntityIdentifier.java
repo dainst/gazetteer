@@ -29,7 +29,7 @@ public class SimpleNameAndIdBasedEntityIdentifier implements EntityIdentifier {
 			if ("gazetteer".equals(id.getContext())) {
 				matchedPlace = placeDao.findOne(id.getValue());
 			} else if (!"zenon-thesaurus".equals(id.getContext())) {
-				matchedPlace = placeDao.findByIdsAndTypeAndNeedsReviewAndIdNot(
+				matchedPlace = placeDao.findByIdsAndNeedsReviewAndIdNot(
 					id, place.getType(), false, place.getId());
 			}
 			if (matchedPlace != null && id.getValue() != null) {
