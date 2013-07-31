@@ -5,7 +5,12 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.domain.Identifier;
@@ -28,6 +33,21 @@ public class PleiadesDBHarvester implements Harvester {
 	private IdGenerator idGenerator;
 	
 	private PlaceRepository placeDao;
+	
+	public final static Map<String,String> LANGUAGES;
+	static {
+		Map<String, String> languages = new HashMap<String,String>();
+		languages.put("la", "lat");
+		languages.put("en", "eng");
+		languages.put("it", "ita");
+		languages.put("tr", "tur");
+		languages.put("ar", "ara");
+		languages.put("el", "ell");
+		languages.put("fr", "fra");
+		languages.put("de", "deu");
+		languages.put("es", "spa");
+		LANGUAGES = Collections.unmodifiableMap(languages);
+	}
 
 	@Override
 	public void harvest(Date date) {
@@ -41,7 +61,7 @@ public class PleiadesDBHarvester implements Harvester {
 			connection = DriverManager.getConnection(url, userName, password);
 			logger.info("Database connection established");
 
-			PreparedStatement statement = connection.prepareStatement("SELECT * FROM places");
+			PreparedStatement statement = connection.prepareStatement("SELECT * FROM places LEFT JOIN plus ON places.id = plus.pid");
 			logger.debug(statement.toString());	        
 			resultSet = statement.executeQuery();
 			if (resultSet != null) logger.info("Retrieved results.");
@@ -58,13 +78,12 @@ public class PleiadesDBHarvester implements Harvester {
 			while (resultSet.next()) {
 				
 				Place place = new Place();
-				PlaceName prefName = null;
+				List<PlaceName> names = new ArrayList<PlaceName>();
 				
 				String title = resultSet.getString("title");
-				if (title != null && !title.isEmpty()) {
-					prefName = new PlaceName(title);
-					prefName.setAncient(true);
-					place.setPrefName(prefName);
+				if (title != null && !title.isEmpty() && !"Untitled".equals(title)
+						&& !title.contains("Unnamed")) {
+					names.add(new PlaceName(title));
 				}
 				
 				Location location = null;
@@ -86,7 +105,16 @@ public class PleiadesDBHarvester implements Harvester {
 				place.addIdentifier(pleiadesId);
 				Link link = new Link();
 				link.setObject("http://pleiades.stoa.org" + resultSet.getString("path"));
+				link.setPredicate("owl:sameAs");
 				place.addLink(link);
+				String geonamesId = resultSet.getString("geonamesid");
+				if (geonamesId != null && !geonamesId.isEmpty() && !"0".equals(geonamesId)) {
+					place.addIdentifier(new Identifier(geonamesId, "geonames"));
+					Link link2 = new Link();
+					link2.setObject("http://sws.geonames.org/" + geonamesId);
+					link2.setPredicate("owl:sameAs");
+					place.addLink(link2);
+				}
 				
 				PreparedStatement namesStmt = connection.prepareStatement("SELECT * FROM names WHERE pid = ?");
 				namesStmt.setInt(1, resultSet.getInt("id"));
@@ -95,24 +123,36 @@ public class PleiadesDBHarvester implements Harvester {
 				while (namesRslt.next()) {
 					String nameAttested = namesRslt.getString("nameAttested");
 					String nameLanguage = namesRslt.getString("nameLanguage");
+					if (LANGUAGES.containsKey(nameLanguage))
+						nameLanguage = LANGUAGES.get(nameLanguage);
+					String timePeriods = namesRslt.getString("timePeriods");
+					boolean ancient = true;
+					if (timePeriods.contains("M"))
+						ancient = false;
 					if (nameAttested != null && !nameAttested.isEmpty()) {
 						PlaceName name = new PlaceName(nameAttested);
 						if (nameLanguage != null && !nameLanguage.isEmpty())
 							name.setLanguage(nameLanguage);
-						name.setAncient(true);
-						if (!name.equals(prefName))
-							place.addName(name);
+						name.setAncient(ancient);
+						names.add(name);
 					}
 					String nameTransliterated = namesRslt.getString("nameTransliterated");
 					if (nameTransliterated != null && !nameTransliterated.isEmpty()) {
 						PlaceName name = new PlaceName(nameTransliterated);
 						if (nameLanguage != null && !nameLanguage.isEmpty())
 							name.setLanguage(nameLanguage);
-						name.setAncient(true);
-						if (!name.equals(prefName))
-							place.addName(name);
+						name.setAncient(ancient);
+						names.add(name);
 					}
 				}
+				
+				if (!names.isEmpty())
+					place.setPrefName(names.remove(0));
+				while (!names.isEmpty())
+					if (!names.get(0).equals(place.getPrefName()))
+						place.addName(names.remove(0));
+					else
+						names.remove(0);
 				
 				place.setId(idGenerator.generate(place));
 				place.setNeedsReview(true);

@@ -112,9 +112,11 @@ public class SearchController {
 		String[] result = query.execute();
 		
 		logger.debug("Querying index returned: " + result.length + " places");
+		logger.debug("Result: {}", Arrays.toString(result));
 		
 		// get places for the result ids from db
 		List<Place> places = placesForList(result);
+		logger.debug("Places: {}", places);
 		Map<String,List<String[]>> facets = processFacets(query, locale);
 		
 		ModelAndView mav = new ModelAndView("place/list");

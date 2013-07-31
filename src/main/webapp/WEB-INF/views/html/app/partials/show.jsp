@@ -160,5 +160,19 @@
 		</dd>
 		<br/>
 	</span>
+	
+	<span ng-repeat="identifier in place.identifiers | filter:{context:'pleiades'} | limitTo:1" >
+		<dt></dt>
+		<dd>
+			<em><s:message code="ui.attribution.pleiades" text="ui.attribution.pleiades"/></em>
+		</dd>
+	</span>
+	
+	<span ng-repeat="identifier in place.identifiers | filter:{context:'geonames'} | limitTo:1" >
+		<dt></dt>
+		<dd>
+			<em><s:message code="ui.attribution.geonames" text="ui.attribution.geonames"/></em>
+		</dd>
+	</span>
 
 </dl>
