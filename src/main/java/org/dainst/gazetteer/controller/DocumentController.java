@@ -1,6 +1,5 @@
 package org.dainst.gazetteer.controller;
 
-import java.sql.Time;
 import java.util.List;
 import java.util.Locale;
 
@@ -189,9 +188,11 @@ public class DocumentController {
 		
 		// add count for children (for scoring)
 		while (place.getParent() != null) {
-			place = placeDao.findOne(place.getParent());
-			place.setChildren(place.getChildren()+1);
-			placeDao.save(place);
+			Place parent = placeDao.findOne(place.getParent());
+			if (parent != null) {
+				parent.setChildren(parent.getChildren()+1);
+				placeDao.save(parent);
+			}
 		}
 		
 		response.setStatus(201);

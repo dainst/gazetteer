@@ -8,6 +8,7 @@ import javax.ws.rs.core.MediaType;
 import org.dainst.gazetteer.dao.HarvesterDefinitionRepository;
 import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.domain.HarvesterDefinition;
+import org.dainst.gazetteer.domain.Link;
 import org.dainst.gazetteer.domain.Location;
 import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.helpers.IdGenerator;
@@ -158,6 +159,33 @@ public class AdminController {
 		
 		return "auto matching started in separate thread.";
 		
+	}
+	
+	@RequestMapping(value="/admin/generateLinks", method=RequestMethod.POST)
+	@ResponseBody
+	public String generateLinks() {
+		
+		generateLinks("pleiades", "http://pleiades.stoa.org/places/", "owl:sameAs");
+		generateLinks("geonames", "http://sws.geonames.org/", "owl:sameAs");
+		
+		return "OK: finished generating Links";
+		
+	}
+	
+	private void generateLinks(String context, String baseUri, String predicate) {
+		List<Place> places = placeDao.findByIdsContext(context);
+		outer: for (Place place : places) {
+			for (Link link : place.getLinks()) {
+				if (link.getObject().startsWith(baseUri))
+					continue outer;
+			}
+			Link newLink = new Link();
+			newLink.setObject(baseUri + place.getIdentifier(context));
+			newLink.setPredicate(predicate);
+			place.addLink(newLink);
+			placeDao.save(place);
+			logger.debug("Generated Link: {}", newLink);
+		}
 	}
 
 }

@@ -7,6 +7,7 @@ import java.util.Set;
 import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.domain.Comment;
 import org.dainst.gazetteer.domain.Identifier;
+import org.dainst.gazetteer.domain.Link;
 import org.dainst.gazetteer.domain.Location;
 import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.PlaceName;
@@ -241,6 +242,24 @@ public class JsonPlaceDeserializer {
 				logger.debug("updated identifier: {}", identifier);				
 			}
 			place.setIdentifiers(identifiers);
+			
+			// update link objects			
+			Set<Link> links = new HashSet<Link>();
+			JsonNode linksNode = objectNode.get("links");
+			if (identifiersNode != null) for (JsonNode linkNode : linksNode) {
+				Link link = new Link();					
+				links.add(link);
+				JsonNode objNode = linkNode.get("object"); 
+				JsonNode predicateNode = linkNode.get("predicate");
+				if (objNode == null)
+					throw new HttpMessageNotReadableException("Invalid link object. Attribute \"object\" has to be set.");
+				if (predicateNode == null)
+					throw new HttpMessageNotReadableException("Invalid link object. Attribute \"predicate\" has to be set.");
+				link.setObject(objNode.asText());
+				link.setPredicate(predicateNode.asText());
+				logger.debug("updated link: {}", link);				
+			}
+			place.setLinks(links);
 					
 			return place;
 			
