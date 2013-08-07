@@ -157,7 +157,7 @@ public class ElasticSearchPlaceQuery {
 	}
 	
 	private String[] responseAsList(SearchResponse response) {
-		SearchHits hits = response.hits();
+		SearchHits hits = response.getHits();
 		totalHits = hits.getTotalHits();
 		String[] result = new String[hits.hits().length];
 		for (int i = 0; i < result.length; i++) {

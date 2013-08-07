@@ -250,9 +250,9 @@ public class SearchController {
 			TermsFacet f = (TermsFacet) facet;
 			
 			// replace parent ids with prefName
-			if (facet.name().equals("parent")) {
+			if (facet.getName().equals("parent")) {
 				for (TermsFacet.Entry entry : f) {
-					Place place = placeDao.findOne(entry.term());
+					Place place = placeDao.findOne(entry.getTerm().string());
 					String[] term = new String[3];
 					try {
 						term[0] = place.getPrefName().getTitle();
@@ -260,31 +260,31 @@ public class SearchController {
 						logger.warn("could not resolve parent name for facet. place: " + place, e);
 						continue;
 					}
-					term[1] = entry.term();
-					term[2] = String.valueOf(entry.count());
+					term[1] = entry.getTerm().string();
+					term[2] = String.valueOf(entry.getCount());
 					terms.add(term);
 				}
-			} else if (facet.name().equals("type")) {
+			} else if (facet.getName().equals("type")) {
 				for (TermsFacet.Entry entry : f) {
 					String message;
 					try {
 						message = messageSource.getMessage("place.types."+entry.getTerm(), null, locale);
 					} catch (NoSuchMessageException e) {
 						logger.warn("No message for type '" + entry.getTerm() + "'.", e);
-						message = entry.getTerm();
+						message = entry.getTerm().string();
 					}
 					String[] term = new String[3];
 					term[0] = message;
-					term[1] = entry.term();
-					term[2] = String.valueOf(entry.count());
+					term[1] = entry.getTerm().string();
+					term[2] = String.valueOf(entry.getCount());
 					terms.add(term);
 				}
 			} else {
 				for (TermsFacet.Entry entry : f) {
 					String[] term = new String[3];
-					term[0] = entry.term();
-					term[1] = entry.term();
-					term[2] = String.valueOf(entry.count());
+					term[0] = entry.getTerm().string();
+					term[1] = entry.getTerm().string();
+					term[2] = String.valueOf(entry.getCount());
 					terms.add(term);
 				}
 			}	
