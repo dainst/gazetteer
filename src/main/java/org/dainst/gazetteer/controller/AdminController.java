@@ -161,6 +161,19 @@ public class AdminController {
 		
 	}
 	
+	@RequestMapping(value="/admin/calculateChildren", method=RequestMethod.POST)
+	@ResponseBody
+	public String calculateChildren() {
+		
+		Iterable<Place> places = placeDao.findAll();
+		for (Place place : places) {
+			int size = placeDao.findByParent(place.getId()).size();
+			place.setChildren(size);
+		}
+		
+		return "OK: finished calculating children";
+	}
+	
 	@RequestMapping(value="/admin/generateLinks", method=RequestMethod.POST)
 	@ResponseBody
 	public String generateLinks() {

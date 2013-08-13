@@ -161,12 +161,12 @@ public class DocumentController {
 		logger.debug(place.getId());
 		
 		// add count for children (for scoring)
-		/*while (true && place.getParent() != null) {
+		while (place.getParent() != null) {
 			place = placeDao.findOne(place.getParent());
-			if (place == null) break;
 			place.setChildren(place.getChildren()+1);
 			placeDao.save(place);
-		}*/
+			logger.debug("updated children count: {}", place.getChildren());
+		}
 		
 		response.setStatus(201);
 		response.setHeader("Location", baseUri + "place/" + place.getId());
@@ -189,13 +189,12 @@ public class DocumentController {
 		logger.debug("saved place {}", place);
 		
 		// add count for children (for scoring)
-		/*while (place.getParent() != null) {
-			place = placeDao.findOne(place.getParent());
-				place.setChildren(place.getChildren()+1);
-				placeDao.save(place);				
-				logger.debug("updated children count: {}", place.getChildren());
-			}
-		}*/
+		while (place.getParent() != null) {
+			Place parent = placeDao.findOne(place.getParent());
+			place.setChildren(place.getChildren()+1);
+			placeDao.save(place);				
+			logger.debug("updated children count: {}", place.getChildren());
+		}
 		
 		response.setStatus(201);
 		response.setHeader("location", baseUri + "place/" + place.getId());

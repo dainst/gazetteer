@@ -78,8 +78,14 @@ public class JsonPlaceDeserializer {
 			JsonNode parentNode = objectNode.get("parent");
 			if (parentNode != null) {
 				Place parent = getPlaceForNode(parentNode);
-				if (parent != null) {
+				if (parent != null && place.getParent() != parent.getId()) {
+					if (place.getParent() != null) {
+						Place oldParent = placeDao.findOne(place.getParent());
+						oldParent.setChildren(oldParent.getChildren()-1);
+						placeDao.save(oldParent);
+					}
 					place.setParent(parent.getId());
+					parent.setChildren(parent.getChildren()+1);
 					placeDao.save(parent);
 				}
 			}
