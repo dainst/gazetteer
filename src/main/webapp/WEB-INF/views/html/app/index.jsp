@@ -95,7 +95,7 @@
 				</div>
 			</div>
 			
-			<div ng-view class="span7">
+			<div ng-view class="span7" style="min-height:530px">
 			
 			</div>
 			
