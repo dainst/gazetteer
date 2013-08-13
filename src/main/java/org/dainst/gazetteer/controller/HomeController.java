@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,7 +31,8 @@ public class HomeController {
 		
 		long time = System.currentTimeMillis();
 		
-		List<Place> places = placeRepository.findByPrefLocationIsNotNull(new PageRequest(0, 10000));
+		List<Place> places = placeRepository.findByPrefLocationIsNotNullAndChildrenGreaterThan(
+				0, new PageRequest(0, 5000, new Sort(Direction.DESC, "children")));
 		
 		logger.debug("findOne: {}", System.currentTimeMillis() - time);
 		time = System.currentTimeMillis();
