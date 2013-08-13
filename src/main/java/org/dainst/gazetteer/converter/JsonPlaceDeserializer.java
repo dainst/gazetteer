@@ -246,7 +246,7 @@ public class JsonPlaceDeserializer {
 			// update link objects			
 			Set<Link> links = new HashSet<Link>();
 			JsonNode linksNode = objectNode.get("links");
-			if (identifiersNode != null) for (JsonNode linkNode : linksNode) {
+			if (linksNode != null) for (JsonNode linkNode : linksNode) {
 				Link link = new Link();					
 				links.add(link);
 				JsonNode objNode = linkNode.get("object"); 
@@ -261,6 +261,8 @@ public class JsonPlaceDeserializer {
 			}
 			place.setLinks(links);
 					
+			logger.debug("returning place {}", place);
+			
 			return place;
 			
 		} catch (Exception e) {
