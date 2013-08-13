@@ -190,7 +190,7 @@ public class DocumentController {
 		
 		// add count for children (for scoring)
 		while (place.getParent() != null) {
-			Place parent = placeDao.findOne(place.getParent());
+			place = placeDao.findOne(place.getParent());
 			place.setChildren(place.getChildren()+1);
 			placeDao.save(place);				
 			logger.debug("updated children count: {}", place.getChildren());
