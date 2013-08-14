@@ -16,6 +16,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -268,8 +271,15 @@ public class JsonPlaceDeserializer {
 			place.setLinks(links);
 			
 			// update reisestipendium note
-			if (objectNode.has("noteReisestipendium")) {
-				place.setNoteReisestipendium(objectNode.get("noteReisestipendium").asText());
+			Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			logger.debug("user: {}", principal);
+			if (principal instanceof User) {
+				User user = (User) principal;
+				if (user.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_REISESTIPENDIUM"))) {
+					if (objectNode.has("noteReisestipendium")) {
+						place.setNoteReisestipendium(objectNode.get("noteReisestipendium").asText());
+					}
+				}
 			}
 					
 			logger.debug("returning place {}", place);
