@@ -165,13 +165,23 @@ public class AdminController {
 	@ResponseBody
 	public String calculateChildren() {
 		
+		long time = System.currentTimeMillis();
+		
 		Iterable<Place> places = placeDao.findAll();
 		for (Place place : places) {
-			int size = placeDao.findByParent(place.getId()).size();
-			place.setChildren(size);
+			try {
+				int size = placeDao.findByParent(place.getId()).size();
+				place.setChildren(size);
+				placeDao.save(place);
+			} catch (NullPointerException e) {
+				logger.warn("Could not find parent {} for {}", place.getParent(), place);
+			}
 		}
 		
-		return "OK: finished calculating children";
+		String message = "OK: finished calculating children in " + (System.currentTimeMillis() - time) + "ms";
+		logger.info(message);
+		
+		return message;
 	}
 	
 	@RequestMapping(value="/admin/generateLinks", method=RequestMethod.POST)

@@ -189,11 +189,15 @@ public class DocumentController {
 		logger.debug("saved place {}", place);
 		
 		// add count for children (for scoring)
-		while (place.getParent() != null) {
-			place = placeDao.findOne(place.getParent());
-			place.setChildren(place.getChildren()+1);
-			placeDao.save(place);				
-			logger.debug("updated children count: {}", place.getChildren());
+		if (place.getParent() != null) {
+			Place parent = placeDao.findOne(place.getParent());
+			try {
+				parent.setChildren(parent.getChildren()+1);
+				placeDao.save(parent);				
+				logger.debug("updated children count: {}", parent.getChildren());
+			} catch (NullPointerException e) {
+				logger.warn("Could not find parent {} for {}", place.getParent(), place);
+			}
 		}
 		
 		response.setStatus(201);
