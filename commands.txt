@@ -175,7 +175,7 @@ rs.initiate({ _id : "rs0", members : [ { _id : 0, host : "localhost:27017" } ] }
         "collection": "place"
     },
     "index": {
-        "name": "gazetteer_tmp",
+        "name": "gazetteer_2013-08-07",
         "type": "place"
     }
 }

@@ -30,7 +30,7 @@ public class SimpleNameAndIdBasedEntityIdentifier implements EntityIdentifier {
 				matchedPlace = placeDao.findOne(id.getValue());
 			} else if (!"zenon-thesaurus".equals(id.getContext())) {
 				matchedPlace = placeDao.findByIdsAndNeedsReviewAndIdNot(
-					id, place.getType(), false, place.getId());
+					id, false, place.getId());
 			}
 			if (matchedPlace != null && id.getValue() != null) {
 				logger.debug("matched id: " + id);
@@ -62,7 +62,7 @@ public class SimpleNameAndIdBasedEntityIdentifier implements EntityIdentifier {
 				return candidates;
 			}
 			
-		} else if ("city".equals(place.getType())) {
+		} else if ("city".equals(place.getType()) || place.getType() == null || place.getType().isEmpty()) {
 
 			// XXX we suppose that the names of cities in the same country are unique
 			Set<Place> resultList = new HashSet<Place>(placeDao.findByPrefNameTitleAndNeedsReviewAndIdNot(

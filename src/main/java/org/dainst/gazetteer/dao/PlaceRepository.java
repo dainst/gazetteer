@@ -57,7 +57,7 @@ public interface PlaceRepository extends PagingAndSortingRepository<Place, Strin
 	public List<Place> findByNamesTitleAndNeedsReviewAndIdNot(
 			String title, boolean b, String id);
 
-	public Place findByIdsAndNeedsReviewAndIdNot(Identifier id, String type,
+	public Place findByIdsAndNeedsReviewAndIdNot(Identifier id,
 			boolean b, String id2);
 	
 	public List<Place> findByIdsContext(String context);

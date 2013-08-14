@@ -161,6 +161,12 @@
 		<br/>
 	</span>
 	
+	<span ng-hide="!place.noteReisestipendium">
+		<dt><s:message code="domain.place.noteReisestipendium" text="domain.place.noteReisestipendium" /></dt>
+		<dd><blockquote>{{place.noteReisestipendium}}</blockquote></dd>
+		<br/>
+	</span>
+	
 	<span ng-repeat="identifier in place.identifiers | filter:{context:'pleiades'} | limitTo:1" >
 		<dt></dt>
 		<dd>

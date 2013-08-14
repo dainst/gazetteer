@@ -8,6 +8,9 @@ import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.PlaceName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -157,6 +160,21 @@ public class JsonPlaceSerializer {
 				tagsNode.add(tag);
 			}
 			placeNode.put("tags", tagsNode);
+		}
+		
+		// reisestipendium notes		
+		logger.debug("serializing reisestipendium comment?");
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		logger.debug("user: {}", principal);
+		if (principal instanceof User) {
+			User user = (User) principal;
+			if (user.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_REISESTIPENDIUM"))) {
+				logger.debug("serializing reisestipendium comment");
+				if (place.getNoteReisestipendium() != null && !place.getNoteReisestipendium().isEmpty()) {
+					placeNode.put("noteReisestipendium", place.getNoteReisestipendium());
+					logger.debug("serialized reisestipendium comment");
+				}
+			}
 		}
 		
 		try {

@@ -65,6 +65,8 @@ public class Place {
 	
 	private int children = 0;
 	
+	private String noteReisestipendium;
+	
 	public String getId() {
 		return id;
 	}
@@ -365,6 +367,14 @@ public class Place {
 
 	public void setChildren(int children) {
 		this.children = children;
+	}
+
+	public String getNoteReisestipendium() {
+		return noteReisestipendium;
+	}
+
+	public void setNoteReisestipendium(String noteReisestipendium) {
+		this.noteReisestipendium = noteReisestipendium;
 	}
 	
 	

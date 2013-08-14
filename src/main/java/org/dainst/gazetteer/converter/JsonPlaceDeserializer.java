@@ -266,6 +266,11 @@ public class JsonPlaceDeserializer {
 				logger.debug("updated link: {}", link);				
 			}
 			place.setLinks(links);
+			
+			// update reisestipendium note
+			if (objectNode.has("noteReisestipendium")) {
+				place.setNoteReisestipendium(objectNode.get("noteReisestipendium").asText());
+			}
 					
 			logger.debug("returning place {}", place);
 			

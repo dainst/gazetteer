@@ -3,3 +3,4 @@
 .classpath
 .settings
 target
+src/main/resources/log4j.xml
