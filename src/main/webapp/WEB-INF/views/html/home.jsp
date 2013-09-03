@@ -32,6 +32,9 @@
 
 	<div class="archaeo-fixed-menu">
 		<div class="container archaeo-fixed-menu-header">
+			<div class="btn-group pull-right" style="margin-top:12px">
+				<a href="#logout" id="userLoginBtn" class="btn btn-small btn-primary">Abmelden</a>
+			</div>
 			<div id="archaeo-fixed-menu-logo"></div>
 			<h3 class="pull-left">
 				<small>Deutsches Archäologisches Institut</small> <br>

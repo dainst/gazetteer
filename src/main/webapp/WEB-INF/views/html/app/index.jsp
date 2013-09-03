@@ -22,6 +22,7 @@
 <script	src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular-resource.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular-cookies.min.js"></script>
 <script src="../resources/js/lib/angular/angular-ui.js"></script>
 <script src="../resources/js/lib/angular/ui-bootstrap-custom-0.4.0.min.js"></script>
 </head>
@@ -29,6 +30,19 @@
 
 	<div class="archaeo-fixed-menu">
 		<div class="container archaeo-fixed-menu-header">
+			<div class="btn-group pull-right" style="margin-top:12px" ng-show="!getUser()">
+				<button href="#loginModal" id="userLoginBtn" class="btn btn-small btn-primary" data-toggle="modal">
+					<s:message code="ui.login" text="ui.login"/>
+				</button>
+			</div>
+			<div class="btn-group pull-right" style="margin-top:12px" ng-show="getUser()">
+				<p class="btn btn-small" ng-show="getUser()">
+					<s:message code="ui.loggedInAs" text="ui.loggedInAs"/>: {{getUser()}}
+				</p>
+				<button href="#" ng-click="logout()" class="btn btn-small btn-primary" ng-show="getUser()">
+					<s:message code="ui.logout" text="ui.logout"/>
+				</button>
+			</div>
 			<div id="archaeo-fixed-menu-logo"></div>
 			<h3 class="pull-left">
 				<small>Deutsches Archäologisches Institut</small> <br>
@@ -68,6 +82,39 @@
 		</div>
 	</div>
 	
+	<div class="modal hide fade" id="loginModal">
+		<form class="form-horizontal" ng-submit="login()">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">&times;</button>
+				<h3><s:message code="ui.login" text="ui.login"/></h3>
+			</div>
+			<div class="modal-body">
+				  <div class="control-group">
+				    <label class="control-label" for="inputUsername">
+						<s:message code="ui.username" text="ui.username"/>
+					</label>
+				    <div class="controls">
+				      <input type="text" id="inputUsername" ng-model="username">
+				    </div>
+				  </div>
+				  <div class="control-group">
+				    <label class="control-label" for="inputPassword">
+						<s:message code="ui.password" text="ui.password"/>
+					</label>
+				    <div class="controls">
+				    	<input type="password" id="inputPassword" ng-model="password">
+				    </div>
+				  </div>
+			</div>
+			<div class="modal-footer">
+				<a href="#" class="btn" data-dismiss="modal" aria-hidden="true"><s:message code="ui.cancel" text="ui.cancel"/></a>
+				<s:message code="ui.login" text="ui.login" var="submitValue"/>
+				<input type="submit" class="btn btn-primary" value="${submitValue}"/>
+			</div>
+		</form>
+	</div>
+	
 	<div class="container">
 	
 		<div class="alerts" ng-cloak ng-hide="alerts.length == 0">
@@ -90,7 +137,7 @@
 		<div class="row-fluid">
 		
 			<div class="span5" id="map-well-wrapper">
-				<div class="well" id="map-well"">
+				<div class="well" id="map-well">
 					<div gaz-map places="activePlaces" height="500" zoom="zoom" bbox="bbox" highlight="highlight"></div>
 				</div>
 			</div>

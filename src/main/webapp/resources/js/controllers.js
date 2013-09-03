@@ -1,6 +1,6 @@
 'use strict';
 
-function AppCtrl($scope, $location, $rootScope) {
+function AppCtrl($scope, $location, $rootScope, Auth) {
 	
 	$scope.q = null;
 	$scope.type = "";
@@ -36,6 +36,18 @@ function AppCtrl($scope, $location, $rootScope) {
 		if (head != null) alert.head = head;
 		if (type != null) alert.alertClass = "alert-" + type;
 		$rootScope.alerts.push(alert);
+	};
+	
+	$rootScope.getUser = function() {
+		return Auth.getUser();
+	};
+	
+	$rootScope.login = function() {
+		Auth.setCredentials($scope.username, $scope.password);
+	};
+	
+	$rootScope.logout = function() {
+		Auth.clearCredentials();
 	};
 	
 	// remove alerts if location changes
