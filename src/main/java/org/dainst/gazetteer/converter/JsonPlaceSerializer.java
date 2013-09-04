@@ -36,6 +36,7 @@ public class JsonPlaceSerializer {
 	public String serialize(Place place, int lod) {
 		
 		ObjectNode placeNode = mapper.createObjectNode();
+		logger.debug("serializing: {}", place);
 		placeNode.put("@id", baseUri + "place/" + place.getId());
 		placeNode.put("gazId", place.getId());
 		

@@ -66,6 +66,7 @@ public class AdminController {
 	@Value("${geonamesSolrUri}")
 	private String geonamesSolrUri;
 	
+	@Deprecated
 	@RequestMapping(value="/admin/reindex", method=RequestMethod.POST)
 	@ResponseBody
 	public String reindex() {
