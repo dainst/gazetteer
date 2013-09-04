@@ -1,4 +1,5 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page contentType="text/html; charset=utf-8" session="false"%>
 
 <div class="subnav place-nav">
@@ -24,11 +25,13 @@
 				<i class="icon-globe"></i> <s:message code="ui.similarPlaces" text="ui.merge"/>
 			</a>
 		</li>
-		<li class="pull-right" ng-class="isActive('edit')">
-			<a href="#!/edit/{{place.gazId}}">
-				<i class="icon-edit"></i> <s:message code="ui.edit" text="ui.edit"/>
-			</a>
-		</li>
+		<sec:authorize access="hasRole('ROLE_USER')">
+			<li class="pull-right" ng-class="isActive('edit')">
+				<a href="#!/edit/{{place.gazId}}">
+					<i class="icon-edit"></i> <s:message code="ui.edit" text="ui.edit"/>
+				</a>
+			</li>
+		</sec:authorize>
 		<li class="pull-right" ng-class="isActive('show')">
 			<a href="#!/show/{{place.gazId}}">
 				<i class="icon-th-list"></i> <s:message code="ui.show" text="ui.show"/>

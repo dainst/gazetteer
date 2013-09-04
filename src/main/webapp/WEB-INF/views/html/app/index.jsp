@@ -70,10 +70,12 @@
 										code="ui.thesaurus.list" text="ui.thesaurus.list" /></a></li>
 							<li><a href="#!/extended-search"> <s:message
 										code="ui.search.extendedSearch" text="ui.search.extendedSearch" />
-							</a></li>
-							<li><a href="#!/edit/"> <s:message
-										code="ui.place.create" text="ui.place.create" />
-							</a></li>
+							</a></li>							
+							<sec:authorize access="hasRole('ROLE_USER')">
+								<li><a href="#!/edit/"> <s:message
+											code="ui.place.create" text="ui.place.create" />
+								</a></li>
+							</sec:authorize>
 						</ul>
 						<form novalidate class="navbar-search pull-left" ng-submit="submit()">
 							<s:message code="ui.search.simpleSearch" text="Einfache Suche"
