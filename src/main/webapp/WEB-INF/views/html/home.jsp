@@ -2,6 +2,7 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page contentType="text/html; charset=utf-8" session="false"%>
 
 <s:url var="searchAction" value="app/#!/search" />
@@ -32,9 +33,23 @@
 
 	<div class="archaeo-fixed-menu">
 		<div class="container archaeo-fixed-menu-header">
-			<div class="btn-group pull-right" style="margin-top:12px">
-				<a href="#logout" id="userLoginBtn" class="btn btn-small btn-primary">Abmelden</a>
-			</div>
+			<sec:authorize access="isAnonymous()">
+				<div class="btn-group pull-right" style="margin-top:12px">
+					<a href="login" class="btn btn-small btn-primary">
+						<s:message code="ui.login" text="ui.login"/>
+					</a>
+				</div>
+			</sec:authorize>
+			<sec:authorize access="isAuthenticated()">
+				<div class="btn-group pull-right" style="margin-top:12px">
+					<p class="btn btn-small">
+						<s:message code="ui.loggedInAs" text="ui.loggedInAs"/>: <sec:authentication property="principal.username" />
+					</p>
+					<a href="logout" class="btn btn-small btn-primary">
+						<s:message code="ui.logout" text="ui.logout"/>
+					</a>
+				</div>
+			</sec:authorize>
 			<div id="archaeo-fixed-menu-logo"></div>
 			<h3 class="pull-left">
 				<small>Deutsches Archäologisches Institut</small> <br>

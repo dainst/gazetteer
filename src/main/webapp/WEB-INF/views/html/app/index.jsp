@@ -1,5 +1,6 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page contentType="text/html; charset=utf-8" session="false"%>
 
 <!doctype html>
@@ -30,19 +31,23 @@
 
 	<div class="archaeo-fixed-menu">
 		<div class="container archaeo-fixed-menu-header">
-			<div class="btn-group pull-right" style="margin-top:12px" ng-show="!getUser()">
-				<button href="#loginModal" id="userLoginBtn" class="btn btn-small btn-primary" data-toggle="modal">
-					<s:message code="ui.login" text="ui.login"/>
-				</button>
-			</div>
-			<div class="btn-group pull-right" style="margin-top:12px" ng-show="getUser()">
-				<p class="btn btn-small" ng-show="getUser()">
-					<s:message code="ui.loggedInAs" text="ui.loggedInAs"/>: {{getUser()}}
-				</p>
-				<button href="#" ng-click="logout()" class="btn btn-small btn-primary" ng-show="getUser()">
-					<s:message code="ui.logout" text="ui.logout"/>
-				</button>
-			</div>
+			<sec:authorize access="isAnonymous()">
+				<div class="btn-group pull-right" style="margin-top:12px">
+					<a href="../login" class="btn btn-small btn-primary">
+						<s:message code="ui.login" text="ui.login"/>
+					</a>
+				</div>
+			</sec:authorize>
+			<sec:authorize access="isAuthenticated()">
+				<div class="btn-group pull-right" style="margin-top:12px">
+					<p class="btn btn-small">
+						<s:message code="ui.loggedInAs" text="ui.loggedInAs"/>: <sec:authentication property="principal.username" />
+					</p>
+					<a href="../logout" class="btn btn-small btn-primary">
+						<s:message code="ui.logout" text="ui.logout"/>
+					</a>
+				</div>
+			</sec:authorize>
 			<div id="archaeo-fixed-menu-logo"></div>
 			<h3 class="pull-left">
 				<small>Deutsches Archäologisches Institut</small> <br>
@@ -80,39 +85,6 @@
 				</div>
 			</div>
 		</div>
-	</div>
-	
-	<div class="modal hide fade" id="loginModal">
-		<form class="form-horizontal" ng-submit="login()">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"
-					aria-hidden="true">&times;</button>
-				<h3><s:message code="ui.login" text="ui.login"/></h3>
-			</div>
-			<div class="modal-body">
-				  <div class="control-group">
-				    <label class="control-label" for="inputUsername">
-						<s:message code="ui.username" text="ui.username"/>
-					</label>
-				    <div class="controls">
-				      <input type="text" id="inputUsername" ng-model="username">
-				    </div>
-				  </div>
-				  <div class="control-group">
-				    <label class="control-label" for="inputPassword">
-						<s:message code="ui.password" text="ui.password"/>
-					</label>
-				    <div class="controls">
-				    	<input type="password" id="inputPassword" ng-model="password">
-				    </div>
-				  </div>
-			</div>
-			<div class="modal-footer">
-				<a href="#" class="btn" data-dismiss="modal" aria-hidden="true"><s:message code="ui.cancel" text="ui.cancel"/></a>
-				<s:message code="ui.login" text="ui.login" var="submitValue"/>
-				<input type="submit" class="btn btn-primary" value="${submitValue}"/>
-			</div>
-		</form>
 	</div>
 	
 	<div class="container">
