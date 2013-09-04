@@ -73,8 +73,7 @@
 	
 		<c:if test="${not empty error}">
 			<div class="alert alert-error">
-				Your login attempt was not successful, try again.<br />
-				Caused: ${sessionScope["SPRING_SECURITY_LAST_EXCEPTION"].message}
+				<s:message code="ui.login.error" text="ui.login.error" />
 			</div>
 		</c:if>
 
