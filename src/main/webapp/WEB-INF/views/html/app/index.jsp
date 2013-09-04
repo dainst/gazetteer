@@ -33,7 +33,7 @@
 		<div class="container archaeo-fixed-menu-header">
 			<sec:authorize access="isAnonymous()">
 				<div class="btn-group pull-right" style="margin-top:12px">
-					<a href="../login" class="btn btn-small btn-primary">
+					<a href="javascript:window.location.href='../login?r=' + window.location.hash.substring(3);" class="btn btn-small btn-primary">
 						<s:message code="ui.login" text="ui.login"/>
 					</a>
 				</div>

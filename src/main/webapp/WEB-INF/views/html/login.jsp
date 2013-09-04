@@ -80,6 +80,9 @@
 		<div class="row">
 			<div class="span6 offset3 well">
 				<form class="form-horizontal" name="f" action="j_spring_security_check" method="POST">
+					<c:if test="${not empty r}">
+						<input type="hidden" name="spring-security-redirect" value="/app/#!/<c:out value="${r}" />">
+					</c:if>
 					<h3>
 						<s:message code="ui.login" text="ui.login" />
 					</h3>
