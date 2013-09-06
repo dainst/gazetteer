@@ -77,6 +77,11 @@
 								<li><a href="app/#!/edit/"> <s:message
 											code="ui.place.create" text="ui.place.create" />
 								</a></li>
+							</sec:authorize>							
+							<sec:authorize access="hasRole('ROLE_REISESTIPENDIUM')">
+								<li><a href="app/#!/search?q=%7B%22bool%22:%7B%22must%22:%5B%7B%22query_string%22:%7B%22query%22:%22_exists_:noteReisestipendium%22%7D%7D%5D%7D%7D&type=extended"> <s:message
+											code="ui.search.reisestipendium" text="ui.search.reisestipendium" />
+								</a></li>
 							</sec:authorize>
 						</ul>
 					</div>
