@@ -1,5 +1,7 @@
 package org.dainst.gazetteer.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.dainst.gazetteer.dao.PlaceRepository;
@@ -51,6 +53,18 @@ public class MergeController {
 			relatedPlace.getRelatedPlaces().remove(id2);
 			relatedPlace.getRelatedPlaces().add(newPlace.getId());
 			placeDao.save(relatedPlace);
+		}
+		
+		List<Place> children = placeDao.findByParent(id1);
+		for (Place child : children) {
+			child.setParent(newPlace.getId());
+			placeDao.save(child);
+		}
+		
+		children = placeDao.findByParent(id2);
+		for (Place child : children) {
+			child.setParent(newPlace.getId());
+			placeDao.save(child);
 		}
 		
 		place1.setReplacedBy(newPlace.getId());
