@@ -163,18 +163,31 @@ public class JsonPlaceSerializer {
 			placeNode.put("tags", tagsNode);
 		}
 		
-		// reisestipendium notes		
-		logger.debug("serializing reisestipendium comment?");
+		// reisestipendium content		
+		logger.debug("serializing reisestipendium content?");
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		logger.debug("user: {}", principal);
 		if (principal instanceof User) {
 			User user = (User) principal;
 			if (user.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_REISESTIPENDIUM"))) {
-				logger.debug("serializing reisestipendium comment");
+				
+				logger.debug("serializing reisestipendium note");
 				if (place.getNoteReisestipendium() != null && !place.getNoteReisestipendium().isEmpty()) {
 					placeNode.put("noteReisestipendium", place.getNoteReisestipendium());
-					logger.debug("serialized reisestipendium comment");
+					logger.debug("serialized reisestipendium note");
 				}
+
+				if (!place.getCommentsReisestipendium().isEmpty()) {
+					ArrayNode commentsNode = mapper.createArrayNode();
+					for (Comment comment : place.getCommentsReisestipendium()) {
+						ObjectNode commentNode = mapper.createObjectNode();
+						commentNode.put("text", comment.getText());
+						commentNode.put("user", comment.getUser());
+						commentsNode.add(commentNode);
+					}
+					placeNode.put("commentsReisestipendium", commentsNode);
+				}
+				
 			}
 		}
 		

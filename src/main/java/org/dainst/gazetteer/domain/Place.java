@@ -67,6 +67,8 @@ public class Place {
 	
 	private String noteReisestipendium;
 	
+	private Set<Comment> commentsReisestipendium = new HashSet<Comment>();
+	
 	public String getId() {
 		return id;
 	}
@@ -251,12 +253,49 @@ public class Place {
 				+ ", deleted=" + deleted + ", replacedBy=" + replacedBy + "]";
 	}
 
+	public Location getPrefLocation() {
+		return prefLocation;
+	}
+
+	public void setPrefLocation(Location prefLocation) {
+		this.prefLocation = prefLocation;
+	}
+
+	public int getChildren() {
+		return children;
+	}
+
+	public void setChildren(int children) {
+		this.children = children;
+	}
+
+	public String getNoteReisestipendium() {
+		return noteReisestipendium;
+	}
+
+	public void setNoteReisestipendium(String noteReisestipendium) {
+		this.noteReisestipendium = noteReisestipendium;
+	}
+
+	public Set<Comment> getCommentsReisestipendium() {
+		return commentsReisestipendium;
+	}
+
+	public void setCommentsReisestipendium(Set<Comment> commentsReisestipendium) {
+		this.commentsReisestipendium = commentsReisestipendium;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + children;
 		result = prime * result
 				+ ((comments == null) ? 0 : comments.hashCode());
+		result = prime
+				* result
+				+ ((commentsReisestipendium == null) ? 0
+						: commentsReisestipendium.hashCode());
 		result = prime * result + (deleted ? 1231 : 1237);
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((ids == null) ? 0 : ids.hashCode());
@@ -265,7 +304,13 @@ public class Place {
 				+ ((locations == null) ? 0 : locations.hashCode());
 		result = prime * result + ((names == null) ? 0 : names.hashCode());
 		result = prime * result + (needsReview ? 1231 : 1237);
+		result = prime
+				* result
+				+ ((noteReisestipendium == null) ? 0 : noteReisestipendium
+						.hashCode());
 		result = prime * result + ((parent == null) ? 0 : parent.hashCode());
+		result = prime * result
+				+ ((prefLocation == null) ? 0 : prefLocation.hashCode());
 		result = prime * result
 				+ ((prefName == null) ? 0 : prefName.hashCode());
 		result = prime * result
@@ -286,10 +331,18 @@ public class Place {
 		if (getClass() != obj.getClass())
 			return false;
 		Place other = (Place) obj;
+		if (children != other.children)
+			return false;
 		if (comments == null) {
 			if (other.comments != null)
 				return false;
 		} else if (!comments.equals(other.comments))
+			return false;
+		if (commentsReisestipendium == null) {
+			if (other.commentsReisestipendium != null)
+				return false;
+		} else if (!commentsReisestipendium
+				.equals(other.commentsReisestipendium))
 			return false;
 		if (deleted != other.deleted)
 			return false;
@@ -320,10 +373,20 @@ public class Place {
 			return false;
 		if (needsReview != other.needsReview)
 			return false;
+		if (noteReisestipendium == null) {
+			if (other.noteReisestipendium != null)
+				return false;
+		} else if (!noteReisestipendium.equals(other.noteReisestipendium))
+			return false;
 		if (parent == null) {
 			if (other.parent != null)
 				return false;
 		} else if (!parent.equals(other.parent))
+			return false;
+		if (prefLocation == null) {
+			if (other.prefLocation != null)
+				return false;
+		} else if (!prefLocation.equals(other.prefLocation))
 			return false;
 		if (prefName == null) {
 			if (other.prefName != null)
@@ -352,31 +415,5 @@ public class Place {
 			return false;
 		return true;
 	}
-
-	public Location getPrefLocation() {
-		return prefLocation;
-	}
-
-	public void setPrefLocation(Location prefLocation) {
-		this.prefLocation = prefLocation;
-	}
-
-	public int getChildren() {
-		return children;
-	}
-
-	public void setChildren(int children) {
-		this.children = children;
-	}
-
-	public String getNoteReisestipendium() {
-		return noteReisestipendium;
-	}
-
-	public void setNoteReisestipendium(String noteReisestipendium) {
-		this.noteReisestipendium = noteReisestipendium;
-	}
-	
-	
 	
 }

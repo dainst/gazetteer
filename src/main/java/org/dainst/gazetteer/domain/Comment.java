@@ -2,8 +2,9 @@ package org.dainst.gazetteer.domain;
 
 public class Comment {
 	
-	private String text;	
+	private String text;
 	private String language;
+	private String user;
 
 	public String getText() {
 		return text;
@@ -26,6 +27,14 @@ public class Comment {
 		return "Comment [text=" + text + ", language=" + language + "]";
 	}
 
+	public String getUser() {
+		return user;
+	}
+
+	public void setUser(String user) {
+		this.user = user;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -33,6 +42,7 @@ public class Comment {
 		result = prime * result
 				+ ((language == null) ? 0 : language.hashCode());
 		result = prime * result + ((text == null) ? 0 : text.hashCode());
+		result = prime * result + ((user == null) ? 0 : user.hashCode());
 		return result;
 	}
 
@@ -55,7 +65,14 @@ public class Comment {
 				return false;
 		} else if (!text.equals(other.text))
 			return false;
+		if (user == null) {
+			if (other.user != null)
+				return false;
+		} else if (!user.equals(other.user))
+			return false;
 		return true;
 	}
+	
+	
 
 }

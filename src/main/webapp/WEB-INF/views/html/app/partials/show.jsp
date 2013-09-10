@@ -169,6 +169,17 @@
 		<br/>
 	</span>
 	
+	<span ng-hide="!place.commentsReisestipendium">
+		<dt><s:message code="domain.place.commentsReisestipendium" text="domain.place.commentsReisestipendium" /></dt>
+		<dd ng-repeat="comment in place.commentsReisestipendium">
+			<blockquote>
+				{{comment.text}}
+				<small ng-show="comment.user">{{comment.user}}</small>
+			</blockquote>
+		</dd>
+		<br/>
+	</span>
+	
 	<span ng-repeat="identifier in place.identifiers | filter:{context:'pleiades'} | limitTo:1" >
 		<dt></dt>
 		<dd>
