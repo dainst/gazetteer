@@ -281,6 +281,24 @@ public class JsonPlaceDeserializer {
 					}
 				}
 			}
+			
+			// update comment objects
+			if (principal instanceof User) {
+				Set<Comment> commentsReisestipendium = new HashSet<Comment>();
+				JsonNode commentsReisestipendiumNode = objectNode.get("comments");
+				if (commentsReisestipendiumNode != null) for (JsonNode commentNode : commentsReisestipendiumNode) {
+					Comment comment = new Comment();					
+					commentsReisestipendium.add(comment);
+					JsonNode userNode = commentNode.get("user"); 
+					JsonNode textNode = commentNode.get("text");
+					if (textNode == null)
+						throw new HttpMessageNotReadableException("Invalid comment object. Attribute \"text\" has to be set.");
+					if (userNode != null) comment.setLanguage(userNode.asText());
+					comment.setText(textNode.asText());
+					logger.debug("updated comment: {}", comment);				
+				}
+				place.setCommentsReisestipendium(commentsReisestipendium);
+			}
 					
 			logger.debug("returning place {}", place);
 			
