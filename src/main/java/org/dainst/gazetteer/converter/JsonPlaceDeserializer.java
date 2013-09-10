@@ -288,8 +288,11 @@ public class JsonPlaceDeserializer {
 						JsonNode textNode = commentNode.get("text");
 						if (textNode == null)
 							throw new HttpMessageNotReadableException("Invalid comment object. Attribute \"text\" has to be set.");
-						if (userNode != null) comment.setUser(userNode.asText());
-						else comment.setUser(user.getUsername());
+						if (userNode != null) {
+							if (!userNode.isNull()) comment.setUser(userNode.asText());
+						} else {
+							comment.setUser(user.getUsername());
+						}
 						comment.setText(textNode.asText());
 						logger.debug("updated comment: {}", comment);				
 					}

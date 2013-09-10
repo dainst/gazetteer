@@ -174,7 +174,7 @@
 		<dd ng-repeat="comment in place.commentsReisestipendium">
 			<blockquote>
 				{{comment.text}}
-				<small ng-show="comment.user">{{comment.user}}</small>
+				<small ng-show="comment.user && comment.user != null">{{comment.user}}</small>
 			</blockquote>
 		</dd>
 		<br/>
