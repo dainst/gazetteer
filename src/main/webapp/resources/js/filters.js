@@ -10,10 +10,16 @@ angular.module('gazetteer.filters', []).
   }]).
   filter('parseUrlFilter', function() {
     var urlPattern = /(http|ftp|https):\/\/[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/gi;
-    return function(text, otherProp) {        
+    return function(text) {        
         angular.forEach(text.match(urlPattern), function(url) {
             text = text.replace(url, "<a target=\"_blank\" href="+ url + ">" + url +" <i class=\"icon-external-link\" style=\"font-size:0.7em\"></i></a>");
         });
         return text;        
+    };
+  }).
+  filter('parseLineBreakFilter', function() {
+    var lineBreakPattern = /\r?\n|\r/gi;
+    return function(text) {
+        return text.replace(lineBreakPattern, "<br>");        
     };
   });

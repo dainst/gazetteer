@@ -164,7 +164,7 @@
 	<span ng-hide="!place.noteReisestipendium">
 		<dt><s:message code="domain.place.noteReisestipendium" text="domain.place.noteReisestipendium" /></dt>
 		<dd>
-			<blockquote ng-bind-html-unsafe="place.noteReisestipendium | parseUrlFilter"></blockquote>
+			<blockquote ng-bind-html-unsafe="place.noteReisestipendium | parseUrlFilter | parseLineBreakFilter"></blockquote>
 		</dd>
 		<br/>
 	</span>

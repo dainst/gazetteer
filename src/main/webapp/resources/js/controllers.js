@@ -495,6 +495,14 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, $http, me
 		$scope.relatedPlaces = relatedPlaces;
 	};
 	
+	$scope.addCommentReisestipendium = function() {
+		if (!$scope.commentReisestipendium.text) return;
+		if ($scope.place.commentsReisestipendium == undefined)
+			$scope.place.commentsReisestipendium = [];
+		$scope.place.commentsReisestipendium.push($scope.commentReisestipendium);
+		$scope.commentReisestipendium = {};
+	};
+	
 	$scope.getIdByContext = function(context) {
 		var ids = $scope.place.identifiers;
 		for (var i in ids)

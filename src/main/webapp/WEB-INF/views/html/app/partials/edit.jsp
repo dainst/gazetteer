@@ -1,5 +1,6 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page contentType="text/html; charset=utf-8" session="false"%>
 
 <s:message code="ui.language.notSpecified" text="ui.language.notSpecified" var="langNotSpecified" />
@@ -32,6 +33,13 @@
 			<s:message code="domain.place.connections" text="domain.place.connections"/>
 		</a>
 	</li>
+	<sec:authorize access="hasRole('ROLE_REISESTIPENDIUM')">
+		<li>
+			<a href="#reisestipendium" data-toggle="tab">
+				<s:message code="domain.place.reisestipendium" text="domain.place.reisestipendium"/>
+			</a>
+		</li>
+	</sec:authorize>
 </ul>
 
 <form novalidate class="form-horizontal" name="editForm">
@@ -294,7 +302,45 @@
 					</div>
 					
 				</div>
-	
+				
+				<sec:authorize access="hasRole('ROLE_REISESTIPENDIUM')">
+					<div class="tab-pane" id="reisestipendium">
+					
+						<legend><s:message code="domain.place.reisestipendium" text="domain.place.reisestipendium"/></legend>
+						
+						<!-- notes -->
+						<div class="control-group">
+							<label class="control-label">
+								<s:message code="domain.place.noteReisestipendium" text="domain.place.noteReisestipendium" />
+							</label>
+							<div class="controls">
+								<textarea rows="6" class="span12" ng-model="place.noteReisestipendium"></textarea>
+							</div>
+						</div>
+						
+						<!-- comments -->
+						<div class="control-group">
+							<label class="control-label">
+								<s:message code="domain.place.commentsReisestipendium" text="domain.place.commentsReisestipendium" />
+							</label>
+							<div class="controls">
+								<textarea rows="6" class="span10" ng-model="commentReisestipendium.text"></textarea>
+								<div class="btn btn-primary plus" ng-click="addCommentReisestipendium()" ng-disabled="!commentReisestipendium.text">
+									<i class="icon-plus icon-white"></i>
+								</div>
+								<div ng-hide="!place.commentsReisestipendium" style="margin-top: 1em">
+									<blockquote ng-repeat="comment in place.commentsReisestipendium">
+										<a ng-click="place.commentsReisestipendium.splice($index,1)"><i class="icon-remove-sign"></i></a>
+										{{comment.text}}
+										<small ng-hide="!comment.user">{{comment.user}}</small>
+									</blockquote>
+								</div>
+							</div>
+						</div>
+						
+					</div>
+				</sec:authorize>
+				
 			</div>
 		
 		</fieldset>
