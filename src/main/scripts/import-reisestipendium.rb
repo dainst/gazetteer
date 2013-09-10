@@ -29,6 +29,7 @@ end
 
 i = 0
 CSV.foreach(ARGV[0], {:col_sep => ';'}) do |row|
+  next if row[0] == nil
 	place = $places.find_one({ '_id' => row[0].strip})
   if place != nil then
     place = get_current(place)
