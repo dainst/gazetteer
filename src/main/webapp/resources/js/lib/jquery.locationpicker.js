@@ -38,7 +38,7 @@
                     $(that).val(lng + "," + lat);
                     var scope = angular.element(that).scope();
                     scope.$apply("coordinates = [" + lng + "," + lat + "]");
-                }
+                };
                 
                 var id = $(this).attr('id');
                 
@@ -108,13 +108,6 @@
                     getCurrentPosition();
                     map.setCenter(marker.position);
                 }
-                
-                $(this).focus(function(){
-                    var address = $(that).val();
-                    if(isLngLat(address)){
-                        showPicker();
-                    }
-                });
                 
                 $(":input").focus(function(){
                     if($(this).attr('id') != $(that).attr('id')){
