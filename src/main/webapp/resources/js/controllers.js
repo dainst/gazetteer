@@ -40,6 +40,7 @@ function AppCtrl($scope, $location, $rootScope) {
 	
 	// remove alerts if location changes
 	$scope.$watch(function(){ return $location.absUrl(); }, function() {
+		if ($location.search().keepAlerts) return;
 		$rootScope.alerts = [];
 	});
 	
@@ -426,15 +427,23 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, $http, me
 	
 	$scope.save = function() {
 		$rootScope.loading++;
+		if($scope.comment) $scope.addComment();
+		if($scope.name) $scope.addName();
+		if($scope.location) $scope.addLocation();
+		if($scope.identifier) $scope.addIdentifier();
+		if($scope.link) $scope.addLink();
+		if($scope.relatedPlace) $scope.addRelatedPlace();
+		if($scope.commentReisestipendium) $scope.addCommentReisestipendium();
 		Place.save(
 			$scope.place,
 			function(data) {
 				if (data.gazId) {
-					$scope.place = data;
+					$scope.place.gazId = data.gazId;
 				}
-				$rootScope.addAlert(messages["ui.place.save.success"], null, "success");
 				window.scrollTo(0,0);
 				$rootScope.loading--;
+				$location.search("keepAlerts").path("show/" + $scope.place.gazId);
+				$rootScope.addAlert(messages["ui.place.save.success"], null, "success");
 			},
 			function(result) {
 				$scope.failure = result.data.message; 
@@ -513,6 +522,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, $http, me
 	
 	// update relatedPlaces attribute of place when relatedPlaces in scope changes
 	$scope.$watch("relatedPlaces.length", function() {
+		if ($scope.place == undefined) return;
 		$scope.place.relatedPlaces = [];
 		for (var i in $scope.relatedPlaces)
 			$scope.place.relatedPlaces.push($scope.relatedPlaces[i]["@id"]);

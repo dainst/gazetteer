@@ -253,6 +253,7 @@ public class SearchController {
 			if (facet.getName().equals("parent")) {
 				for (TermsFacet.Entry entry : f) {
 					Place place = placeDao.findOne(entry.getTerm().string());
+					if (place == null) continue;
 					String[] term = new String[3];
 					try {
 						term[0] = place.getPrefName().getTitle();

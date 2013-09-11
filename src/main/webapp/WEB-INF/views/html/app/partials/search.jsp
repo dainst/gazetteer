@@ -107,7 +107,7 @@
 										<li ng-repeat="entry in facet | orderBy:'count':true | limitTo:-5">
 											<small>
 												<i class="icon-angle-right"></i>
-												<a ng-click="setFacet(facetName, entry.term)">
+												<a ng-click="setFacet(facetName, entry.term)" href="">
 													<span ng-show="entry.label.length < 15">
 														{{entry.label}}
 													</span>
