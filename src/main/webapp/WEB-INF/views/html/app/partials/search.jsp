@@ -104,7 +104,7 @@
 								</td>
 								<td ng-show="facet.length > 5">
 									<ul class="unstyled" style="margin:0; padding-left:5px;">
-										<li ng-repeat="entry in facet | orderBy:'count':true | limitTo:-5">
+										<li ng-repeat="entry in facet.slice(5) | orderBy:'count':true">
 											<small>
 												<i class="icon-angle-right"></i>
 												<a ng-click="setFacet(facetName, entry.term)">
