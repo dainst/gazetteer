@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.domain.Place;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -20,6 +22,8 @@ import org.springframework.web.servlet.view.RedirectView;
 
 @Controller
 public class PlaceController {
+
+	private static final Logger logger = LoggerFactory.getLogger(PlaceController.class);
 	
 	@Resource(name="mediaTypes")
 	Map<String,String> mediaTypes;
@@ -51,9 +55,15 @@ public class PlaceController {
 			String acceptHeader = request.getHeader("Accept");
 			String suffix = "html";
 			if (acceptHeader != null) for (Entry<String, String> entry : mediaTypes.entrySet()) {
+				String uri = request.getRequestURI();
+				if (uri.lastIndexOf(".") > 0)
+					suffix = uri.substring(uri.lastIndexOf(".")+1);
 				if (acceptHeader.contains(entry.getValue()))
 					suffix = entry.getKey();
+				logger.debug("suffix: {}", suffix);
 			}
+			
+			logger.debug("suffix: {}", suffix);
 			
 			view = new RedirectView("../doc/" + id + "." + suffix, false, true);
 			view.setStatusCode(HttpStatus.SEE_OTHER);

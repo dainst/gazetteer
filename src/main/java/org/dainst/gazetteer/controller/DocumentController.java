@@ -75,10 +75,19 @@ public class DocumentController {
 
 		ModelAndView mav;
 		
+		String suffix = "";
+		String uri = request.getRequestURI();
+		logger.debug("uri: " + uri);
+		if (uri.lastIndexOf(".") > 0) {
+			suffix = uri.substring(uri.lastIndexOf("."));
+			logger.debug("suffix: " + suffix);
+		}
+		
 		// redirect browsers to app
-		if (accept.contains("text/html") && !userAgent.contains("bot")) {
+		if (accept.contains("text/html") && !userAgent.contains("bot") && suffix.isEmpty()) {
 			RedirectView redirectView = new RedirectView(baseUri + "app/#!/show/" + placeId, true, true);
 			redirectView.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
+			logger.debug("Redirecting to app ...");
 			return new ModelAndView(redirectView);
 		}
 		
@@ -95,22 +104,14 @@ public class DocumentController {
 			
 		} else if (place.getReplacedBy() != null && !place.getReplacedBy().isEmpty()) {
 			
-			String suffix = "";
-			String uri = request.getRequestURI();
-			logger.debug("uri: " + uri);
-			if (uri.lastIndexOf(".") > 0) {
-				suffix = uri.substring(uri.lastIndexOf("."));
-				logger.debug("suffix: " + suffix);
-			}
-			
 			RedirectView redirectView = new RedirectView("/doc/" + place.getReplacedBy() + suffix, true, true);
 			redirectView.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
 			mav = new ModelAndView(redirectView);
 		
 		// places that need to be reviewed should not be available to the public
-		//} else if (place.isNeedsReview()) {
+		} else if (place.isNeedsReview()) {
 			
-		//	throw new ResourceNotFoundException();
+			throw new ResourceNotFoundException();
 			
 		} else {
 			
@@ -124,8 +125,8 @@ public class DocumentController {
 			logger.debug("findByIdIn: {}", System.currentTimeMillis() - time);
 			time = System.currentTimeMillis();
 			
-			Place parent = null;
-			if (place.getParent() != null) parent = placeDao.findOne(place.getParent());
+			//Place parent = null;
+			//if (place.getParent() != null) parent = placeDao.findOne(place.getParent());
 			
 			mav = new ModelAndView("place/get");
 			if (layout != null) {
@@ -134,7 +135,7 @@ public class DocumentController {
 			mav.addObject("place", place);
 			//mav.addObject("children", children);
 			mav.addObject("relatedPlaces", relatedPlaces);
-			mav.addObject("parent", parent);
+			//mav.addObject("parent", parent);
 			mav.addObject("baseUri", baseUri);
 			mav.addObject("language", locale.getISO3Language());
 			mav.addObject("limit", limit);
