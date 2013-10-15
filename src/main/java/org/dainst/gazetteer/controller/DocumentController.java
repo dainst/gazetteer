@@ -84,7 +84,9 @@ public class DocumentController {
 		}
 		
 		// redirect browsers to app
-		if (accept.contains("text/html") && !userAgent.contains("bot") && suffix.isEmpty()) {
+		logger.debug("User-Agent: {}", userAgent);
+		logger.debug("Accept: {}", accept);
+		if ( (accept.contains("text/html") && suffix.isEmpty()) || ".html".equals(suffix) && !userAgent.contains("bot")) {
 			RedirectView redirectView = new RedirectView(baseUri + "app/#!/show/" + placeId, true, true);
 			redirectView.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
 			logger.debug("Redirecting to app ...");
