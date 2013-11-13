@@ -3,6 +3,7 @@
 require 'rubygems'
 require 'mongo'
 require 'csv'
+require 'json'
 
 include Mongo
 
@@ -27,20 +28,44 @@ def get_current(place)
   end
 end
 
+def save_place(place)
+  if ARGV[1] != "--noop" then
+    $places.save place
+  else
+    jj place
+  end
+  puts "updated: #{place['_id']}"
+end
+
+def add_related(place, relId)
+  if place["relatedPlaces"] == nil then
+    place["relatedPlaces"] = []
+  end
+  place["relatedPlaces"] << relId
+end
+
 i = 0
 CSV.foreach(ARGV[0]) do |row|
   next if row[0] == nil
 	place = $places.find_one({ '_id' => row[0].strip})
   if place != nil then
     place = get_current(place)
-    place['noteReisestipendium'] = row[2].strip
+    if row[2] != nil then
+      place['noteReisestipendium'] = row[2].strip
+    end
     if row[3] != nil then
       place['commentsReisestipendium'] = [{"text" => row[3].strip}]
     end
-    if ARGV[1] != "--noop" then
-      $places.save place
+    if row[4] != nil then
+      place["parent"] = row[4].strip
     end
-    puts "updated: #{row[0]}"
+    if row[5] != nil then
+      add_related(place, row[5].strip)
+      relPlace = $places.find_one({ '_id' => row[5].strip})
+      add_related(relPlace, row[0].strip)
+      save_place(relPlace)
+    end
+    save_place(place)
     i += 1
   elsif
     puts "Place not found: #{row}"
