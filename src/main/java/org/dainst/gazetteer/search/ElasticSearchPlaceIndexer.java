@@ -45,6 +45,8 @@ public class ElasticSearchPlaceIndexer {
 		new Thread(new SinglePlaceIndexer(place, elasticSearchServer, baseUri)).start();
 	}
 
+	// done via reinstantiating mongodb river
+	@Deprecated
 	public void reindexAllPlaces() {
 		LOGGER.info("reindexing all places");
 		new Thread(new AllPlaceIndexer(placeDao, elasticSearchServer, baseUri)).start();
