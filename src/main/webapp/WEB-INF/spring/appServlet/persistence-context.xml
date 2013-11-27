@@ -32,7 +32,7 @@
 	
 	<bean id="merger" class="org.dainst.gazetteer.helpers.SimpleMerger">
 		<property name="placeRepository" ref="placeRepository"/>
-		<property name="newHasPriority" value="false"/>
+		<property name="newHasPriority" value="true"/>
 	</bean>
 
 </beans>

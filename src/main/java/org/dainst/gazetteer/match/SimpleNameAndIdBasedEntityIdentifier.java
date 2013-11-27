@@ -88,8 +88,8 @@ public class SimpleNameAndIdBasedEntityIdentifier implements EntityIdentifier {
 				for (Place candidate : resultList) {
 					// check ancestors for country with equal name 
 					if (candidate.getParent() != null) {
-						Place candidateCountry = retrieveCountryFor(candidate);
-						Place placeCountry = retrieveCountryFor(place);
+						Place candidateCountry = retrieveCountryFor(candidate, false);
+						Place placeCountry = retrieveCountryFor(place, false);
 						logger.debug("comparing countries: {} == {}", placeCountry, candidateCountry);
 						if (candidateCountry != null && placeCountry != null && 
 								( idsMatch(placeCountry, candidateCountry) || namesMatch(placeCountry, candidateCountry) ) ) {
@@ -134,15 +134,17 @@ public class SimpleNameAndIdBasedEntityIdentifier implements EntityIdentifier {
 		return !names1.isEmpty();
 	}
 
-	private Place retrieveCountryFor(Place place) {
+	private Place retrieveCountryFor(Place place, boolean recursive) {
 		if (place.getParent() == null) return null;
 		Place parent = placeDao.findOne(place.getParent());
 		if (parent == null) {
 			return null;
 		} else if ("country".equals(parent.getType())) {
 			return parent;
+		} else if (recursive) {
+			return retrieveCountryFor(parent, true);
 		} else {
-			return retrieveCountryFor(parent);
+			return null;
 		}
 	}
 
