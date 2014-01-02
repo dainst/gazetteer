@@ -83,7 +83,7 @@
 							</sec:authorize>
 						</ul>
 						<form novalidate class="navbar-search pull-left" ng-submit="submit()">
-							<s:message code="ui.search.simpleSearch" text="Einfache Suche"
+							<s:message code="ui.search.simpleSearch" text="ui.search.simpleSearch"
 								var="titleSimpleSearch" />
 							<input type="text" class="search-query" ng-model="q"
 								placeholder="${titleSimpleSearch}"> <i class="icon-search"></i>

@@ -79,6 +79,7 @@
 			<set>
 				<value>de</value>
 				<value>en</value>
+				<value>ar</value>
 			</set>
 		</property>
 		<property name="defaultLanguage" value="en"/>

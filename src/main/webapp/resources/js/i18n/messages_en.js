@@ -49,6 +49,7 @@ messages.factory('messages', function(){
 		"languages.grc": "Ancient Greek",
 		"languages.sqi": "Albanian",
 		"languages.pol": "Polish",
+		"languages.ara": "Arabian",
 		"domain.place.parent": "Falls within",
 		"domain.place.type": "Type",
 		"domain.place.tags": "Tags"
