@@ -233,7 +233,7 @@
 						</label>
 						<div class="controls">
 							<div gaz-location-picker coordinates="place.prefLocation.coordinates"></div>
-							<select path="prefLocation.confidence" class="input-small">
+							<select ng-model="prefLocation.confidence" class="input-small">
 								<option value="0" gaz-translate="'location.confidence.0'">
 								<option value="1" gaz-translate="'location.confidence.1'">
 								<option value="2" gaz-translate="'location.confidence.2'">
