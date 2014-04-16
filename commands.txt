@@ -19,7 +19,7 @@ rs.initiate({ _id : "rs0", members : [ { _id : 0, host : "localhost:27017" } ] }
             "analyzer" : {
             	"default": {
             		"tokenizer" : "standard",
-                    "filter" : ["standard", "lowercase", "custom_snowball"]
+                    "filter" : ["standard", "icu_folding", "custom_snowball"]
             	},
                 "collation" : {
                     "tokenizer" : "keyword",
