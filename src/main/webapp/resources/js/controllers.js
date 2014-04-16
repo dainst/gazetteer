@@ -512,12 +512,13 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, $http, me
 		$scope.commentReisestipendium = {};
 	};
 	
-	$scope.getIdByContext = function(context) {
+	$scope.getIdsByContext = function(context) {
+		var result = [];
 		var ids = $scope.place.identifiers;
 		for (var i in ids)
 			if (ids[i].context == context)
-				return ids[i];
-		return false;
+				result.push(ids[i].value);
+		return result;
 	};
 	
 	// update relatedPlaces attribute of place when relatedPlaces in scope changes
