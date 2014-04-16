@@ -139,7 +139,9 @@ public class JsonPlaceSerializer {
 		if (!place.getRelatedPlaces().isEmpty()) {
 			ArrayNode relatedPlacesNode = mapper.createArrayNode();
 			for (String relatedPlaceId : place.getRelatedPlaces()) {
-				relatedPlacesNode.add(baseUri + "place/" + relatedPlaceId);
+				if (relatedPlaceId != null) {
+					relatedPlacesNode.add(baseUri + "place/" + relatedPlaceId);
+				}
 			}
 			placeNode.put("relatedPlaces", relatedPlacesNode);
 		}

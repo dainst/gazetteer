@@ -107,7 +107,8 @@ public class JsonPlaceDeserializer {
 			}
 			// delete place from related places' related places if necessary
 			for (String oldRelatedPlace : oldRelatedPlaces) {
-				if (!place.getRelatedPlaces().contains(oldRelatedPlace)) {
+				if (oldRelatedPlace != null && !"null".equals(oldRelatedPlace)
+						&& !place.getRelatedPlaces().contains(oldRelatedPlace)) {
 					Place relatedPlace = placeDao.findOne(oldRelatedPlace);
 					relatedPlace.getRelatedPlaces().remove(place.getId());
 					placeDao.save(relatedPlace);
