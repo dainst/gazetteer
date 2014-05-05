@@ -86,8 +86,6 @@
 	</bean>
 
 	<context:component-scan base-package="org.dainst.gazetteer" />
-
-	<context:property-placeholder location="WEB-INF/*.properties" />
 	
 	<import resource="elasticsearch-context.xml" />
 	

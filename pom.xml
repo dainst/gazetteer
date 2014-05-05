@@ -4,9 +4,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.dainst</groupId>
 	<artifactId>gazetteer</artifactId>
-	<name>gazetteer2</name>
+	<name>gazetteer</name>
 	<packaging>war</packaging>
-	<version>1.0.0-BUILD-SNAPSHOT</version>
+	<version>1.0.5</version>
 	<properties>
 		<java-version>1.7</java-version>
 		<org.springframework-version>3.2.5.RELEASE</org.springframework-version>
@@ -48,7 +48,7 @@
 			<artifactId>spring-data-mongodb</artifactId>
 			<version>1.1.0.RELEASE</version>
 		</dependency>
-	
+
 		<!-- Spring security -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
@@ -70,28 +70,28 @@
 			<artifactId>spring-security-taglibs</artifactId>
 			<version>3.1.3.RELEASE</version>
 		</dependency>
-		
+
 		<!-- JPA -->
 		<dependency>
 			<groupId>javax.persistence</groupId>
 			<artifactId>persistence-api</artifactId>
 			<version>1.0</version>
 		</dependency>
-		
+
 		<!-- MySQL -->
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>5.1.6</version>
 		</dependency>
-		
+
 		<!-- Jersey -->
 		<dependency>
-		    <groupId>com.sun.jersey</groupId>
-		    <artifactId>jersey-client</artifactId>
-		    <version>1.12</version>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-client</artifactId>
+			<version>1.12</version>
 		</dependency>
-		
+
 		<!-- Jackson -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
@@ -102,8 +102,8 @@
 			<groupId>com.fasterxml.jackson.jaxrs</groupId>
 			<artifactId>jackson-jaxrs-json-provider</artifactId>
 			<version>2.1.1</version>
-		</dependency>     
-		
+		</dependency>
+
 		<!-- Javassist -->
 		<dependency>
 			<groupId>javassist</groupId>
@@ -187,16 +187,16 @@
 			<artifactId>elasticsearch</artifactId>
 			<version>0.90.3</version>
 		</dependency>
-		
+
 		<!-- JSON Taglib -->
 		<dependency>
 			<groupId>atg.taglib.json</groupId>
 			<artifactId>json-taglib</artifactId>
 			<version>0.4.1</version>
-		</dependency>            
+		</dependency>
 
 	</dependencies>
-	
+
 	<repositories>
 		<repository>
 			<id>OSGEO GeoTools repo</id>
@@ -215,7 +215,7 @@
 			<url>https://maven-eu.nuxeo.org/nexus/content/groups/public/</url>
 		</repository>
 	</repositories>
-	
+
 	<build>
 		<plugins>
 			<plugin>
@@ -254,4 +254,87 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>test</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<phase>test</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>
+										<delete file="src/main/webapp/WEB-INF/config.properties" />
+										<copy file="src/main/resources/config.test.properties"
+											tofile="src/main/webapp/WEB-INF/config.properties" />
+										<delete file="src/main/webapp/WEB-INF/web.xml" />
+										<copy file="src/main/resources/web.test.xml"
+											tofile="src/main/webapp/WEB-INF/web.xml" />
+									</tasks>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<skip>true</skip>
+						</configuration>
+					</plugin>
+					<plugin>
+						<artifactId>maven-war-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>default-war</id>
+								<phase>package</phase>
+								<goals>
+									<goal>war</goal>
+								</goals>
+								<configuration>
+									<classifier>test</classifier>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		
+		<profile>
+			<id>prod</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<phase>test</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>
+										<delete file="src/main/webapp/WEB-INF/config.properties" />
+										<copy file="src/main/resources/config.prod.properties"
+											tofile="src/main/webapp/WEB-INF/config.properties" />
+										<delete file="src/main/webapp/WEB-INF/web.xml" />
+										<copy file="src/main/resources/web.prod.xml"
+											tofile="src/main/webapp/WEB-INF/web.xml" />
+									</tasks>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+	</profiles>
+
 </project>
