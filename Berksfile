@@ -1,5 +1,5 @@
 source 'https://api.berkshelf.com'
 
-cookbook 'mongodb'
-cookbook 'java'
-cookbook 'elasticsearch'
+cookbook 'mongodb', '~> 0.16.0'
+cookbook 'java', '~> 1.22.0'
+cookbook 'elasticsearch', '~> 0.3.8'

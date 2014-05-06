@@ -4,7 +4,8 @@
 .settings
 target
 src/main/resources/log4j.xml
-.vagrant
 Gemfile.lock
 Berksfile.lock
 tmp/
+.kitchen
+.kitchen.local.yml

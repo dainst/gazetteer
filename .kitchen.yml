@@ -1,0 +1,34 @@
+---
+driver:
+  name: vagrant
+  network:
+  - ["forwarded_port", {guest: 27017, host: 27017}]
+  - ["forwarded_port", {guest: 9200, host: 9200}]
+  - ["forwarded_port", {guest: 9300, host: 9300}]
+
+provisioner:
+  name: chef_solo
+
+platforms:
+  - name: ubuntu-12.04
+
+suites:
+  - name: default
+    run_list:
+    - apt
+    - mongodb
+    - java
+    - elasticsearch
+    - elasticsearch::plugins
+    attributes:
+      ssl:
+        verify: false
+      mongodb:
+        cluster_name: "gazetteer-dev"
+        config:
+          replSet: "rs0"
+      elasticsearch:
+        version: "0.90.3"
+        plugins: 
+          elasticsearch/elasticsearch-analysis-icu: { version: 1.13.0 }
+          com.github.richardwilly98.elasticsearch/elasticsearch-river-mongodb: { version: 1.7.0 }
