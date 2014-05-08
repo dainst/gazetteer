@@ -19,13 +19,13 @@
 <link rel="apple-touch-icon" sizes="114x114" href="resources/ico/apple-touch-icon-114.png">
 <link rel="apple-touch-icon" sizes="72x72" href="resources/ico/apple-touch-icon-72.png">
 <link rel="apple-touch-icon" href="resources/ico/apple-touch-icon-57.png">
-<link href="http://arachne.uni-koeln.de/archaeostrap/assets/css/bootstrap.css" rel="stylesheet">
+<link href="//arachne.uni-koeln.de/archaeostrap/assets/css/bootstrap.css" rel="stylesheet">
 <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet">
 <link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet">
 <link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome-ie7.css" rel="stylesheet">
 <link href="resources/css/app.css" rel="stylesheet">
 <script	src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>	
-<script	src="http://arachne.uni-koeln.de/archaeostrap/assets/js/bootstrap.js"></script>	
+<script	src="//arachne.uni-koeln.de/archaeostrap/assets/js/bootstrap.js"></script>	
 <script src='//maps.google.com/maps/api/js?key=${googleMapsApiKey}&amp;sensor=false&libraries=visualization'></script>
 <script src="resources/js/custom.js"></script>
 </head>
@@ -122,7 +122,7 @@
 	            <p>Der DAI-Gazetteer ist außerdem ein Werkzeug, um die Ortsdaten-Struktur innerhalb des DAI sukzessive zu optimieren, d. h. sowohl die Zahl der mit Ortsdaten versehenen Informationsobjekte zu erhöhen, diese dann in die weltweiten Ortsdatensysteme einzubinden, und auch die im DAI schon vorhandenen Informationsobjekte mit Ortsdaten zu vereinheitlichen. Der DAI-Gazetteer ist somit der Auftakt zu einem großen, neuen Querschnitts-Arbeitsfeld.</p>
 	            <p>Geodaten sind ein hinreichend vereinbarungsfähiges, aber auch umfassend genug anwendbares Kontextualisierungskriterium. Ihre Bedeutung für die Kontextualisierung nimmt zu, wenn über die bidirektionale Verknüpfung hinaus eine Drei- oder Vielecksverknküpfung zustande kommt. Daher ist der Gazetteer u. a. auch eine Kontextualisierungsmaschine, die ortsbasierte Suchen über mehrere Informationssysteme hinweg erlaubt, etwa über <a href="http://arachne.uni-koeln.de" target="_blank">Arachne</a> und <a href="http://opac.dainst.org" target="_blank">ZENON</a>.</p>
 			</div>
-			<iframe height="315" class="span6" src="http://www.youtube.com/embed/mISUGMFkQvU" frameborder="0" allowfullscreen></iframe>
+			<iframe height="315" class="span6" src="//www.youtube.com/embed/mISUGMFkQvU" frameborder="0" allowfullscreen></iframe>
 		</div>
 		
 		<!-- Footer -->
