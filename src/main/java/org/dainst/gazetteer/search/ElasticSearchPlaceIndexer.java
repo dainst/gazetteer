@@ -1,16 +1,19 @@
 package org.dainst.gazetteer.search;
 
-import java.util.Date;
-import java.util.List;
+import java.io.InputStream;
+import java.util.Scanner;
 
 import javax.ws.rs.core.MediaType;
 
+import org.apache.lucene.util.IOUtils;
 import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.domain.Place;
-import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
-import org.elasticsearch.action.admin.indices.flush.FlushRequest;
+import org.elasticsearch.action.admin.indices.template.put.PutIndexTemplateRequest;
+import org.elasticsearch.action.admin.indices.template.put.PutIndexTemplateRequestBuilder;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.index.IndexResponse;
+import org.elasticsearch.client.IndicesAdminClient;
+import org.elasticsearch.client.Requests;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,11 +48,43 @@ public class ElasticSearchPlaceIndexer {
 		new Thread(new SinglePlaceIndexer(place, elasticSearchServer, baseUri)).start();
 	}
 
-	// done via reinstantiating mongodb river
-	@Deprecated
 	public void reindexAllPlaces() {
 		LOGGER.info("reindexing all places");
-		new Thread(new AllPlaceIndexer(placeDao, elasticSearchServer, baseUri)).start();
+		
+		// 1. create new index
+		
+		// 2. create corresponding mongodb river
+		
+		// 3. change alias
+		
+		// 4. delete old index and river
+		
+		String esRiverJson = Thread.currentThread().getContextClassLoader().getResourceAsStream("es_river.json").toString();
+		org.elasticsearch.client.Client client = elasticSearchServer.getClient();
+		client.index(Requests.indexRequest("_river").type("mongodb").id("_meta").source(esRiverJson)).actionGet();
+		
+	}
+	
+	public void createIndexTemplate() {
+		
+		LOGGER.info("creating index template");
+		
+		InputStream esMappingStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("es_mapping.json");
+		Scanner s = new java.util.Scanner(esMappingStream, "UTF-8");
+		String esMappingJson = s.useDelimiter("\\A").next();
+		s.close();
+		LOGGER.debug("read mapping: {}", esMappingJson);
+		
+		InputStream esSettingsStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("es_mapping.json");
+		s = new java.util.Scanner(esSettingsStream, "UTF-8");
+		String esSettingsJson = s.useDelimiter("\\A").next();
+		s.close();
+		LOGGER.debug("read mapping: {}", esMappingJson);
+		
+		IndicesAdminClient client = elasticSearchServer.getClient().admin().indices();
+		new PutIndexTemplateRequestBuilder(client).setSettings(esSettingsJson)
+			.addMapping("place", esMappingJson).execute();
+		
 	}
 
 	private static class SinglePlaceIndexer implements Runnable {
@@ -76,57 +111,6 @@ public class ElasticSearchPlaceIndexer {
 					.setSource(response).execute().actionGet();
 
 			LOGGER.info("indexed place in document: " + indexResponse.getId());
-
-		}		
-
-	}
-
-	private static class AllPlaceIndexer implements Runnable {
-
-		private PlaceRepository placeDao;
-		private ElasticSearchServer elasticSearchServer;
-		private String baseUri;
-
-		public AllPlaceIndexer(PlaceRepository placeDao, ElasticSearchServer elasticSearchServer, String baseUri) {
-			this.placeDao = placeDao;
-			this.elasticSearchServer = elasticSearchServer;
-			this.baseUri = baseUri;
-		}
-
-		@Override
-		public void run() {
-
-			Date start = new Date();
-
-			elasticSearchServer.getClient().admin().indices()
-			.delete(new DeleteIndexRequest("gazetteer"))
-			.actionGet();
-
-			Iterable<Place> places = placeDao.findAll();
-			for (Place place : places) {
-
-				if (place.isDeleted()) continue;
-
-				String response = Client.create().resource(baseUri + "place/" + place.getId())
-						.accept(MediaType.APPLICATION_JSON_TYPE)
-						.get(String.class);
-
-				IndexResponse indexResponse = elasticSearchServer.getClient()
-						.prepareIndex("gazetteer", "place", String.valueOf(place.getId()))
-						.setSource(response).execute().actionGet();
-
-				LOGGER.trace("indexed place in document: " + indexResponse.getId());
-
-			}
-
-			elasticSearchServer.getClient().admin().indices()
-			.flush(new FlushRequest("gazetteer").refresh(true))
-			.actionGet();
-
-			Date end = new Date();
-			long duration = end.getTime() - start.getTime();
-
-			LOGGER.info("OK: successfully performed complete reindexing in {}ms", duration);
 
 		}
 

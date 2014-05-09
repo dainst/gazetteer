@@ -77,6 +77,16 @@ public class AdminController {
 		
 	}
 	
+	@RequestMapping(value="/admin/indextemplate", method=RequestMethod.POST)
+	@ResponseBody
+	public String createIndexTemplate() {
+		
+		elasticSearchPlaceIndexer.createIndexTemplate();
+		
+		return "OK: created index template";
+		
+	}
+	
 	@RequestMapping(value="/admin/toggleHarvester/{name}", method=RequestMethod.POST)
 	@ResponseBody
 	public String toggleHarvester(@PathVariable String name) {

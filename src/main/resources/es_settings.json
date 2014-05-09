@@ -1,0 +1,24 @@
+{
+    "analysis": {
+        "analyzer" : {
+        	"default": {
+        		"tokenizer" : "standard",
+                "filter" : ["standard", "icu_folding", "custom_snowball"]
+        	},
+            "collation" : {
+                "tokenizer" : "keyword",
+                "filter" : ["collation_filter"]
+            }
+        },
+        "filter" : {
+        	"custom_snowball": {
+        		"type" : "snowball",
+                "language" : "German2"
+        	},
+            "collation_filter" : {
+                "type" : "icu_collation",
+                "language" : "de"
+            }
+        }
+    }
+}
