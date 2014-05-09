@@ -28,6 +28,8 @@ suites:
         config:
           replSet: "rs0"
       elasticsearch:
+        cluster:
+          name: "gazetteer.dainst.org"
         version: "0.90.3"
         plugins: 
           elasticsearch/elasticsearch-analysis-icu: { version: 1.13.0 }
