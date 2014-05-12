@@ -50,6 +50,11 @@ messages.factory('messages', function(){
 		"languages.sqi": "Albanisch",
 		"languages.pol": "Polnisch",
 		"languages.ara": "Arabisch",
+		"languages.spa": "Spanisch",
+		"languages.por": "Portugiesisch",
+		"languages.zho": "Chinesisch",
+		"languages.rus": "Russisch",
+		"languages.vie": "Vietnamesisch",
 		"domain.place.parent": "Liegt in",
 		"domain.place.type": "Art",
 		"domain.place.tags": "Tags"
