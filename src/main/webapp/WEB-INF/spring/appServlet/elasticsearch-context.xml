@@ -17,6 +17,7 @@
     </bean>	
 	
 	<elasticsearch:client id="esClient" esNodes="localhost:9300"
-		properties="elasticSearchConfiguration"	templates="place_template" />
+		properties="elasticSearchConfiguration"	templates="place_template"
+		mappings="gazetteer/place" />
 
 </beans>
