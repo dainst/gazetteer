@@ -14,7 +14,7 @@ import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.helpers.IdGenerator;
 import org.dainst.gazetteer.helpers.Merger;
 import org.dainst.gazetteer.match.AutoMatchService;
-import org.dainst.gazetteer.search.ElasticSearchPlaceIndexer;
+import org.dainst.gazetteer.search.ElasticSearchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +52,7 @@ public class AdminController {
 	private HarvesterDefinitionRepository harvesterDefinitionDao;
 	
 	@Autowired
-	private ElasticSearchPlaceIndexer elasticSearchPlaceIndexer;
+	private ElasticSearchService esService;
 	
 	@Autowired
 	private IdGenerator idGenerator;
@@ -71,19 +71,9 @@ public class AdminController {
 	@ResponseBody
 	public String reindex() {
 		
-		elasticSearchPlaceIndexer.reindexAllPlaces();
+		esService.reindexAllPlaces();
 		
 		return "OK: reindexing started";
-		
-	}
-	
-	@RequestMapping(value="/admin/indextemplate", method=RequestMethod.POST)
-	@ResponseBody
-	public String createIndexTemplate() {
-		
-		elasticSearchPlaceIndexer.createIndexTemplate();
-		
-		return "OK: created index template";
 		
 	}
 	

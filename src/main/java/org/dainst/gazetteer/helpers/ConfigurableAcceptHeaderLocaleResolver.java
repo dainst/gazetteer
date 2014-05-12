@@ -16,6 +16,7 @@ public class ConfigurableAcceptHeaderLocaleResolver extends
 
 	@Override
 	public Locale resolveLocale(HttpServletRequest request) {
+		@SuppressWarnings("unchecked")
 		Enumeration<Locale> acceptLocales = request.getLocales();
 		for (Locale locale = acceptLocales.nextElement(); 
 				acceptLocales.hasMoreElements(); locale = acceptLocales.nextElement()) {

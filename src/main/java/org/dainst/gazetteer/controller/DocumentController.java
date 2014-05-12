@@ -12,7 +12,6 @@ import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.ValidationResult;
 import org.dainst.gazetteer.helpers.IdGenerator;
 import org.dainst.gazetteer.helpers.LocalizedLanguagesHelper;
-import org.dainst.gazetteer.search.ElasticSearchServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,9 +41,6 @@ public class DocumentController {
 	
 	@Autowired
 	private JsonPlaceDeserializer jsonPlaceDeserializer;
-	
-	@Autowired
-	private ElasticSearchServer elasticSearchServer;
 	
 	@Autowired
 	private IdGenerator idGenerator;

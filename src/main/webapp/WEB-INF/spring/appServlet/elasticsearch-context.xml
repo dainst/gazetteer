@@ -3,35 +3,20 @@
 	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:elasticsearch="http://www.pilato.fr/schema/elasticsearch"
 	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
-		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd">
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+		http://www.pilato.fr/schema/elasticsearch http://www.pilato.fr/schema/elasticsearch/elasticsearch-0.3.xsd">
 
 	<bean id="elasticSearchConfiguration"
           class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="location" value="WEB-INF/elasticsearch.properties" />
         <property name="localOverride" value="true" />
-    </bean>
-
-    <!-- <bean id="elasticSearchServer" class="org.dainst.gazetteer.search.EmbeddedElasticSearchServer"
-          init-method="start" destroy-method="stop">
-        <constructor-arg ref="elasticSearchConfiguration" />
-    </bean> -->
-    
-    <bean id="elasticSearchServer" class="org.dainst.gazetteer.search.RemoteElasticSearchServer"
-          init-method="start" destroy-method="stop">
-    	<constructor-arg>
-    		<map>
-    			<entry key="localhost" value="9300"/>
-    		</map>
-    	</constructor-arg>
-        <constructor-arg ref="elasticSearchConfiguration" />
-    </bean>
-    
-    <bean id="elasticSearchPlaceIndexer" class="org.dainst.gazetteer.search.ElasticSearchPlaceIndexer">
-    	<constructor-arg ref="elasticSearchServer" />
-    	<constructor-arg value="${baseUri}" />
-    </bean>
+    </bean>	
+	
+	<elasticsearch:client id="esClient" esNodes="localhost:9300"
+		properties="elasticSearchConfiguration"	templates="place_template" />
 
 </beans>

@@ -2,8 +2,6 @@ package org.dainst.gazetteer.controller;
 
 import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.domain.Place;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -17,7 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class SitemapController {
 
-	private static final Logger logger = LoggerFactory.getLogger(SitemapController.class);
+	//private static final Logger LOGGER = LoggerFactory.getLogger(SitemapController.class);
 	
 	@Autowired
 	private PlaceRepository placeDao;

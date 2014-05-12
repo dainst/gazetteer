@@ -7,7 +7,7 @@ import org.dainst.gazetteer.converter.JsonPlaceDeserializer;
 import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.search.ElasticSearchPlaceQuery;
-import org.dainst.gazetteer.search.ElasticSearchServer;
+import org.elasticsearch.client.Client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class WidgetController {
 	private PlaceRepository placeDao;
 	
 	@Autowired
-	private ElasticSearchServer elasticSearchServer;
+	private Client client;
 	
 	@Autowired
 	private JsonPlaceDeserializer jsonPlaceDeserializer;
@@ -101,7 +101,7 @@ public class WidgetController {
 			@RequestParam(defaultValue="10") int limit,
 			@RequestParam(defaultValue="0") int offset) {
 		
-		ElasticSearchPlaceQuery query = new ElasticSearchPlaceQuery(elasticSearchServer.getClient());
+		ElasticSearchPlaceQuery query = new ElasticSearchPlaceQuery(client);
 		if (q != null) {
 			query.fuzzyLikeThisSearch(q, "names.title");
 		} else {

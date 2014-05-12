@@ -1,7 +1,5 @@
 package org.dainst.gazetteer.helpers;
 
-import java.math.BigInteger;
-
 import org.dainst.gazetteer.domain.Place;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.MongoTemplate;

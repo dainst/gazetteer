@@ -14,7 +14,7 @@ import org.dainst.gazetteer.converter.JsonPlaceDeserializer;
 import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.search.ElasticSearchPlaceQuery;
-import org.dainst.gazetteer.search.ElasticSearchServer;
+import org.elasticsearch.client.Client;
 import org.elasticsearch.search.facet.Facet;
 import org.elasticsearch.search.facet.terms.TermsFacet;
 import org.slf4j.Logger;
@@ -43,7 +43,7 @@ public class SearchController {
 	private JsonPlaceDeserializer jsonPlaceDeserializer;
 	
 	@Autowired
-	private ElasticSearchServer elasticSearchServer;
+	private Client client;
 	
 	@Value("${baseUri}")
 	private String baseUri;
@@ -79,7 +79,7 @@ public class SearchController {
 		
 		logger.debug("Searching places with query: " + q + ", fq: " + fq + ", limit: " + limit + ", offset: " + offset);
 		
-		ElasticSearchPlaceQuery query = new ElasticSearchPlaceQuery(elasticSearchServer.getClient());
+		ElasticSearchPlaceQuery query = new ElasticSearchPlaceQuery(client);
 		if (q != null) {
 			if ("fuzzy".equals(type)) query.fuzzySearch(q);
 			else if ("prefix".equals(type)) query.prefixSearch(q);
@@ -146,7 +146,7 @@ public class SearchController {
 		RequestContext requestContext = new RequestContext(request);
 		Locale locale = requestContext.getLocale();
 		
-		ElasticSearchPlaceQuery query = new ElasticSearchPlaceQuery(elasticSearchServer.getClient());
+		ElasticSearchPlaceQuery query = new ElasticSearchPlaceQuery(client);
 		query.extendedSearch(jsonQuery);
 		query.limit(limit);
 		query.offset(offset);
@@ -192,7 +192,7 @@ public class SearchController {
 		RequestContext requestContext = new RequestContext(request);
 		Locale locale = requestContext.getLocale();
 		
-		ElasticSearchPlaceQuery query = new ElasticSearchPlaceQuery(elasticSearchServer.getClient());
+		ElasticSearchPlaceQuery query = new ElasticSearchPlaceQuery(client);
 		query.geoDistanceSearch(lon, lat, distance);
 		query.addGeoDistanceSort(lon, lat);
 		query.limit(limit);
