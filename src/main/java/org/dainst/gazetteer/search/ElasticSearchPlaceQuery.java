@@ -10,6 +10,7 @@ import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.QueryFilterBuilder;
 import org.elasticsearch.index.query.QueryStringQueryBuilder.Operator;
+import org.elasticsearch.index.query.functionscore.script.ScriptScoreFunctionBuilder;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.facet.FacetBuilders;
 import org.elasticsearch.search.facet.Facets;
@@ -64,7 +65,7 @@ public class ElasticSearchPlaceQuery {
 	}
 
 	public ElasticSearchPlaceQuery fuzzyLikeThisSearch(String query, String... fields) {
-		queryBuilder = QueryBuilders.fuzzyLikeThisQuery(fields).likeText(query).minSimilarity(0f);
+		queryBuilder = QueryBuilders.fuzzyLikeThisQuery(fields).likeText(query);
 		return this;		
 	}
 
@@ -79,14 +80,15 @@ public class ElasticSearchPlaceQuery {
 		GeoDistanceFilterBuilder filterBuilder = FilterBuilders.geoDistanceFilter("prefLocation.coordinates");
 		filterBuilder.distance(Integer.toString(distance) + "km");
 		filterBuilder.point(lat, lon);
-		requestBuilder.setFilter(filterBuilder);
+		requestBuilder.setPostFilter(filterBuilder);
 		return this;
 	}
 	
 	public ElasticSearchPlaceQuery addBoostForChildren() {
 		// places with many children should get a higher score
-		queryBuilder = QueryBuilders.customScoreQuery(queryBuilder)
-				.script("_score + (doc['children'].value / 100)");
+		
+		queryBuilder = QueryBuilders.functionScoreQuery(queryBuilder)
+				.add(new ScriptScoreFunctionBuilder().script("_score + (doc['children'].value / 100)"));
 		return this;
 	}
 	

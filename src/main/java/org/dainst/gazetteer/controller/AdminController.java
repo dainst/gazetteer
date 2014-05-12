@@ -1,6 +1,7 @@
 package org.dainst.gazetteer.controller;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -66,7 +67,6 @@ public class AdminController {
 	@Value("${geonamesSolrUri}")
 	private String geonamesSolrUri;
 	
-	@Deprecated
 	@RequestMapping(value="/admin/reindex", method=RequestMethod.POST)
 	@ResponseBody
 	public String reindex() {

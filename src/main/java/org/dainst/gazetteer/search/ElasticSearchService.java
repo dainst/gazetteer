@@ -1,7 +1,14 @@
 package org.dainst.gazetteer.search;
 
+import java.io.InputStream;
+import java.util.Scanner;
+
 import org.dainst.gazetteer.dao.PlaceRepository;
+import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
+import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
+import org.elasticsearch.action.admin.indices.mapping.delete.DeleteMappingRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
+import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.Requests;
 import org.slf4j.Logger;
@@ -27,18 +34,29 @@ public class ElasticSearchService {
 	}
 
 	public void reindexAllPlaces() {
+		
 		LOGGER.info("reindexing all places");
 		
-		// 1. create new index
-		
-		// 2. create corresponding mongodb river
-		
-		// 3. change alias
-		
-		// 4. delete old index and river
-		
-		String esRiverJson = Thread.currentThread().getContextClassLoader().getResourceAsStream("es_river.json").toString();
-		client.index(Requests.indexRequest("_river").type("mongodb").id("_meta").source(esRiverJson)).actionGet();
+		try {
+			
+			// recreate es index
+			client.admin().indices().delete(new DeleteIndexRequest("gazetteer")).get();
+			client.admin().indices().create(new CreateIndexRequest("gazetteer")).get();
+			
+			// recreate corresponding mongodb river
+			client.admin().indices().deleteMapping(new DeleteMappingRequest("_river").types("mongodb")).get();
+			InputStream esRiverStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("es/mongodb_river.json");
+			Scanner s = new Scanner(esRiverStream);
+			String esRiverJson = s.useDelimiter("\\A").next();
+			s.close();
+			esRiverStream.close();
+			LOGGER.debug("esRiverJson: {}", esRiverJson);
+			IndexResponse indexResponse = client.index(Requests.indexRequest("_river").type("mongodb").id("_meta").source(esRiverJson)).get();
+			LOGGER.debug("created: {}", indexResponse.isCreated());
+			
+		} catch (Exception e) {
+			throw new RuntimeException("Failed to reindex places", e);
+		}
 		
 	}
 }
