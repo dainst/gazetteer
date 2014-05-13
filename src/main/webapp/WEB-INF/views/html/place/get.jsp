@@ -15,13 +15,13 @@ iDAI.gazetteer - ${place.prefName.title}
 </title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="http://arachne.uni-koeln.de/archaeostrap/assets/css/bootstrap.css" rel="stylesheet">
+<link href="//arachne.uni-koeln.de/archaeostrap/assets/css/bootstrap.css" rel="stylesheet">
 <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet">
 <link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet">
 <link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome-ie7.css" rel="stylesheet">
 <link href="../resources/css/app.css" rel="stylesheet">
 <script	src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>	
-<script	src="http://arachne.uni-koeln.de/archaeostrap/assets/js/bootstrap.js"></script>	
+<script	src="//arachne.uni-koeln.de/archaeostrap/assets/js/bootstrap.js"></script>	
 <script src='//maps.google.com/maps/api/js?key=${googleMapsApiKey}&amp;sensor=false&libraries=visualization'></script>
 <script src="../resources/js/custom.js"></script>
 <link rel="alternate" type="application/rdf+xml" href="${baseUri}doc/${place.id}.rdf">
@@ -207,7 +207,7 @@ iDAI.gazetteer - ${place.prefName.title}
 					</c:if>
 					<c:if test="${not empty place.zenonId}">
 						<li>
-							<a href="http://testopac.dainst.org/#search?q=f999_1:${place.zenonId}" target="_blank">
+							<a href="http://zenon.dainst.org/#search?q=f999_1:${place.zenonId}" target="_blank">
 								<s:message code="ui.link.zenon" text="ui.link.zenon"/>
 								<i class="icon-external-link"></i>
 							</a>

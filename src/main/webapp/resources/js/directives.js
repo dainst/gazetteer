@@ -113,10 +113,10 @@ directives.directive('gazPlacePicker', function($document) {
 
 directives.directive('gazMap', function($location) {
 	
-	var blueIcon = "http://www.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png";
-	var defaultIcon = "http://www.google.com/intl/en_us/mapfiles/ms/micons/red-dot.png";
+	var blueIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png";
+	var defaultIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/red-dot.png";
 	var defaultShadow = new google.maps.MarkerImage(
-		'http://maps.gstatic.com/intl/en_us/mapfiles/markers/marker_sprite.png',
+		'//maps.gstatic.com/intl/en_us/mapfiles/markers/marker_sprite.png',
 		new google.maps.Size(37,34),
 		new google.maps.Point(20, 0),
 		new google.maps.Point(10, 34)
