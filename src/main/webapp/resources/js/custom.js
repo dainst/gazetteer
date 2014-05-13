@@ -24,3 +24,7 @@ $(document).scroll(function(){
 	}
 	
 });
+
+function getIdFromUri(uri) {
+	return uri.substr(uri.lastIndexOf("/")+1);
+}

@@ -177,7 +177,7 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages) {
 	
 }
 
-function SearchCtrl($scope, $rootScope, $location, $routeParams, $http, Place, messages) {
+function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages) {
 	
 	$rootScope.title = messages["ui.search.results"];
 	$rootScope.subtitle = "";
@@ -261,9 +261,8 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, $http, Place, m
 			for (var i=0; i < $scope.places.length; i++) {
 				$rootScope.loading++;
 				if ($scope.places[i].parent && !$scope.parents[$scope.places[i].parent]) {
-					$http.get($scope.places[i].parent).success(function(result) {
-						$scope.parents[result["@id"]] = result;
-					});
+					var id = getIdFromUri($scope.places[i].parent);
+					$scope.parents[result["@id"]] = Place.get({id:id});
 				}
 				$rootScope.loading--;
 			}
@@ -320,7 +319,7 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, $http, Place, m
 }
 
 
-function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, $http, messages) {
+function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages) {
 	
 	$scope.location = { confidence: 0 };
 	$scope.link = { predicate: "owl:sameAs" };
@@ -339,9 +338,8 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, $http, me
 			}
 			if (result.parent) {
 				$rootScope.loading++;
-				$http.get(result.parent).success(function(result) {
-					$scope.parent = result;
-				});
+				var parentId = getIdFromUri(result.parent);
+				$scope.parent = Place.get({id:parentId});
 				$rootScope.loading--;
 			}
 			$rootScope.loading++;
@@ -531,7 +529,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, $http, me
 
 }
 
-function MergeCtrl($scope, $rootScope, $routeParams, $location, Place, $http, messages) {
+function MergeCtrl($scope, $rootScope, $routeParams, $location, Place, messages) {
 	
 	if ($routeParams.id) {
 		$rootScope.loading++;
@@ -629,7 +627,7 @@ function MergeCtrl($scope, $rootScope, $routeParams, $location, Place, $http, me
 	
 }
 
-function ThesaurusCtrl($scope, $rootScope, $location, $http, Place, messages) {
+function ThesaurusCtrl($scope, $rootScope, $location, Place, messages) {
 	
 	$rootScope.title = messages["ui.thesaurus"];
 	$rootScope.subtitle = "";
