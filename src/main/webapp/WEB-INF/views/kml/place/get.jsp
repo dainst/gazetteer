@@ -109,7 +109,7 @@
 					</c:if>
 					<c:if test="${not empty place.zenonId}">
 						<li>
-							<a href="http://testopac.dainst.org/#search?q=f999_1:${place.zenonId}" target="_blank">
+							<a href="http://zenon.dainst.org/#search?q=f999_1:${place.zenonId}" target="_blank">
 								<s:message code="ui.link.zenon" text="ui.link.zenon"/>
 								<i class="icon-external-link"></i>
 							</a>
