@@ -12,8 +12,6 @@ import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.client.Requests;
-import org.elasticsearch.indices.IndexAlreadyExistsException;
-import org.elasticsearch.indices.TypeMissingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,8 +48,8 @@ public class ElasticSearchService {
 			
 		// recreate corresponding mongodb river
 		try {
-			client.admin().indices().create(new CreateIndexRequest("_river")).get();
 			client.admin().indices().deleteMapping(new DeleteMappingRequest("_river").types("mongodb")).get();
+			client.admin().indices().create(new CreateIndexRequest("_river")).get();
 		} catch (InterruptedException e) {
 			throw new RuntimeException("Failed to reindex places", e);
 		} catch (ExecutionException e) {
