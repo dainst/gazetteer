@@ -39,7 +39,7 @@
 					<li><a href="thesaurus"><s:message code="ui.thesaurus.list" text="ui.thesaurus.list"/></a></li>
 					<li>
 						<a href="app/#/extended-search">
-							<s:message code="ui.search.extendedSearch" text="Erweiterte Suche"/>
+							<s:message code="ui.search.extendedSearch" text="ui.search.extendedSearch"/>
 						</a>
 					</li>
 					<li>

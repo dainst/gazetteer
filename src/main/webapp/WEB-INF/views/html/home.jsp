@@ -5,8 +5,6 @@
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page contentType="text/html; charset=utf-8" session="false"%>
 
-<s:url var="searchAction" value="app/#!/search" />
-
 <!doctype html>
 <html>
 <head>
@@ -38,6 +36,9 @@
 					<a href="login" class="btn btn-small btn-primary">
 						<s:message code="ui.login" text="ui.login"/>
 					</a>
+					<a href="register" class="btn btn-small btn-primary">
+						<s:message code="ui.register" text="ui.register"/>
+					</a>
 				</div>
 			</sec:authorize>
 			<sec:authorize access="isAuthenticated()">
@@ -45,6 +46,14 @@
 					<p class="btn btn-small">
 						<s:message code="ui.loggedInAs" text="ui.loggedInAs"/>: <sec:authentication property="principal.username" />
 					</p>
+					<a href="editUser?username=${pageContext['request'].userPrincipal.name}" class="btn btn-small btn-primary">
+						<s:message code="ui.userSettings" text="ui.userSettings"/>
+					</a>
+					<sec:authorize access="hasRole('ROLE_ADMIN')">
+						<a href="userManagement" class="btn btn-small btn-primary">
+							<s:message code="ui.userManagement" text="ui.userManagement"/>
+						</a>
+					</sec:authorize>
 					<a href="logout" class="btn btn-small btn-primary">
 						<s:message code="ui.logout" text="ui.logout"/>
 					</a>
@@ -92,6 +101,12 @@
 	</div>
 	
 	<div class="container">
+
+		<c:if test="${registerSuccess eq true}">
+			<div class="alert alert-success">
+				<s:message code="ui.register.success" text="ui.register.success" />
+			</div>
+		</c:if>
 
 		<div id="map_canvas"></div>		
 		

@@ -36,6 +36,9 @@
 					<a href="javascript:window.location.href='../login?r=' + window.location.hash.substring(3);" class="btn btn-small btn-primary">
 						<s:message code="ui.login" text="ui.login"/>
 					</a>
+					<a href="javascript:window.location.href='../register?r=' + window.location.hash.substring(3);" class="btn btn-small btn-primary">
+						<s:message code="ui.register" text="ui.register"/>
+					</a>
 				</div>
 			</sec:authorize>
 			<sec:authorize access="isAuthenticated()">
@@ -43,6 +46,15 @@
 					<p class="btn btn-small">
 						<s:message code="ui.loggedInAs" text="ui.loggedInAs"/>: <sec:authentication property="principal.username" />
 					</p>
+					<a href="javascript:window.location.href='../editUser?username=${pageContext['request'].userPrincipal.name}&r=' + window.location.hash.substring(3);"
+					 	class="btn btn-small btn-primary">
+						<s:message code="ui.userSettings" text="ui.userSettings"/>
+					</a>
+					<sec:authorize access="hasRole('ROLE_ADMIN')">
+						<a href="../userManagement" class="btn btn-small btn-primary">
+							<s:message code="ui.userManagement" text="ui.userManagement"/>
+						</a>
+					</sec:authorize>
 					<a href="../logout" class="btn btn-small btn-primary">
 						<s:message code="ui.logout" text="ui.logout"/>
 					</a>
@@ -70,7 +82,7 @@
 										code="ui.thesaurus.list" text="ui.thesaurus.list" /></a></li>
 							<li><a href="#!/extended-search"> <s:message
 										code="ui.search.extendedSearch" text="ui.search.extendedSearch" />
-							</a></li>							
+							</a></li>
 							<sec:authorize access="hasRole('ROLE_USER')">
 								<li><a href="#!/edit/"> <s:message
 											code="ui.place.create" text="ui.place.create" />

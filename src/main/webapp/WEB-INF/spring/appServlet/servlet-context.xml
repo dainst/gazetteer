@@ -82,8 +82,10 @@
 				<value>ar</value>
 			</set>
 		</property>
-		<property name="defaultLanguage" value="en"/>
+		<property name="defaultLanguage" value="de"/>
 	</bean>
+	
+	<bean id="mailService" class="org.dainst.gazetteer.helpers.MailService" />
 
 	<context:component-scan base-package="org.dainst.gazetteer" />
 	

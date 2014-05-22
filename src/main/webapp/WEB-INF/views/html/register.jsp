@@ -17,13 +17,13 @@
 <link rel="apple-touch-icon" sizes="114x114" href="resources/ico/apple-touch-icon-114.png">
 <link rel="apple-touch-icon" sizes="72x72" href="resources/ico/apple-touch-icon-72.png">
 <link rel="apple-touch-icon" href="resources/ico/apple-touch-icon-57.png">
-<link href="//arachne.uni-koeln.de/archaeostrap/assets/css/bootstrap.css" rel="stylesheet">
+<link href="http://arachne.uni-koeln.de/archaeostrap/assets/css/bootstrap.css" rel="stylesheet">
 <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet">
 <link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet">
 <link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome-ie7.css" rel="stylesheet">
 <link href="resources/css/app.css" rel="stylesheet">
 <script	src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>	
-<script	src="//arachne.uni-koeln.de/archaeostrap/assets/js/bootstrap.js"></script>	
+<script	src="http://arachne.uni-koeln.de/archaeostrap/assets/js/bootstrap.js"></script>	
 <script src='//maps.google.com/maps/api/js?key=${googleMapsApiKey}&amp;sensor=false&libraries=visualization'></script>
 <script src="resources/js/custom.js"></script>
 </head>
@@ -32,8 +32,8 @@
 	<div class="archaeo-fixed-menu">
 		<div class="container archaeo-fixed-menu-header">
 			<div class="btn-group pull-right" style="margin-top:12px">
-				<a href="register?r=${r}" class="btn btn-small btn-primary">
-					<s:message code="ui.register" text="ui.register"/>
+				<a href="login?r=${r}" class="btn btn-small btn-primary">
+					<s:message code="ui.login" text="ui.login"/>
 				</a>
 			</div>
 			<div id="archaeo-fixed-menu-logo"></div>
@@ -59,11 +59,6 @@
 							<li><a href="app/#!/extended-search"> <s:message
 										code="ui.search.extendedSearch" text="ui.search.extendedSearch" />
 							</a></li>
-							<sec:authorize access="hasRole('ROLE_USER')">
-								<li><a href="app/#!/edit/"> <s:message
-											code="ui.place.create" text="ui.place.create" />
-								</a></li>
-							</sec:authorize>
 						</ul>
 					</div>
 					<!--/.nav-collapse -->
@@ -73,36 +68,99 @@
 	</div>
 
 	<div class="container">
-	
-		<c:if test="${not empty error}">
+		<c:if test="${failure eq 'missingUsername'}">
 			<div class="alert alert-error">
-				<s:message code="ui.login.error" text="ui.login.error" />
+				<s:message code="ui.register.error.missingUsername" text="ui.register.error.missingUsername" />
+			</div>
+		</c:if>
+		<c:if test="${failure eq 'usernameExists'}">
+			<div class="alert alert-error">
+				<s:message code="ui.register.error.usernameExists" text="ui.register.error.usernameExists" />
+			</div>
+		</c:if>	
+		<c:if test="${failure eq 'missingFirstname'}">
+			<div class="alert alert-error">
+				<s:message code="ui.register.error.missingFirstname" text="ui.register.error.missingFirstname" />
+			</div>
+		</c:if>	
+		<c:if test="${failure eq 'missingLastname'}">
+			<div class="alert alert-error">
+				<s:message code="ui.register.error.missingLastname" text="ui.register.error.missingLastname" />
+			</div>
+		</c:if>	
+		<c:if test="${failure eq 'emailExists'}">
+			<div class="alert alert-error">
+				<s:message code="ui.register.error.emailExists" text="ui.register.error.emailExists" />
+			</div>
+		</c:if>
+		<c:if test="${failure eq 'invalidEmail'}">
+			<div class="alert alert-error">
+				<s:message code="ui.register.error.invalidEmail" text="ui.register.error.invalidEmail" />
+			</div>
+		</c:if>
+		<c:if test="${failure eq 'passwordLength'}">
+			<div class="alert alert-error">
+				<s:message code="ui.register.error.passwordLength" text="ui.register.error.passwordLength" />
+			</div>
+		</c:if>
+		<c:if test="${failure eq 'passwordInequality'}">
+			<div class="alert alert-error">
+				<s:message code="ui.register.error.passwordInequality" text="ui.register.error.passwordInequality" />
 			</div>
 		</c:if>
 
 		<div class="row">
 			<div class="span6 offset3 well">
-				<form class="form-horizontal" name="f" action="j_spring_security_check" method="POST">
-					<c:if test="${not empty r}">
-						<input type="hidden" name="spring-security-redirect" value="/app/#!/<c:out value="${r}" />">
-					</c:if>
+				<form class="form-horizontal" name="f" action="checkRegisterForm?r=${r}" accept-charset="UTF-8" method="POST">
 					<h3>
-						<s:message code="ui.login" text="ui.login" />
+						<s:message code="ui.register" text="ui.register" />
 					</h3>
 					<div class="control-group">
-						<label class="control-label" for="inputUsername"> <s:message
-								code="ui.username" text="ui.username" />
+						<label class="control-label"> <s:message
+								code="user.username" text="user.username" />
 						</label>
 						<div class="controls">
-							<input type="text" name="j_username">
+							<input type="text" name="register_username" value="${register_username_value}">
 						</div>
 					</div>
 					<div class="control-group">
-						<label class="control-label" for="inputPassword"> <s:message
-								code="ui.password" text="ui.password" />
+						<label class="control-label"> <s:message
+								code="user.firstname" text="user.firstname" />
 						</label>
 						<div class="controls">
-							<input type="password" name="j_password">
+							<input type="text" name="register_firstname" value="${register_firstname_value}">
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label"> <s:message
+								code="user.lastname" text="user.lastname" />
+						</label>
+						<div class="controls">
+							<input type="text" name="register_lastname" value="${register_lastname_value}">
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label"> <s:message
+								code="user.email" text="user.email" />
+						</label>
+						<div class="controls">
+							<input type="text" name="register_email" value="${register_email_value}">
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label"> <s:message
+								code="ui.registerPassword" text="ui.registerPassword" />
+						</label>
+						<div class="controls">
+							<input type="password" name="register_password">
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label"> <s:message
+								code="ui.registerPasswordConfirmation" text="ui.registerPasswordConfirmation" />
+						</label>
+						<div class="controls">
+							<input type="password" name="register_password_confirmation">
 						</div>
 					</div>
 					<div class="control-group">
@@ -112,7 +170,7 @@
 						<div class="controls">
 							<a href="redirect?r=${r}" class="btn" data-dismiss="modal" aria-hidden="true"><s:message
 									code="ui.cancel" text="ui.cancel" /></a>
-							<s:message code="ui.login" text="ui.login" var="submitValue" />
+							<s:message code="ui.register" text="ui.register" var="submitValue" />
 							<input type="submit" class="btn btn-primary" value="${submitValue}" />
 						</div>
 					</div>
