@@ -17,13 +17,13 @@
 <link rel="apple-touch-icon" sizes="114x114" href="resources/ico/apple-touch-icon-114.png">
 <link rel="apple-touch-icon" sizes="72x72" href="resources/ico/apple-touch-icon-72.png">
 <link rel="apple-touch-icon" href="resources/ico/apple-touch-icon-57.png">
-<link href="//arachne.uni-koeln.de/archaeostrap/assets/css/bootstrap.css" rel="stylesheet">
+<link href="http://arachne.uni-koeln.de/archaeostrap/assets/css/bootstrap.css" rel="stylesheet">
 <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet">
 <link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet">
 <link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome-ie7.css" rel="stylesheet">
 <link href="resources/css/app.css" rel="stylesheet">
 <script	src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>	
-<script	src="//arachne.uni-koeln.de/archaeostrap/assets/js/bootstrap.js"></script>	
+<script	src="http://arachne.uni-koeln.de/archaeostrap/assets/js/bootstrap.js"></script>	
 <script src='//maps.google.com/maps/api/js?key=${googleMapsApiKey}&amp;sensor=false&libraries=visualization'></script>
 <script src="resources/js/custom.js"></script>
 </head>
@@ -73,55 +73,50 @@
 	</div>
 
 	<div class="container">
-	
-		<c:if test="${not empty error}">
+		<c:if test="${failure eq 'passwordLength'}">
 			<div class="alert alert-error">
-				<s:message code="ui.login.error" text="ui.login.error" />
+				<s:message code="ui.changePassword.error.passwordLength" text="ui.changePassword.error.passwordLength" />
+			</div>
+		</c:if>
+		<c:if test="${failure eq 'passwordInequality'}">
+			<div class="alert alert-error">
+				<s:message code="ui.changePassword.error.passwordInequality" text="ui.changePassword.error.passwordInequality" />
 			</div>
 		</c:if>
 
 		<div class="row">
 			<div class="span6 offset3 well">
-				<form class="form-horizontal" name="f" action="j_spring_security_check" method="POST">
-					<c:if test="${not empty r}">
-						<input type="hidden" name="spring-security-redirect" value="/app/#!/<c:out value="${r}" />">
-					</c:if>
+				<form class="form-horizontal" name="f" action="checkChangePasswordForm?userid=${user.id}" accept-charset="UTF-8" method="POST">
 					<h3>
-						<s:message code="ui.login" text="ui.login" />
+						<s:message code="ui.changePassword" text="ui.changePassword" />
 					</h3>
 					<div class="control-group">
-						<label class="control-label" for="inputUsername"> <s:message
-								code="ui.username" text="ui.username" />
-						</label>
-						<div class="controls">
-							<input type="text" name="j_username">
-						</div>
+							<label class="control-label"> <s:message
+									code="ui.password" text="ui.password" />
+							</label>
+							<div class="controls">
+								<input type="password" name="change_password_password" value="${change_password_password_value}" />
+							</div>
 					</div>
+					
 					<div class="control-group">
-						<label class="control-label" for="inputPassword"> <s:message
-								code="ui.password" text="ui.password" />
-						</label>
-						<div class="controls">
-							<input type="password" name="j_password">
-						</div>
+							<label class="control-label"> <s:message
+									code="ui.passwordConfirmation" text="ui.passwordConfirmation" />
+							</label>
+							<div class="controls">
+								<input type="password" name="change_password_password_confirmation" value="${change_password_password_confirmation_value}" />
+							</div>
 					</div>
+					
 					<div class="control-group">
 						<label class="control-label">
 							&nbsp;
 						</label>
 						<div class="controls">
-							<a href="redirect?r=${r}" class="btn" data-dismiss="modal" aria-hidden="true"><s:message
-									code="ui.cancel" text="ui.cancel" /></a>
-							<s:message code="ui.login" text="ui.login" var="submitValue" />
+							<a href="./" class="btn" data-dismiss="modal" aria-hidden="true"><s:message
+										code="ui.cancel" text="ui.cancel" /></a>
+							<s:message code="ui.ok" text="ui.ok" var="submitValue" />
 							<input type="submit" class="btn btn-primary" value="${submitValue}" />
-						</div>
-					</div>
-					<div class="control-group">
-						<label class="control-label">
-							&nbsp;
-						</label>
-						<div class="controls">
-							<a href="passwordChangeRequest?r=${r}"><s:message code="ui.forgotPassword" text="ui.forgotPassword"/></a>
 						</div>
 					</div>
 				</form>

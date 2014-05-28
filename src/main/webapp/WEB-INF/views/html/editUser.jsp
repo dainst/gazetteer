@@ -35,6 +35,11 @@
 				<p class="btn btn-small">
 					<s:message code="ui.loggedInAs" text="ui.loggedInAs"/>: <sec:authentication property="principal.username" />
 				</p>
+				<sec:authorize access="hasRole('ROLE_ADMIN')">
+					<a href="userManagement" class="btn btn-small btn-primary">
+						<s:message code="ui.userManagement" text="ui.userManagement"/>
+					</a>
+				</sec:authorize>
 				<a href="logout" class="btn btn-small btn-primary">
 					<s:message code="ui.logout" text="ui.logout"/>
 				</a>

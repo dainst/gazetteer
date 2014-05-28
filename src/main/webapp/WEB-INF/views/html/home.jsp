@@ -102,9 +102,19 @@
 	
 	<div class="container">
 
-		<c:if test="${registerSuccess eq true}">
+		<c:if test="${successMessage eq 'register'}">
 			<div class="alert alert-success">
 				<s:message code="ui.register.success" text="ui.register.success" />
+			</div>
+		</c:if>
+		<c:if test="${successMessage eq 'passwordChangeRequest'}">
+			<div class="alert alert-success">
+				<s:message code="ui.passwordChangeRequest.success" text="ui.passwordChangeRequest.success" />
+			</div>
+		</c:if>
+		<c:if test="${successMessage eq 'changePassword'}">
+			<div class="alert alert-success">
+				<s:message code="ui.changePassword.success" text="ui.changePassword.success" />
 			</div>
 		</c:if>
 

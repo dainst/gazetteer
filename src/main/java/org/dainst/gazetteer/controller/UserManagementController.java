@@ -1,15 +1,20 @@
 package org.dainst.gazetteer.controller;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.dainst.gazetteer.dao.UserPasswordChangeRequestRepository;
 import org.dainst.gazetteer.dao.UserRepository;
 import org.dainst.gazetteer.domain.User;
+import org.dainst.gazetteer.domain.UserPasswordChangeRequest;
 import org.dainst.gazetteer.helpers.MailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +30,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContext;
 
 @Controller
@@ -32,6 +38,9 @@ public class UserManagementController {
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private UserPasswordChangeRequestRepository userPasswordChangeRequestRepository;
 	
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
@@ -65,7 +74,8 @@ public class UserManagementController {
 	}
 	
 	@RequestMapping(value="/checkRegisterForm")
-	public String checkRegisterForm(HttpServletRequest request, @RequestParam(required=false) String r, ModelMap model) {
+	public String checkRegisterForm(HttpServletRequest request, @RequestParam(required=false) String r,
+									RedirectAttributes redirectAttributes, ModelMap model) {
 		
 		String username = request.getParameter("register_username");
 		String firstname = request.getParameter("register_firstname");
@@ -118,8 +128,14 @@ public class UserManagementController {
 			logger.warn("Could not send notification mails to admins", e);
 		}
 		
-		model.addAttribute("registerSuccess", true);
-		return "home";
+		if (r != null && !r.equals("")) {
+			redirectAttributes.addFlashAttribute("successMessage", "register");
+			return "redirect:app/#!/" + r;
+		}
+		else {
+			model.addAttribute("successMessage", "register");
+			return "home";
+		}
 	}
 	
 	@RequestMapping(value="/redirect")
@@ -174,9 +190,9 @@ public class UserManagementController {
 				break;
 			case "registrationDate":
 				if (isDescending)
-					users = (List<User>) userRepository.findAll(new Sort(Sort.Direction.DESC, "registrationDate"));
-				else
 					users = (List<User>) userRepository.findAll(new Sort(Sort.Direction.ASC, "registrationDate"));
+				else
+					users = (List<User>) userRepository.findAll(new Sort(Sort.Direction.DESC, "registrationDate"));
 				break;
 			case "admin":
 				users = (List<User>) userRepository.findAll();
@@ -351,6 +367,110 @@ public class UserManagementController {
 			return "home";
 	}
 	
+	@RequestMapping(value="/passwordChangeRequest")
+	public String getPasswordChangeRequest(@RequestParam(required=false) String r, ModelMap model) {
+		if (r != null) model.addAttribute("r", r);
+		return "passwordChangeRequest";		
+	}
+	
+	@RequestMapping(value="/checkPasswordChangeRequestForm")
+	public String checkPasswordChangeRequestForm(HttpServletRequest request, @RequestParam(required=false) String r,
+												 RedirectAttributes redirectAttributes, ModelMap model) {
+		
+		String username = request.getParameter("password_change_request_username");
+		
+		if (username.equals(""))
+			return returnPasswordChangeRequestFailure("missingUsername", r, model);
+
+		User user = userRepository.findByUsername(username);
+		if (user == null)
+			return returnPasswordChangeRequestFailure("userNotFound", r, model);
+	
+		UserPasswordChangeRequest changeRequest = userPasswordChangeRequestRepository.findByUserId(user.getId());
+		if (changeRequest != null) {
+			Date changeRequestDate = changeRequest.getRequestDate();
+		    if (TimeUnit.HOURS.convert(new Date().getTime() - changeRequestDate.getTime(), TimeUnit.MILLISECONDS) > 23)
+		    	userPasswordChangeRequestRepository.delete(changeRequest);
+		    else
+		    	return returnPasswordChangeRequestFailure("requestExists", r, model);			
+		}
+		
+		SecureRandom random = new SecureRandom();
+		String resetKey = new BigInteger(130, random).toString(32);
+	
+		changeRequest = new UserPasswordChangeRequest();
+		changeRequest.setUserId(user.getId());		
+		changeRequest.setResetKey(passwordEncoder.encode(resetKey));
+		changeRequest.setRequestDate(new Date());		
+		userPasswordChangeRequestRepository.save(changeRequest);
+		
+		String link = baseUri + "changePassword?userid=" + user.getId() + "&key=" + resetKey;
+		RequestContext context = new RequestContext(request);
+		String subject = context.getMessage("mail.userPasswordResetNotification.subject", new Object[] { });
+		String content = context.getMessage("mail.userPasswordResetNotification.content", new Object[] { link });
+				
+		try {
+			mailService.sendMail(user.getEmail(), subject, content);
+			logger.info("Sending password reset mail to " + user.getUsername() + " / " + user.getEmail());
+		} catch (MessagingException e) {
+			logger.warn("Could not send password reset mail to user " + user.getUsername() + " / " + user.getEmail(), e);
+		}
+		
+		if (r != null && !r.equals("")) {
+			redirectAttributes.addFlashAttribute("successMessage", "passwordChangeRequest");
+			return "redirect:app/#!/" + r;
+		}
+		else {
+			model.addAttribute("successMessage", "passwordChangeRequest");
+			return "home";
+		}
+	}
+	
+	@RequestMapping(value="/changePassword")
+	public String getChangePassword(@RequestParam(required=true) String userid, @RequestParam(required=true) String key, ModelMap model) {
+		
+		UserPasswordChangeRequest changeRequest = userPasswordChangeRequestRepository.findByUserId(userid);
+		User user = userRepository.findById(userid);
+		
+		if (changeRequest == null || !passwordEncoder.matches(key, changeRequest.getResetKey()))
+			return "home";
+		
+		Date changeRequestDate = changeRequest.getRequestDate();
+	    if (TimeUnit.HOURS.convert(new Date().getTime() - changeRequestDate.getTime(), TimeUnit.MILLISECONDS) > 23) {
+	    	userPasswordChangeRequestRepository.delete(changeRequest);
+	    	return "home";
+	    }
+	    
+	    model.addAttribute("user", user);
+	    
+	    return "changePassword";		
+	}
+	
+	@RequestMapping(value="/checkChangePasswordForm")
+	public String checkChangePasswordForm(HttpServletRequest request, @RequestParam(required=true) String userid, ModelMap model) {
+		
+		String newPassword = request.getParameter("change_password_password");
+		String newPasswordConfirmation = request.getParameter("change_password_password_confirmation");
+		
+		User user = userRepository.findById(userid);
+		
+		if (newPassword.length() < 6 || newPassword.length() > 30)
+			return returnChangePasswordFailure("passwordLength", user, model);
+		
+		if (!newPassword.equals(newPasswordConfirmation))
+			return returnChangePasswordFailure("passwordInequality", user, model);
+		
+		user.setPassword(passwordEncoder.encode(newPassword));
+		userRepository.save(user);
+		
+		UserPasswordChangeRequest changeRequest = userPasswordChangeRequestRepository.findByUserId(userid);
+		userPasswordChangeRequestRepository.delete(changeRequest);
+		
+		model.addAttribute("successMessage", "changePassword");
+		
+		return "home";
+	}	
+	
 	private String returnRegisterFailure(String failureType, HttpServletRequest request, String r, ModelMap model) {
 		
 		model.addAttribute("register_username_value", request.getParameter("register_username"));
@@ -380,6 +500,22 @@ public class UserManagementController {
 		model.addAttribute("userEdit", userEdit);
 		
 		return "editUser";
+	}
+	
+	private String returnPasswordChangeRequestFailure(String failureType, String r, ModelMap model) {
+		
+		model.addAttribute("failure", failureType);
+		model.addAttribute("r", r);
+		
+		return "passwordChangeRequest";		
+	}
+	
+	private String returnChangePasswordFailure(String failureType, User user, ModelMap model) {
+		
+		model.addAttribute("failure", failureType);
+		model.addAttribute("user", user);
+		
+		return "changePassword";		
 	}
 	
 	private boolean isAdminEdit() {

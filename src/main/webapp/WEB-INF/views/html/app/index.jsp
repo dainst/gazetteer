@@ -1,3 +1,4 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
@@ -107,6 +108,17 @@
 	</div>
 	
 	<div class="container">
+	
+		<c:if test="${successMessage eq 'register'}">
+			<div class="alert alert-success">
+				<s:message code="ui.register.success" text="ui.register.success" />
+			</div>
+		</c:if>
+		<c:if test="${successMessage eq 'passwordChangeRequest'}">
+			<div class="alert alert-success">
+				<s:message code="ui.passwordChangeRequest.success" text="ui.passwordChangeRequest.success" />
+			</div>
+		</c:if>
 	
 		<div class="alerts" ng-cloak ng-hide="alerts.length == 0">
 			<div ng-repeat="alert in alerts" class="alert" ng-class="alert.alertClass">

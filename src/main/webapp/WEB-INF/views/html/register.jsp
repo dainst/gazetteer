@@ -149,7 +149,7 @@
 					</div>
 					<div class="control-group">
 						<label class="control-label"> <s:message
-								code="ui.registerPassword" text="ui.registerPassword" />
+								code="ui.password" text="ui.password" />
 						</label>
 						<div class="controls">
 							<input type="password" name="register_password">
@@ -157,7 +157,7 @@
 					</div>
 					<div class="control-group">
 						<label class="control-label"> <s:message
-								code="ui.registerPasswordConfirmation" text="ui.registerPasswordConfirmation" />
+								code="ui.passwordConfirmation" text="ui.passwordConfirmation" />
 						</label>
 						<div class="controls">
 							<input type="password" name="register_password_confirmation">
