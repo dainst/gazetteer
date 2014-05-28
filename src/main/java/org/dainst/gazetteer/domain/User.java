@@ -23,19 +23,22 @@ public class User implements UserDetails {
 	private String username;
 	private String firstname;
 	private String lastname;
+	private String institution;
 	private String password;
 	private String email;
 	private Date registrationDate;
+	private Date lastLogin;
 	private boolean enabled;
 
 	private List<GrantedAuthority> authorities;
 	
 
-	public User(String username, String firstname, String lastname,
+	public User(String username, String firstname, String lastname, String institution,
 				String email, String password, Date registrationDate, List<GrantedAuthority> authorities) {
 		this.username = username;
 		this.firstname = firstname;
 		this.lastname = lastname;
+		this.institution = institution;
 		this.email = email;
 		this.password = password;
 		this.setRegistrationDate(registrationDate);
@@ -75,6 +78,14 @@ public class User implements UserDetails {
 		this.lastname = lastname;
 	}
 
+	public String getInstitution() {
+		return institution;
+	}
+
+	public void setInstitution(String institution) {
+		this.institution = institution;
+	}
+
 	public String getPassword() {
 		return password;
 	}
@@ -94,18 +105,35 @@ public class User implements UserDetails {
 	public Date getRegistrationDate() {
 		return registrationDate;
 	}
-
-	public void setRegistrationDate(Date registrationDate) {
-		this.registrationDate = registrationDate;
-	}
 	
 	public String getRegistrationDateAsText() {
 		DateFormat dateFormat = new SimpleDateFormat("dd.MM.YYYY");
 		
 		if (registrationDate == null)
-			registrationDate = new Date();
+			return "-";
 		
 		return dateFormat.format(registrationDate);
+	}
+
+	public void setRegistrationDate(Date registrationDate) {
+		this.registrationDate = registrationDate;
+	}
+		
+	public Date getLastLogin() {
+		return lastLogin;
+	}
+
+	public String getLastLoginAsText() {
+		DateFormat dateFormat = new SimpleDateFormat("dd.MM.YYYY");
+		
+		if (lastLogin == null)
+			return "-";
+		
+		return dateFormat.format(lastLogin);
+	}
+	
+	public void setLastLogin(Date lastLogin) {
+		this.lastLogin = lastLogin;
 	}
 	
 	@Override
@@ -166,6 +194,12 @@ public class User implements UserDetails {
 	public static class LastnameComparator implements Comparator<User>{
 		public int compare(User user1, User user2) {
 			return user1.getLastname().toLowerCase().compareTo(user2.getLastname().toLowerCase());
+		}
+	}
+	
+	public static class InstitutionComparator implements Comparator<User>{
+		public int compare(User user1, User user2) {
+			return user1.getInstitution().toLowerCase().compareTo(user2.getInstitution().toLowerCase());
 		}
 	}
 	

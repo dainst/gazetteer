@@ -122,11 +122,29 @@
 							</c:choose>
 							
 							<c:choose>
+								<c:when test="${lastSorting eq 'institution'}">
+									<th><a href="userManagement?sort=institution&isDescending=<c:out value="${!isDescending}" />"><s:message code="user.institution" text="user.institution" /></a></th>
+								</c:when>
+								<c:otherwise>
+									<th><a href="userManagement?sort=institution&isDescending=false"><s:message code="user.institution" text="user.institution" /></a></th>
+								</c:otherwise>
+							</c:choose>
+							
+							<c:choose>
 								<c:when test="${lastSorting eq 'email'}">
 									<th><a href="userManagement?sort=email&isDescending=<c:out value="${!isDescending}" />"><s:message code="user.email" text="user.email" /></a></th>
 								</c:when>
 								<c:otherwise>
 									<th><a href="userManagement?sort=email&isDescending=false"><s:message code="user.email" text="user.email" /></a></th>
+								</c:otherwise>
+							</c:choose>
+							
+							<c:choose>
+								<c:when test="${lastSorting eq 'lastLogin'}">
+									<th><a href="userManagement?sort=lastLogin&isDescending=<c:out value="${!isDescending}" />"><s:message code="user.lastLogin" text="user.lastLogin" /></a></th>
+								</c:when>
+								<c:otherwise>
+									<th><a href="userManagement?sort=lastLogin&isDescending=false"><s:message code="user.lastLogin" text="user.lastLogin" /></a></th>
 								</c:otherwise>
 							</c:choose>
 							
@@ -177,8 +195,10 @@
 										<td>${user.username}</td>
 										<td>${user.firstname}</td>
 										<td>${user.lastname}</td>
+										<td>${user.institution}</td>
 										<td>${user.email}</td>
-										<td>${user.registrationDateAsText}</td>
+										<td>${user.lastLoginAsText}</td>
+										<td>${user.registrationDateAsText}</td>										
 										<c:choose>
 											<c:when test="${user.hasRole('ROLE_ADMIN')}">
 												<td><span class="icon-ok" style="color: #46a546"></span></td>
@@ -204,8 +224,10 @@
 										<td>${user.username}</td>
 										<td>${user.firstname}</td>
 										<td>${user.lastname}</td>
+										<td>${user.institution}</td>
 										<td>${user.email}</td>
-										<td>${user.registrationDateAsText}</td>
+										<td>${user.lastLoginAsText}</td>
+										<td>${user.registrationDateAsText}</td>										
 										<c:choose>
 											<c:when test="${user.hasRole('ROLE_ADMIN')}">
 												<td><span class="icon-ok" style="color: #46a546"></span></td>

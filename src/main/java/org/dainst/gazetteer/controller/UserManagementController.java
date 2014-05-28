@@ -80,6 +80,7 @@ public class UserManagementController {
 		String username = request.getParameter("register_username");
 		String firstname = request.getParameter("register_firstname");
 		String lastname = request.getParameter("register_lastname");
+		String institution = request.getParameter("register_institution");
 		String email = request.getParameter("register_email");
 		String password = request.getParameter("register_password");
 		String passwordConfirmation = request.getParameter("register_password_confirmation");
@@ -95,7 +96,7 @@ public class UserManagementController {
 		
 		if (lastname.equals(""))
 			return returnRegisterFailure("missingLastname", request, r, model);
-	
+		
 		if (userRepository.findByEmail(email) != null)
 			return returnRegisterFailure("emailExists", request, r, model);
 		
@@ -113,7 +114,7 @@ public class UserManagementController {
 
 		String encodedPassword = passwordEncoder.encode(password);
 		
-		User user = new User(username, firstname, lastname, email, encodedPassword, new Date(), authorities);
+		User user = new User(username, firstname, lastname, institution, email, encodedPassword, new Date(), authorities);
 		
 		userRepository.save(user);
 		
@@ -181,12 +182,25 @@ public class UserManagementController {
 				else
 					Collections.sort(users, new User.LastnameComparator());
 				break;
+			case "institution":
+				users = (List<User>) userRepository.findAll();
+				if (isDescending)
+					Collections.sort(users, Collections.reverseOrder(new User.InstitutionComparator()));
+				else
+					Collections.sort(users, new User.InstitutionComparator());
+				break;
 			case "email":
 				users = (List<User>) userRepository.findAll();
 				if (isDescending)
 					Collections.sort(users, Collections.reverseOrder(new User.EmailComparator()));
 				else
 					Collections.sort(users, new User.EmailComparator());
+				break;
+			case "lastLogin":
+				if (isDescending)
+					users = (List<User>) userRepository.findAll(new Sort(Sort.Direction.ASC, "lastLogin"));
+				else
+					users = (List<User>) userRepository.findAll(new Sort(Sort.Direction.DESC, "lastLogin"));
 				break;
 			case "registrationDate":
 				if (isDescending)
@@ -251,6 +265,7 @@ public class UserManagementController {
 		model.addAttribute("edit_user_username_value", user.getUsername());
 		model.addAttribute("edit_user_firstname_value", user.getFirstname());
 		model.addAttribute("edit_user_lastname_value", user.getLastname());
+		model.addAttribute("edit_user_institution_value", user.getInstitution());
 		model.addAttribute("edit_user_email_value", user.getEmail());
 		model.addAttribute("edit_user_activated_value", user.isEnabled());
 		model.addAttribute("edit_user_role_admin_value", user.hasRole("ROLE_ADMIN"));
@@ -275,6 +290,7 @@ public class UserManagementController {
 		
 		String newFirstname = request.getParameter("edit_user_firstname");
 		String newLastname = request.getParameter("edit_user_lastname");
+		String newInstitution = request.getParameter("edit_user_institution");
 		String newEmail = request.getParameter("edit_user_email");
 		String newUsername = "";
 		String newPassword = "";
@@ -330,6 +346,7 @@ public class UserManagementController {
 		
 		user.setFirstname(newFirstname);
 		user.setLastname(newLastname);
+		user.setInstitution(newInstitution);
 		user.setEmail(newEmail);
 		
 		if (adminEdit) {
@@ -476,6 +493,7 @@ public class UserManagementController {
 		model.addAttribute("register_username_value", request.getParameter("register_username"));
 		model.addAttribute("register_firstname_value", request.getParameter("register_firstname"));
 		model.addAttribute("register_lastname_value", request.getParameter("register_lastname"));
+		model.addAttribute("register_institution_value", request.getParameter("register_institution"));
 		model.addAttribute("register_email_value", request.getParameter("register_email"));
 		model.addAttribute("r", r);
 		model.addAttribute("failure", failureType);
@@ -489,6 +507,7 @@ public class UserManagementController {
 		model.addAttribute("edit_user_username_value", request.getParameter("edit_user_username"));
 		model.addAttribute("edit_user_firstname_value", request.getParameter("edit_user_firstname"));
 		model.addAttribute("edit_user_lastname_value", request.getParameter("edit_user_lastname"));
+		model.addAttribute("edit_user_institution_value", request.getParameter("edit_user_institution"));
 		model.addAttribute("edit_user_email_value", request.getParameter("edit_user_email"));
 		model.addAttribute("edit_user_activated_value", request.getParameter("edit_user_activated") != null);
 		model.addAttribute("edit_user_role_admin_value", request.getParameter("edit_user_role_admin") != null);

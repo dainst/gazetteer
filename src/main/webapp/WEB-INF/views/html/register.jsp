@@ -141,6 +141,14 @@
 					</div>
 					<div class="control-group">
 						<label class="control-label"> <s:message
+								code="user.institution" text="user.institution" />
+						</label>
+						<div class="controls">
+							<input type="text" name="register_institution" value="${register_institution_value}">
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label"> <s:message
 								code="user.email" text="user.email" />
 						</label>
 						<div class="controls">
