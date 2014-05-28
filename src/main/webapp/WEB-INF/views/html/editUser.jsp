@@ -84,45 +84,65 @@
 			</div>
 		</div>
 	</div>
+	
+	<% String usernameControlGroup;
+	String firstnameControlGroup;
+	String lastnameControlGroup;
+	String emailControlGroup;
+	String passwordControlGroup;
+	
+	usernameControlGroup = "control-group";
+	firstnameControlGroup = "control-group";
+	lastnameControlGroup = "control-group";
+	emailControlGroup = "control-group";
+	passwordControlGroup = "control-group"; %>
 
 	<div class="container">
 		<c:if test="${failure eq 'missingUsername'}">
 			<div class="alert alert-error">
+				<% usernameControlGroup = "control-group error"; %>
 				<s:message code="ui.editUser.error.missingUsername" text="ui.editUser.error.missingUsername" />
 			</div>
 		</c:if>
 		<c:if test="${failure eq 'usernameExists'}">
 			<div class="alert alert-error">
+				<% usernameControlGroup = "control-group error"; %>
 				<s:message code="ui.editUser.error.usernameExists" text="ui.editUser.error.usernameExists" />
 			</div>
 		</c:if>	
 		<c:if test="${failure eq 'missingFirstname'}">
 			<div class="alert alert-error">
+				<% firstnameControlGroup = "control-group error"; %>
 				<s:message code="ui.editUser.error.missingFirstname" text="ui.editUser.error.missingFirstname" />
 			</div>
 		</c:if>	
 		<c:if test="${failure eq 'missingLastname'}">
 			<div class="alert alert-error">
+				<% lastnameControlGroup = "control-group error"; %>
 				<s:message code="ui.editUser.error.missingLastname" text="ui.editUser.error.missingLastname" />
 			</div>
 		</c:if>	
 		<c:if test="${failure eq 'emailExists'}">
 			<div class="alert alert-error">
+				<% emailControlGroup = "control-group error"; %>
 				<s:message code="ui.editUser.error.emailExists" text="ui.editUser.error.emailExists" />
 			</div>
 		</c:if>
 		<c:if test="${failure eq 'invalidEmail'}">
 			<div class="alert alert-error">
+				<% emailControlGroup = "control-group error"; %>
 				<s:message code="ui.editUser.error.invalidEmail" text="ui.editUser.error.invalidEmail" />
 			</div>
 		</c:if>
 		<c:if test="${failure eq 'passwordLength'}">
 			<div class="alert alert-error">
+				<% passwordControlGroup = "control-group error"; %>
 				<s:message code="ui.editUser.error.passwordLength" text="ui.editUser.error.passwordLength" />
 			</div>
 		</c:if>
 		<c:if test="${failure eq 'passwordInequality'}">
 			<div class="alert alert-error">
+				<% passwordControlGroup = "control-group error"; %>	
 				<s:message code="ui.editUser.error.passwordInequality" text="ui.editUser.error.passwordInequality" />
 			</div>
 		</c:if>
@@ -134,7 +154,7 @@
 						<s:message code="ui.editUser" text="ui.editUser" />
 					</h3>
 					<c:if test="${adminEdit}">
-						<div class="control-group">
+						<div class="<%=usernameControlGroup%>">
 							<label class="control-label"> <s:message
 									code="user.username" text="user.username" />
 							</label>
@@ -143,7 +163,7 @@
 							</div>
 						</div>
 					</c:if>
-					<div class="control-group">
+					<div class="<%=firstnameControlGroup%>">
 						<label class="control-label"> <s:message
 								code="user.firstname" text="user.firstname" />
 						</label>
@@ -151,7 +171,7 @@
 							<input type="text" name="edit_user_firstname" value="${edit_user_firstname_value}" />
 						</div>
 					</div>
-					<div class="control-group">
+					<div class="<%=lastnameControlGroup%>">
 						<label class="control-label"> <s:message
 								code="user.lastname" text="user.lastname" />
 						</label>
@@ -167,7 +187,7 @@
 							<input type="text" name="edit_user_institution" value="${edit_user_institution_value}" />
 						</div>
 					</div>
-					<div class="control-group">
+					<div class="<%=emailControlGroup%>">
 						<label class="control-label"> <s:message
 								code="user.email" text="user.email" />
 						</label>
@@ -177,7 +197,7 @@
 					</div>
 					
 					<c:if test="${userEdit}">
-						<div class="control-group">
+						<div class="<%=passwordControlGroup%>">
 							<label class="control-label"> <s:message
 									code="ui.editUser.newPassword" text="ui.editUser.newPassword" />
 							</label>
@@ -185,7 +205,7 @@
 								<input type="password" name="edit_user_new_password" value="${edit_user_new_password}" />
 							</div>
 						</div>					
-						<div class="control-group">
+						<div class="<%=passwordControlGroup%>">
 							<label class="control-label"> <s:message
 									code="ui.editUser.newPasswordConfirmation" text="ui.editUser.newPasswordConfirmation" />
 							</label>

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import javax.mail.MessagingException;
@@ -119,9 +120,9 @@ public class UserManagementController {
 		userRepository.save(user);
 		
 		String link = baseUri + "editUser?username=" + username + "&r=userManagement";
-		RequestContext context = new RequestContext(request);		
-		String subject = context.getMessage("mail.adminRegistrationNotification.subject", new Object[] { username });
-		String content = context.getMessage("mail.adminRegistrationNotification.content", new Object[] { username, link });
+		RequestContext context = new RequestContext(request);
+		String subject = context.getMessageSource().getMessage("mail.adminRegistrationNotification.subject", new Object[] { username }, Locale.ENGLISH);
+		String content = context.getMessageSource().getMessage("mail.adminRegistrationNotification.content", new Object[] { username, link }, Locale.ENGLISH);
 				
 		try {
 			sendMailToAdmins(subject, content);					
@@ -340,7 +341,7 @@ public class UserManagementController {
 			if (!newPassword.equals("") && (newPassword.length() < 6 || newPassword.length() > 30))
 				return returnEditUserFailure("passwordLength", user, r, adminEdit, userEdit, request, model);
 			
-			if (!newPassword.equals("") && !newPassword.equals(newPasswordConfirmation))
+			if (!(newPassword.equals("") && newPasswordConfirmation.equals("")) && !newPassword.equals(newPasswordConfirmation))
 				return returnEditUserFailure("passwordInequality", user, r, adminEdit, userEdit, request, model);
 		}
 		

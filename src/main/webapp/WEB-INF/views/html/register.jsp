@@ -67,43 +67,63 @@
 		</div>
 	</div>
 
+	<% String usernameControlGroup;
+	String firstnameControlGroup;
+	String lastnameControlGroup;
+	String emailControlGroup;
+	String passwordControlGroup;
+	
+	usernameControlGroup = "control-group";
+	firstnameControlGroup = "control-group";
+	lastnameControlGroup = "control-group";
+	emailControlGroup = "control-group";
+	passwordControlGroup = "control-group"; %>
+
 	<div class="container">
 		<c:if test="${failure eq 'missingUsername'}">
+			<% usernameControlGroup = "control-group error"; %>
 			<div class="alert alert-error">
 				<s:message code="ui.register.error.missingUsername" text="ui.register.error.missingUsername" />
 			</div>
 		</c:if>
 		<c:if test="${failure eq 'usernameExists'}">
+			<% usernameControlGroup = "control-group error"; %>
 			<div class="alert alert-error">
 				<s:message code="ui.register.error.usernameExists" text="ui.register.error.usernameExists" />
 			</div>
 		</c:if>	
 		<c:if test="${failure eq 'missingFirstname'}">
+			<% firstnameControlGroup = "control-group error"; %>
 			<div class="alert alert-error">
 				<s:message code="ui.register.error.missingFirstname" text="ui.register.error.missingFirstname" />
 			</div>
 		</c:if>	
 		<c:if test="${failure eq 'missingLastname'}">
+			<% lastnameControlGroup = "control-group error"; %>
 			<div class="alert alert-error">
 				<s:message code="ui.register.error.missingLastname" text="ui.register.error.missingLastname" />
 			</div>
 		</c:if>	
 		<c:if test="${failure eq 'emailExists'}">
+			<% emailControlGroup = "control-group error"; %>
 			<div class="alert alert-error">
 				<s:message code="ui.register.error.emailExists" text="ui.register.error.emailExists" />
 			</div>
 		</c:if>
 		<c:if test="${failure eq 'invalidEmail'}">
+			<% emailControlGroup = "control-group error"; %>
 			<div class="alert alert-error">
 				<s:message code="ui.register.error.invalidEmail" text="ui.register.error.invalidEmail" />
 			</div>
 		</c:if>
 		<c:if test="${failure eq 'passwordLength'}">
+			<% passwordControlGroup = "control-group error"; %>
 			<div class="alert alert-error">
 				<s:message code="ui.register.error.passwordLength" text="ui.register.error.passwordLength" />
 			</div>
 		</c:if>
 		<c:if test="${failure eq 'passwordInequality'}">
+			<% passwordControlGroup = "control-group error"; %>
 			<div class="alert alert-error">
 				<s:message code="ui.register.error.passwordInequality" text="ui.register.error.passwordInequality" />
 			</div>
@@ -115,7 +135,7 @@
 					<h3>
 						<s:message code="ui.register" text="ui.register" />
 					</h3>
-					<div class="control-group">
+					<div class="<%=usernameControlGroup%>">
 						<label class="control-label"> <s:message
 								code="user.username" text="user.username" />
 						</label>
@@ -123,7 +143,7 @@
 							<input type="text" name="register_username" value="${register_username_value}">
 						</div>
 					</div>
-					<div class="control-group">
+					<div class="<%=firstnameControlGroup%>">
 						<label class="control-label"> <s:message
 								code="user.firstname" text="user.firstname" />
 						</label>
@@ -131,7 +151,7 @@
 							<input type="text" name="register_firstname" value="${register_firstname_value}">
 						</div>
 					</div>
-					<div class="control-group">
+					<div class="<%=lastnameControlGroup%>">
 						<label class="control-label"> <s:message
 								code="user.lastname" text="user.lastname" />
 						</label>
@@ -147,7 +167,7 @@
 							<input type="text" name="register_institution" value="${register_institution_value}">
 						</div>
 					</div>
-					<div class="control-group">
+					<div class="<%=emailControlGroup%>">
 						<label class="control-label"> <s:message
 								code="user.email" text="user.email" />
 						</label>
@@ -155,7 +175,7 @@
 							<input type="text" name="register_email" value="${register_email_value}">
 						</div>
 					</div>
-					<div class="control-group">
+					<div class="<%=passwordControlGroup%>">
 						<label class="control-label"> <s:message
 								code="ui.password" text="ui.password" />
 						</label>
@@ -163,7 +183,7 @@
 							<input type="password" name="register_password">
 						</div>
 					</div>
-					<div class="control-group">
+					<div class="<%=passwordControlGroup%>">
 						<label class="control-label"> <s:message
 								code="ui.passwordConfirmation" text="ui.passwordConfirmation" />
 						</label>
