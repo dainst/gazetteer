@@ -43,20 +43,29 @@
 			</sec:authorize>
 			<sec:authorize access="isAuthenticated()">
 				<div class="btn-group pull-right" style="margin-top:12px">
-					<p class="btn btn-small">
-						<s:message code="ui.loggedInAs" text="ui.loggedInAs"/>: <sec:authentication property="principal.username" />
-					</p>
-					<a href="editUser?username=${pageContext['request'].userPrincipal.name}" class="btn btn-small btn-primary">
-						<s:message code="ui.userSettings" text="ui.userSettings"/>
-					</a>
-					<sec:authorize access="hasRole('ROLE_ADMIN')">
-						<a href="userManagement" class="btn btn-small btn-primary">
-							<s:message code="ui.userManagement" text="ui.userManagement"/>
-						</a>
-					</sec:authorize>
-					<a href="logout" class="btn btn-small btn-primary">
-						<s:message code="ui.logout" text="ui.logout"/>
-					</a>
+					<button type="button" class="btn btn-primary btn-small dropdown-toggle" data-toggle="dropdown">
+   						<sec:authentication property="principal.username" /> <span class="caret"></span>
+					</button>	
+					<ul class="dropdown-menu pull-right" role="menu">
+	   					<li>
+   							<a href="editUser?username=${pageContext['request'].userPrincipal.name}">
+   								<s:message code="ui.userSettings" text="ui.userSettings"/>
+   							</a>
+   						</li>
+   						<sec:authorize access="hasRole('ROLE_ADMIN')">
+   							<li>
+   								<a href="userManagement">
+   									<s:message code="ui.userManagement" text="ui.userManagement"/>
+   								</a>
+   							</li>
+   						</sec:authorize>
+   						<li class="divider"></li>
+  						<li>
+   							<a href="logout">
+   								<s:message code="ui.logout" text="ui.logout"/>
+   							</a>
+   						</li>   					
+					</ul>
 				</div>
 			</sec:authorize>
 			<div id="archaeo-fixed-menu-logo"></div>
