@@ -228,6 +228,7 @@
 	</repositories>
 
 	<build>
+		<finalName>gazetteer</finalName>
 		<plugins>
 			<plugin>
 				<artifactId>maven-eclipse-plugin</artifactId>
