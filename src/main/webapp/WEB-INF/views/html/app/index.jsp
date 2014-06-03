@@ -175,7 +175,6 @@
 	<script src="../resources/bootstrap/js/bootstrap.min.js"></script>
 	
 	<script src="../resources/js/custom.js"></script>
-	<script src="../widget/lib.js"></script>
 	
 	<script src="../resources/js/app.js"></script>
 	<script src="../resources/js/services.js"></script>
