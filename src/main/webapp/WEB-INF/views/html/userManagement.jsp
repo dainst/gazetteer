@@ -102,206 +102,202 @@
 		<h3>
 			<s:message code="ui.userManagement" text="ui.userManagement" />
 		</h3>
-		
-		<div class="panel panel-default">
-  			<div class="panel-body">
-				<table class="table table-condensed table-hover user-management-table">
-					<thead>
-						<tr>
-							<c:choose>
-								<c:when test="${lastSorting eq 'username'}">
-									<th><a href="userManagement?sort=username&isDescending=<c:out value="${!isDescending}" />"><s:message code="user.username" text="user.username" /></a></th>
-								</c:when>
-								<c:otherwise>
-									<th><a href="userManagement?sort=username&isDescending=false"><s:message code="user.username" text="user.username" /></a></th>
-								</c:otherwise>
-							</c:choose>
-							
-							<c:choose>
-								<c:when test="${lastSorting eq 'firstname'}">
-									<th><a href="userManagement?sort=firstname&isDescending=<c:out value="${!isDescending}" />"><s:message code="user.firstname" text="user.firstname" /></a></th>
-								</c:when>
-								<c:otherwise>
-									<th><a href="userManagement?sort=firstname&isDescending=false"><s:message code="user.firstname" text="user.firstname" /></a></th>
-								</c:otherwise>
-							</c:choose>
-							
-							<c:choose>
-								<c:when test="${lastSorting eq 'lastname'}">
-									<th><a href="userManagement?sort=lastname&isDescending=<c:out value="${!isDescending}" />"><s:message code="user.lastname" text="user.lastname" /></a></th>
-								</c:when>
-								<c:otherwise>
-									<th><a href="userManagement?sort=lastname&isDescending=false"><s:message code="user.lastname" text="user.lastname" /></a></th>
-								</c:otherwise>
-							</c:choose>
-							
-							<c:choose>
-								<c:when test="${lastSorting eq 'institution'}">
-									<th><a href="userManagement?sort=institution&isDescending=<c:out value="${!isDescending}" />"><s:message code="user.institution" text="user.institution" /></a></th>
-								</c:when>
-								<c:otherwise>
-									<th><a href="userManagement?sort=institution&isDescending=false"><s:message code="user.institution" text="user.institution" /></a></th>
-								</c:otherwise>
-							</c:choose>
-							
-							<c:choose>
-								<c:when test="${lastSorting eq 'email'}">
-									<th><a href="userManagement?sort=email&isDescending=<c:out value="${!isDescending}" />"><s:message code="user.email" text="user.email" /></a></th>
-								</c:when>
-								<c:otherwise>
-									<th><a href="userManagement?sort=email&isDescending=false"><s:message code="user.email" text="user.email" /></a></th>
-								</c:otherwise>
-							</c:choose>
-							
-							<c:choose>
-								<c:when test="${lastSorting eq 'lastLogin'}">
-									<th><a href="userManagement?sort=lastLogin&isDescending=<c:out value="${!isDescending}" />"><s:message code="user.lastLogin" text="user.lastLogin" /></a></th>
-								</c:when>
-								<c:otherwise>
-									<th><a href="userManagement?sort=lastLogin&isDescending=false"><s:message code="user.lastLogin" text="user.lastLogin" /></a></th>
-								</c:otherwise>
-							</c:choose>
-							
-							<c:choose>
-								<c:when test="${lastSorting eq 'registrationDate'}">
-									<th><a href="userManagement?sort=registrationDate&isDescending=<c:out value="${!isDescending}" />"><s:message code="user.registrationDate" text="user.registrationDate" /></a></th>
-								</c:when>
-								<c:otherwise>
-									<th><a href="userManagement?sort=registrationDate&isDescending=false"><s:message code="user.registrationDate" text="user.registrationDate" /></a></th>
-								</c:otherwise>
-							</c:choose>
-							
-							<c:choose>
-								<c:when test="${lastSorting eq 'admin'}">
-									<th><a href="userManagement?sort=admin&isDescending=<c:out value="${!isDescending}" />"><s:message code="user.roles.admin" text="user.roles.admin" /></a></th>
-								</c:when>
-								<c:otherwise>
-									<th><a href="userManagement?sort=admin&isDescending=false"><s:message code="user.roles.admin" text="user.roles.admin" /></a></th>
-								</c:otherwise>
-							</c:choose>
-							
-							<c:choose>
-								<c:when test="${lastSorting eq 'reisestipendium'}">
-									<th><a href="userManagement?sort=reisestipendium&isDescending=<c:out value="${!isDescending}" />"><s:message code="user.roles.reisestipendium" text="user.roles.reisestipendium" /></a></th>
-								</c:when>
-								<c:otherwise>
-									<th><a href="userManagement?sort=reisestipendium&isDescending=false"><s:message code="user.roles.reisestipendium" text="user.roles.reisestipendium" /></a></th>
-								</c:otherwise>
-							</c:choose>
-							
-							<c:choose>
-								<c:when test="${lastSorting == null or lastSorting == ''}">
-									<th><a href="userManagement?isDescending=<c:out value="${!isDescending}" />"><s:message code="user.status" text="user.status" /></a></th>
-								</c:when>
-								<c:otherwise>
-									<th><a href="userManagement?isDescending=false"><s:message code="user.status" text="user.status" /></a></th>
-								</c:otherwise>
-							</c:choose>
-							
-							<th />
-						</tr>
-					</thead>
-					<tbody>
-						<c:forEach var="user" items="${users}">
-    						<c:choose>
-								<c:when test="${user.enabled}">
-    								<tr>
-										<td>${user.username}</td>
-										<td>${user.firstname}</td>
-										<td>${user.lastname}</td>
-										<td>${user.institution}</td>
-										<td>${user.email}</td>
-										<td>${user.lastLoginAsText}</td>
-										<td>${user.registrationDateAsText}</td>										
-										<c:choose>
-											<c:when test="${user.hasRole('ROLE_ADMIN')}">
-												<td><span class="icon-ok" style="color: #46a546"></span></td>
-											</c:when>
-											<c:otherwise>
-												<td><span class="icon-remove" style="color: #9d261d"></span></td>
-											</c:otherwise>
-										</c:choose>										
-										<c:choose>
-											<c:when test="${user.hasRole('ROLE_REISESTIPENDIUM')}">
-												<td><span class="icon-ok" style="color: #46a546"></span></td>
-											</c:when>
-											<c:otherwise>
-												<td><span class="icon-remove" style="color: #9d261d"></span></td>
-											</c:otherwise>
-										</c:choose>			
-										<td><s:message code="user.status.activated"></s:message></td>
-										<td><a href="editUser?username=${user.username}&r=userManagement" class="btn btn-block btn-primary"><s:message code="ui.edit" text="ui.edit" /></a></td>
-									</tr>
-								</c:when>
-								<c:otherwise>
-									<tr class="warning">
-										<td>${user.username}</td>
-										<td>${user.firstname}</td>
-										<td>${user.lastname}</td>
-										<td>${user.institution}</td>
-										<td>${user.email}</td>
-										<td>${user.lastLoginAsText}</td>
-										<td>${user.registrationDateAsText}</td>										
-										<c:choose>
-											<c:when test="${user.hasRole('ROLE_ADMIN')}">
-												<td><span class="icon-ok" style="color: #46a546"></span></td>
-											</c:when>
-											<c:otherwise>
-												<td><span class="icon-remove" style="color: #9d261d"></span></td>
-											</c:otherwise>
-										</c:choose>										
-										<c:choose>
-											<c:when test="${user.hasRole('ROLE_REISESTIPENDIUM')}">
-												<td><span class="icon-ok" style="color: #46a546"></span></td>
-											</c:when>
-											<c:otherwise>
-												<td><span class="icon-remove" style="color: #9d261d"></span></td>
-											</c:otherwise>
-										</c:choose>
-										<td><s:message code="user.status.notActivated"></s:message></td>
-										<td><a href="editUser?username=${user.username}&r=userManagement" class="btn btn-block btn-warning"><s:message code="ui.activate" text="ui.activate" /></a></td>
-									</tr>
-								</c:otherwise>
-							</c:choose>
-    					</c:forEach>
-					</tbody>
-				</table>
+	
+		<table class="table table-condensed table-hover user-management-table">
+			<thead>
+				<tr>
+					<c:choose>
+						<c:when test="${lastSorting eq 'username'}">
+							<th><a href="userManagement?sort=username&isDescending=<c:out value="${!isDescending}" />"><s:message code="user.username" text="user.username" /></a></th>
+						</c:when>
+						<c:otherwise>
+							<th><a href="userManagement?sort=username&isDescending=false"><s:message code="user.username" text="user.username" /></a></th>
+						</c:otherwise>
+					</c:choose>
+					
+					<c:choose>
+						<c:when test="${lastSorting eq 'firstname'}">
+							<th><a href="userManagement?sort=firstname&isDescending=<c:out value="${!isDescending}" />"><s:message code="user.firstname" text="user.firstname" /></a></th>
+						</c:when>
+						<c:otherwise>
+							<th><a href="userManagement?sort=firstname&isDescending=false"><s:message code="user.firstname" text="user.firstname" /></a></th>
+						</c:otherwise>
+					</c:choose>
+					
+					<c:choose>
+						<c:when test="${lastSorting eq 'lastname'}">
+							<th><a href="userManagement?sort=lastname&isDescending=<c:out value="${!isDescending}" />"><s:message code="user.lastname" text="user.lastname" /></a></th>
+						</c:when>
+						<c:otherwise>
+							<th><a href="userManagement?sort=lastname&isDescending=false"><s:message code="user.lastname" text="user.lastname" /></a></th>
+						</c:otherwise>
+					</c:choose>
+					
+					<c:choose>
+						<c:when test="${lastSorting eq 'institution'}">
+							<th><a href="userManagement?sort=institution&isDescending=<c:out value="${!isDescending}" />"><s:message code="user.institution" text="user.institution" /></a></th>
+						</c:when>
+						<c:otherwise>
+							<th><a href="userManagement?sort=institution&isDescending=false"><s:message code="user.institution" text="user.institution" /></a></th>
+						</c:otherwise>
+					</c:choose>
 				
-				<ul class="nav nav-pills" style="margin-bottom: 0; margin-left: auto; margin-right: auto; width: 20em;">
 					<c:choose>
-						<c:when test="${page eq 0}">
-							<li class="disabled" style="cursor:pointer">
-								<a>&larr; <s:message code="ui.previous" /></a>
-							</li>
+						<c:when test="${lastSorting eq 'email'}">
+							<th><a href="userManagement?sort=email&isDescending=<c:out value="${!isDescending}" />"><s:message code="user.email" text="user.email" /></a></th>
 						</c:when>
 						<c:otherwise>
-							<li style="cursor:pointer">
-								<a href="userManagement?page=${page - 1}&sort=${lastSorting}&isDescending=${isDescending}">&larr; <s:message code="ui.previous" /></a>
-							</li>
+							<th><a href="userManagement?sort=email&isDescending=false"><s:message code="user.email" text="user.email" /></a></th>
 						</c:otherwise>
 					</c:choose>
 					
-					<li class="divider-vertical"></li>
-					<li class="disabled">
-						<a><s:message code="ui.page" text="ui.page" /> ${page + 1} / ${pages}</a>
+					<c:choose>
+						<c:when test="${lastSorting eq 'lastLogin'}">
+							<th><a href="userManagement?sort=lastLogin&isDescending=<c:out value="${!isDescending}" />"><s:message code="user.lastLogin" text="user.lastLogin" /></a></th>
+						</c:when>
+						<c:otherwise>
+							<th><a href="userManagement?sort=lastLogin&isDescending=false"><s:message code="user.lastLogin" text="user.lastLogin" /></a></th>
+						</c:otherwise>
+					</c:choose>
+							
+					<c:choose>
+						<c:when test="${lastSorting eq 'registrationDate'}">
+							<th><a href="userManagement?sort=registrationDate&isDescending=<c:out value="${!isDescending}" />"><s:message code="user.registrationDate" text="user.registrationDate" /></a></th>
+						</c:when>
+						<c:otherwise>
+							<th><a href="userManagement?sort=registrationDate&isDescending=false"><s:message code="user.registrationDate" text="user.registrationDate" /></a></th>
+						</c:otherwise>
+					</c:choose>
+							
+					<c:choose>
+						<c:when test="${lastSorting eq 'admin'}">
+							<th><a href="userManagement?sort=admin&isDescending=<c:out value="${!isDescending}" />"><s:message code="user.roles.admin" text="user.roles.admin" /></a></th>
+						</c:when>
+						<c:otherwise>
+							<th><a href="userManagement?sort=admin&isDescending=false"><s:message code="user.roles.admin" text="user.roles.admin" /></a></th>
+						</c:otherwise>
+					</c:choose>
+					
+					<c:choose>
+						<c:when test="${lastSorting eq 'reisestipendium'}">
+							<th><a href="userManagement?sort=reisestipendium&isDescending=<c:out value="${!isDescending}" />"><s:message code="user.roles.reisestipendium" text="user.roles.reisestipendium" /></a></th>
+						</c:when>
+						<c:otherwise>
+							<th><a href="userManagement?sort=reisestipendium&isDescending=false"><s:message code="user.roles.reisestipendium" text="user.roles.reisestipendium" /></a></th>
+						</c:otherwise>
+					</c:choose>
+					
+					<c:choose>
+						<c:when test="${lastSorting == null or lastSorting == ''}">
+							<th><a href="userManagement?isDescending=<c:out value="${!isDescending}" />"><s:message code="user.status" text="user.status" /></a></th>
+						</c:when>
+						<c:otherwise>
+							<th><a href="userManagement?isDescending=false"><s:message code="user.status" text="user.status" /></a></th>
+						</c:otherwise>
+					</c:choose>
+					
+					<th />
+				</tr>
+			</thead>
+			<tbody>
+				<c:forEach var="user" items="${users}">
+    				<c:choose>
+						<c:when test="${user.enabled}">
+    						<tr>
+								<td>${user.username}</td>
+								<td>${user.firstname}</td>
+								<td>${user.lastname}</td>
+								<td>${user.institution}</td>
+								<td>${user.email}</td>
+								<td>${user.lastLoginAsText}</td>
+								<td>${user.registrationDateAsText}</td>										
+								<c:choose>
+									<c:when test="${user.hasRole('ROLE_ADMIN')}">
+										<td><span class="icon-ok" style="color: #46a546"></span></td>
+									</c:when>
+									<c:otherwise>
+										<td><span class="icon-remove" style="color: #9d261d"></span></td>
+									</c:otherwise>
+								</c:choose>										
+								<c:choose>
+									<c:when test="${user.hasRole('ROLE_REISESTIPENDIUM')}">
+										<td><span class="icon-ok" style="color: #46a546"></span></td>
+									</c:when>
+									<c:otherwise>
+										<td><span class="icon-remove" style="color: #9d261d"></span></td>
+									</c:otherwise>
+								</c:choose>			
+								<td><s:message code="user.status.activated"></s:message></td>
+								<td><a href="editUser?username=${user.username}&r=userManagement" class="btn btn-block btn-primary"><s:message code="ui.edit" text="ui.edit" /></a></td>
+							</tr>
+						</c:when>
+						<c:otherwise>
+							<tr class="warning">
+								<td>${user.username}</td>
+								<td>${user.firstname}</td>
+								<td>${user.lastname}</td>
+								<td>${user.institution}</td>
+								<td>${user.email}</td>
+								<td>${user.lastLoginAsText}</td>
+								<td>${user.registrationDateAsText}</td>										
+								<c:choose>
+									<c:when test="${user.hasRole('ROLE_ADMIN')}">
+										<td><span class="icon-ok" style="color: #46a546"></span></td>
+									</c:when>
+									<c:otherwise>
+										<td><span class="icon-remove" style="color: #9d261d"></span></td>
+									</c:otherwise>
+								</c:choose>										
+								<c:choose>
+									<c:when test="${user.hasRole('ROLE_REISESTIPENDIUM')}">
+										<td><span class="icon-ok" style="color: #46a546"></span></td>
+									</c:when>
+									<c:otherwise>
+										<td><span class="icon-remove" style="color: #9d261d"></span></td>
+									</c:otherwise>
+								</c:choose>
+								<td><s:message code="user.status.notActivated"></s:message></td>
+								<td><a href="editUser?username=${user.username}&r=userManagement" class="btn btn-block btn-warning"><s:message code="ui.activate" text="ui.activate" /></a></td>
+							</tr>
+						</c:otherwise>
+					</c:choose>
+    			</c:forEach>
+			</tbody>
+		</table>
+				
+		<ul class="nav nav-pills" style="margin-bottom: 0; margin-left: auto; margin-right: auto; width: 20em;">
+			<c:choose>
+				<c:when test="${page eq 0}">
+					<li class="disabled" style="cursor:pointer">
+						<a>&larr; <s:message code="ui.previous" /></a>
 					</li>
-					<li class="divider-vertical"></li>
-					<c:choose>
-						<c:when test="${page eq pages - 1}">
-							<li class="disabled" style="cursor:pointer">
-								<a><s:message code="ui.next" text="Vor"/> &rarr;</a>
-							</li>	
-						</c:when>
-						<c:otherwise>
-							<li style="cursor:pointer">
-								<a href="userManagement?page=${page + 1}&sort=${lastSorting}&isDescending=${isDescending}"><s:message code="ui.next" text="Vor"/> &rarr;</a>
-							</li>
-						</c:otherwise>
-					</c:choose>
-					
-				</ul>					
-			</div>			
-		</div>
+				</c:when>
+				<c:otherwise>
+					<li style="cursor:pointer">
+						<a href="userManagement?page=${page - 1}&sort=${lastSorting}&isDescending=${isDescending}">&larr; <s:message code="ui.previous" /></a>
+					</li>
+				</c:otherwise>
+			</c:choose>
+			
+			<li class="divider-vertical"></li>
+			<li class="disabled">
+				<a><s:message code="ui.page" text="ui.page" /> ${page + 1} / ${pages}</a>
+			</li>
+			<li class="divider-vertical"></li>
+			<c:choose>
+				<c:when test="${page eq pages - 1}">
+					<li class="disabled" style="cursor:pointer">
+						<a><s:message code="ui.next" text="Vor"/> &rarr;</a>
+					</li>	
+				</c:when>
+				<c:otherwise>
+					<li style="cursor:pointer">
+						<a href="userManagement?page=${page + 1}&sort=${lastSorting}&isDescending=${isDescending}"><s:message code="ui.next" text="Vor"/> &rarr;</a>
+					</li>
+				</c:otherwise>
+			</c:choose>
+			
+		</ul>					
 
 		<!-- Footer -->
 		<hr>

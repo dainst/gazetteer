@@ -55,6 +55,7 @@ public class UserManagementController {
 	private static final Logger logger = LoggerFactory.getLogger(UserManagementController.class);
 	
 	private int usersPerPage = 15;
+
 	
 	@RequestMapping(value="/login")
 	public String getLogin(@RequestParam(required=false) String r, ModelMap model) {

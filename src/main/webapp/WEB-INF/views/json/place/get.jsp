@@ -2,16 +2,18 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
 <%@ page session="false" import="org.dainst.gazetteer.domain.*,
-	org.dainst.gazetteer.converter.JsonPlaceSerializer" %>
+	org.dainst.gazetteer.converter.JsonPlaceSerializer,
+	org.dainst.gazetteer.dao.*" %>
 
 <%
 
 response.setHeader("Content-Type", "application/json; charset=utf-8");
 Place place = (Place) request.getAttribute("place");
 String baseUri = (String) request.getAttribute("baseUri");
+UserRepository userDao = (UserRepository) request.getAttribute("userDao");
 
 JsonPlaceSerializer serializer = new JsonPlaceSerializer(baseUri);
 
 %>
 
-<%= serializer.serialize(place) %>
+<%= serializer.serialize(place, userDao) %>

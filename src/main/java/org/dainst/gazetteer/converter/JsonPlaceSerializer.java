@@ -1,16 +1,24 @@
 package org.dainst.gazetteer.converter;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.dainst.gazetteer.dao.UserRepository;
 import org.dainst.gazetteer.domain.Comment;
 import org.dainst.gazetteer.domain.Identifier;
 import org.dainst.gazetteer.domain.Link;
 import org.dainst.gazetteer.domain.Location;
 import org.dainst.gazetteer.domain.Place;
+import org.dainst.gazetteer.domain.PlaceChangeRecord;
 import org.dainst.gazetteer.domain.PlaceName;
+import org.dainst.gazetteer.domain.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -30,10 +38,18 @@ public class JsonPlaceSerializer {
 	}
 	
 	public String serialize(Place place) {
-		return serialize(place, 1);
+		return serialize(place, null, 1);
 	}
 	
 	public String serialize(Place place, int lod) {
+		return serialize(place, null, lod);
+	}
+	
+	public String serialize(Place place, UserRepository userDao) {
+		return serialize(place, userDao, 1);
+	}
+	
+	public String serialize(Place place, UserRepository userDao, int lod) {
 		
 		if (place == null) return null;
 		
@@ -195,6 +211,29 @@ public class JsonPlaceSerializer {
 			}
 		}
 		
+		// change history
+		if (!place.getChangeHistory().isEmpty()) {
+			ArrayNode changeHistoryNode = mapper.createArrayNode();
+			List<PlaceChangeRecord> changeHistory = new ArrayList<PlaceChangeRecord>(place.getChangeHistory());
+			Collections.sort(changeHistory, new PlaceChangeRecord.ChangeDateComparator());
+			
+			for (PlaceChangeRecord changeRecord : changeHistory) {
+				ObjectNode changeRecordNode = mapper.createObjectNode();
+			
+				if (userDao != null) {
+					User user = userDao.findById(changeRecord.getUserId());
+					changeRecordNode.put("username", user.getUsername());
+				}
+				
+				changeRecordNode.put("userId", changeRecord.getUserId());
+			
+				DateFormat format = new SimpleDateFormat("dd.MM.yyyy (HH:mm:ss z)");
+				changeRecordNode.put("changeDate", format.format(changeRecord.getChangeDate()));
+				changeHistoryNode.add(changeRecordNode);
+			}
+			placeNode.put("changeHistory", changeHistoryNode);
+		}
+				
 		try {
 			return mapper.writeValueAsString(placeNode);
 		} catch (Exception e) {

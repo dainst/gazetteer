@@ -62,6 +62,19 @@ directives.directive('gazPlaceNav', function() {
 	};
 });
 
+directives.directive('gazChangeHistory', function() {
+	return {
+		replace: true,
+		scope: { changeHistory: '=' },
+		templateUrl: 'partials/changeHistory.html',
+		controller: function($scope, $attrs) {
+			$scope.isActive = function(view) {
+				return ($attrs.activeTab == view) ? 'active' : '';
+			};
+		}
+	};
+});
+
 directives.directive('gazPlaceTitle', function() {
 	return {
 		replace: true,

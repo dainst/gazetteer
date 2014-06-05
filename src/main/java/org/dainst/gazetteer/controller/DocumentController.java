@@ -1,5 +1,6 @@
 package org.dainst.gazetteer.controller;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -8,7 +9,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.dainst.gazetteer.converter.JsonPlaceDeserializer;
 import org.dainst.gazetteer.dao.PlaceRepository;
+import org.dainst.gazetteer.dao.UserRepository;
 import org.dainst.gazetteer.domain.Place;
+import org.dainst.gazetteer.domain.PlaceChangeRecord;
+import org.dainst.gazetteer.domain.User;
 import org.dainst.gazetteer.domain.ValidationResult;
 import org.dainst.gazetteer.helpers.IdGenerator;
 import org.dainst.gazetteer.helpers.LocalizedLanguagesHelper;
@@ -18,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,6 +45,9 @@ public class DocumentController {
 	private PlaceRepository placeDao;
 	
 	@Autowired
+	private UserRepository userDao;
+	
+	@Autowired
 	private JsonPlaceDeserializer jsonPlaceDeserializer;
 	
 	@Autowired
@@ -53,7 +61,7 @@ public class DocumentController {
 	
 	@Value("${googleMapsApiKey}")
 	private String googleMapsApiKey;
-
+	
 	@RequestMapping(value="/doc/{placeId}", method=RequestMethod.GET)
 	public ModelAndView getPlace(@PathVariable String placeId,
 			@RequestParam(required=false) String layout,
@@ -141,9 +149,9 @@ public class DocumentController {
 			mav.addObject("view", view);
 			mav.addObject("q", q);
 			mav.addObject("nativePlaceName", place.getNameMap().get(locale.getISO3Language()));
+			mav.addObject("userDao", userDao);
 			mav.addObject("googleMapsApiKey", googleMapsApiKey);
-			mav.addObject("languages", langHelper.getLocalizedLanguages(locale));
-			
+			mav.addObject("languages", langHelper.getLocalizedLanguages(locale));			
 		}
 		
 		return mav;
@@ -155,6 +163,7 @@ public class DocumentController {
 			HttpServletResponse response) {
 		
 		place.setId(idGenerator.generate(place));
+		place.getChangeHistory().add(createChangeRecord());
 		place = placeDao.save(place);
 		
 		logger.debug(place.getId());
@@ -183,6 +192,7 @@ public class DocumentController {
 			HttpServletResponse response) {
 		
 		place.setId(placeId);
+		place.getChangeHistory().add(createChangeRecord());
 		place = placeDao.save(place);
 		
 		logger.debug("saved place {}", place);
@@ -232,6 +242,7 @@ public class DocumentController {
 		
 		Place place = placeDao.findOne(placeId);
 		place.setDeleted(true);
+		place.getChangeHistory().add(createChangeRecord());
 		placeDao.save(place);
 		
 		List<Place> children = placeDao.findByParent(placeId);
@@ -250,4 +261,14 @@ public class DocumentController {
 		
 	}
 
+	private PlaceChangeRecord createChangeRecord() {
+		
+		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		PlaceChangeRecord changeRecord = new PlaceChangeRecord();
+		changeRecord.setUserId(user.getId());
+		changeRecord.setChangeDate(new Date());
+		
+		return changeRecord;
+	}
 }

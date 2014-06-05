@@ -69,6 +69,9 @@ public class Place {
 	
 	private Set<Comment> commentsReisestipendium = new HashSet<Comment>();
 	
+	private Set<PlaceChangeRecord> changeHistory = new HashSet<PlaceChangeRecord>();
+	
+	
 	public String getId() {
 		return id;
 	}
@@ -250,7 +253,8 @@ public class Place {
 				+ ", type=" + type + ", links=" + links
 				+ ", locations=" + locations + ", parent=" + parent
 				+ ", comments=" + comments + ", tags=" + tags + ", ids=" + ids
-				+ ", deleted=" + deleted + ", replacedBy=" + replacedBy + "]";
+				+ ", changeHistory=" + changeHistory + ", deleted=" + deleted
+				+ ", replacedBy=" + replacedBy + "]";
 	}
 
 	public Location getPrefLocation() {
@@ -285,6 +289,14 @@ public class Place {
 		this.commentsReisestipendium = commentsReisestipendium;
 	}
 
+	public Set<PlaceChangeRecord> getChangeHistory() {
+		return changeHistory;
+	}
+
+	public void setChangeHistory(Set<PlaceChangeRecord> changeHistory) {
+		this.changeHistory = changeHistory;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;

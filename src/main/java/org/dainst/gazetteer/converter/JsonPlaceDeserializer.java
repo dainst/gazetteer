@@ -1,6 +1,8 @@
 package org.dainst.gazetteer.converter;
 
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -10,6 +12,7 @@ import org.dainst.gazetteer.domain.Identifier;
 import org.dainst.gazetteer.domain.Link;
 import org.dainst.gazetteer.domain.Location;
 import org.dainst.gazetteer.domain.Place;
+import org.dainst.gazetteer.domain.PlaceChangeRecord;
 import org.dainst.gazetteer.domain.PlaceName;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -300,7 +303,28 @@ public class JsonPlaceDeserializer {
 					place.setCommentsReisestipendium(commentsReisestipendium);
 				}
 			}
-					
+			
+			// update change history 
+			Set<PlaceChangeRecord> changeHistory = new HashSet<PlaceChangeRecord>();
+			JsonNode changeHistoryNode = objectNode.get("changeHistory");
+			if (changeHistoryNode != null) for (JsonNode changeRecordNode : changeHistoryNode) {
+				
+				DateFormat format = new SimpleDateFormat("dd.MM.yyyy (HH:mm:ss z)");
+				
+				PlaceChangeRecord changeRecord = new PlaceChangeRecord();					
+				changeHistory.add(changeRecord);
+				JsonNode userIdNode = changeRecordNode.get("userId"); 
+				JsonNode changeDateNode = changeRecordNode.get("changeDate");
+				if (userIdNode == null)
+					throw new HttpMessageNotReadableException("Invalid place change record object. Attribute \"user id\" has to be set.");
+				if (changeDateNode == null)
+					throw new HttpMessageNotReadableException("Invalid place change record object. Attribute \"change date\" has to be set.");
+				changeRecord.setUserId(userIdNode.asText());
+				changeRecord.setChangeDate(format.parse(changeDateNode.asText()));
+				logger.debug("updated place change record: {}", changeRecord);				
+			}
+			place.setChangeHistory(changeHistory);
+			
 			logger.debug("returning place {}", place);
 			
 			return place;

@@ -20,6 +20,13 @@
 				<li><a href="${baseUri}doc/{{place.gazId}}.rdf" target="_blank">RDF/XML</a></li>
 			</ul>
 		</li>
+		<sec:authorize access="hasRole('ROLE_USER')">
+			<li class="pull-right" ng-class="isActive('change-history')">
+				<a href="#!/change-history/{{place.gazId}}">
+					<i class="icon-eye-open"></i> <s:message code="ui.changeHistory" text="ui.changeHistory"/>
+				</a>
+			</li>		
+		</sec:authorize>
 		<li class="pull-right" ng-class="isActive('merge')">	
 			<a href="#!/merge/{{place.gazId}}">
 				<i class="icon-globe"></i> <s:message code="ui.similarPlaces" text="ui.merge"/>
