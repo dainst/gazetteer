@@ -32,6 +32,9 @@ public class AppController {
 	@Value("${idTypes}")
 	private String[] idTypes;
 	
+	@Value("${placeTypes}")
+	private String[] placeTypes;
+	
 	@Autowired
 	LocalizedLanguagesHelper langHelper;
 	@RequestMapping(value="/app/")
@@ -50,6 +53,7 @@ public class AppController {
 		model.addAttribute("languages", langHelper.getLocalizedLanguages(locale));
 		model.addAttribute("googleMapsApiKey", googleMapsApiKey);
 		model.addAttribute("idTypes", idTypes);
+		model.addAttribute("placeTypes", placeTypes);
 		logger.info("accept: {}", request.getHeader("Accept"));
 		return "app/index";
 	}
@@ -61,7 +65,8 @@ public class AppController {
 		model.addAttribute("language", locale.getLanguage());
 		model.addAttribute("languages", langHelper.getLocalizedLanguages(locale));
 		model.addAttribute("googleMapsApiKey", googleMapsApiKey);
-		model.addAttribute("idTypes",idTypes);
+		model.addAttribute("idTypes", idTypes);
+		model.addAttribute("placeTypes", placeTypes);
 		return "app/" + view;
 	}
 	
@@ -71,7 +76,8 @@ public class AppController {
 		Locale locale = new RequestContext(request).getLocale();
 		model.addAttribute("language", locale.getLanguage());
 		model.addAttribute("languages", langHelper.getLocalizedLanguages(locale));
-		model.addAttribute("idTypes",idTypes);
+		model.addAttribute("idTypes", idTypes);
+		model.addAttribute("placeTypes", placeTypes);
 		return "app/partials/" + view;
 	}
 	

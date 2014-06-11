@@ -124,6 +124,33 @@ directives.directive('gazPlacePicker', function($document) {
 	};
 });
 
+directives.directive('gazPlaceTypePicker', function($document) {
+	return {
+		replace: true,
+		scope: { place: '=' },
+		templateUrl: 'partials/placeTypePicker.html',
+		controller: function($scope, $element) {
+			
+			$scope.showOverlay = false;
+			
+			$scope.openOverlay = function() {
+				$element.find("input").focus();
+				$scope.showOverlay = true;
+			};
+			
+			$scope.closeOverlay = function() {
+				$scope.showOverlay = false;
+			};
+			
+			$scope.selectType = function(placeType) {
+				$scope.place.type = placeType;
+				$scope.showOverlay = false;
+			};
+			
+		}
+	};
+});
+
 directives.directive('gazMap', function($location) {
 	
 	var blueIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png";

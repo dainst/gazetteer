@@ -366,7 +366,8 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 			$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
 			$rootScope.loading--;
 		});
-	}
+	} else
+		$scope.place = {};
 	
 	// show live changes of title
 	$scope.$watch("place.prefName.title", function() {

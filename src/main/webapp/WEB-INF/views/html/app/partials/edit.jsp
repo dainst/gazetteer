@@ -58,7 +58,7 @@
 							<s:message code="domain.place.type" text="domain.place.type" />
 						</label>
 						<div class="controls">
-							<input type="text" ng-model="place.type" />
+							<div gaz-place-type-picker place="place"></div>
 						</div>
 					</div>
 					
