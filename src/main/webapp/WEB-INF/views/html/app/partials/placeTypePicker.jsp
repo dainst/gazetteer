@@ -23,6 +23,9 @@
 			border: 1px solid #cccccc;
 			vertical-align: top;
 		}
+		.place-type-picker-clickable-row {
+			cursor: pointer;
+		}
 	</style>
 	
 	<span>
@@ -50,7 +53,7 @@
  		<div class="modal-body">
  			<table class="table table-striped table-hover">
 				<c:forEach var="placeType" items="${placeTypes}">
-					<tr ng-click="selectType('${placeType}')">
+					<tr class="place-type-picker-clickable-row" ng-click="selectType('${placeType}')">
 						<td>
 							<b><span gaz-translate="'place.types.' + '${placeType}'"/></b><br/>
 							<span gaz-translate="'place.types.description.' + '${placeType}'"/>
