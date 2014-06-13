@@ -60,6 +60,7 @@ messages.factory('messages', function(){
 		"languages.grc": "Altgriechisch",
 		"languages.sqi": "Albanisch",
 		"languages.pol": "Polnisch",
+		"languages.tur": "Türkisch",
 		"languages.ara": "Arabisch",
 		"languages.spa": "Spanisch",
 		"languages.por": "Portugiesisch",
