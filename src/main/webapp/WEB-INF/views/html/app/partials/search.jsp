@@ -49,7 +49,7 @@
 	</ul>
 	<ul class="nav nav-pills pull-right" style="display:inline-block; margin-bottom: 0;">
 		<li ng-class="{disabled:(page() == 1)}" ng-click="prevPage()" style="cursor:pointer">
-			<a style="cursor:pointer">&larr; <s:message code="ui.previous" /></a>
+			<a>&larr; <s:message code="ui.previous" /></a>
 		</li>
 		<li class="divider-vertical"></li>
 		<li class="disabled">

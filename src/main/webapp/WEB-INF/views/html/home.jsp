@@ -54,6 +54,11 @@
    								<s:message code="ui.userSettings" text="ui.userSettings"/>
    							</a>
    						</li>
+   						<li>
+   							<a href="globalChangeHistory">
+   								<s:message code="ui.globalChangeHistory" text="ui.globalChangeHistory"/>
+   							</a>
+   						</li>
    						<sec:authorize access="hasRole('ROLE_ADMIN')">
    							<li>
    								<a href="userManagement">

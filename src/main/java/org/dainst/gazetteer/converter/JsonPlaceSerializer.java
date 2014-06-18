@@ -2,10 +2,10 @@ package org.dainst.gazetteer.converter;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.dainst.gazetteer.dao.PlaceChangeRecordRepository;
 import org.dainst.gazetteer.dao.UserRepository;
 import org.dainst.gazetteer.domain.Comment;
 import org.dainst.gazetteer.domain.Identifier;
@@ -38,18 +38,18 @@ public class JsonPlaceSerializer {
 	}
 	
 	public String serialize(Place place) {
-		return serialize(place, null, 1);
+		return serialize(place, null, null, 1);
 	}
 	
 	public String serialize(Place place, int lod) {
-		return serialize(place, null, lod);
+		return serialize(place, null, null, lod);
 	}
 	
-	public String serialize(Place place, UserRepository userDao) {
-		return serialize(place, userDao, 1);
+	public String serialize(Place place, UserRepository userDao, PlaceChangeRecordRepository changeRecordDao) {
+		return serialize(place, userDao, changeRecordDao, 1);
 	}
 	
-	public String serialize(Place place, UserRepository userDao, int lod) {
+	public String serialize(Place place, UserRepository userDao, PlaceChangeRecordRepository changeRecordDao, int lod) {
 		
 		if (place == null) return null;
 		
@@ -212,26 +212,34 @@ public class JsonPlaceSerializer {
 		}
 		
 		// change history
-		if (!place.getChangeHistory().isEmpty()) {
-			ArrayNode changeHistoryNode = mapper.createArrayNode();
-			List<PlaceChangeRecord> changeHistory = new ArrayList<PlaceChangeRecord>(place.getChangeHistory());
-			Collections.sort(changeHistory, new PlaceChangeRecord.ChangeDateComparator());
+		if (userDao != null && changeRecordDao != null) {
 			
-			for (PlaceChangeRecord changeRecord : changeHistory) {
-				ObjectNode changeRecordNode = mapper.createObjectNode();
+			List<PlaceChangeRecord> changeHistory = changeRecordDao.findByPlaceId(place.getId());
 			
-				if (userDao != null) {
+			if (!changeHistory.isEmpty()) {
+				
+				Collections.sort(changeHistory, new PlaceChangeRecord.ChangeDateComparator());
+				ArrayNode changeHistoryNode = mapper.createArrayNode();
+								
+				for (PlaceChangeRecord changeRecord : changeHistory) {
+					ObjectNode changeRecordNode = mapper.createObjectNode();
+				
 					User user = userDao.findById(changeRecord.getUserId());
 					changeRecordNode.put("username", user.getUsername());
+					changeRecordNode.put("userId", changeRecord.getUserId());
+					
+					if (changeRecord.getChangeType() != null)
+						changeRecordNode.put("changeType", changeRecord.getChangeType());
+					else
+						changeRecordNode.put("changeType", "unknown");
+				
+					DateFormat format = new SimpleDateFormat("dd.MM.yyyy (HH:mm:ss z)");
+					changeRecordNode.put("changeDate", format.format(changeRecord.getChangeDate()));
+					changeHistoryNode.add(changeRecordNode);
 				}
 				
-				changeRecordNode.put("userId", changeRecord.getUserId());
-			
-				DateFormat format = new SimpleDateFormat("dd.MM.yyyy (HH:mm:ss z)");
-				changeRecordNode.put("changeDate", format.format(changeRecord.getChangeDate()));
-				changeHistoryNode.add(changeRecordNode);
+				placeNode.put("changeHistory", changeHistoryNode);
 			}
-			placeNode.put("changeHistory", changeHistoryNode);
 		}
 				
 		try {

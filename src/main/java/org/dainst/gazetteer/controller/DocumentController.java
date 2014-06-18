@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.dainst.gazetteer.converter.JsonPlaceDeserializer;
+import org.dainst.gazetteer.dao.PlaceChangeRecordRepository;
 import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.dao.UserRepository;
 import org.dainst.gazetteer.domain.Place;
@@ -46,6 +47,9 @@ public class DocumentController {
 	
 	@Autowired
 	private UserRepository userDao;
+	
+	@Autowired
+	private PlaceChangeRecordRepository changeRecordDao;
 	
 	@Autowired
 	private JsonPlaceDeserializer jsonPlaceDeserializer;
@@ -150,6 +154,7 @@ public class DocumentController {
 			mav.addObject("q", q);
 			mav.addObject("nativePlaceName", place.getNameMap().get(locale.getISO3Language()));
 			mav.addObject("userDao", userDao);
+			mav.addObject("changeRecordDao", changeRecordDao);
 			mav.addObject("googleMapsApiKey", googleMapsApiKey);
 			mav.addObject("languages", langHelper.getLocalizedLanguages(locale));			
 		}
@@ -163,8 +168,9 @@ public class DocumentController {
 			HttpServletResponse response) {
 		
 		place.setId(idGenerator.generate(place));
-		place.getChangeHistory().add(createChangeRecord());
 		place = placeDao.save(place);
+		
+		changeRecordDao.save(createChangeRecord(place, "create"));
 		
 		logger.debug(place.getId());
 		
@@ -192,8 +198,9 @@ public class DocumentController {
 			HttpServletResponse response) {
 		
 		place.setId(placeId);
-		place.getChangeHistory().add(createChangeRecord());
 		place = placeDao.save(place);
+		
+		changeRecordDao.save(createChangeRecord(place, "edit"));
 		
 		logger.debug("saved place {}", place);
 		
@@ -242,8 +249,9 @@ public class DocumentController {
 		
 		Place place = placeDao.findOne(placeId);
 		place.setDeleted(true);
-		place.getChangeHistory().add(createChangeRecord());
 		placeDao.save(place);
+		
+		changeRecordDao.save(createChangeRecord(place, "delete"));
 		
 		List<Place> children = placeDao.findByParent(placeId);
 		for (Place child : children) {
@@ -261,12 +269,14 @@ public class DocumentController {
 		
 	}
 
-	private PlaceChangeRecord createChangeRecord() {
+	private PlaceChangeRecord createChangeRecord(Place place, String changeType) {
 		
 		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		
 		PlaceChangeRecord changeRecord = new PlaceChangeRecord();
 		changeRecord.setUserId(user.getId());
+		changeRecord.setPlaceId(place.getId());
+		changeRecord.setChangeType(changeType);
 		changeRecord.setChangeDate(new Date());
 		
 		return changeRecord;

@@ -11,9 +11,10 @@ response.setHeader("Content-Type", "application/json; charset=utf-8");
 Place place = (Place) request.getAttribute("place");
 String baseUri = (String) request.getAttribute("baseUri");
 UserRepository userDao = (UserRepository) request.getAttribute("userDao");
+PlaceChangeRecordRepository changeRecordDao = (PlaceChangeRecordRepository) request.getAttribute("changeRecordDao");
 
 JsonPlaceSerializer serializer = new JsonPlaceSerializer(baseUri);
 
 %>
 
-<%= serializer.serialize(place, userDao) %>
+<%= serializer.serialize(place, userDao, changeRecordDao) %>

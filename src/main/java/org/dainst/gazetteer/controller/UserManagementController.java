@@ -151,95 +151,134 @@ public class UserManagementController {
 	}
 		
 	@RequestMapping(value="/userManagement")
-	public String getUserManagement(@RequestParam(required=false) String sort, @RequestParam(required=false) boolean isDescending, @RequestParam(required=false) Integer page, ModelMap model) {
+	public String getUserManagement(@RequestParam(required=false) String sort, @RequestParam(required=false) boolean isDescending,
+									@RequestParam(required=false) Integer page, @RequestParam(required=false) String showUser, ModelMap model) {
 		
 		List<User> users = null;
+		int pages;
 
-		if (sort == null || sort.equals("")) {
-			if (isDescending)
-				users = (List<User>) userRepository.findAll(new Sort(Sort.Direction.DESC, "enabled"));
-			else
-				users = (List<User>) userRepository.findAll(new Sort(Sort.Direction.ASC, "enabled"));				
-		}
-		else {
-			switch (sort) {
-			case "username":
-				users = (List<User>) userRepository.findAll();
-				if (isDescending)
-					Collections.sort(users, Collections.reverseOrder(new User.UsernameComparator()));
-				else
-					Collections.sort(users, new User.UsernameComparator());					
-				break;
-			case "firstname":
-				users = (List<User>) userRepository.findAll();
-				if (isDescending)
-					Collections.sort(users, Collections.reverseOrder(new User.FirstnameComparator()));
-				else
-					Collections.sort(users, new User.FirstnameComparator());
-				break;
-			case "lastname":
-				users = (List<User>) userRepository.findAll();
-				if (isDescending)
-					Collections.sort(users, Collections.reverseOrder(new User.LastnameComparator()));
-				else
-					Collections.sort(users, new User.LastnameComparator());
-				break;
-			case "institution":
-				users = (List<User>) userRepository.findAll();
-				if (isDescending)
-					Collections.sort(users, Collections.reverseOrder(new User.InstitutionComparator()));
-				else
-					Collections.sort(users, new User.InstitutionComparator());
-				break;
-			case "email":
-				users = (List<User>) userRepository.findAll();
-				if (isDescending)
-					Collections.sort(users, Collections.reverseOrder(new User.EmailComparator()));
-				else
-					Collections.sort(users, new User.EmailComparator());
-				break;
-			case "lastLogin":
-				if (isDescending)
-					users = (List<User>) userRepository.findAll(new Sort(Sort.Direction.ASC, "lastLogin"));
-				else
-					users = (List<User>) userRepository.findAll(new Sort(Sort.Direction.DESC, "lastLogin"));
-				break;
-			case "registrationDate":
-				if (isDescending)
-					users = (List<User>) userRepository.findAll(new Sort(Sort.Direction.ASC, "registrationDate"));
-				else
-					users = (List<User>) userRepository.findAll(new Sort(Sort.Direction.DESC, "registrationDate"));
-				break;
-			case "admin":
-				users = (List<User>) userRepository.findAll();
-				if (isDescending)
-					Collections.sort(users, Collections.reverseOrder(new User.AdminComparator()));
-				else
-					Collections.sort(users, new User.AdminComparator());
-				break;
-			case "reisestipendium":
-				users = (List<User>) userRepository.findAll();
-				if (isDescending)
-					Collections.sort(users, Collections.reverseOrder(new User.ReisestipendiumComparator()));
-				else
-					Collections.sort(users, new User.ReisestipendiumComparator());
-				break;
+		if (showUser != null && !showUser.equals("")) {
+			
+			User userToShow = userRepository.findById(showUser);
+			
+			if (userToShow == null)
+				return "home";
+			
+			users = (List<User>) userRepository.findAll();
+			Collections.sort(users, new User.UsernameComparator());	
+			
+			pages = (users.size() + usersPerPage - 1) / usersPerPage;
+			List<User> pageUsers;			
+			for (int i = 0; i < pages; i++) {
+				
+				int toIndex = i * usersPerPage + usersPerPage;
+				if (toIndex > users.size())
+					toIndex = users.size();
+
+					pageUsers = users.subList(i * usersPerPage, toIndex);
+	 
+				for (User u : pageUsers) {
+					if (u.getId().equals(userToShow.getId())) {
+						users = pageUsers;
+						page = i;
+						break;
+					}
+				}
+				
+				if (users.equals(pageUsers))
+					break;
 			}
+			
+			sort = "username";
+			
+		} else {
+		
+			if (sort == null || sort.equals("")) {
+				if (isDescending)
+					users = (List<User>) userRepository.findAll(new Sort(Sort.Direction.DESC, "enabled"));
+				else
+					users = (List<User>) userRepository.findAll(new Sort(Sort.Direction.ASC, "enabled"));				
+			}
+			else {
+				switch (sort) {
+				case "username":
+					users = (List<User>) userRepository.findAll();
+					if (isDescending)
+						Collections.sort(users, Collections.reverseOrder(new User.UsernameComparator()));
+					else
+						Collections.sort(users, new User.UsernameComparator());					
+					break;
+				case "firstname":
+					users = (List<User>) userRepository.findAll();
+					if (isDescending)
+						Collections.sort(users, Collections.reverseOrder(new User.FirstnameComparator()));
+					else
+						Collections.sort(users, new User.FirstnameComparator());
+					break;
+				case "lastname":
+				users = (List<User>) userRepository.findAll();
+					if (isDescending)
+						Collections.sort(users, Collections.reverseOrder(new User.LastnameComparator()));
+					else
+						Collections.sort(users, new User.LastnameComparator());
+					break;
+				case "institution":
+					users = (List<User>) userRepository.findAll();
+					if (isDescending)
+						Collections.sort(users, Collections.reverseOrder(new User.InstitutionComparator()));
+					else
+						Collections.sort(users, new User.InstitutionComparator());
+					break;
+				case "email":
+					users = (List<User>) userRepository.findAll();
+					if (isDescending)
+						Collections.sort(users, Collections.reverseOrder(new User.EmailComparator()));
+					else
+						Collections.sort(users, new User.EmailComparator());
+					break;
+				case "lastLogin":
+					if (isDescending)
+						users = (List<User>) userRepository.findAll(new Sort(Sort.Direction.ASC, "lastLogin"));
+					else
+						users = (List<User>) userRepository.findAll(new Sort(Sort.Direction.DESC, "lastLogin"));
+					break;
+				case "registrationDate":
+					if (isDescending)
+						users = (List<User>) userRepository.findAll(new Sort(Sort.Direction.ASC, "registrationDate"));
+					else
+						users = (List<User>) userRepository.findAll(new Sort(Sort.Direction.DESC, "registrationDate"));
+					break;
+				case "admin":
+					users = (List<User>) userRepository.findAll();
+					if (isDescending)
+						Collections.sort(users, Collections.reverseOrder(new User.AdminComparator()));
+					else
+						Collections.sort(users, new User.AdminComparator());
+				break;
+				case "reisestipendium":
+					users = (List<User>) userRepository.findAll();
+					if (isDescending)
+						Collections.sort(users, Collections.reverseOrder(new User.ReisestipendiumComparator()));
+					else
+						Collections.sort(users, new User.ReisestipendiumComparator());
+					break;
+				}
+			}
+		
+			pages = (users.size() + usersPerPage - 1) / usersPerPage;
+		
+			if (page == null || page < 0)
+				page = 0;
+		
+			if (page >= pages)
+				page = pages - 1;
+		
+			int toIndex = page * usersPerPage + usersPerPage;
+			if (toIndex > users.size())
+				toIndex = users.size();
+		
+			users = users.subList(page * usersPerPage, toIndex);
 		}
-		
-		int pages = users.size() / usersPerPage + 1;
-		
-		if (page == null || page < 0)
-			page = 0;
-		
-		if (page >= pages)
-			page = pages - 1;
-		
-		int toIndex = page * usersPerPage + usersPerPage;
-		if (toIndex > users.size())
-			toIndex = users.size();
-		
-		users = users.subList(page * usersPerPage, toIndex);
 		
 		model.addAttribute("page", page);
 		model.addAttribute("pages", pages);
@@ -379,7 +418,7 @@ public class UserManagementController {
 		userRepository.save(user);
 	
 		if (r != null && r.equals("userManagement") && adminEdit)
-			return getUserManagement(null, false, 0, model);
+			return getUserManagement(null, false, 0, null, model);
 		else if (r != null && !r.equals(""))
 			return "redirect:app/#!/" + r;
 		else

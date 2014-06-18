@@ -41,6 +41,11 @@
    							<s:message code="ui.userSettings" text="ui.userSettings"/>
    						</a>
    					</li>
+   					<li>
+   						<a href="globalChangeHistory">
+   							<s:message code="ui.globalChangeHistory" text="ui.globalChangeHistory"/>
+   						</a>
+   					</li>
    					<sec:authorize access="hasRole('ROLE_ADMIN')">
    						<li>
    							<a href="">
@@ -268,7 +273,7 @@
 		<ul class="nav nav-pills" style="margin-bottom: 0; margin-left: auto; margin-right: auto; width: 20em;">
 			<c:choose>
 				<c:when test="${page eq 0}">
-					<li class="disabled" style="cursor:pointer">
+					<li class="disabled">
 						<a>&larr; <s:message code="ui.previous" /></a>
 					</li>
 				</c:when>
@@ -286,7 +291,7 @@
 			<li class="divider-vertical"></li>
 			<c:choose>
 				<c:when test="${page eq pages - 1}">
-					<li class="disabled" style="cursor:pointer">
+					<li class="disabled">
 						<a><s:message code="ui.next" text="Vor"/> &rarr;</a>
 					</li>	
 				</c:when>

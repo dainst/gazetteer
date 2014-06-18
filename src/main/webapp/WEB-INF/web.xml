@@ -46,7 +46,7 @@
 		<param-value>/WEB-INF/classes/log4j.xml</param-value>
 	</context-param>
 	
-	<!-- Filters for spring security -->	  		
+	<!-- Filters for spring security -->
 	<filter>
 		<filter-name>springSecurityFilterChain</filter-name>
 		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>

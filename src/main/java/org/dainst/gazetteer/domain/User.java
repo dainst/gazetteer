@@ -179,37 +179,37 @@ public class User implements UserDetails {
 		return enabled;
 	}
 	
-	public static class UsernameComparator implements Comparator<User>{
+	public static class UsernameComparator implements Comparator<User> {
 		public int compare(User user1, User user2) {
 			return user1.getUsername().toLowerCase().compareTo(user2.getUsername().toLowerCase());
 		}
 	}
 
-	public static class FirstnameComparator implements Comparator<User>{
+	public static class FirstnameComparator implements Comparator<User> {
 		public int compare(User user1, User user2) {
 			return user1.getFirstname().toLowerCase().compareTo(user2.getFirstname().toLowerCase());
 		}
 	}
 	
-	public static class LastnameComparator implements Comparator<User>{
+	public static class LastnameComparator implements Comparator<User> {
 		public int compare(User user1, User user2) {
 			return user1.getLastname().toLowerCase().compareTo(user2.getLastname().toLowerCase());
 		}
 	}
 	
-	public static class InstitutionComparator implements Comparator<User>{
+	public static class InstitutionComparator implements Comparator<User> {
 		public int compare(User user1, User user2) {
 			return user1.getInstitution().toLowerCase().compareTo(user2.getInstitution().toLowerCase());
 		}
 	}
 	
-	public static class EmailComparator implements Comparator<User>{
+	public static class EmailComparator implements Comparator<User> {
 		public int compare(User user1, User user2) {
 			return user1.getEmail().toLowerCase().compareTo(user2.getEmail().toLowerCase());
 		}
 	}
 	
-	public static class AdminComparator implements Comparator<User>{
+	public static class AdminComparator implements Comparator<User> {
 		public int compare(User user1, User user2) {
 			if (user1.hasRole("ROLE_ADMIN") == user2.hasRole("ROLE_ADMIN")) 
 				return 0;
@@ -220,7 +220,7 @@ public class User implements UserDetails {
 		}
 	}
 	
-	public static class ReisestipendiumComparator implements Comparator<User>{
+	public static class ReisestipendiumComparator implements Comparator<User> {
 		public int compare(User user1, User user2) {
 			if (user1.hasRole("ROLE_REISESTIPENDIUM") == user2.hasRole("ROLE_REISESTIPENDIUM")) 
 				return 0;

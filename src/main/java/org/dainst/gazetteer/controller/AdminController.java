@@ -1,7 +1,6 @@
 package org.dainst.gazetteer.controller;
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;

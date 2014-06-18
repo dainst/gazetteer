@@ -28,12 +28,14 @@
 		<tr>
 			<th><s:message code="ui.changeHistory.changeDate" text="ui.changeHistory.changeDate"/></th>
 			<th><s:message code="ui.username" text="ui.username"/></th>
+			<th><s:message code="ui.changeHistory.changeType" text="ui.changeHistory.changeType"/></th>
 		</tr>
 	</thead>
-	<tbody ng-repeat="placeChangeRecord in place.changeHistory">
-		<tr>
+	<tbody>
+		<tr ng-repeat="placeChangeRecord in place.changeHistory">
 			<td>{{placeChangeRecord.changeDate}}</td>
-			<td>{{placeChangeRecord.username}}</td>			
+			<td>{{placeChangeRecord.username}}</td>
+			<td gaz-translate="'ui.change-history.change-type.' + placeChangeRecord.changeType"></td>
 		</tr>		
 	</tbody>
 </table>
