@@ -170,9 +170,7 @@
 		<!-- Footer -->
 		<hr>
 		<footer>
-			<jsp:useBean id="now" class="java.util.Date" />
-			<fmt:formatDate var="year" value="${now}" pattern="yyyy" />
-			<p>&copy; Deutsches Archäologisches Institut ${year}</p>
+			<p><s:message code="ui.license" text="ui.license"/></p>
 		</footer>
 		
 	</div>
