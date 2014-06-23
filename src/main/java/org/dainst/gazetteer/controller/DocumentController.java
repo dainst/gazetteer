@@ -197,10 +197,15 @@ public class DocumentController {
 			@PathVariable String placeId,
 			HttpServletResponse response) {
 		
+		if (placeDao.equals(place))
+			changeRecordDao.save(createChangeRecord(place, "edit"));
+		else
+			changeRecordDao.save(createChangeRecord(place, "create"));
+		
 		place.setId(placeId);
 		place = placeDao.save(place);
 		
-		changeRecordDao.save(createChangeRecord(place, "edit"));
+		
 		
 		logger.debug("saved place {}", place);
 		
