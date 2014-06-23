@@ -261,8 +261,8 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 			for (var i=0; i < $scope.places.length; i++) {
 				$rootScope.loading++;
 				if ($scope.places[i].parent && !$scope.parents[$scope.places[i].parent]) {
-					var id = getIdFromUri($scope.places[i].parent);
-					$scope.parents[result["@id"]] = Place.get({id:id});
+					var parentId = getIdFromUri($scope.places[i].parent);					
+					$scope.parents[$scope.places[i].parent] = Place.get({id:parentId});
 				}
 				$rootScope.loading--;
 			}
