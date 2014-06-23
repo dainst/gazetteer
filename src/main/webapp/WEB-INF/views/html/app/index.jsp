@@ -169,7 +169,7 @@
 		<footer>
 			<jsp:useBean id="now" class="java.util.Date" />
 			<fmt:formatDate var="year" value="${now}" pattern="yyyy" />
-			<p>&copy; Deutsches Archäologisches Institut ${year}</p>
+			<p>&copy; Deutsches Archäologisches Institut ${year} - <s:message code="ui.mailingList" text="ui.mailingList"/></p>
 		</footer>
 		
 	</div>

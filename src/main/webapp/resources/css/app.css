@@ -28,6 +28,10 @@ body {
 	margin-bottom: 10px;
 }
 
+footer {
+	text-align: center;
+}
+
 .navbar-search .icon-search {
 	position: relative;
 	left: -30px;
