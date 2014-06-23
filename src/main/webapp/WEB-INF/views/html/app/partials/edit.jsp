@@ -9,6 +9,11 @@
 
 <ul class="nav nav-tabs">
 	<li class="active">
+		<a href="#names" data-toggle="tab">
+			<s:message code="domain.place.names" text="domain.place.names"/>
+		</a>
+	</li>
+	<li>
 		<a href="#general" data-toggle="tab">
 			<s:message code="domain.place.general" text="domain.place.general"/>
 		</a>
@@ -16,11 +21,6 @@
 	<li>
 		<a href="#identification" data-toggle="tab">
 			<s:message code="domain.place.identification" text="domain.place.identification"/>
-		</a>
-	</li>
-	<li>
-		<a href="#names" data-toggle="tab">
-			<s:message code="domain.place.names" text="domain.place.names"/>
 		</a>
 	</li>
 	<li>
@@ -48,7 +48,69 @@
 
 			<div class="tab-content">
 			
-				<div class="tab-pane active" id="general">
+				<div class="tab-pane active" id="names">
+				
+					<legend><s:message code="domain.place.names" text="domain.place.names"/></legend>
+					
+					<!-- preferred name -->
+					<div class="control-group">
+						<label class="control-label">
+							<s:message code="domain.place.prefName" text="domain.place.prefName" />
+						</label>
+						<div class="controls">
+							<div class="form-inline">
+								<input type="text" ng-model="place.prefName.title" required />
+								<select ng-model="place.prefName.language" class="input-small">
+									<option value="">${langNotSpecified}</option>
+									<c:forEach var="language" items="${languages}">
+										<option value="${language.key}">${language.value}</option>
+									</c:forEach>
+								</select>
+								<label class="checkbox inline">
+									<input type="checkbox" ng-model="place.prefName.ancient">
+									<span gaz-translate="'place.name.ancient'"></span>
+								</label>
+							</div>
+						</div>
+					</div>
+					
+					<!-- additional names -->
+					<div class="control-group">
+						<label class="control-label">
+							<s:message code="domain.place.otherNames" text="domain.place.otherNames" />
+						</label>
+						<div class="controls">
+							<div class="form-inline">
+								<input type="text" ng-model="name.title" />
+								<select ng-model="name.language" class="input-small">
+									<option value="">${langNotSpecified}</option>
+									<c:forEach var="language" items="${languages}">
+										<option value="${language.key}">${language.value}</option>
+									</c:forEach>
+								</select>
+								<label class="checkbox">
+									<input type="checkbox" ng-model="name.ancient">
+									<span gaz-translate="'place.name.ancient'"></span>
+								</label>
+								<button class="btn btn-primary plus" ng-click="addName()" ng-disabled="!name.title">
+									<i class="icon-plus icon-white"></i>
+								</button>
+							</div>
+							<div ng-repeat="placename in place.names">
+								<a ng-click="place.names.splice($index,1)"><i class="icon-remove-sign"></i></a> {{placename.title}}
+								<em ng-show="placename.ancient">
+									(<small gaz-translate="'place.name.ancient'"></small>)
+								</em>
+								<small ng-hide="!placename.language">
+									<em gaz-translate="'languages.' + placename.language"></em>
+								</small>
+							</div>
+						</div>
+					</div>
+				
+				</div>
+			
+				<div class="tab-pane" id="general">
 		
 					<legend><s:message code="domain.place.general" text="domain.place.general"/></legend>
 				
@@ -158,68 +220,6 @@
 						</div>
 					</div>
 					
-				</div>
-			
-				<div class="tab-pane" id="names">
-				
-					<legend><s:message code="domain.place.names" text="domain.place.names"/></legend>
-					
-					<!-- preferred name -->
-					<div class="control-group">
-						<label class="control-label">
-							<s:message code="domain.place.prefName" text="domain.place.prefName" />
-						</label>
-						<div class="controls">
-							<div class="form-inline">
-								<input type="text" ng-model="place.prefName.title" required />
-								<select ng-model="place.prefName.language" class="input-small">
-									<option value="">${langNotSpecified}</option>
-									<c:forEach var="language" items="${languages}">
-										<option value="${language.key}">${language.value}</option>
-									</c:forEach>
-								</select>
-								<label class="checkbox inline">
-									<input type="checkbox" ng-model="place.prefName.ancient">
-									<span gaz-translate="'place.name.ancient'"></span>
-								</label>
-							</div>
-						</div>
-					</div>
-					
-					<!-- additional names -->
-					<div class="control-group">
-						<label class="control-label">
-							<s:message code="domain.place.otherNames" text="domain.place.otherNames" />
-						</label>
-						<div class="controls">
-							<div class="form-inline">
-								<input type="text" ng-model="name.title" />
-								<select ng-model="name.language" class="input-small">
-									<option value="">${langNotSpecified}</option>
-									<c:forEach var="language" items="${languages}">
-										<option value="${language.key}">${language.value}</option>
-									</c:forEach>
-								</select>
-								<label class="checkbox">
-									<input type="checkbox" ng-model="name.ancient">
-									<span gaz-translate="'place.name.ancient'"></span>
-								</label>
-								<button class="btn btn-primary plus" ng-click="addName()" ng-disabled="!name.title">
-									<i class="icon-plus icon-white"></i>
-								</button>
-							</div>
-							<div ng-repeat="placename in place.names">
-								<a ng-click="place.names.splice($index,1)"><i class="icon-remove-sign"></i></a> {{placename.title}}
-								<em ng-show="placename.ancient">
-									(<small gaz-translate="'place.name.ancient'"></small>)
-								</em>
-								<small ng-hide="!placename.language">
-									<em gaz-translate="'languages.' + placename.language"></em>
-								</small>
-							</div>
-						</div>
-					</div>
-				
 				</div>
 				
 				<div class="tab-pane" id="locations">
