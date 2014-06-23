@@ -29,8 +29,14 @@
 	<dd>
 		<em><s:message code="domain.place.prefName" text="domain.place.prefName"/>: </em>
 		{{place.prefName.title}}
-		<em ng-show="place.prefName.ancient">
+		<em ng-show="place.prefName.ancient && !place.prefName.transliterated">
 			(<small gaz-translate="'place.name.ancient'"></small>)
+		</em>
+		<em ng-show="!place.prefName.ancient && place.prefName.transliterated">
+			(<small gaz-translate="'place.name.transliterated'"></small>)
+		</em>
+		<em ng-show="place.prefName.ancient && place.prefName.transliterated">
+			(<small gaz-translate="'place.name.ancient'"></small>/<small gaz-translate="'place.name.transliterated'"></small>)
 		</em>
 		<small ng-show="place.prefName.language">
 			<em gaz-translate="'languages.' + place.prefName.language"></em>
@@ -38,8 +44,14 @@
 	</dd>
 	<dd ng-repeat="placename in place.names | orderBy:['language','title']">
 		{{placename.title}}
-		<em ng-show="placename.ancient">
+		<em ng-show="placename.ancient && !placename.transliterated">
 			(<small gaz-translate="'place.name.ancient'"></small>)
+		</em>
+		<em ng-show="!placename.ancient && placename.transliterated">
+			(<small gaz-translate="'place.name.transliterated'"></small>)
+		</em>
+		<em ng-show="placename.ancient && placename.transliterated">
+			(<small gaz-translate="'place.name.ancient'"></small>/<small gaz-translate="'place.name.transliterated'"></small>)
 		</em>
 		<small ng-hide="!placename.language">
 			<em gaz-translate="'languages.' + placename.language"></em>

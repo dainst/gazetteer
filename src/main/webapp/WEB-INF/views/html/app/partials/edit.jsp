@@ -59,17 +59,33 @@
 						</label>
 						<div class="controls">
 							<div class="form-inline">
-								<input type="text" ng-model="place.prefName.title" required />
-								<select ng-model="place.prefName.language" class="input-small">
-									<option value="">${langNotSpecified}</option>
-									<c:forEach var="language" items="${languages}">
-										<option value="${language.key}">${language.value}</option>
-									</c:forEach>
-								</select>
-								<label class="checkbox inline">
-									<input type="checkbox" ng-model="place.prefName.ancient">
-									<span gaz-translate="'place.name.ancient'"></span>
-								</label>
+								<table>
+									<tbody>
+										<tr>
+											<td>
+												<input type="text" ng-model="place.prefName.title" required />
+												<select ng-model="place.prefName.language" class="input-small">
+													<option value="">${langNotSpecified}</option>
+													<c:forEach var="language" items="${languages}">
+														<option value="${language.key}">${language.value}</option>
+													</c:forEach>
+												</select>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<label class="checkbox inline">
+													<input type="checkbox" ng-model="place.prefName.ancient" />
+													<span gaz-translate="'place.name.ancient'"></span>
+												</label>
+												<label class="checkbox inline">
+													<input type="checkbox" ng-model="place.prefName.transliterated" />
+													<span gaz-translate="'place.name.transliterated'"></span>
+												</label>
+											</td>
+										</tr>
+									</tbody>
+								</table>
 							</div>
 						</div>
 					</div>
@@ -81,25 +97,52 @@
 						</label>
 						<div class="controls">
 							<div class="form-inline">
-								<input type="text" ng-model="name.title" />
-								<select ng-model="name.language" class="input-small">
-									<option value="">${langNotSpecified}</option>
-									<c:forEach var="language" items="${languages}">
-										<option value="${language.key}">${language.value}</option>
-									</c:forEach>
-								</select>
-								<label class="checkbox">
-									<input type="checkbox" ng-model="name.ancient">
-									<span gaz-translate="'place.name.ancient'"></span>
-								</label>
-								<button class="btn btn-primary plus" ng-click="addName()" ng-disabled="!name.title">
-									<i class="icon-plus icon-white"></i>
-								</button>
+								<table>
+									<tbody>
+										<tr>
+											<td>
+												<input type="text" ng-model="name.title" />
+											</td>
+											<td>
+												<select ng-model="name.language" class="input-small">
+													<option value="">${langNotSpecified}</option>
+													<c:forEach var="language" items="${languages}">
+														<option value="${language.key}">${language.value}</option>
+													</c:forEach>
+												</select>
+											</td>
+											<td>
+												<button class="btn btn-primary plus" ng-click="addName()" ng-disabled="!name.title">
+													<i class="icon-plus icon-white"></i>
+												</button>
+											</td>
+										</tr>
+										<tr>
+											<td>
+												<label class="checkbox inline">
+													<input type="checkbox" ng-model="name.ancient" />
+													<span gaz-translate="'place.name.ancient'"></span>
+												</label>
+												<label class="checkbox inline">
+													<input type="checkbox" ng-model="name.transliterated" />
+													<span gaz-translate="'place.name.transliterated'"></span>
+												</label>
+											</td>
+										</tr>
+									</tbody>
+								</table>
 							</div>
+							<br />
 							<div ng-repeat="placename in place.names">
 								<a ng-click="place.names.splice($index,1)"><i class="icon-remove-sign"></i></a> {{placename.title}}
-								<em ng-show="placename.ancient">
+								<em ng-show="placename.ancient && !placename.transliterated">
 									(<small gaz-translate="'place.name.ancient'"></small>)
+								</em>
+								<em ng-show="!placename.ancient && placename.transliterated">
+									(<small gaz-translate="'place.name.transliterated'"></small>)
+								</em>
+								<em ng-show="placename.ancient && placename.transliterated">
+									(<small gaz-translate="'place.name.ancient'"></small>/<small gaz-translate="'place.name.transliterated'"></small>)
 								</em>
 								<small ng-hide="!placename.language">
 									<em gaz-translate="'languages.' + placename.language"></em>
@@ -109,7 +152,7 @@
 					</div>
 				
 				</div>
-			
+							
 				<div class="tab-pane" id="general">
 		
 					<legend><s:message code="domain.place.general" text="domain.place.general"/></legend>

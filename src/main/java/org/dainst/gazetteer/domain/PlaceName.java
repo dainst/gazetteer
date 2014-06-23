@@ -14,6 +14,8 @@ public class PlaceName {
 	
 	private boolean ancient = false;
 	
+	private boolean transliterated = false;
+	
 	private int ordering = 0;
 	
 	public PlaceName() {
@@ -60,6 +62,14 @@ public class PlaceName {
 		this.ancient = ancient;
 	}
 
+	public boolean isTransliterated() {
+		return transliterated;
+	}
+
+	public void setTransliterated(boolean transliterated) {
+		this.transliterated = transliterated;
+	}
+
 	public int getOrdering() {
 		return ordering;
 	}
@@ -71,7 +81,7 @@ public class PlaceName {
 	@Override
 	public String toString() {
 		return "PlaceName [title=" + title + ", language=" + language
-				+ ", ancient=" + ancient + "]";
+				+ ", ancient=" + ancient + ", transliterated=" + transliterated + "]";
 	}
 
 	@Override
@@ -81,6 +91,7 @@ public class PlaceName {
 		result = prime * result
 				+ ((language == null) ? 0 : language.hashCode());
 		result = prime * result + (ancient ? 1231 : 1237);
+		result = prime * result + (transliterated ? 1231 : 1237);
 		result = prime * result + ((title == null) ? 0 : title.hashCode());
 		return result;
 	}
@@ -100,6 +111,8 @@ public class PlaceName {
 		} else if (!language.equals(other.language))
 			return false;
 		if (ancient != other.ancient)
+			return false;
+		if (transliterated != other.transliterated)
 			return false;
 		if (title == null) {
 			if (other.title != null)

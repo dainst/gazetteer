@@ -79,6 +79,8 @@ public class JsonPlaceSerializer {
 				prefNameNode.put("language", place.getPrefName().getLanguage());
 			if (place.getPrefName().isAncient())
 				prefNameNode.put("ancient", true);
+			if (place.getPrefName().isTransliterated())
+				prefNameNode.put("transliterated", true);
 			placeNode.put("prefName", prefNameNode);
 		}
 		
@@ -92,6 +94,8 @@ public class JsonPlaceSerializer {
 					nameNode.put("language", name.getLanguage());
 				if (name.isAncient())
 					nameNode.put("ancient", true);
+				if (name.isTransliterated())
+					nameNode.put("transliterated", true);
 				namesNode.add(nameNode);
 			}
 			placeNode.put("names", namesNode);

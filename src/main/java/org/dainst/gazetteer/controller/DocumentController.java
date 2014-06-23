@@ -197,7 +197,7 @@ public class DocumentController {
 			@PathVariable String placeId,
 			HttpServletResponse response) {
 		
-		if (placeDao.equals(place))
+		if (placeDao.exists(place.getId()))
 			changeRecordDao.save(createChangeRecord(place, "edit"));
 		else
 			changeRecordDao.save(createChangeRecord(place, "create"));
