@@ -6,8 +6,8 @@ import java.util.Arrays;
 public class Location {
 
 	private double[] coordinates;
-
-	private double[][] polygon;
+	
+	private Shape shape;
 	
 	private int confidence = 0;
 	
@@ -25,14 +25,6 @@ public class Location {
 
 	public void setCoordinates(double[] point) {
 		this.coordinates = point;
-	}
-
-	public double[][] getPolygon() {
-		return polygon;
-	}
-
-	public void setPolygon(double[][] polygon) {
-		this.polygon = polygon;
 	}
 	
 	public double getLat() {
@@ -60,7 +52,7 @@ public class Location {
 	@Override
 	public String toString() {
 		return "Location [coordinates=" + Arrays.toString(coordinates)
-				+ ", polygon=" + Arrays.toString(polygon) + ", confidence="
+				+ ", shape=" + shape.toString() + ", confidence="
 				+ confidence + "]";
 	}
 
@@ -70,7 +62,6 @@ public class Location {
 		int result = 1;
 		result = prime * result + confidence;
 		result = prime * result + Arrays.hashCode(coordinates);
-		result = prime * result + Arrays.hashCode(polygon);
 		return result;
 	}
 
@@ -87,9 +78,15 @@ public class Location {
 			return false;
 		if (!Arrays.equals(coordinates, other.coordinates))
 			return false;
-		if (!Arrays.deepEquals(polygon, other.polygon))
-			return false;
 		return true;
+	}
+
+	public Shape getShape() {
+		return shape;
+	}
+
+	public void setShape(Shape shape) {
+		this.shape = shape;
 	}
 
 }
