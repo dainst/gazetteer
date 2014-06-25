@@ -577,7 +577,7 @@ function MergeCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 			lon: $scope.place.prefLocation.coordinates[0],
 			lat: $scope.place.prefLocation.coordinates[1],
 			distance: 50,
-			filter: "type:"+ $scope.place.type + " AND NOT _id:" + $scope.place.gazId
+			filter: "NOT _id:" + $scope.place.gazId
 		}, function(result) {
 			$scope.candidatePlaces = result.result;
 			$scope.parents = {};
