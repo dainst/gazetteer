@@ -35,7 +35,7 @@
 		<tbody>
 			<tr ng-repeat="candidatePlace in candidatePlaces">
 				<td>{{candidatePlace.gazId}}</td>
-				<td><div gaz-place-title place="candidatePlace"></div></td>
+				<td><div gaz-place-title place="candidatePlace"></div><small class="muted">{{parents[candidatePlace.parent].prefName.title}}</small></td>
 				<td>
 					<sec:authorize access="hasRole('ROLE_USER')">
 						<div class="modal hide" id="linkModal-{{candidatePlace.gazId}}">

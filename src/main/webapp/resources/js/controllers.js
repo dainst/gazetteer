@@ -557,6 +557,13 @@ function MergeCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 		$rootScope.loading++;
 		Place.query({q: query, type: 'queryString'}, function(result) {
 			$scope.candidatePlaces = result.result;
+			$scope.parents = {};
+			for(var i in $scope.candidatePlaces) {
+				if ($scope.candidatePlaces[i].parent && !$scope.parents[$scope.candidatePlaces[i].parent]) {
+					var parentId = getIdFromUri($scope.candidatePlaces[i].parent);					
+					$scope.parents[$scope.candidatePlaces[i].parent] = Place.get({id:parentId});
+				}
+			}
 			$rootScope.loading--;
 		}, function() {
 			$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
@@ -573,6 +580,13 @@ function MergeCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 			filter: "type:"+ $scope.place.type + " AND NOT _id:" + $scope.place.gazId
 		}, function(result) {
 			$scope.candidatePlaces = result.result;
+			$scope.parents = {};
+			for(var i in $scope.candidatePlaces) {
+				if ($scope.candidatePlaces[i].parent && !$scope.parents[$scope.candidatePlaces[i].parent]) {
+					var parentId = getIdFromUri($scope.candidatePlaces[i].parent);					
+					$scope.parents[$scope.candidatePlaces[i].parent] = Place.get({id:parentId});
+				}
+			}
 			$rootScope.loading--;
 		}, function() {
 			$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
