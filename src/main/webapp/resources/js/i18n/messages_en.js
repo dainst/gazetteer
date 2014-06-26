@@ -17,6 +17,7 @@ messages.factory('messages', function(){
 		"ui.place.children.search": "Show places in search",
 		"ui.place.save.success": "Successfully created place",
 		"ui.place.save.failure": "Could not create place",
+		"ui.place.save.failure.parentError": "A place may not fall within itself or a place it contains",
 		"ui.place.remove.success": "Successfully deleted place",
 		"ui.place.remove.failure": "Could not delete place",
 		"ui.thesaurus": "Thesaurus",

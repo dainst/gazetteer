@@ -165,7 +165,7 @@ public class DocumentController {
 	
 	@RequestMapping(value="/doc", method={RequestMethod.POST, RequestMethod.PUT})
 	public ModelAndView createPlace(@RequestBody Place place,
-			HttpServletResponse response) {
+			HttpServletResponse response) throws Exception {
 		
 		place.setId(idGenerator.generate(place));
 		place = placeDao.save(place);
@@ -195,7 +195,21 @@ public class DocumentController {
 	@RequestMapping(value="/doc/{placeId}", method={RequestMethod.POST, RequestMethod.PUT})
 	public ModelAndView updateOrCreatePlace(@RequestBody Place place, 
 			@PathVariable String placeId,
-			HttpServletResponse response) {
+			HttpServletResponse response) throws Exception {
+
+			Place placeToCheck = place;
+			while (placeToCheck.getParent() != null && !placeToCheck.getParent().equals("")) {
+				placeToCheck = placeDao.findOne(placeToCheck.getParent());
+				
+				if (placeToCheck.getId().equals(place.getId())) {
+					ModelAndView mav = new ModelAndView("place/validation");
+					ValidationResult result = new ValidationResult();
+					result.setSuccess(false);
+					result.setMessage("parentError");
+					mav.addObject("result", result);
+					return mav;
+				}
+			}
 		
 		if (placeDao.exists(place.getId()))
 			changeRecordDao.save(createChangeRecord(place, "edit"));
@@ -204,8 +218,6 @@ public class DocumentController {
 		
 		place.setId(placeId);
 		place = placeDao.save(place);
-		
-		
 		
 		logger.debug("saved place {}", place);
 		
@@ -225,7 +237,7 @@ public class DocumentController {
 		response.setHeader("location", baseUri + "place/" + place.getId());
 		
 		ModelAndView mav = new ModelAndView("place/validation");
-		mav.addObject("result", new ValidationResult());	
+		mav.addObject("result", new ValidationResult());
 		
 		return mav;
 		

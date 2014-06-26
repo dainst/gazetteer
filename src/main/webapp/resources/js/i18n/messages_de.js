@@ -17,6 +17,7 @@ messages.factory('messages', function(){
 		"ui.place.children.search": "Orte in Suche anzeigen",
 		"ui.place.save.success": "Ort erfolgreich gespeichert",
 		"ui.place.save.failure": "Ort konnte nicht gespeichert werden",
+		"ui.place.save.failure.parentError": "Ein Ort darf nicht sein eigener untergeordneter Ort oder derjenige eines Ortes sein, den er enthält",
 		"ui.place.remove.success": "Ort erfolgreich gelöscht",
 		"ui.place.remove.failure": "Ort konnte nicht gelöscht werden",
 		"ui.thesaurus": "Thesaurus",

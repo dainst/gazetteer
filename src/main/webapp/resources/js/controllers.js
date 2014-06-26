@@ -436,16 +436,24 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 		Place.save(
 			$scope.place,
 			function(data) {
-				if (data.gazId) {
-					$scope.place.gazId = data.gazId;
+				if (data.message == null) {
+					if (data.gazId) {
+						$scope.place.gazId = data.gazId;
+					}
+					window.scrollTo(0,0);
+					$rootScope.loading--;
+					$location.search("keepAlerts").path("show/" + $scope.place.gazId);
+					$rootScope.addAlert(messages["ui.place.save.success"], null, "success");
+				} else {
+					$scope.failure = data.message;
+					$rootScope.addAlert(messages["ui.place.save.failure." + $scope.failure], null, "error");
+					window.scrollTo(0,0);
+					$rootScope.loading--;
 				}
-				window.scrollTo(0,0);
-				$rootScope.loading--;
-				$location.search("keepAlerts").path("show/" + $scope.place.gazId);
-				$rootScope.addAlert(messages["ui.place.save.success"], null, "success");
+				
 			},
 			function(result) {
-				$scope.failure = result.data.message; 
+				$scope.failure = result.data.message;
 				$rootScope.addAlert(messages["ui.place.save.failure"], null, "error");
 				window.scrollTo(0,0);
 				$rootScope.loading--;
