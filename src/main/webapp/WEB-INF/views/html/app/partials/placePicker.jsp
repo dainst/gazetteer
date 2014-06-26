@@ -41,7 +41,7 @@
 		<div class='modal-header'>
 			<button type='button' class='close' data-dismiss='modal' ng-click="closeOverlay()">×</button>
 			<h3><s:message code="ui.picker.pickAPlace" text="ui.picker.pickAPlace"/></h3>
-			<form class="navbar-search" style="position:static; float:none;" action="/gazetteer/place" autocomplete="off">
+			<form class="navbar-search" style="position:static; float:none;" ng-submit="pickFirst()" autocomplete="off">
  				<input type="text" class="search-query" placeholder="Filter" ng-model="search.q" autocomplete="off" focus-me="showOverlay">
  				<i class="icon-search icon-white"></i>
 			</form>

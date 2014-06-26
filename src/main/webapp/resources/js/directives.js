@@ -114,6 +114,14 @@ directives.directive('gazPlacePicker', function($document) {
 				$scope.showOverlay = false;
 			};
 			
+			$scope.pickFirst = function() {
+				Place.query($scope.search, function(result) {
+					$scope.places = result.result;
+				});
+				
+				$scope.selectPlace($scope.places[0]);				
+			};
+			
 			$scope.$watch("search.q", function() {
 				Place.query($scope.search, function(result) {
 					$scope.places = result.result;
