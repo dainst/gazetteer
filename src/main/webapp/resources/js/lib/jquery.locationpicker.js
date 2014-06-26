@@ -35,9 +35,9 @@
                     }else{
                         map.panTo(latLng);
                     }
-                    $(that).val(lng + "," + lat);
+                    $(that).val(lat + "," + lng);
                     var scope = angular.element(that).scope();
-                    scope.$apply("coordinates = [" + lng + "," + lat + "]");
+                    scope.$apply("coordinates = [" + lat + "," + lng + "]");
                 };
                 
                 var id = $(this).attr('id');
@@ -91,8 +91,8 @@
                     if(posStr != ""){
                         var posArr = posStr.split(",");
                         if(posArr.length == 2){
-                            var lat = $.trim(posArr[1]);
-                            var lng = $.trim(posArr[0]);
+                            var lat = $.trim(posArr[0]);
+                            var lng = $.trim(posArr[1]);
                             var latlng = new google.maps.LatLng(lat, lng);
                             setPosition(latlng);
                             return;
