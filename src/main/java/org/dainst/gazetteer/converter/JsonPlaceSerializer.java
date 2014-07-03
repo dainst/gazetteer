@@ -189,12 +189,13 @@ public class JsonPlaceSerializer {
 			placeNode.put("tags", tagsNode);
 		}
 		
-		// reisestipendium content		
-		logger.debug("serializing reisestipendium content?");
 		User user = null;
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if (principal instanceof User)
 			user = (User) principal;
+		
+		// reisestipendium content		
+		logger.debug("serializing reisestipendium content?");
 		if (user != null && user.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_REISESTIPENDIUM"))) {
 			
 			logger.debug("serializing reisestipendium note");
@@ -215,7 +216,7 @@ public class JsonPlaceSerializer {
 		}
 		
 		// change history
-		if (userDao != null && changeRecordDao != null) {
+		if (user != null  && user.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_EDITOR")) && userDao != null && changeRecordDao != null) {
 			
 			List<PlaceChangeRecord> changeHistory = changeRecordDao.findByPlaceId(place.getId());
 			
