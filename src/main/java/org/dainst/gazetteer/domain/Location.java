@@ -7,7 +7,7 @@ public class Location {
 
 	private double[] coordinates;
 	
-	// private Shape shape;
+	private Shape shape;
 	
 	private int confidence = 0;
 
@@ -62,7 +62,7 @@ public class Location {
 	@Override
 	public String toString() {
 		return "Location [coordinates=" + Arrays.toString(coordinates)
-				//+ ", shape=" + shape.toString()
+				+ ", shape=" + shape.toString()
 				+ ", confidence=" + confidence + ", publicSite=" + publicSite + "]";
 	}
 
@@ -94,12 +94,12 @@ public class Location {
 		return true;
 	}
 
-	//public Shape getShape() {
-	//	return shape;
-	//}
+	public Shape getShape() {
+		return shape;
+	}
 
-	//public void setShape(Shape shape) {
-	//	this.shape = shape;
-	//}
+	public void setShape(Shape shape) {
+		this.shape = shape;
+	}
 
 }

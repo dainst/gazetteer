@@ -11,6 +11,7 @@
 			<list>
 				<value>languages</value>
 				<value>messages</value>
+				<value>languages_iso_mapping</value>
 			</list>
 		</property>
 	</bean>

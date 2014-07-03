@@ -6,19 +6,24 @@
 	xmlns:skos="http://www.w3.org/2004/02/skos/core#"
 	xmlns:dc="http://purl.org/dc/elements/1.1/"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:owl ="http://www.w3.org/2002/07/owl#"
 	xmlns:gaz_id="http://gazetteer.dainst.org/types/id#">
 	
 	<edm:Place rdf:about="${baseUri}place/${place.id}">
-		<skos:prefLabel xml:lang="${place.prefName.language}">${place.prefName.title}</skos:prefLabel>
+		<s:message code="languages.isoMapping.${place.prefName.language}" var="prefLanguage"/>
+		<skos:prefLabel xml:lang="${prefLanguage}">${place.prefName.title}</skos:prefLabel>
 		<c:forEach var="name" items="${place.names}">
-			<skos:altLabel xml:lang="${name.language}">${name.title}</skos:altLabel>
+			<c:if test="${name.language != null}">
+				<s:message code="languages.isoMapping.${name.language}" var="placeLanguage"/>
+			</c:if>
+			<skos:altLabel xml:lang="${placeLanguage}">${name.title}</skos:altLabel>
 		</c:forEach>
 		<c:if test="${place.prefLocation != null}">
 			<wgs84_pos:lat>${place.prefLocation.lat}</wgs84_pos:lat>
 			<wgs84_pos:long>${place.prefLocation.lng}</wgs84_pos:long>
 		</c:if>
 		<c:forEach var="identifier" items="${place.identifiers}">
-			<dc:identifier xsi:type="gaz_id:${identifier.context}">${identifier.value}</dc:identifier>
+			<dc:identifier>${identifier.context}:${identifier.value}</dc:identifier>
 		</c:forEach>
 		<c:forEach var="link" items="${place.links}">
 			<${link.predicate} rdf:resource="${link.object}"/>
