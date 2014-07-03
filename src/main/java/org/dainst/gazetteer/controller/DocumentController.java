@@ -17,6 +17,7 @@ import org.dainst.gazetteer.domain.User;
 import org.dainst.gazetteer.domain.ValidationResult;
 import org.dainst.gazetteer.helpers.IdGenerator;
 import org.dainst.gazetteer.helpers.LocalizedLanguagesHelper;
+import org.dainst.gazetteer.helpers.RoundCoordinatesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -137,6 +138,12 @@ public class DocumentController {
 			
 			//Place parent = null;
 			//if (place.getParent() != null) parent = placeDao.findOne(place.getParent());
+			
+			User user = null;
+			Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			if (principal instanceof User)
+				user = (User) principal;
+			RoundCoordinatesService.roundCoordinates(user, place);
 			
 			mav = new ModelAndView("place/get");
 			if (layout != null) {

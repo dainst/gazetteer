@@ -10,6 +10,8 @@ public class Location {
 	// private Shape shape;
 	
 	private int confidence = 0;
+
+	private boolean publicSite = false;
 	
 	public Location() {
 		
@@ -49,12 +51,19 @@ public class Location {
 		this.confidence = confidence;
 	}
 
+	public boolean isPublicSite() {
+		return publicSite;
+	}
+
+	public void setPublicSite(boolean publicSite) {
+		this.publicSite = publicSite;
+	}
+
 	@Override
 	public String toString() {
 		return "Location [coordinates=" + Arrays.toString(coordinates)
 				//+ ", shape=" + shape.toString()
-				+ ", confidence="
-				+ confidence + "]";
+				+ ", confidence=" + confidence + ", publicSite=" + publicSite + "]";
 	}
 
 	@Override
@@ -62,6 +71,7 @@ public class Location {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + confidence;
+		result = prime * result + (publicSite ? 1231 : 1237);
 		result = prime * result + Arrays.hashCode(coordinates);
 		return result;
 	}
@@ -76,6 +86,8 @@ public class Location {
 			return false;
 		Location other = (Location) obj;
 		if (confidence != other.confidence)
+			return false;
+		if (publicSite != other.publicSite)
 			return false;
 		if (!Arrays.equals(coordinates, other.coordinates))
 			return false;

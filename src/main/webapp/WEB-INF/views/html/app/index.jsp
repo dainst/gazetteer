@@ -54,11 +54,13 @@
    								<s:message code="ui.userSettings" text="ui.userSettings"/>
    							</a>
    						</li>
-   						<li>
-   							<a href="../globalChangeHistory">
-   								<s:message code="ui.globalChangeHistory" text="ui.globalChangeHistory"/>
-   							</a>
-   						</li>
+   						<sec:authorize access="hasRole('ROLE_EDITOR')">
+   							<li>
+   								<a href="../globalChangeHistory">
+   									<s:message code="ui.globalChangeHistory" text="ui.globalChangeHistory"/>
+   								</a>
+   							</li>
+   						</sec:authorize>
    						<sec:authorize access="hasRole('ROLE_ADMIN')">
    							<li>
    								<a href="../userManagement">
@@ -98,7 +100,7 @@
 							<li><a href="#!/extended-search"> <s:message
 										code="ui.search.extendedSearch" text="ui.search.extendedSearch" />
 							</a></li>
-							<sec:authorize access="hasRole('ROLE_USER')">
+							<sec:authorize access="hasRole('ROLE_EDITOR')">
 								<li><a href="#!/edit/"> <s:message
 											code="ui.place.create" text="ui.place.create" />
 								</a></li>

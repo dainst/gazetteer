@@ -41,11 +41,13 @@
    								<s:message code="ui.userSettings" text="ui.userSettings"/>
    							</a>
    						</li>
-   						<li>
-   							<a href="globalChangeHistory">
-   								<s:message code="ui.globalChangeHistory" text="ui.globalChangeHistory"/>
-   							</a>
-   						</li>
+   						<sec:authorize access="hasRole('ROLE_EDITOR')">
+   							<li>
+   								<a href="globalChangeHistory">
+   									<s:message code="ui.globalChangeHistory" text="ui.globalChangeHistory"/>
+   								</a>
+   							</li>
+   						</sec:authorize>
    						<sec:authorize access="hasRole('ROLE_ADMIN')">
    							<li>
    								<a href="userManagement">
@@ -84,7 +86,7 @@
 							<li><a href="app/#!/extended-search"> <s:message
 										code="ui.search.extendedSearch" text="ui.search.extendedSearch" />
 							</a></li>
-							<sec:authorize access="hasRole('ROLE_USER')">
+							<sec:authorize access="hasRole('ROLE_EDITOR')">
 								<li><a href="app/#!/edit/"> <s:message
 											code="ui.place.create" text="ui.place.create" />
 								</a></li>
@@ -258,6 +260,19 @@
 									</c:choose>
 							
 									<s:message code="ui.editUser.roleAdmin" text="ui.editUser.roleAdmin" />
+								</label>
+								
+								<label>
+									<c:choose>
+										<c:when test="${edit_user_role_editor_value}">
+											<input type="checkbox" class="edit-user-checkbox" name="edit_user_role_editor" checked />
+										</c:when>
+										<c:otherwise>
+											<input type="checkbox" class="edit-user-checkbox" name="edit_user_role_editor" />
+										</c:otherwise>
+									</c:choose>
+							
+									<s:message code="ui.editUser.roleEditor" text="ui.editUser.roleEditor" />
 								</label>
 							
 								<label>

@@ -220,6 +220,17 @@ public class User implements UserDetails {
 		}
 	}
 	
+	public static class EditorComparator implements Comparator<User> {
+		public int compare(User user1, User user2) {
+			if (user1.hasRole("ROLE_EDITOR") == user2.hasRole("ROLE_EDITOR")) 
+				return 0;
+			else if (user1.hasRole("ROLE_EDITOR"))
+				return -1;
+			else
+				return 1;			
+		}
+	}
+	
 	public static class ReisestipendiumComparator implements Comparator<User> {
 		public int compare(User user1, User user2) {
 			if (user1.hasRole("ROLE_REISESTIPENDIUM") == user2.hasRole("ROLE_REISESTIPENDIUM")) 

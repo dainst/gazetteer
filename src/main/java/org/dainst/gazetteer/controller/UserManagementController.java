@@ -255,6 +255,13 @@ public class UserManagementController {
 					else
 						Collections.sort(users, new User.AdminComparator());
 				break;
+				case "editor":
+					users = (List<User>) userRepository.findAll();
+					if (isDescending)
+						Collections.sort(users, Collections.reverseOrder(new User.EditorComparator()));
+					else
+						Collections.sort(users, new User.EditorComparator());
+				break;
 				case "reisestipendium":
 					users = (List<User>) userRepository.findAll();
 					if (isDescending)
@@ -310,6 +317,7 @@ public class UserManagementController {
 		model.addAttribute("edit_user_email_value", user.getEmail());
 		model.addAttribute("edit_user_activated_value", user.isEnabled());
 		model.addAttribute("edit_user_role_admin_value", user.hasRole("ROLE_ADMIN"));
+		model.addAttribute("edit_user_role_editor_value", user.hasRole("ROLE_EDITOR"));
 		model.addAttribute("edit_user_role_reisestipendium_value", user.hasRole("ROLE_REISESTIPENDIUM"));
 		model.addAttribute("adminEdit", adminEdit);
 		model.addAttribute("userEdit", userEdit);
@@ -347,6 +355,9 @@ public class UserManagementController {
 		
 		if (request.getParameter("edit_user_role_admin") != null)
 			authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+		
+		if (request.getParameter("edit_user_role_editor") != null)
+			authorities.add(new SimpleGrantedAuthority("ROLE_EDITOR"));
 
 		if (request.getParameter("edit_user_role_reisestipendium") != null)
 			authorities.add(new SimpleGrantedAuthority("ROLE_REISESTIPENDIUM"));
@@ -552,6 +563,7 @@ public class UserManagementController {
 		model.addAttribute("edit_user_email_value", request.getParameter("edit_user_email"));
 		model.addAttribute("edit_user_activated_value", request.getParameter("edit_user_activated") != null);
 		model.addAttribute("edit_user_role_admin_value", request.getParameter("edit_user_role_admin") != null);
+		model.addAttribute("edit_user_role_editor_value", request.getParameter("edit_user_role_editor") != null);
 		model.addAttribute("edit_user_role_reisestipendium_value", request.getParameter("edit_user_role_reisestipendium") != null);
 		model.addAttribute("failure", failureType);
 		model.addAttribute("user", user);

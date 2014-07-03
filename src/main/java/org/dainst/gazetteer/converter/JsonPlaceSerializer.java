@@ -104,11 +104,12 @@ public class JsonPlaceSerializer {
 		// preferred location
 		if (place.getPrefLocation() != null) {
 			ObjectNode locationNode = mapper.createObjectNode();
-			ArrayNode coordinatesNode = mapper.createArrayNode();
+			ArrayNode coordinatesNode = mapper.createArrayNode();			
 			coordinatesNode.add(place.getPrefLocation().getLat());
 			coordinatesNode.add(place.getPrefLocation().getLng());
 			locationNode.put("coordinates", coordinatesNode);
 			locationNode.put("confidence", place.getPrefLocation().getConfidence());
+			locationNode.put("publicSite", place.getPrefLocation().isPublicSite());
 			placeNode.put("prefLocation", locationNode);
 		}
 		
@@ -122,6 +123,7 @@ public class JsonPlaceSerializer {
 				coordinatesNode.add(location.getLng());
 				locationNode.put("coordinates", coordinatesNode);
 				locationNode.put("confidence", location.getConfidence());
+				locationNode.put("publicSite", location.isPublicSite());
 				locationsNode.add(locationNode);
 			}
 			placeNode.put("locations", locationsNode);
@@ -189,29 +191,26 @@ public class JsonPlaceSerializer {
 		
 		// reisestipendium content		
 		logger.debug("serializing reisestipendium content?");
+		User user = null;
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		logger.debug("user: {}", principal);
-		if (principal instanceof User) {
-			User user = (User) principal;
-			if (user.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_REISESTIPENDIUM"))) {
-				
-				logger.debug("serializing reisestipendium note");
-				if (place.getNoteReisestipendium() != null && !place.getNoteReisestipendium().isEmpty()) {
-					placeNode.put("noteReisestipendium", place.getNoteReisestipendium());
-					logger.debug("serialized reisestipendium note");
-				}
-
+		if (principal instanceof User)
+			user = (User) principal;
+		if (user != null && user.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_REISESTIPENDIUM"))) {
+			
+			logger.debug("serializing reisestipendium note");
+			if (place.getNoteReisestipendium() != null && !place.getNoteReisestipendium().isEmpty()) {
+				placeNode.put("noteReisestipendium", place.getNoteReisestipendium());
+				logger.debug("serialized reisestipendium note");
+			}
 				if (!place.getCommentsReisestipendium().isEmpty()) {
-					ArrayNode commentsNode = mapper.createArrayNode();
-					for (Comment comment : place.getCommentsReisestipendium()) {
-						ObjectNode commentNode = mapper.createObjectNode();
-						commentNode.put("text", comment.getText());
-						commentNode.put("user", comment.getUser());
-						commentsNode.add(commentNode);
-					}
-					placeNode.put("commentsReisestipendium", commentsNode);
+				ArrayNode commentsNode = mapper.createArrayNode();
+				for (Comment comment : place.getCommentsReisestipendium()) {
+					ObjectNode commentNode = mapper.createObjectNode();
+					commentNode.put("text", comment.getText());
+					commentNode.put("user", comment.getUser());
+					commentsNode.add(commentNode);
 				}
-				
+				placeNode.put("commentsReisestipendium", commentsNode);
 			}
 		}
 		
@@ -228,8 +227,8 @@ public class JsonPlaceSerializer {
 				for (PlaceChangeRecord changeRecord : changeHistory) {
 					ObjectNode changeRecordNode = mapper.createObjectNode();
 				
-					User user = userDao.findById(changeRecord.getUserId());
-					changeRecordNode.put("username", user.getUsername());
+					User changeRecordUser = userDao.findById(changeRecord.getUserId());
+					changeRecordNode.put("username", changeRecordUser.getUsername());
 					changeRecordNode.put("userId", changeRecord.getUserId());
 					
 					if (changeRecord.getChangeType() != null)

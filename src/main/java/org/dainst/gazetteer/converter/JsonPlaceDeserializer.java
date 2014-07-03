@@ -177,9 +177,11 @@ public class JsonPlaceDeserializer {
 					
 					prefLocation.setCoordinates(new double[]{lng, lat});
 					
-					if (prefLocationNode.has("confidence")) {
+					if (prefLocationNode.has("confidence"))
 						prefLocation.setConfidence(prefLocationNode.get("confidence").asInt());
-					}
+					
+					if (prefLocationNode.has("publicSite"))
+						prefLocation.setPublicSite(prefLocationNode.get("publicSite").asBoolean());
 					
 					place.setPrefLocation(prefLocation);
 					
@@ -211,9 +213,11 @@ public class JsonPlaceDeserializer {
 				
 				location.setCoordinates(new double[]{lng, lat});
 				
-				if (locationNode.has("confidence")) {
+				if (locationNode.has("confidence"))
 					location.setConfidence(locationNode.get("confidence").asInt());
-				}
+				
+				if (locationNode.has("publicSite"))
+					location.setPublicSite(locationNode.get("publicSite").asBoolean());
 				
 				logger.debug("updated location: {}", location);
 				

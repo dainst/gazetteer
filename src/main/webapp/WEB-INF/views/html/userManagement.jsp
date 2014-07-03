@@ -41,11 +41,13 @@
    							<s:message code="ui.userSettings" text="ui.userSettings"/>
    						</a>
    					</li>
-   					<li>
-   						<a href="globalChangeHistory">
-   							<s:message code="ui.globalChangeHistory" text="ui.globalChangeHistory"/>
-   						</a>
-   					</li>
+   					<sec:authorize access="hasRole('ROLE_EDITOR')">
+   						<li>
+   							<a href="globalChangeHistory">
+   								<s:message code="ui.globalChangeHistory" text="ui.globalChangeHistory"/>
+   							</a>
+   						</li>
+   					</sec:authorize>
    					<sec:authorize access="hasRole('ROLE_ADMIN')">
    						<li>
    							<a href="">
@@ -84,7 +86,7 @@
 							<li><a href="app/#!/extended-search"> <s:message
 										code="ui.search.extendedSearch" text="ui.search.extendedSearch" />
 							</a></li>
-							<sec:authorize access="hasRole('ROLE_USER')">
+							<sec:authorize access="hasRole('ROLE_EDITOR')">
 								<li><a href="app/#!/edit/"> <s:message
 											code="ui.place.create" text="ui.place.create" />
 								</a></li>
@@ -184,6 +186,15 @@
 					</c:choose>
 					
 					<c:choose>
+						<c:when test="${lastSorting eq 'editor'}">
+							<th><a href="userManagement?sort=editor&isDescending=<c:out value="${!isDescending}" />"><s:message code="user.roles.editor" text="user.roles.editor" /></a></th>
+						</c:when>
+						<c:otherwise>
+							<th><a href="userManagement?sort=editor&isDescending=false"><s:message code="user.roles.editor" text="user.roles.editor" /></a></th>
+						</c:otherwise>
+					</c:choose>
+					
+					<c:choose>
 						<c:when test="${lastSorting eq 'reisestipendium'}">
 							<th><a href="userManagement?sort=reisestipendium&isDescending=<c:out value="${!isDescending}" />"><s:message code="user.roles.reisestipendium" text="user.roles.reisestipendium" /></a></th>
 						</c:when>
@@ -223,7 +234,15 @@
 									<c:otherwise>
 										<td><span class="icon-remove" style="color: #9d261d"></span></td>
 									</c:otherwise>
-								</c:choose>										
+								</c:choose>
+								<c:choose>
+									<c:when test="${user.hasRole('ROLE_EDITOR')}">
+										<td><span class="icon-ok" style="color: #46a546"></span></td>
+									</c:when>
+									<c:otherwise>
+										<td><span class="icon-remove" style="color: #9d261d"></span></td>
+									</c:otherwise>
+								</c:choose>							
 								<c:choose>
 									<c:when test="${user.hasRole('ROLE_REISESTIPENDIUM')}">
 										<td><span class="icon-ok" style="color: #46a546"></span></td>
@@ -252,7 +271,15 @@
 									<c:otherwise>
 										<td><span class="icon-remove" style="color: #9d261d"></span></td>
 									</c:otherwise>
-								</c:choose>										
+								</c:choose>
+								<c:choose>
+									<c:when test="${user.hasRole('ROLE_EDITOR')}">
+										<td><span class="icon-ok" style="color: #46a546"></span></td>
+									</c:when>
+									<c:otherwise>
+										<td><span class="icon-remove" style="color: #9d261d"></span></td>
+									</c:otherwise>
+								</c:choose>							
 								<c:choose>
 									<c:when test="${user.hasRole('ROLE_REISESTIPENDIUM')}">
 										<td><span class="icon-ok" style="color: #46a546"></span></td>

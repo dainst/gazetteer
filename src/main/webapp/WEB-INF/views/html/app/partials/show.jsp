@@ -1,4 +1,5 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page contentType="text/html; charset=utf-8" session="false"%>
 
 <div gaz-place-nav active-tab="show" place="place"></div>
@@ -51,7 +52,7 @@
 			(<small gaz-translate="'place.name.transliterated'"></small>)
 		</em>
 		<em ng-show="placename.ancient && placename.transliterated">
-			(<small gaz-translate="'place.name.ancient'"></small>/<small gaz-translate="'place.name.transliterated'"></small>)
+			(<small gaz-translate="'place.name.ancient'"></small><small>/</small><small gaz-translate="'place.name.transliterated'"></small>)
 		</em>
 		<small ng-hide="!placename.language">
 			<em gaz-translate="'languages.' + placename.language"></em>
@@ -112,16 +113,38 @@
 	<span ng-hide="!place.prefLocation">
 		<dt><s:message code="domain.place.locations" text="domain.place.locations" /></dt>
 		<dd>
-			<em><s:message code="domain.location.latitude" text="domain.location.latitude" />:</em> {{place.prefLocation.coordinates[0]}},
-			<em><s:message code="domain.location.longitude" text="domain.location.longitude" />:</em> {{place.prefLocation.coordinates[1]}}
-			(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />:</em>
-			<span gaz-translate="'location.confidence.'+place.prefLocation.confidence"></span>)
+			<em><s:message code="domain.location.latitude" text="domain.location.latitude" />: </em>{{place.prefLocation.coordinates[0]}},
+			<em><s:message code="domain.location.longitude" text="domain.location.longitude" />: </em>{{place.prefLocation.coordinates[1]}}
+			<span ng-show="place.type == 'archaeological-site' && !place.prefLocation.publicSite">
+				<sec:authorize access="hasRole('ROLE_USER')">
+					(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />:</em>
+					<span gaz-translate="'location.confidence.'+place.prefLocation.confidence"></span>)
+				</sec:authorize>
+				<sec:authorize access="!hasRole('ROLE_USER')">
+					(<span><s:message code="domain.location.rounded" text="domain.location.rounded" /> <i class="icon-info-sign" style="color: #5572a1;" gaz-tooltip="'ui.place.archaeological-site-info'"></i></span>)
+				</sec:authorize>
+			</span>
+			<span ng-hide="place.type == 'archaeological-site' && !place.prefLocation.publicSite">
+				(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />: </em>
+				<span gaz-translate="'location.confidence.'+place.prefLocation.confidence"></span>)
+			</span>
 		</dd>
 		<dd ng-repeat="location in place.locations">
-			<em><s:message code="domain.location.latitude" text="domain.location.latitude" />:</em> {{location.coordinates[0]}},
-			<em><s:message code="domain.location.longitude" text="domain.location.longitude" />:</em> {{location.coordinates[1]}}
-			(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />:</em>
-			<span gaz-translate="'location.confidence.'+location.confidence"></span>)
+			<em><s:message code="domain.location.latitude" text="domain.location.latitude" />: </em>{{location.coordinates[0]}},
+			<em><s:message code="domain.location.longitude" text="domain.location.longitude" />: </em>{{location.coordinates[1]}}
+			<span ng-show="place.type == 'archaeological-site' && !location.publicSite">
+				<sec:authorize access="hasRole('ROLE_USER')">
+					(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />:</em>
+					<span gaz-translate="'location.confidence.'+location.confidence"></span>)
+				</sec:authorize>
+				<sec:authorize access="!hasRole('ROLE_USER')">
+					(<span><s:message code="domain.location.rounded" text="domain.location.rounded" /> <i class="icon-info-sign" style="color: #5572a1;" gaz-tooltip="'ui.place.archaeological-site-info'"></i></span>)
+				</sec:authorize>
+			</span>
+			<span ng-hide="place.type == 'archaeological-site' && !location.publicSite">
+				(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />:</em>
+				<span gaz-translate="'location.confidence.'+location.confidence"></span>)
+			</span>
 		</dd>
 		<br/>
 	</span>

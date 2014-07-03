@@ -244,19 +244,21 @@ directives.directive('gazMap', function($location) {
 					var place = $scope.places[i];		
 					var title = "";
 					if (place.prefName) title = place.prefName.title;
-					if (place.prefLocation && angular.isNumber(place.prefLocation.coordinates[0])
-							&& angular.isNumber(place.prefLocation.coordinates[1])) {
-						ll = new google.maps.LatLng(place.prefLocation.coordinates[0], place.prefLocation.coordinates[1]);
-						$scope.markers[i] = new google.maps.Marker({
-							position: ll,
-							title: title,
-							map: $scope.map,
-							icon: defaultIcon,
-							shadow: defaultShadow
-						});
-						$scope.markerMap[place.gazId] = $scope.markers[i];
-						bounds.extend(ll);
-						numLocations++;
+					
+					if (place.prefLocation) {
+						if (angular.isNumber(place.prefLocation.coordinates[0]) && angular.isNumber(place.prefLocation.coordinates[1])) {
+							ll = new google.maps.LatLng(place.prefLocation.coordinates[0], place.prefLocation.coordinates[1]);
+							$scope.markers[i] = new google.maps.Marker({
+								position: ll,
+								title: title,
+								map: $scope.map,
+								icon: defaultIcon,
+								shadow: defaultShadow
+							});
+							$scope.markerMap[place.gazId] = $scope.markers[i];
+							bounds.extend(ll);
+							numLocations++;
+						}
 					}
 				}
 				
