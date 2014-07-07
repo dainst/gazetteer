@@ -184,6 +184,7 @@ directives.directive('gazMap', function($location) {
 			
 			$scope.markers = [];
 			$scope.markerMap = {};
+			$scope.shapes = [];
 			$scope.highlightedMarker = null;
 			$scope.mapOptions = {
 				center: new google.maps.LatLng(0, 0),
@@ -216,6 +217,7 @@ directives.directive('gazMap', function($location) {
 			};
 			
 			$scope.$watch("highlight", function() {
+				
 				if ($scope.highlightedMarker != null) {
 					$scope.highlightedMarker.setIcon(defaultIcon);
 					$scope.highlightedMarker.setZIndex($scope.lastZIndex);
@@ -234,6 +236,9 @@ directives.directive('gazMap', function($location) {
 				$scope.markerMap = {};
 				for (var i in $scope.markers)
 					$scope.markers[i].setMap(null);
+				
+				for (var i in $scope.shapes)
+					$scope.shapes[i].setMap(null);
 				
 				if ($scope.places.length == 0) return;
 				
@@ -258,6 +263,24 @@ directives.directive('gazMap', function($location) {
 							$scope.markerMap[place.gazId] = $scope.markers[i];
 							bounds.extend(ll);
 							numLocations++;
+						}
+						if (place.prefLocation.shape) {
+							var shapeCoordinates = [];
+							
+							for (var j = 0; j < place.prefLocation.shape.length; j++) {
+								for (var k = 0; k < place.prefLocation.shape[j].length; k++)
+									shapeCoordinates[k] = new google.maps.LatLng(place.prefLocation.shape[j][k][1], place.prefLocation.shape[j][k][0]);
+							}
+							
+							$scope.shapes[i] = new google.maps.Polygon({
+								paths: shapeCoordinates,
+								strokeColor: "##6786ad",
+								strokeOpacity: 0.7,
+								strokeWeight: 1.5,
+								fillColor: "##6786ad",
+							    fillOpacity: 0.25
+							});
+							$scope.shapes[i].setMap($scope.map);						
 						}
 					}
 				}

@@ -108,6 +108,21 @@ public class JsonPlaceSerializer {
 			coordinatesNode.add(place.getPrefLocation().getLat());
 			coordinatesNode.add(place.getPrefLocation().getLng());
 			locationNode.put("coordinates", coordinatesNode);
+			if (place.getPrefLocation().getShape() != null) {
+				ArrayNode shapeNode = mapper.createArrayNode();
+				for (int i = 0; i < place.getPrefLocation().getShape().getCoordinates().length; i++) {
+					ArrayNode shapeCoordinatesNode1 = mapper.createArrayNode();
+					for (int j = 0; j < place.getPrefLocation().getShape().getCoordinates()[i].length; j++) {
+						ArrayNode shapeCoordinatesNode2 = mapper.createArrayNode();
+						for (int k = 0; k < place.getPrefLocation().getShape().getCoordinates()[i][j].length; k++)
+							shapeCoordinatesNode2.add(place.getPrefLocation().getShape().getCoordinates()[i][j][k]);
+						shapeCoordinatesNode1.add(shapeCoordinatesNode2);
+					}
+					shapeNode.add(shapeCoordinatesNode1);
+				}
+				locationNode.put("shape", shapeNode);
+			}
+								
 			locationNode.put("confidence", place.getPrefLocation().getConfidence());
 			locationNode.put("publicSite", place.getPrefLocation().isPublicSite());
 			placeNode.put("prefLocation", locationNode);

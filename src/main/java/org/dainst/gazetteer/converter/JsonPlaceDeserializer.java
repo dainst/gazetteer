@@ -11,6 +11,7 @@ import org.dainst.gazetteer.domain.Link;
 import org.dainst.gazetteer.domain.Location;
 import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.PlaceName;
+import org.dainst.gazetteer.domain.Shape;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -182,6 +183,23 @@ public class JsonPlaceDeserializer {
 					
 					if (prefLocationNode.has("publicSite"))
 						prefLocation.setPublicSite(prefLocationNode.get("publicSite").asBoolean());
+					
+					if (prefLocationNode.has("shape")) {
+						JsonNode shapeNode = prefLocationNode.get("shape");
+						double[][][] shapeCoordinates = new double[shapeNode.size()][][];
+						for (int i = 0; i < shapeNode.size(); i++) {
+							shapeCoordinates[i] = new double[shapeNode.get(i).size()][];
+							for (int j = 0; j < shapeNode.get(i).size(); j++) {
+								shapeCoordinates[i][j] = new double[shapeNode.get(i).get(j).size()];
+								for (int k = 0; k < shapeNode.get(i).get(j).size(); k++) {
+									shapeCoordinates[i][j][k] = shapeNode.get(i).get(j).get(k).asDouble();
+								}
+							}
+						}
+						Shape shape = new Shape();
+						shape.setCoordinates(shapeCoordinates);
+						prefLocation.setShape(shape);
+					}
 					
 					place.setPrefLocation(prefLocation);
 					
