@@ -244,6 +244,7 @@ directives.directive('gazMap', function($location) {
 				
 				var bounds = new google.maps.LatLngBounds();
 				var ll = new google.maps.LatLng("0","0");
+				var shape = null;
 				var numLocations = 0;
 				for (var i in $scope.places) {	
 					var place = $scope.places[i];		
@@ -280,12 +281,16 @@ directives.directive('gazMap', function($location) {
 								fillColor: "##6786ad",
 							    fillOpacity: 0.25
 							});
-							$scope.shapes[i].setMap($scope.map);						
+							$scope.shapes[i].setMap($scope.map);
+							
+							shape = $scope.shapes[i];
+							bounds.extend(shape.getBounds().getSouthWest());
+							bounds.extend(shape.getBounds().getNorthEast());
 						}
 					}
 				}
 				
-				if (numLocations > 1)
+				if (shape != null || numLocations > 1)
 					$scope.map.fitBounds(bounds);
 				else if (numLocations > 0)
 					$scope.map.setCenter(ll);
@@ -296,6 +301,18 @@ directives.directive('gazMap', function($location) {
 				
 			});
 			
+			google.maps.Polygon.prototype.getBounds = function() {
+			    var bounds = new google.maps.LatLngBounds();
+			    var paths = this.getPaths();
+			    var path;        
+			    for (var i = 0; i < paths.getLength(); i++) {
+			        path = paths.getAt(i);
+			        for (var j = 0; j < path.getLength(); j++) {
+			            bounds.extend(path.getAt(j));
+			        }
+			    }
+			    return bounds;
+			};
 		}
 	};
 });
