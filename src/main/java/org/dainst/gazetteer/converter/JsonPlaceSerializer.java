@@ -114,8 +114,13 @@ public class JsonPlaceSerializer {
 					ArrayNode shapeCoordinatesNode1 = mapper.createArrayNode();
 					for (int j = 0; j < place.getPrefLocation().getShape().getCoordinates()[i].length; j++) {
 						ArrayNode shapeCoordinatesNode2 = mapper.createArrayNode();
-						for (int k = 0; k < place.getPrefLocation().getShape().getCoordinates()[i][j].length; k++)
-							shapeCoordinatesNode2.add(place.getPrefLocation().getShape().getCoordinates()[i][j][k]);
+						for (int k = 0; k < place.getPrefLocation().getShape().getCoordinates()[i][j].length; k++) {
+							ArrayNode shapeCoordinatesNode3 = mapper.createArrayNode();
+							for (int l = 0; l < place.getPrefLocation().getShape().getCoordinates()[i][j][k].length; l++) {
+								shapeCoordinatesNode3.add(place.getPrefLocation().getShape().getCoordinates()[i][j][k][l]);
+							}
+							shapeCoordinatesNode2.add(shapeCoordinatesNode3);
+						}
 						shapeCoordinatesNode1.add(shapeCoordinatesNode2);
 					}
 					shapeNode.add(shapeCoordinatesNode1);

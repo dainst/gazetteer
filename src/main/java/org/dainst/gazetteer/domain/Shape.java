@@ -2,9 +2,9 @@ package org.dainst.gazetteer.domain;
 
 public class Shape {
 	
-	private String type = "polygon";
+	private String type = "multipolygon";
 	
-	private double[][][] coordinates;
+	private double[][][][] coordinates;
 
 	public String getType() {
 		return type;
@@ -14,11 +14,11 @@ public class Shape {
 		this.type = type;
 	}
 
-	public double[][][] getCoordinates() {
+	public double[][][][] getCoordinates() {
 		return coordinates;
 	}
 
-	public void setCoordinates(double[][][] coordinates) {
+	public void setCoordinates(double[][][][] coordinates) {
 		this.coordinates = coordinates;
 	}
 

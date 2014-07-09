@@ -267,10 +267,16 @@ directives.directive('gazMap', function($location) {
 						}
 						if (place.prefLocation.shape) {
 							var shapeCoordinates = [];
+							var counter = 0;
 							
 							for (var j = 0; j < place.prefLocation.shape.length; j++) {
-								for (var k = 0; k < place.prefLocation.shape[j].length; k++)
-									shapeCoordinates[k] = new google.maps.LatLng(place.prefLocation.shape[j][k][1], place.prefLocation.shape[j][k][0]);
+								for (var k = 0; k < place.prefLocation.shape[j].length; k++) {
+									var shapePolygonCoordinates = [];
+									for (var l = 0; l < place.prefLocation.shape[j][k].length; l++)
+										shapePolygonCoordinates[l] = new google.maps.LatLng(place.prefLocation.shape[j][k][l][1], place.prefLocation.shape[j][k][l][0]);
+									shapeCoordinates[counter] = shapePolygonCoordinates;
+									counter++;
+								}
 							}
 							
 							$scope.shapes[i] = new google.maps.Polygon({
