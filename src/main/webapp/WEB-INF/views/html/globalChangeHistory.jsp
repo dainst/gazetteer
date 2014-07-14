@@ -245,7 +245,12 @@
 						<sec:authorize access="hasRole('ROLE_ADMIN')">
 							<td><a href="userManagement?showUser=${changeRecord.userId}">${changeRecord.username}</a></td>
 						</sec:authorize>
-						<td><a href="place/${changeRecord.placeId}">${changeRecord.placename}</a></td>
+						<td><a href="place/${changeRecord.placeId}">
+							<c:choose>
+								<c:when test="${changeRecord.placename == null or changeRecord.placename eq ''}"><s:message code="domain.place.untitled" text="domain.place.untitled" /></c:when>
+								<c:otherwise>${changeRecord.placename}</c:otherwise>
+							</c:choose>
+						</a></td>
 						<td><s:message code="ui.changeHistory.changeType.${changeRecord.changeType}" text="ui.changeHistory.changeType.${changeRecord.changeType}" /></td>
 					</tr>
 	  			</c:forEach>

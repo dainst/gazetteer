@@ -13,6 +13,7 @@ import java.util.List;
 import org.dainst.gazetteer.dao.PlaceChangeRecordRepository;
 import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.dao.UserRepository;
+import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.PlaceChangeRecord;
 import org.dainst.gazetteer.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,7 +109,11 @@ public class ChangeHistoryController {
 				presChangeRecord.setUserId(changeRecord.getUserId());
 				presChangeRecord.setUsername(userRepository.findById(changeRecord.getUserId()).getUsername());
 				presChangeRecord.setPlaceId(changeRecord.getPlaceId());
-				presChangeRecord.setPlacename(placeRepository.findOne(changeRecord.getPlaceId()).getPrefName().getTitle());
+				
+				Place place = placeRepository.findOne(changeRecord.getPlaceId());
+				if (place.getPrefName() != null)
+					presChangeRecord.setPlacename(place.getPrefName().getTitle());
+				
 				presChangeRecord.setChangeType(changeRecord.getChangeType());
 				presChangeHistory.add(presChangeRecord);
 			}
