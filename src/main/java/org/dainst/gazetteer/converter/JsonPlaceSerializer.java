@@ -104,10 +104,12 @@ public class JsonPlaceSerializer {
 		// preferred location
 		if (place.getPrefLocation() != null) {
 			ObjectNode locationNode = mapper.createObjectNode();
-			ArrayNode coordinatesNode = mapper.createArrayNode();			
-			coordinatesNode.add(place.getPrefLocation().getLat());
-			coordinatesNode.add(place.getPrefLocation().getLng());
-			locationNode.put("coordinates", coordinatesNode);
+			if (place.getPrefLocation().getCoordinates() != null) {
+				ArrayNode coordinatesNode = mapper.createArrayNode();			
+				coordinatesNode.add(place.getPrefLocation().getLat());
+				coordinatesNode.add(place.getPrefLocation().getLng());
+				locationNode.put("coordinates", coordinatesNode);
+			}
 			if (place.getPrefLocation().getShape() != null) {
 				ArrayNode shapeNode = mapper.createArrayNode();
 				for (int i = 0; i < place.getPrefLocation().getShape().getCoordinates().length; i++) {
@@ -126,10 +128,10 @@ public class JsonPlaceSerializer {
 					shapeNode.add(shapeCoordinatesNode1);
 				}
 				locationNode.put("shape", shapeNode);
-			}
-								
+			}								
 			locationNode.put("confidence", place.getPrefLocation().getConfidence());
 			locationNode.put("publicSite", place.getPrefLocation().isPublicSite());
+			locationNode.put("area", 0);
 			placeNode.put("prefLocation", locationNode);
 		}
 		
@@ -142,6 +144,25 @@ public class JsonPlaceSerializer {
 				coordinatesNode.add(location.getLat());
 				coordinatesNode.add(location.getLng());
 				locationNode.put("coordinates", coordinatesNode);
+				if (location.getShape() != null) {
+					ArrayNode shapeNode = mapper.createArrayNode();
+					for (int i = 0; i < location.getShape().getCoordinates().length; i++) {
+						ArrayNode shapeCoordinatesNode1 = mapper.createArrayNode();
+						for (int j = 0; j < location.getShape().getCoordinates()[i].length; j++) {
+							ArrayNode shapeCoordinatesNode2 = mapper.createArrayNode();
+							for (int k = 0; k < location.getShape().getCoordinates()[i][j].length; k++) {
+								ArrayNode shapeCoordinatesNode3 = mapper.createArrayNode();
+								for (int l = 0; l < location.getShape().getCoordinates()[i][j][k].length; l++) {
+									shapeCoordinatesNode3.add(location.getShape().getCoordinates()[i][j][k][l]);
+								}
+								shapeCoordinatesNode2.add(shapeCoordinatesNode3);
+							}
+							shapeCoordinatesNode1.add(shapeCoordinatesNode2);
+						}
+						shapeNode.add(shapeCoordinatesNode1);
+					}
+					locationNode.put("shape", shapeNode);
+				}
 				locationNode.put("confidence", location.getConfidence());
 				locationNode.put("publicSite", location.isPublicSite());
 				locationsNode.add(locationNode);

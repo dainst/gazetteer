@@ -113,6 +113,7 @@
 	<span ng-hide="!place.prefLocation">
 		<dt><s:message code="domain.place.locations" text="domain.place.locations" /></dt>
 		<dd>
+			<span ng-show="place.prefLocation.coordinates">
 			<em><s:message code="domain.location.latitude" text="domain.location.latitude" />: </em>{{place.prefLocation.coordinates[0]}},
 			<em><s:message code="domain.location.longitude" text="domain.location.longitude" />: </em>{{place.prefLocation.coordinates[1]}}
 			<span ng-show="place.type == 'archaeological-site' && !place.prefLocation.publicSite">
@@ -128,6 +129,9 @@
 				(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />: </em>
 				<span gaz-translate="'location.confidence.'+place.prefLocation.confidence"></span>)
 			</span>
+			<br />
+			</span>
+			<span ng-show="place.prefLocation.shape"><em><s:message code="domain.location.polygon" text="domain.location.polygon" /></em></span>
 		</dd>
 		<dd ng-repeat="location in place.locations">
 			<em><s:message code="domain.location.latitude" text="domain.location.latitude" />: </em>{{location.coordinates[0]}},
@@ -145,6 +149,8 @@
 				(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />:</em>
 				<span gaz-translate="'location.confidence.'+location.confidence"></span>)
 			</span>
+			<br />
+			<em><s:message code="domain.location.polygon" text="domain.location.polygon" /> (<s:message code="domain.location.area" text="domain.location.area" />:</em> {{place.prefLocation.area}} km²<em>)</em>
 		</dd>
 		<br/>
 	</span>

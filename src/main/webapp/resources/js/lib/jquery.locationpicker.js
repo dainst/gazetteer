@@ -68,7 +68,7 @@
                     mapTypeId: google.maps.MapTypeId.ROADMAP,
                     disableDoubleClickZoom: true,
                     streetViewControl: false
-                }
+                };
                 var map = new google.maps.Map(mapDiv.get(0), myOptions);
                 
                 var marker = new google.maps.Marker({

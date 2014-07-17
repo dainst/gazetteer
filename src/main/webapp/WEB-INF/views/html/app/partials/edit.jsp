@@ -286,6 +286,8 @@
 								<input type="checkbox" ng-model="place.prefLocation.publicSite" />
 								<span gaz-translate="'location.public'"></span>
 							</label>
+							<br />
+							<div gaz-shape-editor shape="place.prefLocation.shape"></div>
 						</div>
 					</div>
 					

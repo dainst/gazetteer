@@ -159,6 +159,323 @@ directives.directive('gazPlaceTypePicker', function($document) {
 	};
 });
 
+directives.directive('gazShapeEditor', function($document) {
+	return {
+		replace: true,
+		scope: {
+			shape: '='
+		},
+		templateUrl: 'partials/shapeEditor.html',
+		controller: function($scope, $element) {
+			
+			$scope.gmapsShapes = [];
+			$scope.initialized = false;
+			
+			$scope.mapOptions = {
+				center: new google.maps.LatLng(0, 0),
+				zoom: 10,
+				mapTypeId: google.maps.MapTypeId.TERRAIN
+			};
+	
+			$scope.showOverlay = false;
+			
+			$scope.openOverlay = function() {
+				$scope.showOverlay = true;
+				window.setTimeout(function() { $scope.initialize(); }, 20);
+			};
+			
+			$scope.closeOverlay = function() {
+				$scope.showOverlay = false;
+				$scope.initialized = false;
+			};
+			
+			$scope.initialize = function() {
+				if (!$scope.initialized) {
+					google.maps.event.trigger($scope.map, 'resize');
+					$scope.initialized = true;
+				
+					var drawingManager = new google.maps.drawing.DrawingManager({
+						drawingControl: true,
+						drawingControlOptions: {
+							position: google.maps.ControlPosition.TOP_CENTER,
+							drawingModes: [google.maps.drawing.OverlayType.POLYGON]
+						},
+						polygonOptions: {
+							strokeColor: "000000",
+							strokeOpacity: 0.7,
+							strokeWeight: 1.5,
+							fillColor: "#000000",
+							fillOpacity: 0.25,
+							editable: true
+						}
+					});
+
+					drawingManager.setMap($scope.map);
+					
+					google.maps.event.addListener(drawingManager, 'polygoncomplete', function(polygon) {
+						$scope.addPolygon(polygon);
+					});
+					
+					if ($scope.shape) {
+						var bounds = new google.maps.LatLngBounds();
+						
+						for (var i = 0; i < $scope.shape.length; i++) {
+							var polygonCoordinates = [];		
+							
+							for (var j = 0; j < $scope.shape[i].length; j++) {
+								var pathCoordinates = [];
+								for (var k = 0; k < $scope.shape[i][j].length; k++)
+									pathCoordinates[k] = new google.maps.LatLng($scope.shape[i][j][k][1], $scope.shape[i][j][k][0]);
+								polygonCoordinates[j] = pathCoordinates;
+							}				
+							
+							$scope.gmapsShapes[i] = new google.maps.Polygon({
+								paths: polygonCoordinates,
+								strokeColor: "#000000",
+								strokeOpacity: 0.7,
+								strokeWeight: 1.5,
+								fillColor: "#000000",
+								fillOpacity: 0.25,
+								editable: true,
+							});
+							
+							$scope.gmapsShapes[i].setMap($scope.map);
+							
+							bounds.extend($scope.gmapsShapes[i].getBounds().getSouthWest());
+							bounds.extend($scope.gmapsShapes[i].getBounds().getNorthEast());
+							
+							$scope.addListeners($scope.gmapsShapes[i]);
+						}
+
+						$scope.map.fitBounds(bounds);
+					}
+				}
+			};
+			
+			$scope.addPolygon = function(polygon) {
+				var insidePolygon = false;
+				var polygonInside = false;
+
+				if (polygon.getPath().getLength() < 3 || $scope.checkForIntersections(polygon.getPath()))
+					polygon.setMap(null);
+				else {
+					for (var i = 0; i < $scope.gmapsShapes.length; i++) {						
+						$scope.gmapsShapes[i].getPaths().forEach(function(path) {
+							if (google.maps.geometry.poly.containsLocation(path.getAt(0), polygon))
+								polygonInside = true;
+						});
+					}
+					
+					if (!polygonInside) {
+						for (var i = 0; i < $scope.gmapsShapes.length; i++) {						
+							if (google.maps.geometry.poly.containsLocation(polygon.getPath().getAt(0), $scope.gmapsShapes[i])) {						
+								if ($scope.isClockwise(polygon.getPath()) == $scope.isClockwise($scope.gmapsShapes[i].getPath())) {
+									var pathArray = polygon.getPath().getArray();
+									pathArray.reverse();
+									polygon.setPath(new google.maps.MVCArray(pathArray));
+								}
+								
+								$scope.gmapsShapes[i].getPaths().push(polygon.getPath());
+								$scope.addPathListeners(polygon.getPath());
+								insidePolygon = true;
+							}
+						}
+					}
+					
+					if (!polygonInside && !insidePolygon) {
+						$scope.gmapsShapes.push(polygon);
+						$scope.addListeners(polygon);
+					} else
+						polygon.setMap(null);
+				}
+			};
+			
+			$scope.addListeners = function(polygon) {
+				polygon.addListener("rightclick", function(event) {
+					if (event.path != null && event.vertex != null) {
+						var path = this.getPaths().getAt(event.path);
+						if (path.getLength() > 3)
+							path.removeAt(event.vertex);
+						else
+							this.getPaths().removeAt(event.path);
+					}
+				});
+				
+				polygon.getPaths().forEach(function(path) {
+					$scope.addPathListeners(path);
+				});
+			};
+			
+			$scope.addPathListeners = function(path) {
+				google.maps.event.addListener(path, 'insert_at', function(index) {
+					if ($scope.checkForIntersections(this))
+						this.removeAt(index);
+				});
+				
+				google.maps.event.addListener(path, 'set_at', function(index, oldLatLng) {
+					if ($scope.checkForIntersections(this))
+						this.setAt(index, oldLatLng);
+					else {						
+						for (var i = 0; i < $scope.gmapsShapes.length; i++) {
+							if (google.maps.geometry.poly.containsLocation(this.getAt(0), $scope.gmapsShapes[i])) {
+								var path = this;
+								if ($scope.gmapsShapes[i].getPath() != path && $scope.isClockwise(path) == $scope.isClockwise($scope.gmapsShapes[i].getPath())) {
+									var tempArray = path.getArray();
+									tempArray.reverse();
+									
+									for (var j = 0; j < tempArray.length; j++) {
+										path.setAt(j, tempArray[j]);
+									}
+								}
+							}
+						}
+					}
+				});
+			};
+			
+			$scope.saveShape = function() {
+				var shapeCoordinates = [];
+				var emptyPolygons = 0;
+				for (var i = 0; i < $scope.gmapsShapes.length; i++) {
+					var polygonCoordinates = [];
+					var pathCounter = 0;
+					
+					$scope.gmapsShapes[i].getPaths().forEach(function(path) {
+						var pathCoordinates = [];
+						var pathData = path.getArray();
+						for (var j = 0; j < pathData.length; j++) {
+							var lngLat = [pathData[j].lng(), pathData[j].lat()];						
+							pathCoordinates[j] = lngLat;
+						}
+						polygonCoordinates[pathCounter] = pathCoordinates;
+						pathCounter++;
+					});
+					if (polygonCoordinates.length == 0)
+						emptyPolygons++;
+					else					
+						shapeCoordinates[i - emptyPolygons] = polygonCoordinates;
+				}
+				
+				if (shapeCoordinates.length == 0)
+					$scope.shape = null;
+				else
+					$scope.shape = shapeCoordinates;
+				
+				$scope.closeOverlay();
+			};
+			
+			$scope.isClockwise = function(path) {
+				var pathData = path.getArray();
+				var result = 0;
+				for (var i = 0; i < pathData.length; i++) {
+					if (i + 1 < pathData.length) {
+						var latResult = pathData[i + 1].lat() - pathData[i].lat();
+						var lngResult = pathData[i + 1].lng() + pathData[i].lng();
+						result += (latResult * lngResult);
+					}
+					else {
+						var latResult = pathData[0].lat() - pathData[i].lat();
+						var lngResult = pathData[0].lng() + pathData[i].lng();
+						result += (latResult * lngResult);
+					}
+				}
+				if (result >= 0)
+					return true;
+				else
+					return false;
+			};
+			
+			$scope.checkForIntersections = function(pathToCheck) {
+				var intersecting = false;
+				
+				for (var i = 0; i < $scope.gmapsShapes.length; i++) {					
+					$scope.gmapsShapes[i].getPaths().forEach(function(path) {
+						if ($scope.checkForPathIntersection(pathToCheck, path))
+							intersecting = true;
+					});
+				}
+				
+				if ($scope.checkForPathIntersection(pathToCheck, pathToCheck))
+					intersecting = true;
+				
+				return intersecting;
+			};
+			
+			$scope.checkForPathIntersection = function(path1, path2) {
+				var path1Data = path1.getArray();
+				var path2Data = path2.getArray();
+				for (var i = 0; i < path1Data.length; i++) {
+					var path1Point1 = path1Data[i];
+					if (i + 1 < path1Data.length)
+						var path1Point2 = path1Data[i + 1];
+					else
+						var path1Point2 = path1Data[0];
+					
+					for (var j = 0; j < path2Data.length; j++) {
+						var path2Point1 = path2Data[j];
+						if (j + 1 < path2Data.length)
+							var path2Point2 = path2Data[j + 1];
+						else
+							var path2Point2 = path2Data[0];
+						
+						if (path1Point1 != path2Point1 && path1Point2 != path2Point2 &&
+								path1Point1 != path2Point2 && path1Point2 != path2Point1 &&
+								$scope.checkForLineIntersection(path1Point1, path1Point2, path2Point1, path2Point2))
+							return true; 
+					}
+				}
+				
+				return false;
+			};
+			
+			$scope.checkForLineIntersection = function(latlng1, latlng2, latlng3, latlng4)	{
+			    var a1 = latlng2.lat() - latlng1.lat();
+			    var b1 = latlng1.lng() - latlng2.lng();
+			    var c1 = a1 * latlng1.lng() + b1 * latlng1.lat();
+			    
+			    var a2 = latlng4.lat() - latlng3.lat();
+			    var b2 = latlng3.lng() - latlng4.lng();
+			    var c2 = a2 * latlng3.lng() + b2 * latlng3.lat();
+
+			    var determinate = a1 * b2 - a2 * b1;
+
+			    var intersection;
+			    if (determinate != 0) {
+			        var x = (b2 * c1 - b1 * c2) / determinate;
+			        var y = (a1 * c2 - a2 * c1) / determinate;
+			        
+			        var intersect = new google.maps.LatLng(y, x);
+			        
+			        if ($scope.isInBoundedBox(latlng1, latlng2, intersect) && $scope.isInBoundedBox(latlng3, latlng4, intersect))
+			            intersection = intersect;
+			        else
+			            intersection = null;
+			    } else
+			        intersection = null; 
+			        
+			    return intersection;
+			};
+
+			$scope.isInBoundedBox = function(latlng1, latlng2, latlng3) {
+			    var betweenLats;
+			    var betweenLngs;
+			    
+			    if (latlng1.lat() < latlng2.lat())
+			        betweenLats = (latlng1.lat() <= latlng3.lat() && latlng2.lat() >= latlng3.lat());
+			    else
+			        betweenLats = (latlng1.lat() >= latlng3.lat() && latlng2.lat() <= latlng3.lat());
+			        
+			    if (latlng1.lng() < latlng2.lng())
+			        betweenLngs = (latlng1.lng() <= latlng3.lng() && latlng2.lng() >= latlng3.lng());
+			    else
+			    	betweenLngs = (latlng1.lng() >= latlng3.lng() && latlng2.lng() <= latlng3.lng());
+			    
+			    return (betweenLats && betweenLngs);
+			};
+		}
+	};
+});
+
 directives.directive('gazMap', function($location) {
 	
 	var blueIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png";
@@ -230,7 +547,7 @@ directives.directive('gazMap', function($location) {
 				}
 			});
 			
-			// add markers for locations and auto zoom and center map
+			// add markers/shapes for locations and auto zoom and center map
 			$scope.$watch("places", function() {
 				
 				$scope.markerMap = {};
@@ -250,20 +567,21 @@ directives.directive('gazMap', function($location) {
 					var place = $scope.places[i];		
 					var title = "";
 					if (place.prefName) title = place.prefName.title;
-					
 					if (place.prefLocation) {
-						if (angular.isNumber(place.prefLocation.coordinates[0]) && angular.isNumber(place.prefLocation.coordinates[1])) {
-							ll = new google.maps.LatLng(place.prefLocation.coordinates[0], place.prefLocation.coordinates[1]);
-							$scope.markers[i] = new google.maps.Marker({
-								position: ll,
-								title: title,
-								map: $scope.map,
-								icon: defaultIcon,
-								shadow: defaultShadow
-							});
-							$scope.markerMap[place.gazId] = $scope.markers[i];
-							bounds.extend(ll);
-							numLocations++;
+						if (place.prefLocation.coordinates) {
+							if (angular.isNumber(place.prefLocation.coordinates[0]) && angular.isNumber(place.prefLocation.coordinates[1])) {
+								ll = new google.maps.LatLng(place.prefLocation.coordinates[0], place.prefLocation.coordinates[1]);
+								$scope.markers[i] = new google.maps.Marker({
+									position: ll,
+									title: title,
+									map: $scope.map,
+									icon: defaultIcon,
+									shadow: defaultShadow
+								});
+								$scope.markerMap[place.gazId] = $scope.markers[i];
+								bounds.extend(ll);
+								numLocations++;
+							}
 						}
 						if (place.prefLocation.shape) {
 							var shapeCoordinates = [];
@@ -278,14 +596,14 @@ directives.directive('gazMap', function($location) {
 									counter++;
 								}
 							}
-							
+					
 							$scope.shapes[i] = new google.maps.Polygon({
 								paths: shapeCoordinates,
-								strokeColor: "##6786ad",
+								strokeColor: "#000000",
 								strokeOpacity: 0.7,
 								strokeWeight: 1.5,
-								fillColor: "##6786ad",
-							    fillOpacity: 0.25
+								fillColor: "#000000",
+							   	fillOpacity: 0.25
 							});
 							$scope.shapes[i].setMap($scope.map);
 							
@@ -303,8 +621,7 @@ directives.directive('gazMap', function($location) {
 				else {
 					$scope.map.setZoom(parseInt($scope.zoom));
 					$scope.map.setCenter(new google.maps.LatLng("0","0"));
-				}
-				
+				}				
 			});
 			
 			google.maps.Polygon.prototype.getBounds = function() {

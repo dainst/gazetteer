@@ -175,7 +175,7 @@
 		
 	</div>
 	
-	<script src='//maps.google.com/maps/api/js?key=${googleMapsApiKey}&amp;sensor=false&libraries=visualization'></script>
+	<script src='//maps.google.com/maps/api/js?key=${googleMapsApiKey}&amp;sensor=false&libraries=visualization,drawing'></script>
 	
 	<script src='../resources/js/lib/jquery.locationpicker.js'></script>
 	<script src="../resources/bootstrap/js/bootstrap.min.js"></script>

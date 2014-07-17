@@ -162,8 +162,7 @@ public class JsonPlaceDeserializer {
 			if (prefLocationNode != null) {
 				Location prefLocation = new Location();
 				JsonNode coordinatesNode = prefLocationNode.get("coordinates");
-				if (coordinatesNode != null && coordinatesNode.size() > 0) {
-					
+				if (coordinatesNode != null && coordinatesNode.size() > 0) {					
 					JsonNode latNode = coordinatesNode.get(0);
 					if (latNode == null)
 						throw new HttpMessageNotReadableException("Invalid location object. Attribute \"coordinates\" cannot be read.");
@@ -182,10 +181,12 @@ public class JsonPlaceDeserializer {
 						prefLocation.setConfidence(prefLocationNode.get("confidence").asInt());
 					
 					if (prefLocationNode.has("publicSite"))
-						prefLocation.setPublicSite(prefLocationNode.get("publicSite").asBoolean());
-					
-					if (prefLocationNode.has("shape")) {
-						JsonNode shapeNode = prefLocationNode.get("shape");
+						prefLocation.setPublicSite(prefLocationNode.get("publicSite").asBoolean());			
+				}
+				
+				if (prefLocationNode.has("shape")) {
+					JsonNode shapeNode = prefLocationNode.get("shape");
+					if (shapeNode.size() > 0) {
 						double[][][][] shapeCoordinates = new double[shapeNode.size()][][][];
 						for (int i = 0; i < shapeNode.size(); i++) {
 							shapeCoordinates[i] = new double[shapeNode.get(i).size()][][];
@@ -203,14 +204,13 @@ public class JsonPlaceDeserializer {
 						shape.setCoordinates(shapeCoordinates);
 						prefLocation.setShape(shape);
 					}
-					
-					place.setPrefLocation(prefLocation);
-					
-				} else {
-					place.setPrefLocation(null);
 				}
 				
-				logger.debug("updated location: {}", prefLocation);
+				if (prefLocation.getCoordinates() != null || prefLocation.getShape() != null) {
+					place.setPrefLocation(prefLocation);	
+					logger.debug("updated location: {}", prefLocation);
+				} else
+					place.setPrefLocation(null);
 			}
 			Set<Location> locations = new HashSet<Location>();
 			JsonNode locationsNode = objectNode.get("locations");
@@ -239,6 +239,26 @@ public class JsonPlaceDeserializer {
 				
 				if (locationNode.has("publicSite"))
 					location.setPublicSite(locationNode.get("publicSite").asBoolean());
+				
+				if (locationNode.has("shape")) {
+					JsonNode shapeNode = locationNode.get("shape");
+					double[][][][] shapeCoordinates = new double[shapeNode.size()][][][];
+					for (int i = 0; i < shapeNode.size(); i++) {
+						shapeCoordinates[i] = new double[shapeNode.get(i).size()][][];
+						for (int j = 0; j < shapeNode.get(i).size(); j++) {
+							shapeCoordinates[i][j] = new double[shapeNode.get(i).get(j).size()][];
+							for (int k = 0; k < shapeNode.get(i).get(j).size(); k++) {
+								shapeCoordinates[i][j][k] = new double[shapeNode.get(i).get(j).get(k).size()];
+								for (int l = 0; l < shapeNode.get(i).get(j).get(k).size(); l++) {
+									shapeCoordinates[i][j][k][l] = shapeNode.get(i).get(j).get(k).get(l).asDouble();
+								}
+							}
+						}
+					}
+					Shape shape = new Shape();
+					shape.setCoordinates(shapeCoordinates);
+					location.setShape(shape);
+				}
 				
 				logger.debug("updated location: {}", location);
 				

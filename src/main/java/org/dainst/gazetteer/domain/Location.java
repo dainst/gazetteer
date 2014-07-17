@@ -30,14 +30,14 @@ public class Location {
 	}
 	
 	public double getLat() {
-		if (coordinates.length >= 2)
+		if (coordinates != null && coordinates.length >= 2)
 			return coordinates[1];
 		else
 			return 0;
 	}
 	
 	public double getLng() {
-		if (coordinates.length >= 1)
+		if (coordinates != null && coordinates.length >= 1)
 			return coordinates[0];
 		else
 			return 0;
