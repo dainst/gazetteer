@@ -19,12 +19,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import org.dainst.gazetteer.domain.User;
 
 @Component
 public class JsonPlaceDeserializer {
@@ -330,9 +331,8 @@ public class JsonPlaceDeserializer {
 			if (principal instanceof User) {
 				User user = (User) principal;
 				if (user.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_REISESTIPENDIUM"))) {
-					if (objectNode.has("noteReisestipendium")) {
+					if (objectNode.has("noteReisestipendium"))
 						place.setNoteReisestipendium(objectNode.get("noteReisestipendium").asText());
-					}
 					Set<Comment> commentsReisestipendium = new HashSet<Comment>();
 					JsonNode commentsReisestipendiumNode = objectNode.get("commentsReisestipendium");
 					if (commentsReisestipendiumNode != null) for (JsonNode commentNode : commentsReisestipendiumNode) {
