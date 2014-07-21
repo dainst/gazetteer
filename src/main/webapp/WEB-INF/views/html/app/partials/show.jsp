@@ -131,7 +131,7 @@
 			</span>
 			<br />
 			</span>
-			<span ng-show="place.prefLocation.shape"><em><s:message code="domain.location.polygon" text="domain.location.polygon" /></em></span>
+			<em ng-show="place.prefLocation.shape"><s:message code="domain.location.polygon" text="domain.location.polygon" /></em>
 		</dd>
 		<dd ng-repeat="location in place.locations">
 			<em><s:message code="domain.location.latitude" text="domain.location.latitude" />: </em>{{location.coordinates[0]}},
@@ -150,7 +150,7 @@
 				<span gaz-translate="'location.confidence.'+location.confidence"></span>)
 			</span>
 			<br />
-			<em><s:message code="domain.location.polygon" text="domain.location.polygon" /> (<s:message code="domain.location.area" text="domain.location.area" />:</em> {{place.prefLocation.area}} km²<em>)</em>
+			<em ng-show="location.shape"><s:message code="domain.location.polygon" text="domain.location.polygon" /></em>
 		</dd>
 		<br/>
 	</span>

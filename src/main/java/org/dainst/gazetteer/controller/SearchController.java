@@ -81,6 +81,8 @@ public class SearchController {
 		
 		ElasticSearchPlaceQuery query = new ElasticSearchPlaceQuery(client);
 		if (q != null) {
+			q = q.replace("/", "\\/");
+			
 			if ("fuzzy".equals(type)) query.fuzzySearch(q);
 			else if ("prefix".equals(type)) query.prefixSearch(q);
 			else if ("queryString".equals(type)) query.queryStringSearch(q);

@@ -18,11 +18,13 @@
 		.shape-editor-btn {
 			margin-left: -3px;
 			border-radius: 0 0 0 0;
-			border: 1px solid #cccccc;
+			border-top: 1px solid #cccccc;
+			border-bottom: 1px solid #cccccc;
+			border-right: 1px solid #cccccc;
 			vertical-align: top;
 			text-align: center;
 			display: inline-block;
-			padding: 4px 9px;
+			padding: 4px 9px 4px 10px;
 		}
 	</style>
 	
