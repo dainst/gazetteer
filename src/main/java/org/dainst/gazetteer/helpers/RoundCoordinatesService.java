@@ -16,7 +16,7 @@ public class RoundCoordinatesService {
 		if (place.getType() != null && place.getType().equals("archaeological-site") &&
 				(user == null || !user.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER")))) {			
 			
-			if (!place.getPrefLocation().isPublicSite()) {
+			if (place.getPrefLocation() != null && !place.getPrefLocation().isPublicSite()) {
 				double lng = BigDecimal.valueOf(place.getPrefLocation().getLng()).setScale(decimalPlaces, BigDecimal.ROUND_HALF_UP).doubleValue();
 				double lat = BigDecimal.valueOf(place.getPrefLocation().getLat()).setScale(decimalPlaces, BigDecimal.ROUND_HALF_UP).doubleValue();				
 				place.getPrefLocation().setCoordinates(new double[] {lng, lat});			
