@@ -252,7 +252,15 @@ public class ChangeHistoryController {
 	
 	public static class ChangeDateComparator implements Comparator<PresentablePlaceChangeRecord> {
 		public int compare(PresentablePlaceChangeRecord changeRecord1, PresentablePlaceChangeRecord changeRecord2) {
-			return (int) (changeRecord2.getChangeDate().getTime() - changeRecord1.getChangeDate().getTime());
+			long time1 = changeRecord1.getChangeDate().getTime();
+			long time2 = changeRecord2.getChangeDate().getTime();
+			
+			if (time2 > time1)
+	            return 1;
+			else if (time1 > time2)
+	            return -1;
+			else
+	            return 0;
 		}
 	}
 	
