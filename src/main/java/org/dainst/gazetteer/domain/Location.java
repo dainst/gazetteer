@@ -62,7 +62,6 @@ public class Location {
 	@Override
 	public String toString() {
 		return "Location [coordinates=" + Arrays.toString(coordinates)
-				+ ", shape=" + shape.toString()
 				+ ", confidence=" + confidence + ", publicSite=" + publicSite + "]";
 	}
 
@@ -73,6 +72,8 @@ public class Location {
 		result = prime * result + confidence;
 		result = prime * result + (publicSite ? 1231 : 1237);
 		result = prime * result + Arrays.hashCode(coordinates);
+		if (shape != null)
+			result = prime * result + shape.hashCode();
 		return result;
 	}
 
@@ -90,6 +91,10 @@ public class Location {
 		if (publicSite != other.publicSite)
 			return false;
 		if (!Arrays.equals(coordinates, other.coordinates))
+			return false;
+		if ((shape == null) != (other.shape == null))
+			return false;
+		if (shape != null && !shape.equals(other.shape))
 			return false;
 		return true;
 	}

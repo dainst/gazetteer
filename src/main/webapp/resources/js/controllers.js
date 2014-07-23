@@ -478,7 +478,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 	};
 	
 	$scope.addLocation = function() {
-		if (!$scope.location.coordinates) return;
+		if (!$scope.location.coordinates && !$scope.location.shape) return;
 		if ($scope.place.locations == undefined)
 			$scope.place.locations = [];
 		$scope.place.locations.push($scope.location);

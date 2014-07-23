@@ -304,7 +304,7 @@
 								<option value="2" gaz-translate="'location.confidence.2'">
 								<option value="3" gaz-translate="'location.confidence.3'">
 							</select>
-							<div class="btn btn-primary plus" ng-click="addLocation()" ng-disabled="!location.coordinates">
+							<div class="btn btn-primary plus" ng-click="addLocation()" ng-disabled="!location.coordinates && !location.shape">
 								<i class="icon-plus icon-white"></i>
 							</div>
 							<br />
@@ -312,15 +312,21 @@
 								<input type="checkbox" ng-model="location.publicSite" />
 								<span gaz-translate="'location.public'"></span>
 							</label>
+							<br />
+							<div gaz-shape-editor shape="location.shape"></div>
 							<br ng-show="place.type == 'archaeological-site'"/>
 							<div ng-repeat="location in place.locations">
 								<br /><a ng-click="place.locations.splice($index,1)"><i class="icon-remove-sign"></i></a>
-								<em><s:message code="domain.location.latitude" text="domain.location.latitude" />:</em> {{location.coordinates[0]}},
-								<em><s:message code="domain.location.longitude" text="domain.location.longitude" />:</em> {{location.coordinates[1]}}
-								<br />(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />:</em>
-								<span gaz-translate="'location.confidence.'+location.confidence"></span><span ng-show="place.type == 'archaeological-site'">,
-								<em gaz-translate="'location.public'"></em>:
-								<span ng-show="location.publicSite"><s:message code="ui.yes" text="ui.yes" /></span><span ng-hide="location.publicSite"><s:message code="ui.no" text="ui.no" /></span></span>)
+								<span ng-show="location.coordinates">
+									<em><s:message code="domain.location.latitude" text="domain.location.latitude" />:</em> {{location.coordinates[0]}},
+									<em><s:message code="domain.location.longitude" text="domain.location.longitude" />:</em> {{location.coordinates[1]}}
+									<br />(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />:</em>
+									<span gaz-translate="'location.confidence.'+location.confidence"></span><span ng-show="place.type == 'archaeological-site'">,
+									<em gaz-translate="'location.public'"></em>:
+									<span ng-show="location.publicSite"><s:message code="ui.yes" text="ui.yes" /></span><span ng-hide="location.publicSite"><s:message code="ui.no" text="ui.no" /></span></span>)
+									<span ng-show="location.shape"><br /></span>
+								</span>								
+								<em ng-show="location.shape"><s:message code="domain.location.polygon" text="domain.location.polygon" /></em>
 							</div>
 						</div>
 					</div>

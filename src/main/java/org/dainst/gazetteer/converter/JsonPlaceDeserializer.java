@@ -217,29 +217,28 @@ public class JsonPlaceDeserializer {
 			JsonNode locationsNode = objectNode.get("locations");
 			if (locationsNode != null) for (JsonNode locationNode : locationsNode) {
 				Location location = new Location();					
-				locations.add(location);
 				JsonNode coordinatesNode = locationNode.get("coordinates");
-				if (coordinatesNode == null)
-					throw new HttpMessageNotReadableException("Invalid location object. Attribute \"coordinates\" has to be set.");
-				JsonNode latNode = coordinatesNode.get(0);
-				if (latNode == null)
-					throw new HttpMessageNotReadableException("Invalid location object. Attribute \"coordinates\" cannot be read.");
-				JsonNode longNode = coordinatesNode.get(1);
-				if (longNode == null)
-					throw new HttpMessageNotReadableException("Invalid location object. Attribute \"coordinates\" cannot be read.");
+				if (coordinatesNode != null && coordinatesNode.size() > 0) {
+					JsonNode latNode = coordinatesNode.get(0);
+					if (latNode == null)
+						throw new HttpMessageNotReadableException("Invalid location object. Attribute \"coordinates\" cannot be read.");
+					JsonNode longNode = coordinatesNode.get(1);
+					if (longNode == null)
+						throw new HttpMessageNotReadableException("Invalid location object. Attribute \"coordinates\" cannot be read.");
 	
-				double lat = latNode.asDouble(1000);
-				double lng = longNode.asDouble(1000);
-				if (lat > 90 || lat < -90 || lng > 180 || lng < -180)
-					throw new HttpMessageNotReadableException("Invalid location object. Attribute \"coordinates\" cannot be read.");
+					double lat = latNode.asDouble(1000);
+					double lng = longNode.asDouble(1000);
+					if (lat > 90 || lat < -90 || lng > 180 || lng < -180)
+						throw new HttpMessageNotReadableException("Invalid location object. Attribute \"coordinates\" cannot be read.");
 				
-				location.setCoordinates(new double[]{lng, lat});
+					location.setCoordinates(new double[]{lng, lat});
 				
-				if (locationNode.has("confidence"))
-					location.setConfidence(locationNode.get("confidence").asInt());
+					if (locationNode.has("confidence"))
+						location.setConfidence(locationNode.get("confidence").asInt());
 				
-				if (locationNode.has("publicSite"))
-					location.setPublicSite(locationNode.get("publicSite").asBoolean());
+					if (locationNode.has("publicSite"))
+						location.setPublicSite(locationNode.get("publicSite").asBoolean());
+				}
 				
 				if (locationNode.has("shape")) {
 					JsonNode shapeNode = locationNode.get("shape");
@@ -260,7 +259,7 @@ public class JsonPlaceDeserializer {
 					shape.setCoordinates(shapeCoordinates);
 					location.setShape(shape);
 				}
-				
+				locations.add(location);				
 				logger.debug("updated location: {}", location);
 				
 			}
@@ -348,7 +347,7 @@ public class JsonPlaceDeserializer {
 							comment.setUser(user.getUsername());
 						}
 						comment.setText(textNode.asText());
-						logger.debug("updated comment: {}", comment);				
+						logger.debug("updated comment: {}", comment);
 					}
 					place.setCommentsReisestipendium(commentsReisestipendium);
 				}

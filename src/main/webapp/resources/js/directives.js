@@ -193,6 +193,7 @@ directives.directive('gazShapeEditor', function($document) {
 				if (!$scope.initialized) {
 					google.maps.event.trigger($scope.map, 'resize');
 					$scope.initialized = true;
+					$scope.gmapsShapes = [];
 				
 					var drawingManager = new google.maps.drawing.DrawingManager({
 						drawingControl: true,

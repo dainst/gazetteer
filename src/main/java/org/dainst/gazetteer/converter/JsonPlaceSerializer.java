@@ -140,10 +140,12 @@ public class JsonPlaceSerializer {
 			ArrayNode locationsNode = mapper.createArrayNode();
 			for (Location location : place.getLocations()) {
 				ObjectNode locationNode = mapper.createObjectNode();
-				ArrayNode coordinatesNode = mapper.createArrayNode();
-				coordinatesNode.add(location.getLat());
-				coordinatesNode.add(location.getLng());
-				locationNode.put("coordinates", coordinatesNode);
+				if (location.getCoordinates() != null) {
+					ArrayNode coordinatesNode = mapper.createArrayNode();
+					coordinatesNode.add(location.getLat());
+					coordinatesNode.add(location.getLng());
+					locationNode.put("coordinates", coordinatesNode);
+				}
 				if (location.getShape() != null) {
 					ArrayNode shapeNode = mapper.createArrayNode();
 					for (int i = 0; i < location.getShape().getCoordinates().length; i++) {
