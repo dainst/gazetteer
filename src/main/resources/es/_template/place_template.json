@@ -146,6 +146,9 @@
 	                "type": "string",
 					"include_in_all": false
 	            },
+	            "relatedPlaces": {
+	            	"type": "string"
+	            },
 	            "type": {
 	                "type": "string"
 				},
