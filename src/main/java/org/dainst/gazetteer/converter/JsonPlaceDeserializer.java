@@ -180,9 +180,6 @@ public class JsonPlaceDeserializer {
 					
 					if (prefLocationNode.has("confidence"))
 						prefLocation.setConfidence(prefLocationNode.get("confidence").asInt());
-					
-					if (prefLocationNode.has("publicSite"))
-						prefLocation.setPublicSite(prefLocationNode.get("publicSite").asBoolean());			
 				}
 				
 				if (prefLocationNode.has("shape")) {
@@ -208,6 +205,9 @@ public class JsonPlaceDeserializer {
 				}
 				
 				if (prefLocation.getCoordinates() != null || prefLocation.getShape() != null) {
+					if (prefLocationNode.has("publicSite"))
+						prefLocation.setPublicSite(prefLocationNode.get("publicSite").asBoolean());			
+					
 					place.setPrefLocation(prefLocation);	
 					logger.debug("updated location: {}", prefLocation);
 				} else
@@ -235,9 +235,6 @@ public class JsonPlaceDeserializer {
 				
 					if (locationNode.has("confidence"))
 						location.setConfidence(locationNode.get("confidence").asInt());
-				
-					if (locationNode.has("publicSite"))
-						location.setPublicSite(locationNode.get("publicSite").asBoolean());
 				}
 				
 				if (locationNode.has("shape")) {
@@ -259,6 +256,9 @@ public class JsonPlaceDeserializer {
 					shape.setCoordinates(shapeCoordinates);
 					location.setShape(shape);
 				}
+				if (locationNode.has("publicSite"))
+					location.setPublicSite(locationNode.get("publicSite").asBoolean());
+				
 				locations.add(location);				
 				logger.debug("updated location: {}", location);
 				

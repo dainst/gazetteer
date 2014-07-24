@@ -281,13 +281,14 @@
 								<option value="2" gaz-translate="'location.confidence.2'">
 								<option value="3" gaz-translate="'location.confidence.3'">
 							</select>
+							<br /><br />
+							<div gaz-shape-editor shape="place.prefLocation.shape"></div>
 							<br />
 							<label class="checkbox inline" ng-show="place.type == 'archaeological-site'">
 								<input type="checkbox" ng-model="place.prefLocation.publicSite" />
 								<span gaz-translate="'location.public'"></span>
 							</label>
-							<br />
-							<div gaz-shape-editor shape="place.prefLocation.shape"></div>
+
 						</div>
 					</div>
 					
@@ -307,13 +308,14 @@
 							<div class="btn btn-primary plus" ng-click="addLocation()" ng-disabled="!location.coordinates && !location.shape">
 								<i class="icon-plus icon-white"></i>
 							</div>
+							<br /> <br />
+							<div gaz-shape-editor shape="location.shape"></div>
 							<br />
 							<label class="checkbox inline" ng-show="place.type == 'archaeological-site'">
 								<input type="checkbox" ng-model="location.publicSite" />
 								<span gaz-translate="'location.public'"></span>
 							</label>
-							<br />
-							<div gaz-shape-editor shape="location.shape"></div>
+
 							<br ng-show="place.type == 'archaeological-site'"/>
 							<div ng-repeat="location in place.locations">
 								<br /><a ng-click="place.locations.splice($index,1)"><i class="icon-remove-sign"></i></a>

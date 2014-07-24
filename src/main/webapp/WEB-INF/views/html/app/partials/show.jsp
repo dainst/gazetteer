@@ -133,28 +133,36 @@
 			</span>
 			<em ng-show="place.prefLocation.shape"><s:message code="domain.location.polygon" text="domain.location.polygon" /></em>
 		</dd>
-		<dd ng-repeat="location in place.locations">
-			<span ng-show="location.coordinates">
-				<em><s:message code="domain.location.latitude" text="domain.location.latitude" />: </em>{{location.coordinates[0]}},
-				<em><s:message code="domain.location.longitude" text="domain.location.longitude" />: </em>{{location.coordinates[1]}}
-				<span ng-show="place.type == 'archaeological-site' && !location.publicSite">
-					<sec:authorize access="hasRole('ROLE_USER')">
-						(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />:</em>
-						<span gaz-translate="'location.confidence.'+location.confidence"></span>)
-					</sec:authorize>
-					<sec:authorize access="!hasRole('ROLE_USER')">
-						(<span><s:message code="domain.location.rounded" text="domain.location.rounded" /> <i class="icon-info-sign" style="color: #5572a1;" gaz-tooltip="'ui.place.archaeological-site-info'"></i></span>)
-					</sec:authorize>
-				</span>
-				<span ng-hide="place.type == 'archaeological-site' && !location.publicSite">
-					(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />:</em>
-					<span gaz-translate="'location.confidence.'+location.confidence"></span>)
-				</span>
-				<br />
-			</span>
-			<em ng-show="location.shape"><s:message code="domain.location.polygon" text="domain.location.polygon" /></em>
-		</dd>
-		<br/>
+		<span ng-hide="!place.locations">
+			<br />
+			<dt><s:message code="domain.place.otherLocations" text="domain.place.otherLocations" /></dt>
+			<dd>
+				<ul>
+					<li ng-repeat="location in place.locations">
+						<span ng-show="location.coordinates">
+							<em><s:message code="domain.location.latitude" text="domain.location.latitude" />: </em>{{location.coordinates[0]}},
+							<em><s:message code="domain.location.longitude" text="domain.location.longitude" />: </em>{{location.coordinates[1]}}
+							<span ng-show="place.type == 'archaeological-site' && !location.publicSite">
+								<sec:authorize access="hasRole('ROLE_USER')">
+									(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />:</em>
+									<span gaz-translate="'location.confidence.'+location.confidence"></span>)
+								</sec:authorize>
+								<sec:authorize access="!hasRole('ROLE_USER')">
+									(<span><s:message code="domain.location.rounded" text="domain.location.rounded" /> <i class="icon-info-sign" style="color: #5572a1;" gaz-tooltip="'ui.place.archaeological-site-info'"></i></span>)
+								</sec:authorize>
+							</span>
+							<span ng-hide="place.type == 'archaeological-site' && !location.publicSite">
+								(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />:</em>
+								<span gaz-translate="'location.confidence.'+location.confidence"></span>)
+							</span>
+							<br />
+						</span>
+						<em ng-show="location.shape"><s:message code="domain.location.polygon" text="domain.location.polygon" /></em>
+					</li>
+				</ul>
+			</dd>
+			<br />
+		</span>
 	</span>
 	
 	<span ng-hide="!place.type">

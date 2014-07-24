@@ -12,7 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.dainst.gazetteer.converter.JsonPlaceDeserializer;
 import org.dainst.gazetteer.dao.PlaceRepository;
+import org.dainst.gazetteer.dao.UserRepository;
 import org.dainst.gazetteer.domain.Place;
+import org.dainst.gazetteer.domain.User;
+import org.dainst.gazetteer.helpers.ProtectLocationsService;
 import org.dainst.gazetteer.search.ElasticSearchPlaceQuery;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.search.facet.Facet;
@@ -23,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,6 +42,9 @@ public class SearchController {
 	
 	@Autowired
 	private PlaceRepository placeDao;
+	
+	@Autowired
+	private UserRepository userDao;
 	
 	@Autowired
 	private JsonPlaceDeserializer jsonPlaceDeserializer;
@@ -121,6 +128,14 @@ public class SearchController {
 		logger.debug("Places: {}", places);
 		Map<String,List<String[]>> facets = processFacets(query, locale);
 		
+		User user = null;
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal instanceof User)
+			user = (User) principal;
+		
+		for (Place place : places)
+			ProtectLocationsService.protectLocations(user, place);
+		
 		ModelAndView mav = new ModelAndView("place/list");
 		mav.addObject("places", places);
 		mav.addObject("facets", facets);
@@ -166,6 +181,14 @@ public class SearchController {
 		
 		List<Place> places = placesForList(result);
 		Map<String,List<String[]>> facets = processFacets(query, locale);
+		
+		User user = null;
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal instanceof User)
+			user = (User) principal;
+		
+		for (Place place : places)
+			ProtectLocationsService.protectLocations(user, place);
 		
 		ModelAndView mav = new ModelAndView("place/list");
 		mav.addObject("places", places);
@@ -216,6 +239,14 @@ public class SearchController {
 		logger.debug("Querying index returned: " + result.length + " places");
 		
 		List<Place> places = placesForList(result);
+		
+		User user = null;
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal instanceof User)
+			user = (User) principal;
+		
+		for (Place place : places)
+			ProtectLocationsService.protectLocations(user, place);
 		
 		ModelAndView mav = new ModelAndView("place/list");
 		mav.addObject("places", places);
