@@ -163,7 +163,8 @@ directives.directive('gazShapeEditor', function($document) {
 	return {
 		replace: true,
 		scope: {
-			shape: '='
+			shape: '=',
+			pos: '='
 		},
 		templateUrl: 'partials/shapeEditor.html',
 		controller: function($scope, $element) {
@@ -194,6 +195,9 @@ directives.directive('gazShapeEditor', function($document) {
 					google.maps.event.trigger($scope.map, 'resize');
 					$scope.initialized = true;
 					$scope.gmapsShapes = [];
+					
+					if ($scope.pos)
+						$scope.map.setCenter(new google.maps.LatLng($scope.pos[1], $scope.pos[0]));
 				
 					var drawingManager = new google.maps.drawing.DrawingManager({
 						drawingControl: true,

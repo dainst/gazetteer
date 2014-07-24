@@ -161,8 +161,8 @@
 					</li>
 				</ul>
 			</dd>
-			<br />
 		</span>
+		<br />
 	</span>
 	
 	<span ng-hide="!place.type">

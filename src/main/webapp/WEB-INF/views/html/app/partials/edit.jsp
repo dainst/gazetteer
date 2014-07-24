@@ -282,7 +282,7 @@
 								<option value="3" gaz-translate="'location.confidence.3'">
 							</select>
 							<br /><br />
-							<div gaz-shape-editor shape="place.prefLocation.shape"></div>
+							<div gaz-shape-editor shape="place.prefLocation.shape" pos="place.prefLocation.coordinates"></div>
 							<br />
 							<label class="checkbox inline" ng-show="place.type == 'archaeological-site'">
 								<input type="checkbox" ng-model="place.prefLocation.publicSite" />
@@ -309,7 +309,7 @@
 								<i class="icon-plus icon-white"></i>
 							</div>
 							<br /> <br />
-							<div gaz-shape-editor shape="location.shape"></div>
+							<div gaz-shape-editor shape="location.shape" pos="location.coordinates"></div>
 							<br />
 							<label class="checkbox inline" ng-show="place.type == 'archaeological-site'">
 								<input type="checkbox" ng-model="location.publicSite" />
