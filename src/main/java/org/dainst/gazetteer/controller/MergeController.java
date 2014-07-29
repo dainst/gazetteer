@@ -49,10 +49,12 @@ public class MergeController {
 		
 		for (String relatedPlaceId : newPlace.getRelatedPlaces()) {
 			Place relatedPlace = placeDao.findOne(relatedPlaceId);
-			relatedPlace.getRelatedPlaces().remove(id1);
-			relatedPlace.getRelatedPlaces().remove(id2);
-			relatedPlace.getRelatedPlaces().add(newPlace.getId());
-			placeDao.save(relatedPlace);
+			if(relatedPlace != null && relatedPlace.getRelatedPlaces() != null) {
+				relatedPlace.getRelatedPlaces().remove(id1);
+				relatedPlace.getRelatedPlaces().remove(id2);
+				relatedPlace.getRelatedPlaces().add(newPlace.getId());
+				placeDao.save(relatedPlace);
+			}
 		}
 		
 		List<Place> children = placeDao.findByParent(id1);
