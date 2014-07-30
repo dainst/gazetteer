@@ -464,10 +464,10 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 		if($scope.location) $scope.addLocation();
 		if($scope.identifier) $scope.addIdentifier();
 		if($scope.link) $scope.addLink();
-		if($scope.relatedPlace) {
+		if($scope.relatedPlace)
 			$scope.addRelatedPlace();
-			$scope.updateRelatedPlaces();
-		}
+		$scope.updateRelatedPlaces();
+
 		if($scope.commentReisestipendium) $scope.addCommentReisestipendium();
 		Place.save(
 			$scope.place,
@@ -572,7 +572,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 	};
 	
 	// update relatedPlaces attribute of place when relatedPlaces in scope changes
-	$scope.$watch("relatedPlaces.length", $scope.updateRelatedPlaces());
+	$scope.$watch("allRelatedPlaces.length", $scope.updateRelatedPlaces());
 }
 
 function MergeCtrl($scope, $rootScope, $routeParams, $location, Place, messages) {

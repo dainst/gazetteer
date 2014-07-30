@@ -360,7 +360,7 @@
 								<i class="icon-plus icon-white"></i>
 							</div>
 							<div ng-repeat="relatedPlace in allRelatedPlaces">
-								<a ng-click="relatedPlaces.splice($index,1)"><i class="icon-remove-sign"></i></a>
+								<a ng-click="allRelatedPlaces.splice($index,1)"><i class="icon-remove-sign"></i></a>
 								<div gaz-place-title place="relatedPlace"></div>
 							</div>
 						</div>
