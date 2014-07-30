@@ -175,6 +175,12 @@ public class DocumentController {
 			HttpServletResponse response) throws Exception {
 		
 		place.setId(idGenerator.generate(place));
+		Place existingPlace = placeDao.findOne(place.getId());
+		if (existingPlace == null) {
+			placeDao.save(place);
+		} else {
+			throw new IllegalStateException("Could not create place! Generated ID already exists: " + place.getId());
+		}
 		place = placeDao.save(place);
 		
 		changeRecordDao.save(createChangeRecord(place, "create"));

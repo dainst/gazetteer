@@ -45,7 +45,12 @@ public class MergeController {
 		
 		Place newPlace = merger.merge(place1, place2);
 		newPlace.setId(idGenerator.generate(newPlace));
-		placeDao.save(newPlace);
+		Place existingPlace = placeDao.findOne(newPlace.getId());
+		if (existingPlace == null) {
+			placeDao.save(newPlace);
+		} else {
+			throw new IllegalStateException("Could not merge places! Creation of place failed because generated ID already exists: " + newPlace.getId());
+		}
 		
 		for (String relatedPlaceId : newPlace.getRelatedPlaces()) {
 			Place relatedPlace = placeDao.findOne(relatedPlaceId);
