@@ -359,7 +359,7 @@
 							<div class="btn btn-primary plus" style="vertical-align:top" ng-click="addRelatedPlace()" ng-disabled="!relatedPlace['@id']">
 								<i class="icon-plus icon-white"></i>
 							</div>
-							<div ng-repeat="relatedPlace in relatedPlaces">
+							<div ng-repeat="relatedPlace in allRelatedPlaces">
 								<a ng-click="relatedPlaces.splice($index,1)"><i class="icon-remove-sign"></i></a>
 								<div gaz-place-title place="relatedPlace"></div>
 							</div>
@@ -415,18 +415,67 @@
            	<a class="btn" href="javascript:history.back()"><s:message code="ui.cancel" text="ui.cancel"/></a>
            	<button href="#deleteModal" class="btn btn-danger" data-toggle="modal"><s:message code="ui.delete" text="ui.delete"/></button>
 			<div class="modal hide fade" id="deleteModal">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal"
-						aria-hidden="true">&times;</button>
-					<h3><s:message code="ui.delete" text="ui.delete"/>?</h3>
-				</div>
-				<div class="modal-body">
-					<p><s:message code="ui.delete.really" text="ui.delete.really"/></p>
-				</div>
-				<div class="modal-footer">
-					<a href="#" class="btn" data-dismiss="modal" aria-hidden="true">Close</a>
-					<a ng-click="remove()" data-dismiss="modal" class="btn btn-danger"><s:message code="ui.delete" text="ui.delete"/></a>
-				</div>
+				<span ng-hide="(children && children.length > 0) || (relatedPlaces && relatedPlaces.length > 0)">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-hidden="true">&times;</button>
+						<h3><s:message code="ui.delete" text="ui.delete"/>?</h3>
+					</div>
+					<div class="modal-body">
+						<p><s:message code="ui.delete.really" text="ui.delete.really"/></p>
+					</div>
+					<div class="modal-footer">
+						<a href="#" class="btn" data-dismiss="modal" aria-hidden="true"><s:message code="ui.cancel" text="ui.cancel"/></a>
+						<a ng-click="remove()" data-dismiss="modal" class="btn btn-danger"><s:message code="ui.delete" text="ui.delete"/></a>
+					</div>
+				</span>
+				<span ng-show="(children && children.length > 0) || (relatedPlaces && relatedPlaces.length > 0)">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-hidden="true">&times;</button>
+						<h3><s:message code="ui.delete.notAllowed" text="ui.delete.notAllowed"/></h3>
+					</div>
+					<div class="modal-body">
+						<p><s:message code="ui.delete.children" text="ui.delete.children"/></p>
+						<span ng-hide="!children || children.length < 1">
+							<dd>
+								<em>{{totalChildren}} <s:message code="ui.children" text="ui.children"/>:</em>
+								<a gaz-tooltip="'ui.place.children.search'" ng-href="#!/search?q=parent:{{place.gazId}}" data-dismiss="modal"><i class="icon-search"></i></a>
+								<i class="icon-circle-arrow-left" ng-show="offsetChildren == 0"></i>
+								<a ng-click="prevChildren()" ng-hide="offsetChildren == 0"><i class="icon-circle-arrow-left"/></i></a>
+								<i class="icon-circle-arrow-right" ng-show="offsetChildren+10 >= totalChildren"></i>
+								<a ng-click="nextChildren()" ng-hide="offsetChildren+10 >= totalChildren"><i class="icon-circle-arrow-right"/></i></a>
+							</dd>
+							<dd>
+								<ul>
+									<li ng-repeat="child in children">
+										<div gaz-place-title place="child" data-dismiss="modal"></div>
+									</li>
+								</ul>
+							</dd>
+						</span>
+						<span ng-hide="!relatedPlaces || relatedPlaces.length < 1">
+							<dd>
+								<em>{{totalRelatedPlaces}} <s:message code="ui.relatedPlaces" text="ui.relatedPlaces"/>:</em>
+								<a gaz-tooltip="'ui.place.children.search'" ng-href="#!/search?q=relatedPlaces:{{place.gazId}}" data-dismiss="modal"><i class="icon-search"></i></a>
+								<i class="icon-circle-arrow-left" ng-show="offsetRelatedPlaces == 0"></i>
+								<a ng-click="prevRelatedPlaces()" ng-hide="offsetRelatedPlaces == 0"><i class="icon-circle-arrow-left"/></i></a>
+								<i class="icon-circle-arrow-right" ng-show="offsetRelatedPlaces+10 >= totalRelatedPlaces"></i>
+								<a ng-click="nextRelatedPlaces()" ng-hide="offsetRelatedPlaces+10 >= totalRelatedPlaces"><i class="icon-circle-arrow-right"/></i></a>
+							</dd>
+							<dd>
+								<ul>
+									<li ng-repeat="relatedPlace in relatedPlaces">
+										<div gaz-place-title place="relatedPlace" data-dismiss="modal"></div>
+									</li>
+								</ul>
+							</dd>
+						</span>
+					</div>
+					<div class="modal-footer">
+						<a href="#" class="btn" data-dismiss="modal" aria-hidden="true"><s:message code="ui.ok" text="ui.ok"/></a>
+					</div>
+				</span>
 			</div>
 	</div>
        	

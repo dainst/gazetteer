@@ -271,25 +271,20 @@ public class DocumentController {
 	public void deletePlace(@PathVariable String placeId,
 			HttpServletResponse response) {
 		
-		Place place = placeDao.findOne(placeId);
-		place.setDeleted(true);
-		placeDao.save(place);
-		
-		changeRecordDao.save(createChangeRecord(place, "delete"));
-		
 		List<Place> children = placeDao.findByParent(placeId);
-		for (Place child : children) {
-			child.setParent(null);
-			placeDao.save(child);
-		}
-		
 		List<Place> relatedPlaces = placeDao.findByRelatedPlaces(placeId);
-		for (Place relatedPlace : relatedPlaces) {
-			relatedPlace.getRelatedPlaces().remove(placeId);
-			placeDao.save(relatedPlace);
-		}
 		
-		response.setStatus(204);
+		if (children.size() > 0 || relatedPlaces.size() > 0) {
+			response.setStatus(409);
+		} else {
+			Place place = placeDao.findOne(placeId);
+			place.setDeleted(true);
+			placeDao.save(place);
+		
+			changeRecordDao.save(createChangeRecord(place, "delete"));
+		
+			response.setStatus(204);
+		}
 		
 	}
 

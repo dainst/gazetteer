@@ -343,8 +343,17 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 				$rootScope.loading--;
 			}
 			$rootScope.loading++;
-			Place.query({q: "relatedPlaces:" + $scope.place.gazId}, function(result) {
+			Place.query({q: "relatedPlaces:" + $scope.place.gazId, sort:"prefName.title.sort" }, function(result) {
+				$scope.totalRelatedPlaces = result.total;
 				$scope.relatedPlaces = result.result;
+				$scope.offsetRelatedPlaces = 0;
+				$rootScope.loading--;
+			}, function() {
+				$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
+				$rootScope.loading--;
+			});
+			Place.query({q: "relatedPlaces:" + $scope.place.gazId, sort:"prefName.title.sort", limit: "1000" }, function(result) {
+				$scope.allRelatedPlaces = result.result;
 				$rootScope.loading--;
 			}, function() {
 				$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
@@ -411,6 +420,30 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 		});
 	};
 	
+	$scope.prevRelatedPlaces = function() {
+		$scope.offsetRelatedPlaces -= 10;
+		$rootScope.loading++;
+		Place.query({q: "relatedPlaces:" + $scope.place.gazId, sort:"prefName.title.sort", offset:$scope.offsetRelatedPlaces }, function(result) {
+			$scope.relatedPlaces = result.result;
+			$rootScope.loading--;
+		}, function() {
+			$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
+			$rootScope.loading--;
+		});
+	};
+	
+	$scope.nextRelatedPlaces = function() {
+		$scope.offsetRelatedPlaces += 10;
+		$rootScope.loading++;
+		Place.query({q: "relatedPlaces:" + $scope.place.gazId, sort:"prefName.title.sort", offset:$scope.offsetRelatedPlaces }, function(result) {
+			$scope.relatedPlaces = result.result;
+			$rootScope.loading--;
+		}, function() {
+			$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
+			$rootScope.loading--;
+		});
+	};
+	
 	$scope.remove = function() {
 		Place.remove({ id: $scope.place.gazId }, function(data) {
 			window.scrollTo(0,0);
@@ -431,7 +464,10 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 		if($scope.location) $scope.addLocation();
 		if($scope.identifier) $scope.addIdentifier();
 		if($scope.link) $scope.addLink();
-		if($scope.relatedPlace) $scope.addRelatedPlace();
+		if($scope.relatedPlace) {
+			$scope.addRelatedPlace();
+			$scope.updateRelatedPlaces();
+		}
 		if($scope.commentReisestipendium) $scope.addCommentReisestipendium();
 		Place.save(
 			$scope.place,
@@ -503,12 +539,12 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 	
 	$scope.addRelatedPlace = function() {
 		if (!$scope.relatedPlace['@id']) return;
-		var relatedPlaces = $scope.relatedPlaces;
+		var relatedPlaces = $scope.allRelatedPlaces;
 		if (relatedPlaces == undefined)
 			relatedPlaces = [];
 		relatedPlaces.push($scope.relatedPlace);
 		$scope.relatedPlace = { "@id" : null };
-		$scope.relatedPlaces = relatedPlaces;
+		$scope.allRelatedPlaces = relatedPlaces;
 	};
 	
 	$scope.addCommentReisestipendium = function() {
@@ -528,14 +564,15 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 		return result;
 	};
 	
-	// update relatedPlaces attribute of place when relatedPlaces in scope changes
-	$scope.$watch("relatedPlaces.length", function() {
+	$scope.updateRelatedPlaces = function() {
 		if ($scope.place == undefined) return;
 		$scope.place.relatedPlaces = [];
-		for (var i in $scope.relatedPlaces)
-			$scope.place.relatedPlaces.push($scope.relatedPlaces[i]["@id"]);
-	});
-
+		for (var i in $scope.allRelatedPlaces)
+			$scope.place.relatedPlaces.push($scope.allRelatedPlaces[i]["@id"]);
+	};
+	
+	// update relatedPlaces attribute of place when relatedPlaces in scope changes
+	$scope.$watch("relatedPlaces.length", $scope.updateRelatedPlaces());
 }
 
 function MergeCtrl($scope, $rootScope, $routeParams, $location, Place, messages) {
