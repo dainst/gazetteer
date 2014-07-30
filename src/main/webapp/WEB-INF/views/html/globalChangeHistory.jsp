@@ -220,11 +220,20 @@
 					</sec:authorize>
 					
 					<c:choose>
-						<c:when test="${lastSorting eq 'placename'}">
-							<th><a href="globalChangeHistory?sort=placename&isDescending=<c:out value="${!isDescending}" />&startDate=<c:out value="${startDate}" />&endDate=<c:out value="${endDate}" />"><s:message code="domain.place" text="domain.place" /></a></th>
+						<c:when test="${lastSorting eq 'placeId'}">
+							<th><a href="globalChangeHistory?sort=placeId&isDescending=<c:out value="${!isDescending}" />&startDate=<c:out value="${startDate}" />&endDate=<c:out value="${endDate}" />"><s:message code="ui.changeHistory.placeId" text="ui.changeHistory.placeId" /></a></th>
 						</c:when>
 						<c:otherwise>
-							<th><a href="globalChangeHistory?sort=placename&isDescending=false&startDate=<c:out value="${startDate}" />&endDate=<c:out value="${endDate}" />"><s:message code="domain.place" text="domain.place" /></a></th>
+							<th><a href="globalChangeHistory?sort=placeId&isDescending=false&startDate=<c:out value="${startDate}" />&endDate=<c:out value="${endDate}" />"><s:message code="ui.changeHistory.placeId" text="ui.changeHistory.placeId" /></a></th>
+						</c:otherwise>
+					</c:choose>
+					
+					<c:choose>
+						<c:when test="${lastSorting eq 'placename'}">
+							<th><a href="globalChangeHistory?sort=placename&isDescending=<c:out value="${!isDescending}" />&startDate=<c:out value="${startDate}" />&endDate=<c:out value="${endDate}" />"><s:message code="ui.changeHistory.placename" text="ui.changeHistory.placename" /></a></th>
+						</c:when>
+						<c:otherwise>
+							<th><a href="globalChangeHistory?sort=placename&isDescending=false&startDate=<c:out value="${startDate}" />&endDate=<c:out value="${endDate}" />"><s:message code="ui.changeHistory.placename" text="ui.changeHistory.placename" /></a></th>
 						</c:otherwise>
 					</c:choose>
 					
@@ -245,12 +254,13 @@
 						<sec:authorize access="hasRole('ROLE_ADMIN')">
 							<td><a href="userManagement?showUser=${changeRecord.userId}">${changeRecord.username}</a></td>
 						</sec:authorize>
-						<td><a href="place/${changeRecord.placeId}">
+						<td><a href="place/${changeRecord.placeId}">${changeRecord.placeId}</a>
+						<td>
 							<c:choose>
 								<c:when test="${changeRecord.placename == null or changeRecord.placename eq ''}"><s:message code="domain.place.untitled" text="domain.place.untitled" /></c:when>
 								<c:otherwise>${changeRecord.placename}</c:otherwise>
 							</c:choose>
-						</a></td>
+						</td>
 						<td><s:message code="ui.changeHistory.changeType.${changeRecord.changeType}" text="ui.changeHistory.changeType.${changeRecord.changeType}" /></td>
 					</tr>
 	  			</c:forEach>
