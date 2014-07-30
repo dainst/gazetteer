@@ -9,7 +9,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 public class ProtectLocationsService {
 
-	private static int decimalPlaces = 1;
+	private static int decimalPlaces = 3;
 	
 	public static void protectLocations(User user, Place place) {
 		
