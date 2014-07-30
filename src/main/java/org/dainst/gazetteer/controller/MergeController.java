@@ -43,6 +43,7 @@ public class MergeController {
 		Place place1 = placeDao.findOne(id1);
 		Place place2 = placeDao.findOne(id2);
 		
+		// merge places
 		Place newPlace = merger.merge(place1, place2);
 		newPlace.setId(idGenerator.generate(newPlace));
 		Place existingPlace = placeDao.findOne(newPlace.getId());
@@ -52,6 +53,7 @@ public class MergeController {
 			throw new IllegalStateException("Could not merge places! Creation of place failed because generated ID already exists: " + newPlace.getId());
 		}
 		
+		// update IDs in related places
 		for (String relatedPlaceId : newPlace.getRelatedPlaces()) {
 			Place relatedPlace = placeDao.findOne(relatedPlaceId);
 			if(relatedPlace != null && relatedPlace.getRelatedPlaces() != null) {
@@ -62,12 +64,12 @@ public class MergeController {
 			}
 		}
 		
+		// update IDs in children
 		List<Place> children = placeDao.findByParent(id1);
 		for (Place child : children) {
 			child.setParent(newPlace.getId());
 			placeDao.save(child);
-		}
-		
+		}		
 		children = placeDao.findByParent(id2);
 		for (Place child : children) {
 			child.setParent(newPlace.getId());
