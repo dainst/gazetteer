@@ -170,7 +170,7 @@ public class AdminController {
 		Iterable<Place> places = placeDao.findAll();
 		for (Place place : places) {
 			try {
-				int size = placeDao.findByParent(place.getId()).size();
+				int size = calculatePlaceChildren(place);
 				place.setChildren(size);
 				placeDao.save(place);
 			} catch (NullPointerException e) {
@@ -182,6 +182,16 @@ public class AdminController {
 		logger.info(message);
 		
 		return message;
+	}
+	
+	private int calculatePlaceChildren(Place place) {
+		
+		List<Place> children = placeDao.findByParent(place.getId());
+		int size = children.size();
+		for (Place child : children)
+			size += calculatePlaceChildren(child);
+		
+		return size;
 	}
 	
 	@RequestMapping(value="/admin/generateLinks", method=RequestMethod.POST)
