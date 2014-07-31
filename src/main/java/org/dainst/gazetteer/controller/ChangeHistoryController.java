@@ -133,6 +133,12 @@ public class ChangeHistoryController {
 				else
 					Collections.sort(presChangeHistory, new UsernameComparator());			
 				break;
+			case "placeId":
+				if (isDescending)
+					Collections.sort(presChangeHistory, Collections.reverseOrder(new PlaceIdComparator()));
+				else
+					Collections.sort(presChangeHistory, new PlaceIdComparator());	
+				break;
 			case "placename":
 				if (isDescending)
 					Collections.sort(presChangeHistory, Collections.reverseOrder(new PlacenameComparator()));
@@ -267,6 +273,13 @@ public class ChangeHistoryController {
 	public static class UsernameComparator implements Comparator<PresentablePlaceChangeRecord> {
 		public int compare(PresentablePlaceChangeRecord changeRecord1, PresentablePlaceChangeRecord changeRecord2) {
 			return changeRecord1.getUsername().toLowerCase().compareTo(changeRecord2.getUsername().toLowerCase());
+
+		}
+	}
+	
+	public static class PlaceIdComparator implements Comparator<PresentablePlaceChangeRecord> {
+		public int compare(PresentablePlaceChangeRecord changeRecord1, PresentablePlaceChangeRecord changeRecord2) {
+			return changeRecord1.getPlaceId().toLowerCase().compareTo(changeRecord2.getPlaceId().toLowerCase());
 
 		}
 	}

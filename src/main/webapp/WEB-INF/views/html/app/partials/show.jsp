@@ -101,8 +101,16 @@
 	<span ng-hide="!relatedPlaces || relatedPlaces.length < 1">
 		<dt><s:message code="domain.place.relatedPlaces" text="domain.place.relatedPlaces" /></dt>
 		<dd>
+			<em><s:message code="ui.numberOfPlaces" text="ui.numberOfPlaces" arguments="{{totalRelatedPlaces}}" />:</em>
+			<a gaz-tooltip="'ui.place.children.search'" ng-href="#!/search?q=relatedPlaces:{{place.gazId}}"><i class="icon-search"></i></a>
+			<i class="icon-circle-arrow-left" ng-show="offsetRelatedPlaces == 0"></i>
+			<a ng-click="prevRelatedPlaces()" ng-hide="offsetRelatedPlaces == 0"><i class="icon-circle-arrow-left"/></i></a>
+			<i class="icon-circle-arrow-right" ng-show="offsetRelatedPlaces+10 >= totalRelatedPlaces"></i>
+			<a ng-click="nextRelatedPlaces()" ng-hide="offsetRelatedPlaces+10 >= totalRelatedPlaces"><i class="icon-circle-arrow-right"/></i></a>
+		</dd>
+		<dd>
 			<ul>
-				<li ng-repeat="relatedPlace in relatedPlaces | orderBy:'prefName.title'">
+				<li ng-repeat="relatedPlace in relatedPlaces">
 					<div gaz-place-title place="relatedPlace"></div>
 				</li>
 			</ul>

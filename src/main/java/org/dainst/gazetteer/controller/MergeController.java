@@ -1,17 +1,22 @@
 package org.dainst.gazetteer.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.dainst.gazetteer.dao.PlaceChangeRecordRepository;
 import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.domain.Place;
+import org.dainst.gazetteer.domain.PlaceChangeRecord;
+import org.dainst.gazetteer.domain.User;
 import org.dainst.gazetteer.helpers.IdGenerator;
 import org.dainst.gazetteer.helpers.Merger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +30,9 @@ public class MergeController {
 	
 	@Autowired
 	private PlaceRepository placeDao;
+	
+	@Autowired
+	private PlaceChangeRecordRepository changeRecordDao;
 	
 	@Autowired
 	private Merger merger;
@@ -82,7 +90,11 @@ public class MergeController {
 		place2.setReplacedBy(newPlace.getId());
 		place2.setDeleted(true);
 		placeDao.save(place2);
-		
+
+		changeRecordDao.save(createChangeRecord(place1, "replace"));
+		changeRecordDao.save(createChangeRecord(place2, "replace"));		
+		changeRecordDao.save(createChangeRecord(newPlace, "merge"));
+	
 		logger.debug("finished merging " + place1.getId() + " and " + place2.getId() + " to " + newPlace.getId());
 		
 		response.setStatus(201);
@@ -93,6 +105,19 @@ public class MergeController {
 		mav.addObject("baseUri", baseUri);
 		return mav;
 		
+	}
+	
+	private PlaceChangeRecord createChangeRecord(Place place, String changeType) {
+		
+		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		PlaceChangeRecord changeRecord = new PlaceChangeRecord();
+		changeRecord.setUserId(user.getId());
+		changeRecord.setPlaceId(place.getId());
+		changeRecord.setChangeType(changeType);
+		changeRecord.setChangeDate(new Date());
+		
+		return changeRecord;
 	}
 	
 }
