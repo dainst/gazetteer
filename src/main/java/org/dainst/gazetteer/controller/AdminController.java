@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -167,7 +168,8 @@ public class AdminController {
 		
 		long time = System.currentTimeMillis();
 		
-		Iterable<Place> places = placeDao.findAll();
+		List<Place> places = placeDao.findByTypeAndDeletedIsFalse("continent",new Sort("prefName"));
+		
 		for (Place place : places) {
 			try {
 				int size = calculatePlaceChildren(place);
@@ -186,10 +188,12 @@ public class AdminController {
 	
 	private int calculatePlaceChildren(Place place) {
 		
-		List<Place> children = placeDao.findByParent(place.getId());
+		List<Place> children = placeDao.findByParentAndDeletedIsFalse(place.getId());
 		int size = children.size();
 		for (Place child : children)
 			size += calculatePlaceChildren(child);
+		place.setChildren(size);
+		placeDao.save(place);
 		
 		return size;
 	}
