@@ -197,7 +197,7 @@ directives.directive('gazShapeEditor', function($document) {
 					$scope.gmapsShapes = [];
 					
 					if ($scope.pos)
-						$scope.map.setCenter(new google.maps.LatLng($scope.pos[1], $scope.pos[0]));
+						$scope.map.setCenter(new google.maps.LatLng($scope.pos[0], $scope.pos[1]));
 				
 					var drawingManager = new google.maps.drawing.DrawingManager({
 						drawingControl: true,

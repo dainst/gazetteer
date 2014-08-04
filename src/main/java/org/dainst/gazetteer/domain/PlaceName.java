@@ -16,8 +16,6 @@ public class PlaceName {
 	
 	private boolean transliterated = false;
 	
-	private int ordering = 0;
-	
 	public PlaceName() {
 	}
 	
@@ -68,14 +66,6 @@ public class PlaceName {
 
 	public void setTransliterated(boolean transliterated) {
 		this.transliterated = transliterated;
-	}
-
-	public int getOrdering() {
-		return ordering;
-	}
-
-	public void setOrdering(int ordering) {
-		this.ordering = ordering;
 	}
 
 	@Override
