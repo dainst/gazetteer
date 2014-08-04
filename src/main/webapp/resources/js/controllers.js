@@ -327,7 +327,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 	
 	$rootScope.title = "";
 	$rootScope.subtitle = "";
-	
+
 	if ($routeParams.id) {
 		$rootScope.loading++;
 		$scope.place = Place.get({
@@ -336,6 +336,19 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 			if (result.deleted) {
 				$rootScope.addAlert(messages["ui.place.deleted"], null, "error");
 			}
+			$scope.prefLocationCoordinates = [];
+			if ($scope.place && $scope.place.prefLocation && $scope.place.prefLocation.coordinates) {
+				$scope.prefLocationCoordinates = $scope.place.prefLocation.coordinates.slice();
+				$scope.prefLocationCoordinates.reverse();
+			}
+			$scope.$watch("prefLocationCoordinates", function() {
+				if ($scope.place) {
+					if (!$scope.place.prefLocation)
+						$scope.place.prefLocation = { confidence: 0, coordinates: [] };
+					$scope.place.prefLocation.coordinates = $scope.prefLocationCoordinates.slice();
+					$scope.place.prefLocation.coordinates.reverse();
+				}
+			});
 			if (result.parent) {
 				$rootScope.loading++;
 				var parentId = getIdFromUri(result.parent);
@@ -374,7 +387,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 		}, function() {
 			$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
 			$rootScope.loading--;
-		});
+		});		
 	} else
 		$scope.place = {};
 	
@@ -387,6 +400,11 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 	// show live changes of location
 	$scope.$watch("place.prefLocation.coordinates", function() {
 		if ($scope.place && $scope.place.prefLocation)
+			$rootScope.activePlaces = [$scope.place];
+	});
+	
+	$scope.$watch("place.prefLocation.shape", function() {
+		if ($scope.place && scope.place.prefLocation)
 			$rootScope.activePlaces = [$scope.place];
 	});
 	
@@ -515,6 +533,8 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 	
 	$scope.addLocation = function() {
 		if (!$scope.location.coordinates && !$scope.location.shape) return;
+		if ($scope.location.coordinates)
+			$scope.location.coordinates.reverse();
 		if ($scope.place.locations == undefined)
 			$scope.place.locations = [];
 		$scope.place.locations.push($scope.location);

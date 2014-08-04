@@ -122,8 +122,8 @@
 		<dt><s:message code="domain.place.locations" text="domain.place.locations" /></dt>
 		<dd>
 			<span ng-show="place.prefLocation.coordinates">
-				<em><s:message code="domain.location.latitude" text="domain.location.latitude" />: </em>{{place.prefLocation.coordinates[0]}},
-				<em><s:message code="domain.location.longitude" text="domain.location.longitude" />: </em>{{place.prefLocation.coordinates[1]}}
+				<em><s:message code="domain.location.latitude" text="domain.location.latitude" />: </em>{{place.prefLocation.coordinates[1]}},
+				<em><s:message code="domain.location.longitude" text="domain.location.longitude" />: </em>{{place.prefLocation.coordinates[0]}}
 				<span ng-show="place.type == 'archaeological-site' && !place.prefLocation.publicSite">
 					<sec:authorize access="hasRole('ROLE_USER')">
 						(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />:</em>
@@ -148,8 +148,8 @@
 				<ul>
 					<li ng-repeat="location in place.locations">
 						<span ng-show="location.coordinates">
-							<em><s:message code="domain.location.latitude" text="domain.location.latitude" />: </em>{{location.coordinates[0]}},
-							<em><s:message code="domain.location.longitude" text="domain.location.longitude" />: </em>{{location.coordinates[1]}}
+							<em><s:message code="domain.location.latitude" text="domain.location.latitude" />: </em>{{location.coordinates[1]}},
+							<em><s:message code="domain.location.longitude" text="domain.location.longitude" />: </em>{{location.coordinates[0]}}
 							<span ng-show="place.type == 'archaeological-site' && !location.publicSite">
 								<sec:authorize access="hasRole('ROLE_USER')">
 									(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />:</em>

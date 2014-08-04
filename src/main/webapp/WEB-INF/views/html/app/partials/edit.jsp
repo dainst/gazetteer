@@ -274,7 +274,7 @@
 							<s:message code="domain.place.prefLocation" text="domain.place.prefLocation" />
 						</label>
 						<div class="controls">
-							<div gaz-location-picker coordinates="place.prefLocation.coordinates"></div>
+							<div gaz-location-picker coordinates="prefLocationCoordinates"></div>
 							<select ng-model="place.prefLocation.confidence" class="input-small">
 								<option value="0" gaz-translate="'location.confidence.0'">
 								<option value="1" gaz-translate="'location.confidence.1'">
@@ -320,8 +320,8 @@
 							<div ng-repeat="location in place.locations">
 								<br /><a ng-click="place.locations.splice($index,1)"><i class="icon-remove-sign"></i></a>
 								<span ng-show="location.coordinates">
-									<em><s:message code="domain.location.latitude" text="domain.location.latitude" />:</em> {{location.coordinates[0]}},
-									<em><s:message code="domain.location.longitude" text="domain.location.longitude" />:</em> {{location.coordinates[1]}}
+									<em><s:message code="domain.location.latitude" text="domain.location.latitude" />:</em> {{location.coordinates[1]}},
+									<em><s:message code="domain.location.longitude" text="domain.location.longitude" />:</em> {{location.coordinates[0]}}
 									<br />(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />:</em>
 									<span gaz-translate="'location.confidence.'+location.confidence"></span><span ng-show="place.type == 'archaeological-site'">,
 									<em gaz-translate="'location.public'"></em>:

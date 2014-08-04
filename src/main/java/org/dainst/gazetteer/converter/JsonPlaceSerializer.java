@@ -105,9 +105,9 @@ public class JsonPlaceSerializer {
 		if (place.getPrefLocation() != null) {
 			ObjectNode locationNode = mapper.createObjectNode();
 			if (place.getPrefLocation().getCoordinates() != null) {
-				ArrayNode coordinatesNode = mapper.createArrayNode();			
-				coordinatesNode.add(place.getPrefLocation().getLat());
+				ArrayNode coordinatesNode = mapper.createArrayNode();
 				coordinatesNode.add(place.getPrefLocation().getLng());
+				coordinatesNode.add(place.getPrefLocation().getLat());
 				locationNode.put("coordinates", coordinatesNode);
 			}
 			if (place.getPrefLocation().getShape() != null) {
@@ -142,8 +142,8 @@ public class JsonPlaceSerializer {
 				ObjectNode locationNode = mapper.createObjectNode();
 				if (location.getCoordinates() != null) {
 					ArrayNode coordinatesNode = mapper.createArrayNode();
-					coordinatesNode.add(location.getLat());
 					coordinatesNode.add(location.getLng());
+					coordinatesNode.add(location.getLat());
 					locationNode.put("coordinates", coordinatesNode);
 				}
 				if (location.getShape() != null) {

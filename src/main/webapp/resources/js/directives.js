@@ -197,7 +197,7 @@ directives.directive('gazShapeEditor', function($document) {
 					$scope.gmapsShapes = [];
 					
 					if ($scope.pos)
-						$scope.map.setCenter(new google.maps.LatLng($scope.pos[0], $scope.pos[1]));
+						$scope.map.setCenter(new google.maps.LatLng($scope.pos[1], $scope.pos[0]));
 				
 					var drawingManager = new google.maps.drawing.DrawingManager({
 						drawingControl: true,
@@ -581,7 +581,7 @@ directives.directive('gazMap', function($location) {
 					if (place.prefLocation) {
 						if (place.prefLocation.coordinates) {
 							if (angular.isNumber(place.prefLocation.coordinates[0]) && angular.isNumber(place.prefLocation.coordinates[1])) {
-								ll = new google.maps.LatLng(place.prefLocation.coordinates[0], place.prefLocation.coordinates[1]);
+								ll = new google.maps.LatLng(place.prefLocation.coordinates[1], place.prefLocation.coordinates[0]);
 								$scope.markers[i] = new google.maps.Marker({
 									position: ll,
 									title: title,

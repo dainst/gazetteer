@@ -164,15 +164,15 @@ public class JsonPlaceDeserializer {
 				Location prefLocation = new Location();
 				JsonNode coordinatesNode = prefLocationNode.get("coordinates");
 				if (coordinatesNode != null && coordinatesNode.size() > 0) {					
-					JsonNode latNode = coordinatesNode.get(0);
-					if (latNode == null)
-						throw new HttpMessageNotReadableException("Invalid location object. Attribute \"coordinates\" cannot be read.");
-					JsonNode longNode = coordinatesNode.get(1);
+					JsonNode longNode = coordinatesNode.get(0);
 					if (longNode == null)
 						throw new HttpMessageNotReadableException("Invalid location object. Attribute \"coordinates\" cannot be read.");
+					JsonNode latNode = coordinatesNode.get(1);
+					if (latNode == null)
+						throw new HttpMessageNotReadableException("Invalid location object. Attribute \"coordinates\" cannot be read.");					
 		
-					double lat = latNode.asDouble(1000);
 					double lng = longNode.asDouble(1000);
+					double lat = latNode.asDouble(1000);					
 					if (lat > 90 || lat < -90 || lng > 180 || lng < -180)
 						throw new HttpMessageNotReadableException("Invalid location object. Attribute \"coordinates\" cannot be read.");
 					
@@ -219,15 +219,15 @@ public class JsonPlaceDeserializer {
 				Location location = new Location();					
 				JsonNode coordinatesNode = locationNode.get("coordinates");
 				if (coordinatesNode != null && coordinatesNode.size() > 0) {
-					JsonNode latNode = coordinatesNode.get(0);
-					if (latNode == null)
-						throw new HttpMessageNotReadableException("Invalid location object. Attribute \"coordinates\" cannot be read.");
-					JsonNode longNode = coordinatesNode.get(1);
+					JsonNode longNode = coordinatesNode.get(0);
 					if (longNode == null)
 						throw new HttpMessageNotReadableException("Invalid location object. Attribute \"coordinates\" cannot be read.");
+					JsonNode latNode = coordinatesNode.get(1);
+					if (latNode == null)
+						throw new HttpMessageNotReadableException("Invalid location object. Attribute \"coordinates\" cannot be read.");					
 	
-					double lat = latNode.asDouble(1000);
 					double lng = longNode.asDouble(1000);
+					double lat = latNode.asDouble(1000);					
 					if (lat > 90 || lat < -90 || lng > 180 || lng < -180)
 						throw new HttpMessageNotReadableException("Invalid location object. Attribute \"coordinates\" cannot be read.");
 				
