@@ -30,18 +30,15 @@
 	<dd>
 		<em><s:message code="domain.place.prefName" text="domain.place.prefName"/>: </em>
 		{{place.prefName.title}}
-		<em ng-show="place.prefName.ancient && !place.prefName.transliterated">
+		<span ng-show="place.prefName.ancient">
 			(<small gaz-translate="'place.name.ancient'"></small>)
-		</em>
-		<em ng-show="!place.prefName.ancient && place.prefName.transliterated">
-			(<small gaz-translate="'place.name.transliterated'"></small>)
-		</em>
-		<em ng-show="place.prefName.ancient && place.prefName.transliterated">
-			(<small gaz-translate="'place.name.ancient'"></small>/<small gaz-translate="'place.name.transliterated'"></small>)
-		</em>
+		</span>
 		<small ng-show="place.prefName.language">
 			<em gaz-translate="'languages.' + place.prefName.language"></em>
 		</small>
+		<em ng-show="place.prefName.transliterated">
+			(<small gaz-translate="'place.name.transliterated'"></small>)
+		</em>
 	</dd>
 	<dd ng-repeat="placename in place.names | orderBy:['language','title']">
 		{{placename.title}}
