@@ -20,7 +20,7 @@ messages.factory('messages', function(){
 		"ui.place.save.failure.parentError": "A place may not fall within itself or a place it contains",
 		"ui.place.remove.success": "Successfully deleted place",
 		"ui.place.remove.failure": "Could not delete place",
-		"ui.place.archaeological-site-info": "Please log in to gain access to the exact coordinates.",
+		"ui.place.protected-site-info": "Please log in to gain access to the exact coordinates.",
 		"ui.thesaurus": "Thesaurus",
 		"ui.link.tooltip": "Link to current place",
 		"ui.place.deleted": "This place has been deleted",

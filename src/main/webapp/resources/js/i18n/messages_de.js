@@ -20,7 +20,7 @@ messages.factory('messages', function(){
 		"ui.place.save.failure.parentError": "Ein Ort darf nicht sein eigener untergeordneter Ort oder derjenige eines Ortes sein, den er enthält",
 		"ui.place.remove.success": "Ort erfolgreich gelöscht",
 		"ui.place.remove.failure": "Ort konnte nicht gelöscht werden",
-		"ui.place.archaeological-site-info": "Bitte loggen Sie sich ein, um Zugriff auf die exakten Koordinaten zu erhalten.",
+		"ui.place.protected-site-info": "Bitte loggen Sie sich ein, um Zugriff auf die exakten Koordinaten zu erhalten.",
 		"ui.thesaurus": "Thesaurus",
 		"ui.link.tooltip": "Mit aktuellem Ort verknüpfen",
 		"ui.place.deleted": "Dieser Ort wurde gelöscht",

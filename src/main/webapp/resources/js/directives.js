@@ -151,6 +151,9 @@ directives.directive('gazPlaceTypePicker', function($document) {
 			};
 			
 			$scope.selectType = function(placeType) {
+				if (placeType == "archaeological-site" && $scope.place.type != "archaeological-site")
+					$scope.place.prefLocation.publicSite = false;
+				
 				$scope.place.type = placeType;
 				$scope.showOverlay = false;
 			};

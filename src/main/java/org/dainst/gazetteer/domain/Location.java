@@ -11,7 +11,7 @@ public class Location {
 	
 	private int confidence = 0;
 
-	private boolean publicSite = false;
+	private boolean publicSite = true;
 	
 	public Location() {
 		

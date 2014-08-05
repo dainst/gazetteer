@@ -349,6 +349,8 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 					$scope.place.prefLocation.coordinates.reverse();
 				}
 			});
+			if (!$scope.place.prefLocation && $scope.place.type != "archaeological-site")
+				$scope.place.prefLocation = { publicSite : true };
 			if (result.parent) {
 				$rootScope.loading++;
 				var parentId = getIdFromUri(result.parent);
@@ -388,8 +390,8 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 			$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
 			$rootScope.loading--;
 		});		
-	} else
-		$scope.place = {};
+	} else 
+		$scope.place = { prefLocation: { publicSite: true } };
 	
 	// show live changes of title
 	$scope.$watch("place.prefName.title", function() {
@@ -406,6 +408,10 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 	$scope.$watch("place.prefLocation.shape", function() {
 		if ($scope.place && scope.place.prefLocation)
 			$rootScope.activePlaces = [$scope.place];
+	});
+	
+	$scope.$watch("place.type", function() {
+		$scope.location.publicSite = $scope.place.prefLocation.publicSite;		
 	});
 	
 	// show live changes of id
@@ -477,6 +483,8 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 	
 	$scope.save = function() {
 		$rootScope.loading++;
+		if($scope.place.prefLocation && !$scope.place.prefLocation.coordinates && !$scope.place.prefLocation.shape)
+			$scope.place.prefLocation = undefined;
 		if($scope.comment) $scope.addComment();
 		if($scope.name) $scope.addName();
 		if($scope.location) $scope.addLocation();

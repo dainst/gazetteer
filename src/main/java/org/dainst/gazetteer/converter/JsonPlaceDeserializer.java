@@ -206,7 +206,9 @@ public class JsonPlaceDeserializer {
 				
 				if (prefLocation.getCoordinates() != null || prefLocation.getShape() != null) {
 					if (prefLocationNode.has("publicSite"))
-						prefLocation.setPublicSite(prefLocationNode.get("publicSite").asBoolean());			
+						prefLocation.setPublicSite(prefLocationNode.get("publicSite").asBoolean());
+					else if (place.getType().equals("archaeological-site"))
+						prefLocation.setPublicSite(false);
 					
 					place.setPrefLocation(prefLocation);	
 					logger.debug("updated location: {}", prefLocation);

@@ -13,8 +13,7 @@ public class ProtectLocationsService {
 	
 	public static void protectLocations(User user, Place place) {
 		
-		if (place.getType() != null && place.getType().equals("archaeological-site") &&
-				(user == null || !user.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER")))) {			
+		if (user == null || !user.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER"))) {			
 			
 			if (place.getPrefLocation() != null && !place.getPrefLocation().isPublicSite()) {
 				double lng = BigDecimal.valueOf(place.getPrefLocation().getLng()).setScale(decimalPlaces, BigDecimal.ROUND_HALF_UP).doubleValue();
