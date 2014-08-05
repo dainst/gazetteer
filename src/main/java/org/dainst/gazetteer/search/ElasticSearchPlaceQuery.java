@@ -88,7 +88,7 @@ public class ElasticSearchPlaceQuery {
 		// places with many children should get a higher score
 		
 		queryBuilder = QueryBuilders.functionScoreQuery(queryBuilder)
-				.add(new ScriptScoreFunctionBuilder().script("_score + (doc['children'].value / 100)"));
+				.add(new ScriptScoreFunctionBuilder().script("_score + (1 - 1 / ( 0.001 * doc['children'].value + 1 ) )"));
 		return this;
 	}
 	
