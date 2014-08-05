@@ -399,25 +399,26 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 			$rootScope.title = $scope.place.prefName.title;
 	});
 	
-	// show live changes of location
+	// show live changes of location coordinates
 	$scope.$watch("place.prefLocation.coordinates", function() {
 		if ($scope.place && $scope.place.prefLocation)
 			$rootScope.activePlaces = [$scope.place];
 	});
 	
+	// show live changes of location shape
 	$scope.$watch("place.prefLocation.shape", function() {
-		if ($scope.place && scope.place.prefLocation)
+		if ($scope.place && $scope.place.prefLocation)
 			$rootScope.activePlaces = [$scope.place];
-	});
-	
-	$scope.$watch("place.type", function() {
-		$scope.location.publicSite = $scope.place.prefLocation.publicSite;		
 	});
 	
 	// show live changes of id
 	$scope.$watch("place.gazId", function() {
 		if ($scope.place && $scope.place["@id"])
 			$rootScope.subtitle = $scope.place["@id"]	+ '<a data-toggle="modal" href="#copyUriModal"><i class="icon-share" style="font-size:0.7em"></i></a>';
+	});
+	
+	$scope.$watch("place.type", function() {
+		$scope.location.publicSite = $scope.place.prefLocation.publicSite;		
 	});
 	
 	$scope.prevChildren = function() {
