@@ -47,7 +47,8 @@
 							"boost": 2.0,
 							"fields": {
 								"title": {
-									"type" : "string"
+									"type" : "string",
+									"omit_norms": true
 								},
 	                    		"sort" : {
 									"type" : "string",
@@ -135,7 +136,8 @@
 							"include_in_all": false
 	                    },
 	                    "title": {
-	                        "type": "string"
+	                        "type": "string",
+							"omit_norms": true
 	                    }
 	                }
 	            },
