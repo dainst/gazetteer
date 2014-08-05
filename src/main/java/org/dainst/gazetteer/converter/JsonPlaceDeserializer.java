@@ -260,6 +260,8 @@ public class JsonPlaceDeserializer {
 				}
 				if (locationNode.has("publicSite"))
 					location.setPublicSite(locationNode.get("publicSite").asBoolean());
+				else if (place.getType().equals("archaeological-site"))
+					location.setPublicSite(false);
 				
 				locations.add(location);				
 				logger.debug("updated location: {}", location);
