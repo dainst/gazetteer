@@ -42,18 +42,15 @@
 	</dd>
 	<dd ng-repeat="placename in place.names | orderBy:['language','title']">
 		{{placename.title}}
-		<em ng-show="placename.ancient && !placename.transliterated">
+		<span ng-show="placename.ancient">
 			(<small gaz-translate="'place.name.ancient'"></small>)
-		</em>
-		<em ng-show="!placename.ancient && placename.transliterated">
-			(<small gaz-translate="'place.name.transliterated'"></small>)
-		</em>
-		<em ng-show="placename.ancient && placename.transliterated">
-			(<small gaz-translate="'place.name.ancient'"></small><small>/</small><small gaz-translate="'place.name.transliterated'"></small>)
-		</em>
+		</span>
 		<small ng-hide="!placename.language">
 			<em gaz-translate="'languages.' + placename.language"></em>
 		</small>
+		<em ng-show="placename.transliterated">
+			(<small gaz-translate="'place.name.transliterated'"></small>)
+		</em>
 	</dd>
 	<br/>
 	
