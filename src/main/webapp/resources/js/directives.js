@@ -140,24 +140,50 @@ directives.directive('gazPlaceTypePicker', function($document) {
 		controller: function($scope, $element) {
 			
 			$scope.showOverlay = false;
+			$scope.placeTypes = [];
+			$scope.counter = 0;
 			
 			$scope.openOverlay = function() {
 				$element.find("input").focus();
+				if ($scope.place.types)
+					$scope.placeTypes = $scope.place.types.slice();
 				$scope.showOverlay = true;
 			};
 			
 			$scope.closeOverlay = function() {
-				$scope.showOverlay = false;
-			};
-			
-			$scope.selectType = function(placeType) {
-				if (placeType == "archaeological-site" && $scope.place.type != "archaeological-site")
+				if ($scope.getListPos($scope.placeTypes, "archaeological-site") != -1 && $scope.getListPos($scope.place.types, "archaeological-site") == -1)
 					$scope.place.prefLocation.publicSite = false;
 				
-				$scope.place.type = placeType;
+				$scope.place.types = $scope.placeTypes.slice();
 				$scope.showOverlay = false;
 			};
 			
+			$scope.add = function(placeType) {
+				var pos = $scope.getListPos($scope.placeTypes, placeType);
+				if (pos == -1)
+					$scope.placeTypes.push(placeType);
+				else
+					$scope.placeTypes.splice(pos, 1);
+			};
+			
+			$scope.isChecked = function(placeType) {
+				if ($scope.getListPos($scope.placeTypes, placeType) != -1)
+					return true;
+				else
+					return false;
+			};
+			
+			$scope.getListPos = function(list, placeType) {				
+				if (!list)
+					return -1;			
+				
+			    for (var i = 0; i < list.length; i++) {
+			        if (list[i] == placeType)
+			            return i;
+			    }
+			    
+			    return -1;
+			};
 		}
 	};
 });

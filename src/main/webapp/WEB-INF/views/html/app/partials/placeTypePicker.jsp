@@ -23,19 +23,22 @@
 			border: 1px solid #cccccc;
 			vertical-align: top;
 		}
-		.place-type-picker-clickable-row {
-			cursor: pointer;
+		.place-type-picker-modal {
+			overflow: hidden;
+		}
+		.place-type-picker-typelist {
+			margin-left: 25px;
 		}
 	</style>
 	
 	<span>
 	
 		<div class="place-type-picker-field">
-			<span ng-hide="place.type">
+			<span ng-hide="place.types.length > 0">
 				<em><s:message code="ui.picker.pickAPlaceType" text="ui.picker.pickAPlaceType"/></em>
 			</span>
-			<span ng-show="place.type">
-				<div gaz-translate="'place.types.' + place.type"/>
+			<span ng-show="place.types.length > 0">
+				<span gaz-translate="'place.types.' + place.types[0]"/> <span ng-show="place.types.length > 1">...</span>
 			</span>
 		</div>
 		
@@ -50,17 +53,23 @@
 			<button type='button' class='close' data-dismiss='modal' ng-click="closeOverlay()">×</button>
 			<h3><s:message code="ui.picker.pickAPlaceType" text="ui.picker.pickAPlaceType"/></h3>
 		</div>
- 		<div class="modal-body">
- 			<table class="table table-striped table-hover">
-				<c:forEach var="placeType" items="${placeTypes}">
-					<tr class="place-type-picker-clickable-row" ng-click="selectType('${placeType}')">
-						<td>
-							<b><span gaz-translate="'place.types.' + '${placeType}'"/></b><br/>
-							<span gaz-translate="'place.types.description.' + '${placeType}'"/>
-						</td>	
-					</tr>
-				</c:forEach>					
-			</table>
+ 		<div class="modal-body place-type-picker-modal">
+ 			<div class="place-type-picker-typelist">
+				<c:forEach var="placeTypeGroup" items="${placeTypeGroups}" varStatus="groupStatus">
+					<b><span gaz-translate="'place.types.groups.' + '${placeTypeGroup}'"/></b><br/>
+					<c:forEach var="placeTypeGroupId" items="${placeTypeGroupIds}" varStatus="idStatus">
+						<c:if test="${groupStatus.index == placeTypeGroupId}">
+							<label class="checkbox inline">
+								<input type="checkbox" ng-click="add('${placeTypes[idStatus.index]}')" ng-checked="isChecked('${placeTypes[idStatus.index]}')"/>
+								<span gaz-translate="'place.types.' + '${placeTypes[idStatus.index]}'"/>
+								<i class="icon-info-sign" style="color: #5572a1;" gaz-tooltip="'place.types.description.' + '${placeTypes[idStatus.index]}'"></i>
+							</label>						
+							<br/>
+						</c:if>
+					</c:forEach>
+					<br/>
+				</c:forEach>
+			</div>
  		</div>
 	</div>
 

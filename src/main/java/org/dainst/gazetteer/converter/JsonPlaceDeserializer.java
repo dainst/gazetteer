@@ -122,6 +122,13 @@ public class JsonPlaceDeserializer {
 				place.setType(objectNode.get("type").asText());
 			}
 			
+			if (objectNode.has("types")) {
+				Set<String> types = new HashSet<String>();
+				for (JsonNode type : objectNode.get("types"))
+					types.add(type.asText());
+				place.setTypes(types);
+			}
+			
 			// update name objects
 			JsonNode prefNameNode = objectNode.get("prefName");
 			if(prefNameNode != null) {
@@ -207,7 +214,7 @@ public class JsonPlaceDeserializer {
 				if (prefLocation.getCoordinates() != null || prefLocation.getShape() != null) {
 					if (prefLocationNode.has("publicSite"))
 						prefLocation.setPublicSite(prefLocationNode.get("publicSite").asBoolean());
-					else if (place.getType().equals("archaeological-site"))
+					else if (place.getTypes().contains("archaeological-site"))
 						prefLocation.setPublicSite(false);
 					
 					place.setPrefLocation(prefLocation);	
@@ -260,7 +267,7 @@ public class JsonPlaceDeserializer {
 				}
 				if (locationNode.has("publicSite"))
 					location.setPublicSite(locationNode.get("publicSite").asBoolean());
-				else if (place.getType().equals("archaeological-site"))
+				else if (place.getTypes().contains("archaeological-site"))
 					location.setPublicSite(false);
 				
 				locations.add(location);				

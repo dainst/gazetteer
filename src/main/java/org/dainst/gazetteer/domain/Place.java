@@ -37,6 +37,7 @@ public class Place {
 	private Set<PlaceName> names = new HashSet<PlaceName>();
 	
 	private String type;
+	private Set<String> types;
 	
 	@Indexed
 	private Location prefLocation;
@@ -144,6 +145,14 @@ public class Place {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public Set<String> getTypes() {
+		return types;
+	}
+
+	public void setTypes(Set<String> types) {
+		this.types = types;
 	}
 
 	public void removeName(PlaceName name) {

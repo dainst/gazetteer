@@ -165,7 +165,7 @@
 				<small class="muted">{{parents[place.parent].prefName.title}}</small>
 				<i class="icon-map-marker" ng-show="place.prefLocation"/>
 			</td>
-			<td><span ng-show="place.type" gaz-translate="'place.types.' + place.type"></span></td>
+			<td><span ng-show="place.types && place.types.length > 0" gaz-translate="'place.types.' + place.types[0]"></span></td>
 			<td style="text-align:center;">
 				<div gaz-copy-uri uri="place['@id']"></div>
 			</td>

@@ -59,7 +59,7 @@
 						</span>
 						<small class="muted">{{parents[place.parent].prefName.title}}</small>
 					</td>
-					<td><span ng-show="place.type" gaz-translate="'place.types.' + place.type"></span></td>
+					<td><span ng-show="place.type && place.type.length > 0" gaz-translate="'place.types.' + place.types[0]"></span></td>
 				</tr>
 			</table>
  		</div>

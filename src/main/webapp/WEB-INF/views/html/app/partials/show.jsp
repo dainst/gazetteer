@@ -1,4 +1,5 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page contentType="text/html; charset=utf-8" session="false"%>
 
@@ -167,9 +168,14 @@
 		<br />
 	</span>
 	
-	<span ng-hide="!place.type">
+	<span ng-hide="!place.types || place.types.length == 0">
 		<dt><s:message code="domain.place.type" text="domain.place.type" /></dt>
-		<dd><span gaz-translate="'place.types.' + place.type"></span></dd>
+			<c:forEach var="placeType" items="${placeTypes}">
+				<dd ng-show="hasType('${placeType}')">
+					<span gaz-translate="'place.types.' + '${placeType}'"></span>
+					<br/>
+				</dd>
+			</c:forEach>
 		<br/>
 	</span>
 	

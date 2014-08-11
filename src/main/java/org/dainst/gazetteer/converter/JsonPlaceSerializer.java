@@ -71,6 +71,13 @@ public class JsonPlaceSerializer {
 		if (place.getType() != null && !place.getType().isEmpty())
 			placeNode.put("type", place.getType());
 		
+		if (place.getTypes() != null && !place.getTypes().isEmpty()) {
+			ArrayNode typesNode = mapper.createArrayNode();
+			for (String type : place.getTypes())
+				typesNode.add(type);
+			placeNode.put("types", typesNode);
+		}
+		
 		// preferred name
 		if (place.getPrefName() != null) {
 			ObjectNode prefNameNode = mapper.createObjectNode();
