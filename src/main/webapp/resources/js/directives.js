@@ -150,12 +150,17 @@ directives.directive('gazPlaceTypePicker', function($document) {
 				$scope.showOverlay = true;
 			};
 			
-			$scope.closeOverlay = function() {
+			$scope.closeOverlay = function() {				
+				$scope.showOverlay = false;
+			};
+			
+			$scope.saveTypes = function() {
 				if ($scope.getListPos($scope.placeTypes, "archaeological-site") != -1 && $scope.getListPos($scope.place.types, "archaeological-site") == -1)
 					$scope.place.prefLocation.publicSite = false;
 				
 				$scope.place.types = $scope.placeTypes.slice();
-				$scope.showOverlay = false;
+				
+				$scope.closeOverlay();
 			};
 			
 			$scope.add = function(placeType) {

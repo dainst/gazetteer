@@ -49,7 +49,7 @@
  		</div>
  		<div class="modal-footer">
  			<button type="button" class="btn btn-primary" ng-click="saveShape()"><s:message code="ui.ok" text="ui.ok" /></button>
- 			<button type="button" class="btn btn-danger" ng-click="closeOverlay()"><s:message code="ui.cancel" text="ui.cancel" /></button>
+ 			<button type="button" class="btn" ng-click="closeOverlay()"><s:message code="ui.cancel" text="ui.cancel" /></button>
  		</div>
 	</div>
 </span>
