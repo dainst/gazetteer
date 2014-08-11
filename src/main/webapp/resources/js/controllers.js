@@ -341,14 +341,6 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 				$scope.prefLocationCoordinates = $scope.place.prefLocation.coordinates.slice();
 				$scope.prefLocationCoordinates.reverse();
 			}
-			$scope.$watch("prefLocationCoordinates", function() {
-				if ($scope.place) {
-					if (!$scope.place.prefLocation)
-						$scope.place.prefLocation = { confidence: 0, coordinates: [] };
-					$scope.place.prefLocation.coordinates = $scope.prefLocationCoordinates.slice();
-					$scope.place.prefLocation.coordinates.reverse();
-				}
-			});
 			if (!$scope.place.prefLocation && $scope.hasType("archaeological-site"))
 				$scope.place.prefLocation = { publicSite : true };
 			if (result.parent) {
@@ -392,6 +384,15 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 		});		
 	} else 
 		$scope.place = { prefLocation: { publicSite: true } };
+	
+	$scope.$watch("prefLocationCoordinates", function() {
+		if ($scope.place) {
+			if (!$scope.place.prefLocation)
+				$scope.place.prefLocation = { confidence: 0, coordinates: [] };
+			$scope.place.prefLocation.coordinates = $scope.prefLocationCoordinates.slice();
+			$scope.place.prefLocation.coordinates.reverse();
+		}
+	});
 	
 	// show live changes of title
 	$scope.$watch("place.prefName.title", function() {
