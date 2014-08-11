@@ -37,7 +37,7 @@ public class Place {
 	private Set<PlaceName> names = new HashSet<PlaceName>();
 	
 	private String type;
-	private Set<String> types;
+	private Set<String> types = new HashSet<String>();
 	
 	@Indexed
 	private Location prefLocation;

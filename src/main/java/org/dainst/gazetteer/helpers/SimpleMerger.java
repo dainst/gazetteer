@@ -29,6 +29,8 @@ public class SimpleMerger implements Merger {
 		
 		result.getComments().addAll(place1.getComments());
 		result.getComments().addAll(place2.getComments());
+		result.getCommentsReisestipendium().addAll(place1.getCommentsReisestipendium());
+		result.getCommentsReisestipendium().addAll(place2.getCommentsReisestipendium());
 		result.getIdentifiers().addAll(place1.getIdentifiers());
 		result.getIdentifiers().addAll(place2.getIdentifiers());
 		result.getLinks().addAll(place1.getLinks());
@@ -41,6 +43,8 @@ public class SimpleMerger implements Merger {
 		result.getRelatedPlaces().addAll(place2.getRelatedPlaces());
 		result.getTags().addAll(place1.getTags());
 		result.getTags().addAll(place2.getTags());
+		result.getTypes().addAll(place1.getTypes());
+		result.getTypes().addAll(place2.getTypes());
 		
 		result.setChildren(place1.getChildren() + place2.getChildren());
 		
@@ -95,8 +99,12 @@ public class SimpleMerger implements Merger {
 			placeRepository.save(relatedPlace);
 		}
 		
-		return result;
+		if (place1.getNoteReisestipendium() != null && !place1.getNoteReisestipendium().isEmpty())
+			result.setNoteReisestipendium(place1.getNoteReisestipendium());
+		else if (place2.getNoteReisestipendium() != null && !place2.getNoteReisestipendium().isEmpty())
+			result.setNoteReisestipendium(place2.getNoteReisestipendium());
 		
+		return result;		
 	}
 
 	public PlaceRepository getPlaceRepository() {
