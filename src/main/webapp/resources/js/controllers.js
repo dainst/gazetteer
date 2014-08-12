@@ -769,8 +769,19 @@ function ThesaurusCtrl($scope, $rootScope, $location, Place, messages) {
 		limit: 10000,
 		q: 'type:continent'
 	}, function(result) {
-		$rootScope.loading--;
-		$scope.places = result.result;
+		if (result.result.length == 0) {
+			Place.query({
+				sort: 'prefName.title.sort',
+				limit: 10000,
+				q: 'types:continent'
+			}, function(result) {
+				$rootScope.loading--;
+				$scope.places = result.result;
+			});
+		} else {		
+			$rootScope.loading--;
+			$scope.places = result.result;
+		}
 	}, function() {
 		$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
 		$rootScope.loading--;
