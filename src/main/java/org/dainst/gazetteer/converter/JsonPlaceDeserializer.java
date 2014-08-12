@@ -301,6 +301,15 @@ public class JsonPlaceDeserializer {
 			logger.debug("updated tags: {}", tags);	
 			place.setTags(tags);
 			
+			// update provenance	
+			Set<String> provenance = new HashSet<String>();
+			JsonNode provenanceNode = objectNode.get("provenance");
+			if (provenanceNode != null) for (JsonNode provenanceEntryNode : provenanceNode) {				
+				provenance.add(provenanceEntryNode.asText());	
+			}
+			logger.debug("updated provenance: {}", provenance);	
+			place.setProvenance(provenance);
+			
 			// update identifier objects			
 			Set<Identifier> identifiers = new HashSet<Identifier>();
 			JsonNode identifiersNode = objectNode.get("identifiers");

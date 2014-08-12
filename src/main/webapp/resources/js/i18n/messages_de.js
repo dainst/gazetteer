@@ -24,6 +24,7 @@ messages.factory('messages', function(){
 		"ui.thesaurus": "Thesaurus",
 		"ui.link.tooltip": "Mit aktuellem Ort verknüpfen",
 		"ui.place.deleted": "Dieser Ort wurde gelöscht",
+		"ui.place.provenance-info": "Dieses Objekt enthält Daten aus den angegebenen Quellen.",
 		"ui.merge.tooltip": "Diesen und aktuellen Ort zusammenfassen",
 		"ui.merge.success.head": "Zusammenfassen erfolgreich",
 		"ui.merge.success.body": "Bitte überprüfen Sie unten die Angaben des neu angelegten Orts",

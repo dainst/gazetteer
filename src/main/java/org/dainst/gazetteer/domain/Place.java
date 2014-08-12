@@ -54,6 +54,8 @@ public class Place {
 	
 	private Set<String> tags = new HashSet<String>();
 	
+	private Set<String> provenance = new HashSet<String>();
+	
 	@Indexed
 	private Set<Identifier> ids = new HashSet<Identifier>();
 	
@@ -202,6 +204,18 @@ public class Place {
 	public void addTag(String tag) {
 		this.tags.add(tag);
 	}
+	
+	public Set<String> getProvenance() {
+		return provenance;
+	}
+
+	public void setProvenance(Set<String> provenance) {
+		this.provenance = provenance;
+	}
+	
+	public void addProvenance(String provenance) {
+		this.provenance.add(provenance);
+	}
 
 	public Set<Identifier> getIdentifiers() {
 		return ids;
@@ -257,9 +271,9 @@ public class Place {
 	@Override
 	public String toString() {
 		return "Place [id=" + id + ", prefName=" + prefName + ", names=" + names
-				+ ", type=" + type + ", links=" + links
+				+ ", types=" + types + ", links=" + links
 				+ ", locations=" + locations + ", parent=" + parent
-				+ ", comments=" + comments + ", tags=" + tags + ", ids=" + ids
+				+ ", comments=" + comments + ", tags=" + tags + ", provenance=" + provenance + ", ids=" + ids
 				+ ", deleted=" + deleted + ", replacedBy=" + replacedBy + "]";
 	}
 
@@ -328,7 +342,8 @@ public class Place {
 		result = prime * result
 				+ ((replacedBy == null) ? 0 : replacedBy.hashCode());
 		result = prime * result + ((tags == null) ? 0 : tags.hashCode());
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		result = prime * result + ((provenance == null) ? 0 : provenance.hashCode());
+		result = prime * result + ((types == null) ? 0 : types.hashCode());
 		return result;
 	}
 
@@ -418,10 +433,15 @@ public class Place {
 				return false;
 		} else if (!tags.equals(other.tags))
 			return false;
-		if (type == null) {
-			if (other.type != null)
+		if (provenance == null) {
+			if (other.provenance != null)
 				return false;
-		} else if (!type.equals(other.type))
+		} else if (!provenance.equals(other.provenance))
+			return false;
+		if (types == null) {
+			if (other.types != null)
+				return false;
+		} else if (!types.equals(other.types))
 			return false;
 		return true;
 	}

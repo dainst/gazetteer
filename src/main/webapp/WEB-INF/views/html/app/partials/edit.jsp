@@ -215,6 +215,21 @@
 						</div>
 					</div>
 					
+					<!-- provenance -->
+					<div class="control-group">
+						<label class="control-label">
+							<s:message code="domain.place.provenance" text="domain.place.provenance" />
+						</label>
+						<div class="controls">
+							<input type="text" ng-model="place.provenance" ng-list />
+							<div>
+								<span ng-repeat="provenanceEntry in place.provenance">
+									<span class="label label-info">{{provenanceEntry}}</span>&nbsp; 
+								</span>
+							</div>
+						</div>
+					</div>
+					
 					<!-- comments -->
 					<div class="control-group">
 						<label class="control-label">

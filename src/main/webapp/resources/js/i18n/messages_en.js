@@ -24,6 +24,7 @@ messages.factory('messages', function(){
 		"ui.thesaurus": "Thesaurus",
 		"ui.link.tooltip": "Link to current place",
 		"ui.place.deleted": "This place has been deleted",
+		"ui.place.provenance-info": "This object contains data derived from the specified sources.",
 		"ui.merge.tooltip": "Merge this and the current place",
 		"ui.merge.success.head": "Successfully merged places",
 		"ui.merge.success.body": "Please review the information of the newly created place",

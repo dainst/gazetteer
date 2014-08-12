@@ -239,6 +239,15 @@ public class JsonPlaceSerializer {
 			placeNode.put("tags", tagsNode);
 		}
 		
+		// provenance
+		if (!place.getProvenance().isEmpty()) {
+			ArrayNode provenanceNode = mapper.createArrayNode();
+			for (String provenanceEntry : place.getProvenance()) {
+				provenanceNode.add(provenanceEntry);
+			}
+			placeNode.put("provenance", provenanceNode);
+		}
+		
 		User user = null;
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if (principal instanceof User)

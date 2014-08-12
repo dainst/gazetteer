@@ -43,6 +43,8 @@ public class SimpleMerger implements Merger {
 		result.getRelatedPlaces().addAll(place2.getRelatedPlaces());
 		result.getTags().addAll(place1.getTags());
 		result.getTags().addAll(place2.getTags());
+		result.getProvenance().addAll(place1.getProvenance());
+		result.getProvenance().addAll(place2.getProvenance());
 		result.getTypes().addAll(place1.getTypes());
 		result.getTypes().addAll(place2.getTypes());
 		

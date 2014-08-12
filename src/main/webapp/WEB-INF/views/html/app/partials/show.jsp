@@ -65,6 +65,17 @@
 		<br/>
 	</span>
 	
+	<span ng-hide="!place.provenance">
+		<dt><s:message code="domain.place.provenance" text="domain.place.provenance" /></dt>
+		<dd>
+			<span ng-repeat="provenanceEntry in place.provenance">
+				<span class="label label-info">{{provenanceEntry}}</span>&nbsp; 
+			</span>
+			<i class="icon-info-sign" style="color: #5572a1;" gaz-tooltip="'ui.place.provenance-info'"></i>
+		</dd>
+		<br/>
+	</span>
+	
 	<span ng-hide="!parent">
 		<dt><s:message code="domain.place.parent" text="domain.place.parent" /></dt>
 		<dd>
@@ -239,18 +250,4 @@
 		<br/>
 	</span>
 	
-	<span ng-repeat="identifier in place.identifiers | filter:{context:'pleiades'} | limitTo:1" >
-		<dt></dt>
-		<dd>
-			<em><s:message code="ui.attribution.pleiades" text="ui.attribution.pleiades"/></em>
-		</dd>
-	</span>
-	
-	<span ng-repeat="identifier in place.identifiers | filter:{context:'geonames'} | limitTo:1" >
-		<dt></dt>
-		<dd>
-			<em><s:message code="ui.attribution.geonames" text="ui.attribution.geonames"/></em>
-		</dd>
-	</span>
-
 </dl>
