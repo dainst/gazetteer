@@ -321,7 +321,7 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 
 function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages) {
 	
-	$scope.location = { confidence: 0 };
+	$scope.location = { confidence: 0, publicSite: true };
 	$scope.link = { predicate: "owl:sameAs" };
 	$rootScope.showMap = true;
 	
@@ -341,8 +341,10 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 				$scope.prefLocationCoordinates = $scope.place.prefLocation.coordinates.slice();
 				$scope.prefLocationCoordinates.reverse();
 			}
-			if (!$scope.place.prefLocation && $scope.hasType("archaeological-site"))
-				$scope.place.prefLocation = { publicSite : true };
+			if (!$scope.place.prefLocation && !$scope.hasType("archaeological-site"))
+				$scope.place.prefLocation = { publicSite : true };			
+			if ($scope.hasType("archaeological-site"))
+				$scope.location.publicSite = false;
 			if (result.parent) {
 				$rootScope.loading++;
 				var parentId = getIdFromUri(result.parent);
@@ -417,11 +419,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 		if ($scope.place && $scope.place["@id"])
 			$rootScope.subtitle = $scope.place["@id"]	+ '<a data-toggle="modal" href="#copyUriModal"><i class="icon-share" style="font-size:0.7em"></i></a>';
 	});
-	
-	$scope.$watch("place.types", function() {
-		$scope.location.publicSite = $scope.place.prefLocation.publicSite;		
-	});
-	
+
 	$scope.prevChildren = function() {
 		$scope.offsetChildren -= 10;
 		$rootScope.loading++;
@@ -548,7 +546,10 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 		if ($scope.place.locations == undefined)
 			$scope.place.locations = [];
 		$scope.place.locations.push($scope.location);
-		$scope.location = { confidence: 0 };
+		if ($scope.hasType("archaeological-site")) 
+			$scope.location = { confidence: 0, publicSite: false };
+		else
+			$scope.location = { confidence: 0, publicSite: true };
 	};
 	
 	$scope.addIdentifier = function() {
@@ -585,6 +586,45 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 		$scope.commentReisestipendium = {};
 	};
 	
+	$scope.addPlaceType = function(placeType) {
+		var pos = $scope.getListPos($scope.place.types, placeType);
+		
+		if (placeType == "archaeological-site" && pos == -1) {
+			$scope.place.prefLocation.publicSite = false;
+			$scope.location.publicSite = false;
+		}
+		
+		if (pos == -1) {
+			if (!$scope.place.types)
+				$scope.place.types = [];
+			$scope.place.types.push(placeType);
+		}
+		else
+			$scope.place.types.splice(pos, 1);
+	};
+	
+	$scope.getListPos = function(list, placeType) {				
+		if (!list)
+			return -1;			
+		
+	    for (var i = 0; i < list.length; i++) {
+	        if (list[i] == placeType)
+	            return i;
+	    }
+	    
+	    return -1;
+	};
+	
+	$scope.hasType = function(placeType) {		
+		if (!$scope.place || !$scope.place.types)
+			return false;
+		
+	   if ($scope.getListPos($scope.place.types, placeType) != -1)
+		   return true;
+	   else
+		   return false;
+	};
+	
 	$scope.getIdsByContext = function(context) {
 		var result = [];
 		var ids = $scope.place.identifiers;
@@ -603,18 +643,6 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 
 	// update relatedPlaces attribute of place when relatedPlaces in scope changes
 	$scope.$watch("allRelatedPlaces.length", $scope.updateRelatedPlaces());
-		
-	$scope.hasType = function(placeType) {				
-		if (!$scope.place.types)
-			return false;
-		
-	    for (var i = 0; i < $scope.place.types.length; i++) {
-	        if ($scope.place.types[i] == placeType)
-	            return true;
-	    }
-	    
-	    return false;
-	};
 }
 
 function MergeCtrl($scope, $rootScope, $routeParams, $location, Place, messages) {

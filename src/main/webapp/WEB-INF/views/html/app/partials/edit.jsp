@@ -161,8 +161,42 @@
 						<label class="control-label">
 							<s:message code="domain.place.type" text="domain.place.type" />
 						</label>
-						<div class="controls">
-							<div gaz-place-type-picker place="place"></div>
+						<div class="controls well">
+							<table>
+								<tbody>
+									<c:forEach var="placeTypeGroup" items="${placeTypeGroups}" varStatus="groupStatus">
+										<tr>
+											<td colspan="2">
+												<c:if test="${groupStatus.index != 0}">
+													<br/>
+												</c:if>								
+												<b><span gaz-translate="'place.types.groups.' + '${placeTypeGroup}'"/></b>
+											</td>
+										</tr>
+										<c:set var="placeTypeCounter" value="0"/>
+										<c:forEach var="placeTypeGroupId" items="${placeTypeGroupIds}" varStatus="idStatus">
+											<c:if test="${groupStatus.index == placeTypeGroupId}">
+												<c:if test="${placeTypeCounter == 0}">
+													<tr>
+												</c:if>
+												<c:if test="${placeTypeCounter != 0 && placeTypeCounter % 2 == 0}">
+													</tr><tr>
+												</c:if>
+												<td>
+													<c:set var="placeTypeCounter" value="${placeTypeCounter + 1}"/>
+													<label class="checkbox inline">
+														<input type="checkbox" ng-click="addPlaceType('${placeTypes[idStatus.index]}')" ng-checked="hasType('${placeTypes[idStatus.index]}')"/>
+														<span gaz-translate="'place.types.' + '${placeTypes[idStatus.index]}'"/>
+														<i class="icon-info-sign" style="color: #5572a1;" gaz-tooltip="'place.types.description.' + '${placeTypes[idStatus.index]}'"></i>
+														&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+													</label>
+												</td>										
+											</c:if>
+										</c:forEach>
+										</tr>								
+									</c:forEach>
+								</tbody>
+							</table>
 						</div>
 					</div>
 					
