@@ -35,13 +35,16 @@ public class ElasticSearchPlaceQuery {
 	
 	public ElasticSearchPlaceQuery metaSearch(String query) {
 		if(query == null || "".equals(query) || "*".equals(query)) listAll();
-		// _id can't be added to _all, so it's appended here, prefName.title is
-		// added in order to boost it and prevent its score from being
+		// _id can't be added to _all, so it's appended here, titles are
+		// added in order to boost them and prevent their score from being
 		// diminished by norms when occurring together with other fields in _all
 		else {
 			String queryString = "(" + query + ")";
 			queryString += " OR _id:\"" + query + "\"";
-			if (!query.contains(":")) queryString += " OR prefName.title:\"" + query + "\"";
+			if (!query.contains(":")) {
+				queryString += " OR prefName.title:\"" + query + "\"^2";
+				queryString += " OR names.title:\"" + query + "\"";
+			}
 			queryBuilder = QueryBuilders.queryString(queryString).defaultField("_all").defaultOperator(Operator.AND);
 		}
 				
@@ -70,8 +73,10 @@ public class ElasticSearchPlaceQuery {
 	}
 
 	public ElasticSearchPlaceQuery prefixSearch(String query) {
-		query = query.toLowerCase() + "*";
-		queryBuilder = QueryBuilders.queryString(query).defaultField("_all").defaultOperator(Operator.AND);
+		query = query.toLowerCase();
+		queryBuilder = QueryBuilders.boolQuery()
+				.should(QueryBuilders.prefixQuery("prefName.title.raw", query))
+				.should(QueryBuilders.prefixQuery("names.title.raw", query));
 		return this;
 	}
 	

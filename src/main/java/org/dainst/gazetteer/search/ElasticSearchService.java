@@ -53,7 +53,7 @@ public class ElasticSearchService {
 		} catch (InterruptedException e) {
 			throw new RuntimeException("Failed to reindex places", e);
 		} catch (ExecutionException e) {
-			// eat exceptions if river is created for the first time
+			// eat exceptions if river is not created for the first time
 		}
 		
 		try {

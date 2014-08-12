@@ -5,7 +5,11 @@
             "analyzer" : {
             	"default": {
             		"tokenizer" : "standard",
-                    "filter" : ["standard", "icu_folding", "custom_snowball"]
+                    "filter" : ["standard", "icu_folding"]
+            	},
+            	"raw": {
+            		"tokenizer": "keyword",
+            		"filter": ["lowercase"]
             	},
                 "collation" : {
                     "tokenizer" : "keyword",
@@ -13,13 +17,12 @@
                 }
             },
             "filter" : {
-            	"custom_snowball": {
-            		"type" : "snowball",
-                    "language" : "German2"
-            	},
                 "collation_filter" : {
                     "type" : "icu_collation",
                     "language" : "de"
+                },
+                "lowercase" : {
+                	"type" : "lowercase"
                 }
             }
         }
@@ -29,29 +32,63 @@
 	    	"_all": {
 	    		"omit_norms": true
 	    	},
-			"_id": {
-				"index": "not_analyzed",
-				"include_in_all": true
-			},
 	        "properties": {
 	            "prefName": {
 	                "properties": {
 	                    "language": {
-	                        "type": "string"
+	                        "type": "string",
+	                        "include_in_all": false
 	                    },
 	                    "modern": {
-	                        "type": "boolean"
+	                        "type": "boolean",
+	                        "include_in_all": false
+	                    },
+	                    "ordering": {
+	                    	"type": "string",
+	                    	"include_in_all": false
 	                    },
 	                    "title": {
-	                        "type": "multi_field",
-							"boost": 2.0,
+	                        "type": "string",
+							"omit_norms": true,
 							"fields": {
-								"title": {
-									"type" : "string",
-									"omit_norms": true
+								"raw": {
+									"type": "string",
+									"analyzer": "raw"
 								},
 	                    		"sort" : {
-									"type" : "string",
+									"type": "string",
+									"analyzer": "collation"
+								}
+							}
+	                    }
+	                }
+	            },
+	            "names": {
+	            	"type": "nested",
+					"include_in_parent": true,
+	                "properties": {
+	                    "language": {
+	                        "type": "string",
+							"include_in_all": false
+	                    },
+	                    "modern": {
+	                        "type": "boolean",
+							"include_in_all": false
+	                    },
+	                    "ordering": {
+	                    	"type": "string",
+	                    	"include_in_all": false
+	                    },
+	                    "title": {
+	                        "type": "string",
+							"omit_norms": true,
+							"fields": {
+								"raw": {
+									"type": "string",
+									"analyzer": "raw"
+								},
+	                    		"sort" : {
+									"type": "string",
 									"analyzer": "collation"
 								}
 							}
@@ -65,15 +102,31 @@
 							"include_in_all": false
 	                    },
 	                    "coordinates": {
-	                        "type": "geo_point"
+	                        "type": "geo_point",
+							"include_in_all": false
 						},
 						"shape": {
-							"type": "geo_shape"
+							"type": "geo_shape",
+							"include_in_all": false
 						}
 	                }
 	            },
-	            "thesauri": {
-	                "type": "string"
+	            "locations": {
+	            	"type": "nested",
+	                "properties": {
+	                    "confidence": {
+	                        "type": "long",
+							"include_in_all": false
+	                    },
+	                    "coordinates": {
+	                        "type": "geo_point",
+							"include_in_all": false
+						},
+						"shape": {
+							"type": "geo_shape",
+							"include_in_all": false
+						}
+	                }
 	            },
 	            "children": {
 	                "type": "integer",
@@ -91,7 +144,8 @@
 							"include_in_all": false
 	                    },
 	                    "value": {
-	                        "type": "string"
+	                        "type": "string",
+	                        "index": "not_analyzed"
 	                    }
 	                }
 	            },
@@ -109,38 +163,6 @@
 	                    }
 	                }
 	            },
-	            "locations": {
-	            	"type": "nested",
-	                "properties": {
-	                    "confidence": {
-	                        "type": "long",
-							"include_in_all": false
-	                    },
-	                    "coordinates": {
-	                        "type": "geo_point"
-						},
-						"shape": {
-							"type": "geo_shape"
-						}
-	                }
-	            },
-	            "names": {
-	            	"type": "nested",
-	                "properties": {
-	                    "language": {
-	                        "type": "string",
-							"include_in_all": false
-	                    },
-	                    "modern": {
-	                        "type": "boolean",
-							"include_in_all": false
-	                    },
-	                    "title": {
-	                        "type": "string",
-							"omit_norms": true
-	                    }
-	                }
-	            },
 	            "needsReview": {
 	                "type": "boolean"
 	            },
@@ -153,7 +175,13 @@
 	            },
 	            "type": {
 	                "type": "string",
-	                "index": "not_analyzed"
+	                "index": "not_analyzed",
+	                "include_in_all": false
+				},
+	            "types": {
+	                "type": "string",
+	                "index": "not_analyzed",
+	                "include_in_all": false
 				},
 	            "_class": {
 	                "type": "string",

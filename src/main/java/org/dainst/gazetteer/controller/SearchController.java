@@ -84,7 +84,7 @@ public class SearchController {
 		RequestContext requestContext = new RequestContext(request);
 		Locale locale = requestContext.getLocale();
 		
-		logger.debug("Searching places with query: " + q + ", fq: " + fq + ", limit: " + limit + ", offset: " + offset);
+		logger.debug("Searching places with query: " + q + ", fq: " + fq + ", limit: " + limit + ", offset: " + offset + ", type: " + type);
 		
 		ElasticSearchPlaceQuery query = new ElasticSearchPlaceQuery(client);
 		if (q != null) {
