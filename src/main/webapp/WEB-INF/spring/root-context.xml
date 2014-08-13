@@ -9,7 +9,6 @@
 		<property name="defaultEncoding" value="UTF-8"/>
 		<property name="basenames">
 			<list>
-				<value>languages</value>
 				<value>messages</value>
 				<value>languages_iso_mapping</value>
 			</list>

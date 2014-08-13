@@ -1,6 +1,7 @@
 package org.dainst.gazetteer.controller;
 
 import java.util.List;
+import java.util.Locale;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -11,7 +12,9 @@ import org.dainst.gazetteer.domain.HarvesterDefinition;
 import org.dainst.gazetteer.domain.Link;
 import org.dainst.gazetteer.domain.Location;
 import org.dainst.gazetteer.domain.Place;
+import org.dainst.gazetteer.domain.PlaceName;
 import org.dainst.gazetteer.helpers.IdGenerator;
+import org.dainst.gazetteer.helpers.LanguagesHelper;
 import org.dainst.gazetteer.helpers.Merger;
 import org.dainst.gazetteer.match.AutoMatchService;
 import org.dainst.gazetteer.search.ElasticSearchService;
@@ -67,6 +70,9 @@ public class AdminController {
 	@Value("${geonamesSolrUri}")
 	private String geonamesSolrUri;
 	
+	@Autowired
+	private LanguagesHelper languagesHelper;
+	
 	@RequestMapping(value="/admin/reindex", method=RequestMethod.POST)
 	@ResponseBody
 	public String reindex() {
@@ -111,7 +117,7 @@ public class AdminController {
 	@ResponseBody
 	public String importGeonames() {
 		
-		List<Place> places = placeDao.findByPrefLocationIsNullAndIdsContext("geonames");
+		List<Place> places = placeDao.findByProvenanceNotAndIdsContext("geonames","geonames");
 		
 		logger.debug("found {} places with geonames-id and no location", places.size());
 		
@@ -135,20 +141,31 @@ public class AdminController {
 			if (node.get("response").get("numFound").asInt() > 0) {
 				logger.debug("found {} candidates.", node.get("response").get("numFound"));
 				JsonNode entries = node.get("response").get("docs");
+				boolean updated = false;
 				for (JsonNode entry : entries) {
 					if (entry.has("longitude")) {
 						logger.debug("found coordinates in doc: {}", entry);
 						place.setPrefLocation(new Location(entry.get("longitude").get(0).asDouble(),
 								entry.get("latitude").get(0).asDouble()));
-						placeDao.save(place);
-						count ++;
-						break;
+						updated = true;
 					}
+					if (entry.has("alternateName")) {
+						String altName = entry.get("alternateName").get(0).asText();
+						String lang = entry.get("isoLanguage").get(0).asText();
+						logger.debug("found alternatename '{}' for language '{}'", altName, lang);
+						place.addName(new PlaceName(altName, new Locale(lang).getISO3Language()));
+						updated = true;
+					}
+				}
+				if (updated) {
+					count++;
+					place.addProvenance("geonames");
+					placeDao.save(place);
 				}
 			}
 		}
 		
-		return String.format("OK: imported %s locations", count);
+		return String.format("OK: imported data for %s places", count);
 		
 	}
 	

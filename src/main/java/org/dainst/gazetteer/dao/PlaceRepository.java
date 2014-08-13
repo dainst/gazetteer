@@ -67,4 +67,7 @@ public interface PlaceRepository extends PagingAndSortingRepository<Place, Strin
 	public List<Place> findByPrefLocationIsNotNullAndChildrenGreaterThan(
 			int i, PageRequest pageRequest);
 
+	public List<Place> findByProvenanceNotAndIdsContext(String string,
+			String string2);
+
 }
