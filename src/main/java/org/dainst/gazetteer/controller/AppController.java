@@ -6,7 +6,7 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.dainst.gazetteer.helpers.LocalizedLanguagesHelper;
+import org.dainst.gazetteer.helpers.LanguagesHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +42,7 @@ public class AppController {
 	private int[] placeTypeGroupIds;
 	
 	@Autowired
-	LocalizedLanguagesHelper langHelper;
+	LanguagesHelper langHelper;
 	@RequestMapping(value="/app/")
 	public String app(ModelMap model, HttpServletRequest request, 
 			@RequestParam(value="_escaped_fragment_", required=false) String fragment) throws UnsupportedEncodingException {

@@ -16,7 +16,7 @@ import org.dainst.gazetteer.domain.PlaceChangeRecord;
 import org.dainst.gazetteer.domain.User;
 import org.dainst.gazetteer.domain.ValidationResult;
 import org.dainst.gazetteer.helpers.IdGenerator;
-import org.dainst.gazetteer.helpers.LocalizedLanguagesHelper;
+import org.dainst.gazetteer.helpers.LanguagesHelper;
 import org.dainst.gazetteer.helpers.ProtectLocationsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,7 +59,7 @@ public class DocumentController {
 	private IdGenerator idGenerator;
 	
 	@Autowired
-	private LocalizedLanguagesHelper langHelper;
+	private LanguagesHelper langHelper;
 	
 	@Value("${baseUri}")
 	private String baseUri;
