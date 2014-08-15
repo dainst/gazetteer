@@ -2,6 +2,7 @@ package org.dainst.gazetteer.controller;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.MissingResourceException;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -153,7 +154,18 @@ public class AdminController {
 						String altName = entry.get("alternateName").get(0).asText();
 						String lang = entry.get("isoLanguage").get(0).asText();
 						logger.debug("found alternatename '{}' for language '{}'", altName, lang);
-						place.addName(new PlaceName(altName, new Locale(lang).getISO3Language()));
+						if (lang.equals("link")) {
+							Link link = new Link();
+							link.setObject(altName);
+							link.setPredicate("rdfs:seeAlso");
+							place.addLink(link);
+						} else {
+							try {
+								place.addName(new PlaceName(altName, new Locale(lang).getISO3Language()));
+							} catch (MissingResourceException e) {
+								logger.warn(e.getMessage());
+							}
+						}
 						updated = true;
 					}
 				}
