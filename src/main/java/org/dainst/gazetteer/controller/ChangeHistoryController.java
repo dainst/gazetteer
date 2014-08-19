@@ -17,6 +17,7 @@ import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.PlaceChangeRecord;
 import org.dainst.gazetteer.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -37,6 +38,9 @@ public class ChangeHistoryController {
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Value("${version}")
+	private String version;
 		
 	private int recordsPerPage = 15;
 
@@ -182,6 +186,7 @@ public class ChangeHistoryController {
 		model.addAttribute("endDate", endDate);
 		model.addAttribute("startDatePres", presFormat.format(start));
 		model.addAttribute("endDatePres", presFormat.format(end));
+		model.addAttribute("version", version);
 		
 		return "globalChangeHistory";
 	}

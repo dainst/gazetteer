@@ -3,6 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="gaz" tagdir="/WEB-INF/tags/layout" %>
 <%@ page contentType="text/html; charset=utf-8" session="false"%>
 
 <s:url var="searchAction" value="app/#!/search" />
@@ -170,10 +171,7 @@
 		</div>
 		
 		<!-- Footer -->
-		<hr>
-		<footer>
-			<p><s:message code="ui.license" text="ui.license"/></p>
-		</footer>
+		<gaz:footer/>
 		
 	</div>
 	

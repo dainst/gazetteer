@@ -3,6 +3,7 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="gaz" tagdir="/WEB-INF/tags/layout" %>
 <%@ page contentType="text/html; charset=utf-8" session="false"%>
 
 <!doctype html>
@@ -332,12 +333,7 @@
 		</ul>					
 
 		<!-- Footer -->
-		<hr>
-		<footer>
-			<jsp:useBean id="now" class="java.util.Date" />
-			<fmt:formatDate var="year" value="${now}" pattern="yyyy" />
-			<p>&copy; Deutsches Archäologisches Institut ${year}</p>
-		</footer>
+		<gaz:footer/>
 		
 	</div>
 	

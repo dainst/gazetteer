@@ -9,6 +9,7 @@ import org.dainst.gazetteer.domain.Place;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -25,6 +26,9 @@ public class HomeController {
 	
 	@Autowired
 	private PlaceRepository placeRepository;
+	
+	@Value("${version}")
+	private String version;
 
 	@RequestMapping(value="/")
 	public ModelAndView home() {
@@ -39,6 +43,7 @@ public class HomeController {
 		
 		ModelAndView mav = new ModelAndView("home");
 		mav.addObject("places", places);
+		mav.addObject("version", version);
 		
 		return mav;
 	}

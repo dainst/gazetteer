@@ -41,6 +41,9 @@ public class AppController {
 	@Value("${placeTypeGroupIds}")
 	private int[] placeTypeGroupIds;
 	
+	@Value("${version}")
+	private String version;
+	
 	@Autowired
 	LanguagesHelper langHelper;
 	@RequestMapping(value="/app/")
@@ -62,6 +65,7 @@ public class AppController {
 		model.addAttribute("placeTypes", placeTypes);
 		model.addAttribute("placeTypeGroups", placeTypeGroups);
 		model.addAttribute("placeTypeGroupIds", placeTypeGroupIds);
+		model.addAttribute("version", version);
 		logger.info("accept: {}", request.getHeader("Accept"));
 		return "app/index";
 	}

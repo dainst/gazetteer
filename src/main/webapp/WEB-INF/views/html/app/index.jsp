@@ -2,6 +2,7 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="gaz" tagdir="/WEB-INF/tags/layout" %>
 <%@ page contentType="text/html; charset=utf-8" session="false"%>
 
 <!doctype html>
@@ -167,10 +168,7 @@
 		</div>
 		
 		<!-- Footer -->
-		<hr>
-		<footer>
-			<p><s:message code="ui.license" text="ui.license"/> <s:message code="ui.mailingList" text="ui.mailingList"/></p>
-		</footer>
+		<gaz:footer/>
 		
 	</div>
 	

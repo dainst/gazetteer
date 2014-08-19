@@ -52,6 +52,9 @@ public class UserManagementController {
 	@Value("${baseUri}")
 	private String baseUri;
 	
+	@Value("${version}")
+	private String version;
+	
 	private static final Logger logger = LoggerFactory.getLogger(UserManagementController.class);
 	
 	private int usersPerPage = 15;
@@ -60,18 +63,21 @@ public class UserManagementController {
 	@RequestMapping(value="/login")
 	public String getLogin(@RequestParam(required=false) String r, ModelMap model) {
 		if (r != null) model.addAttribute("r", r);
+		model.addAttribute("version", version);
 		return "login";		
 	}
 	
 	@RequestMapping(value="/loginfailed")
 	public String loginerror(ModelMap model) {
 		model.addAttribute("error", "true");
+		model.addAttribute("version", version);
 		return "login"; 
 	}
 	
 	@RequestMapping(value="/register")
 	public String register(@RequestParam(required=false) String r, ModelMap model) {
 		if (r != null) model.addAttribute("r", r);
+		model.addAttribute("version", version);
 		return "register";
 	}
 	
@@ -137,6 +143,7 @@ public class UserManagementController {
 		}
 		else {
 			model.addAttribute("successMessage", "register");
+			model.addAttribute("version", version);
 			return "home";
 		}
 	}
@@ -292,6 +299,7 @@ public class UserManagementController {
 		model.addAttribute("users", users);		
 		model.addAttribute("isDescending", isDescending);
 		model.addAttribute("lastSorting", sort);
+		model.addAttribute("version", version);
 		
 		return "userManagement";
 	}
@@ -322,6 +330,7 @@ public class UserManagementController {
 		model.addAttribute("adminEdit", adminEdit);
 		model.addAttribute("userEdit", userEdit);
 		model.addAttribute("r", r);
+		model.addAttribute("version", version);
 		
 		return "editUser";
 	}
@@ -427,6 +436,8 @@ public class UserManagementController {
 			user.setPassword(passwordEncoder.encode(newPassword));		
 		
 		userRepository.save(user);
+		
+		model.addAttribute("version", version);
 	
 		if (r != null && r.equals("userManagement") && adminEdit)
 			return getUserManagement(null, false, 0, null, model);
@@ -439,6 +450,7 @@ public class UserManagementController {
 	@RequestMapping(value="/passwordChangeRequest")
 	public String getPasswordChangeRequest(@RequestParam(required=false) String r, ModelMap model) {
 		if (r != null) model.addAttribute("r", r);
+		model.addAttribute("version", version);
 		return "passwordChangeRequest";		
 	}
 	
@@ -491,6 +503,7 @@ public class UserManagementController {
 		}
 		else {
 			model.addAttribute("successMessage", "passwordChangeRequest");
+			model.addAttribute("version", version);
 			return "home";
 		}
 	}
@@ -511,6 +524,7 @@ public class UserManagementController {
 	    }
 	    
 	    model.addAttribute("user", user);
+		model.addAttribute("version", version);
 	    
 	    return "changePassword";		
 	}
@@ -536,6 +550,7 @@ public class UserManagementController {
 		userPasswordChangeRequestRepository.delete(changeRequest);
 		
 		model.addAttribute("successMessage", "changePassword");
+		model.addAttribute("version", version);
 		
 		return "home";
 	}	
@@ -549,6 +564,7 @@ public class UserManagementController {
 		model.addAttribute("register_email_value", request.getParameter("register_email"));
 		model.addAttribute("r", r);
 		model.addAttribute("failure", failureType);
+		model.addAttribute("version", version);
 		
 		return "register";
 	}
