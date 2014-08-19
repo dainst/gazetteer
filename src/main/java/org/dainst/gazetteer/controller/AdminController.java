@@ -1,5 +1,6 @@
 package org.dainst.gazetteer.controller;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.MissingResourceException;
@@ -125,7 +126,7 @@ public class AdminController {
 		ClientConfig config = new DefaultClientConfig();
 		config.getClasses().add(JacksonJsonProvider.class);
 		Client client = Client.create(config);
-		WebResource api = client.resource(geonamesSolrUri).path("select").queryParam("wt", "json");
+		WebResource api = client.resource(geonamesSolrUri).path("select").queryParam("wt", "json").queryParam("rows", "1000");
 		api.addFilter(new ClientFilter() {
 		    @Override
 		    public ClientResponse handle(ClientRequest request) throws ClientHandlerException {
@@ -143,6 +144,7 @@ public class AdminController {
 				logger.debug("found {} candidates.", node.get("response").get("numFound"));
 				JsonNode entries = node.get("response").get("docs");
 				boolean updated = false;
+				List<String> languages = Arrays.asList(languagesHelper.getLanguages());
 				for (JsonNode entry : entries) {
 					if (entry.has("longitude")) {
 						logger.debug("found coordinates in doc: {}", entry);
@@ -153,18 +155,16 @@ public class AdminController {
 					if (entry.has("alternateName")) {
 						String altName = entry.get("alternateName").get(0).asText();
 						String lang = entry.get("isoLanguage").get(0).asText();
-						logger.debug("found alternatename '{}' for language '{}'", altName, lang);
-						if (lang.equals("link")) {
-							Link link = new Link();
-							link.setObject(altName);
-							link.setPredicate("rdfs:seeAlso");
-							place.addLink(link);
-						} else {
-							try {
-								place.addName(new PlaceName(altName, new Locale(lang).getISO3Language()));
-							} catch (MissingResourceException e) {
-								logger.warn(e.getMessage());
+						try {
+							String iso3Lang = new Locale(lang).getISO3Language();
+							logger.debug("found alternatename '{}' for language '{}'", altName, iso3Lang);
+							// skip languages that are not configured
+							if (!languages.contains(iso3Lang)) {
+								continue;
 							}
+							place.addName(new PlaceName(altName, iso3Lang));
+						} catch (MissingResourceException e) {
+							logger.warn(e.getMessage());
 						}
 						updated = true;
 					}
