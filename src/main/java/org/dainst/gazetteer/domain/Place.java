@@ -17,7 +17,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 	@CompoundIndex(name="prefNameTitle_types", def="{'prefName.title': 1, 'types': 1}"),
 	@CompoundIndex(name="parent_type", def="{'parent': 1, 'types': 1}"),
 	@CompoundIndex(name="types_deleted", def="{'types': 1, 'deleted': 1}"),
-	@CompoundIndex(name="prefLocation_idsContext", def="{'prefLocation': 1, 'ids.context': 1}"),
 	@CompoundIndex(name="prefNameTitle_types_needsReview_id", def="{'prefName.title': 1, 'types': 1, 'needsReview': 1, '_id': 1}"),
 	@CompoundIndex(name="prefNameTitle_needsReview_id", def="{'prefName.title': 1, 'needsReview': 1, '_id': 1}"),
 	@CompoundIndex(name="namesTitle_needsReview_id", def="{'names.title': 1, 'needsReview': 1, '_id': 1}")
