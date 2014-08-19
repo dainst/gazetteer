@@ -40,10 +40,10 @@ public class SimpleNameAndIdBasedEntityIdentifier implements EntityIdentifier {
 			}
 		}
 		
-		if ("continent".equals(place.getType())) {
+		if (place.getTypes().contains("continent")) {
 			
 			// we suppose that the names of continents are unique
-			List<Place> resultList = placeDao.findByPrefNameTitleAndTypeAndNeedsReviewAndIdNot(
+			List<Place> resultList = placeDao.findByPrefNameTitleAndTypesAndNeedsReviewAndIdNot(
 					place.getPrefName().getTitle(), "continent", false, place.getId());
 			logger.debug("matched continents: " + resultList.size());
 			if (resultList.size() == 1) {
@@ -51,18 +51,18 @@ public class SimpleNameAndIdBasedEntityIdentifier implements EntityIdentifier {
 				return candidates;
 			}
 		
-		} else if ("country".equals(place.getType())) {
+		} else if (place.getTypes().contains("administrative-unit")) {
 
 			// we suppose that the names of countries are unique
-			List<Place> resultList = placeDao.findByPrefNameTitleAndTypeAndNeedsReviewAndIdNot(
-					place.getPrefName().getTitle(), "country", false, place.getId());
-			logger.debug("matched countries: " + resultList.size());
+			List<Place> resultList = placeDao.findByPrefNameTitleAndTypesAndNeedsReviewAndIdNot(
+					place.getPrefName().getTitle(), "administrative-unit", false, place.getId());
+			logger.debug("matched administrative units: " + resultList.size());
 			if (resultList.size() == 1) {
 				candidates.add(new Candidate(place, resultList.get(0), 1));
 				return candidates;
 			}
 			
-		} else if ("city".equals(place.getType()) || place.getType() == null || place.getType().isEmpty()) {
+		} else if (place.getTypes().contains("populated-place") || place.getTypes() == null || place.getTypes().isEmpty()) {
 
 			// XXX we suppose that the names of cities in the same country are unique
 			Set<Place> resultList = new HashSet<Place>(placeDao.findByPrefNameTitleAndNeedsReviewAndIdNot(
@@ -75,7 +75,7 @@ public class SimpleNameAndIdBasedEntityIdentifier implements EntityIdentifier {
 				resultList.addAll(placeDao.findByNamesTitleAndNeedsReviewAndIdNot(
 						name.getTitle(), false, place.getId()));
 			}
-			logger.debug("matched cities: " + resultList.size());
+			logger.debug("matched populated places: " + resultList.size());
 			
 			if (place.getParent() == null) {
 				if (resultList.size() == 1) {
@@ -88,12 +88,12 @@ public class SimpleNameAndIdBasedEntityIdentifier implements EntityIdentifier {
 				for (Place candidate : resultList) {
 					// check ancestors for country with equal name 
 					if (candidate.getParent() != null) {
-						Place candidateCountry = retrieveCountryFor(candidate, false);
-						Place placeCountry = retrieveCountryFor(place, false);
-						logger.debug("comparing countries: {} == {}", placeCountry, candidateCountry);
-						if (candidateCountry != null && placeCountry != null && 
-								( idsMatch(placeCountry, candidateCountry) || namesMatch(placeCountry, candidateCountry) ) ) {
-							logger.debug("countries matched");
+						Place candidateAdministrativeUnit = retrieveAdministrativeUnitFor(candidate, false);
+						Place placeAdministrativeUnit = retrieveAdministrativeUnitFor(place, false);
+						logger.debug("comparing administrative units: {} == {}", placeAdministrativeUnit, candidateAdministrativeUnit);
+						if (candidateAdministrativeUnit != null && placeAdministrativeUnit != null && 
+								( idsMatch(placeAdministrativeUnit, candidateAdministrativeUnit) || namesMatch(placeAdministrativeUnit, candidateAdministrativeUnit) ) ) {
+							logger.debug("administrative units matched");
 							candidates.add(new Candidate(place, candidate, 1));
 						}
 					}
@@ -134,15 +134,15 @@ public class SimpleNameAndIdBasedEntityIdentifier implements EntityIdentifier {
 		return !names1.isEmpty();
 	}
 
-	private Place retrieveCountryFor(Place place, boolean recursive) {
+	private Place retrieveAdministrativeUnitFor(Place place, boolean recursive) {
 		if (place.getParent() == null) return null;
 		Place parent = placeDao.findOne(place.getParent());
 		if (parent == null) {
 			return null;
-		} else if ("country".equals(parent.getType())) {
+		} else if (parent.getTypes().contains("administrative-unit")) {
 			return parent;
 		} else if (recursive) {
-			return retrieveCountryFor(parent, true);
+			return retrieveAdministrativeUnitFor(parent, true);
 		} else {
 			return null;
 		}

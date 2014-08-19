@@ -197,7 +197,7 @@ public class AdminController {
 		
 		long time = System.currentTimeMillis();
 		
-		List<Place> places = placeDao.findByTypeAndDeletedIsFalse("continent",new Sort("prefName"));
+		List<Place> places = placeDao.findByTypesAndDeletedIsFalse("continent",new Sort("prefName"));
 		
 		for (Place place : places) {
 			try {

@@ -117,11 +117,6 @@ public class JsonPlaceDeserializer {
 				}
 			}			
 			
-			// set place type
-			if (objectNode.has("type")) {
-				place.setType(objectNode.get("type").asText());
-			}
-			
 			if (objectNode.has("types")) {
 				Set<String> types = new HashSet<String>();
 				for (JsonNode type : objectNode.get("types"))

@@ -18,11 +18,11 @@ public interface PlaceRepository extends PagingAndSortingRepository<Place, Strin
 	
 	public List<Place> findByNamesTitle(String name);
 
-	public List<Place> findByPrefNameTitleAndType(String name, String type);
+	public List<Place> findByPrefNameTitleAndTypes(String name, String type);
 
 	public Place findByIds(Identifier id);
 
-	public Place findByIdsAndType(Identifier id, String type);
+	public Place findByIdsAndTypes(Identifier id, String type);
 	
 	public List<Place> findByParent(String parentId);
 	
@@ -32,7 +32,7 @@ public interface PlaceRepository extends PagingAndSortingRepository<Place, Strin
 
 	public List<Place> findByParentIsNullAndDeletedIsFalse(Sort sort);
 
-	public List<Place> findByTypeAndDeletedIsFalse(String string, Sort sort);
+	public List<Place> findByTypesAndDeletedIsFalse(String string, Sort sort);
 
 	public List<Place> findByPrefLocationIsNull();
 
@@ -44,14 +44,14 @@ public interface PlaceRepository extends PagingAndSortingRepository<Place, Strin
 	
 	public List<Place> findByRelatedPlaces(String id);
 
-	public List<Place> findByNamesTitleAndType(String title, String string);
+	public List<Place> findByNamesTitleAndTypes(String title, String string);
 
 	public List<Place> findByNeedsReview(boolean b);
 
-	public Place findByIdsAndTypeAndNeedsReviewAndIdNot(Identifier identifier,
+	public Place findByIdsAndTypesAndNeedsReviewAndIdNot(Identifier identifier,
 			String type, boolean needsReview, String id);
 
-	public List<Place> findByPrefNameTitleAndTypeAndNeedsReviewAndIdNot(
+	public List<Place> findByPrefNameTitleAndTypesAndNeedsReviewAndIdNot(
 			String title, String string, boolean b, String id);
 
 	public List<Place> findByPrefNameTitleAndNeedsReviewAndIdNot(String title, boolean b, String string);

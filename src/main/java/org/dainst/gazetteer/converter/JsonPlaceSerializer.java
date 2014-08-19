@@ -68,9 +68,6 @@ public class JsonPlaceSerializer {
 			}
 		}
 		
-		if (place.getType() != null && !place.getType().isEmpty())
-			placeNode.put("type", place.getType());
-		
 		if (place.getTypes() != null && !place.getTypes().isEmpty()) {
 			ArrayNode typesNode = mapper.createArrayNode();
 			for (String type : place.getTypes())

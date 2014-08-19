@@ -14,14 +14,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document
 @CompoundIndexes({
 	@CompoundIndex(name="linksObject_linksPredicate", def="{'links.object': 1, 'links.predicate': 1}"),
-	@CompoundIndex(name="prefNameTitle_type", def="{'prefName.title': 1, 'type': 1}"),
-	@CompoundIndex(name="ids_type", def="{'ids': 1, 'type': 1}"),
-	@CompoundIndex(name="parent_type", def="{'parent': 1, 'type': 1}"),
-	@CompoundIndex(name="type_deleted", def="{'type': 1, 'deleted': 1}"),
+	@CompoundIndex(name="prefNameTitle_types", def="{'prefName.title': 1, 'types': 1}"),
+	@CompoundIndex(name="parent_type", def="{'parent': 1, 'types': 1}"),
+	@CompoundIndex(name="types_deleted", def="{'types': 1, 'deleted': 1}"),
 	@CompoundIndex(name="prefLocation_idsContext", def="{'prefLocation': 1, 'ids.context': 1}"),
-	@CompoundIndex(name="namesTitle_type", def="{'names.title': 1, 'type': 1}"),
-	@CompoundIndex(name="ids_type_needsReview_id", def="{'ids': 1, 'type': 1, 'needsReview': 1, '_id': 1}"),
-	@CompoundIndex(name="prefNameTitle_type_needsReview_id", def="{'prefName.title': 1, 'type': 1, 'needsReview': 1, '_id': 1}"),
+	@CompoundIndex(name="prefNameTitle_types_needsReview_id", def="{'prefName.title': 1, 'types': 1, 'needsReview': 1, '_id': 1}"),
 	@CompoundIndex(name="prefNameTitle_needsReview_id", def="{'prefName.title': 1, 'needsReview': 1, '_id': 1}"),
 	@CompoundIndex(name="namesTitle_needsReview_id", def="{'names.title': 1, 'needsReview': 1, '_id': 1}")
 })
@@ -36,7 +33,6 @@ public class Place {
 
 	private Set<PlaceName> names = new HashSet<PlaceName>();
 	
-	private String type;
 	private Set<String> types = new HashSet<String>();
 	
 	@Indexed
@@ -139,14 +135,6 @@ public class Place {
 
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
 	}
 
 	public Set<String> getTypes() {

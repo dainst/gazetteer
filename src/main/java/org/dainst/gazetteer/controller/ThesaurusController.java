@@ -25,7 +25,7 @@ public class ThesaurusController {
 	public ModelAndView getThesaurus() {
 		
 		List<Place> places = placeRepository
-				.findByTypeAndDeletedIsFalse("continent",new Sort("prefName"));
+				.findByTypesAndDeletedIsFalse("continent",new Sort("prefName"));
 		
 		ModelAndView mav = new ModelAndView("thesaurus/get");
 		mav.addObject("places", places);

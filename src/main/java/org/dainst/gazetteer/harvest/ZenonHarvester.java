@@ -151,7 +151,7 @@ public class ZenonHarvester implements Harvester {
 		
 		place.setId(idGenerator.generate(place));
 		
-		if (type != null) place.setType(type);
+		if (type != null) place.getTypes().add(type);
 		
 		// ID
 		JsonNode controlNodes = placeNode.get("data").get("marc:controlfield");
@@ -255,7 +255,7 @@ public class ZenonHarvester implements Harvester {
 					String code = marcSubNode.get("@code").asText();
 					String text = marcSubNode.get("#text").asText();
 					if ("a".equals(code)) {
-						place.setType(PLACE_TYPES.get(text));
+						place.getTypes().add(PLACE_TYPES.get(text));
 						types.add(text);
 					}
 				}
@@ -289,10 +289,10 @@ public class ZenonHarvester implements Harvester {
 			
 		}
 		
-		if (level == 1 && place.getType() == null) {
-			place.setType("continent");
-		} else if (level == 3 && place.getType() == null) {
-			place.setType("country");
+		if (level == 1 && place.getTypes().isEmpty()) {
+			place.getTypes().add("continent");
+		} else if (level == 3 && place.getTypes().isEmpty()) {
+			place.getTypes().add("country");
 		}
 		
 		Identifier zenonId = new Identifier();
@@ -325,7 +325,7 @@ public class ZenonHarvester implements Harvester {
 		nextParent.setChildren(nextParent.getChildren() + children.size());
 		for (Place child : children) {
 			child.setParent(nextParent.getId());
-			child.setType(nextType);
+			child.getTypes().add(nextType);
 			place.setNeedsReview(true);
 			placeDao.save(place);
 			logger.debug("added child to queue: {}", child);

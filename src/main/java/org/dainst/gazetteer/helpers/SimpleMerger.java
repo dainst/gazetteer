@@ -72,11 +72,6 @@ public class SimpleMerger implements Merger {
 		else
 			result.setParent(place2.getParent());
 		
-		if (place1.getType() != null && !place1.getType().isEmpty())
-			result.setType(place1.getType());
-		else
-			result.setType(place2.getType());
-		
 		// the id is always determined by the first parameter of this function
 		if (newHasPriority) result.setId(place2.getId());
 		else result.setId(place1.getId());
