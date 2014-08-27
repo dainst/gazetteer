@@ -51,7 +51,7 @@
    					</sec:authorize>
    					<sec:authorize access="hasRole('ROLE_ADMIN')">
    						<li>
-   							<a href="">
+   							<a href="userManagement?page=${page}&sort=${lastSorting}&isDescending=${isDescending}">
    								<s:message code="ui.userManagement" text="ui.userManagement"/>
    							</a>
    						</li>
