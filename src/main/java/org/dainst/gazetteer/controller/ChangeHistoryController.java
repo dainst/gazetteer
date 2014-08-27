@@ -10,6 +10,8 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.dainst.gazetteer.dao.PlaceChangeRecordRepository;
 import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.dao.UserRepository;
@@ -25,6 +27,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.support.RequestContext;
 
 
 @Controller
@@ -46,7 +49,7 @@ public class ChangeHistoryController {
 
 	
 	@RequestMapping(value="/globalChangeHistory")
-	public String getGlobalChangeHistory(@RequestParam(required=false) String sort, @RequestParam(required=false) boolean isDescending,
+	public String getGlobalChangeHistory(HttpServletRequest request, @RequestParam(required=false) String sort, @RequestParam(required=false) boolean isDescending,
 										 @RequestParam(required=false) Integer page, @RequestParam(required=false) String startDate,
 										 @RequestParam(required=false) String endDate, ModelMap model) {
 		
@@ -107,11 +110,20 @@ public class ChangeHistoryController {
 			
 			if ((sameAsStart || changeRecord.getChangeDate().after(start)) &&
 				(sameAsEnd || changeRecord.getChangeDate().before(end))) {
-			
+				
 				PresentablePlaceChangeRecord presChangeRecord = new PresentablePlaceChangeRecord();
 				presChangeRecord.setChangeDate(changeRecord.getChangeDate());
-				presChangeRecord.setUserId(changeRecord.getUserId());
-				presChangeRecord.setUsername(userRepository.findById(changeRecord.getUserId()).getUsername());
+				
+				User changeRecordUser = userRepository.findById(changeRecord.getUserId());
+				if (changeRecordUser != null) {
+					presChangeRecord.setUserId(changeRecord.getUserId());
+					presChangeRecord.setUsername(changeRecordUser.getUsername());
+				}
+				else {
+					presChangeRecord.setUserId(null);
+					RequestContext context = new RequestContext(request);
+					presChangeRecord.setUsername(context.getMessage("ui.changeHistory.deletedUser"));
+				}
 				presChangeRecord.setPlaceId(changeRecord.getPlaceId());
 				
 				Place place = placeRepository.findOne(changeRecord.getPlaceId());

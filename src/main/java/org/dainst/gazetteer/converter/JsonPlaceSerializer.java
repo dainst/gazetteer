@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.dainst.gazetteer.dao.PlaceChangeRecordRepository;
 import org.dainst.gazetteer.dao.UserRepository;
 import org.dainst.gazetteer.domain.Comment;
@@ -19,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.servlet.support.RequestContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -38,18 +41,18 @@ public class JsonPlaceSerializer {
 	}
 	
 	public String serialize(Place place) {
-		return serialize(place, null, null, 1);
+		return serialize(place, null, null, null, 1);
 	}
 	
 	public String serialize(Place place, int lod) {
-		return serialize(place, null, null, lod);
+		return serialize(place, null, null, null, lod);
 	}
 	
-	public String serialize(Place place, UserRepository userDao, PlaceChangeRecordRepository changeRecordDao) {
-		return serialize(place, userDao, changeRecordDao, 1);
+	public String serialize(Place place, UserRepository userDao, PlaceChangeRecordRepository changeRecordDao, HttpServletRequest request) {
+		return serialize(place, userDao, changeRecordDao, request, 1);
 	}
 	
-	public String serialize(Place place, UserRepository userDao, PlaceChangeRecordRepository changeRecordDao, int lod) {
+	public String serialize(Place place, UserRepository userDao, PlaceChangeRecordRepository changeRecordDao, HttpServletRequest request, int lod) {
 		
 		if (place == null) return null;
 		
@@ -272,7 +275,7 @@ public class JsonPlaceSerializer {
 		}
 		
 		// change history
-		if (user != null  && user.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_EDITOR")) && userDao != null && changeRecordDao != null) {
+		if (user != null  && user.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_EDITOR")) && userDao != null && changeRecordDao != null && request != null) {
 			
 			List<PlaceChangeRecord> changeHistory = changeRecordDao.findByPlaceId(place.getId());
 			
@@ -285,8 +288,14 @@ public class JsonPlaceSerializer {
 					ObjectNode changeRecordNode = mapper.createObjectNode();
 				
 					User changeRecordUser = userDao.findById(changeRecord.getUserId());
-					changeRecordNode.put("username", changeRecordUser.getUsername());
-					changeRecordNode.put("userId", changeRecord.getUserId());
+					if (changeRecordUser != null) {
+						changeRecordNode.put("username", changeRecordUser.getUsername());
+						changeRecordNode.put("userId", changeRecord.getUserId());
+					} else {
+						RequestContext context = new RequestContext(request);
+						changeRecordNode.put("username", context.getMessage("ui.changeHistory.deletedUser"));
+						changeRecordNode.put("userId", "");
+					}
 					
 					if (changeRecord.getChangeType() != null)
 						changeRecordNode.put("changeType", changeRecord.getChangeType());

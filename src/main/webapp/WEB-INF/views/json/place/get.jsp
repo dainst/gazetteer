@@ -17,4 +17,4 @@ JsonPlaceSerializer serializer = new JsonPlaceSerializer(baseUri);
 
 %>
 
-<%= serializer.serialize(place, userDao, changeRecordDao) %>
+<%= serializer.serialize(place, userDao, changeRecordDao, request) %>

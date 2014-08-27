@@ -253,7 +253,14 @@
 					<tr>
 						<td>${changeRecord.changeDateAsText}</td>
 						<sec:authorize access="hasRole('ROLE_ADMIN')">
-							<td><a href="userManagement?showUser=${changeRecord.userId}">${changeRecord.username}</a></td>
+							<c:choose>
+								<c:when test="${changeRecord.userId != null}">
+									<td><a href="userManagement?showUser=${changeRecord.userId}">${changeRecord.username}</a></td>
+								</c:when>
+								<c:otherwise>
+									<td>${changeRecord.username}</td>
+								</c:otherwise>
+							</c:choose>
 						</sec:authorize>
 						<td><a href="place/${changeRecord.placeId}">${changeRecord.placeId}</a>
 						<td>
