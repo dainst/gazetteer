@@ -106,6 +106,12 @@
 	</div>
 
 	<div class="container">
+	
+		<c:if test="${userDeleted != null}">
+			<div class="alert alert-success">
+				<s:message code="ui.deleteUser.success" text="ui.deleteUser.success" arguments="${userDeleted}" />
+			</div>
+		</c:if>
 		
 		<h3>
 			<s:message code="ui.userManagement" text="ui.userManagement" />
@@ -214,6 +220,7 @@
 					</c:choose>
 					
 					<th />
+					<th />
 				</tr>
 			</thead>
 			<tbody>
@@ -253,7 +260,8 @@
 									</c:otherwise>
 								</c:choose>			
 								<td><s:message code="user.status.activated"></s:message></td>
-								<td><a href="editUser?username=${user.username}&r=userManagement" class="btn btn-block btn-primary"><s:message code="ui.edit" text="ui.edit" /></a></td>
+								<td><a href="editUser?username=${user.username}&r=userManagement" class="btn btn-block btn-primary">&nbsp;<s:message code="ui.edit" text="ui.edit" />&nbsp;</a></td>
+								<td><span class="btn btn-block btn-danger disabled">&nbsp;<s:message code="ui.delete" text="ui.delete" />&nbsp;</span></td>
 							</tr>
 						</c:when>
 						<c:otherwise>
@@ -290,10 +298,24 @@
 									</c:otherwise>
 								</c:choose>
 								<td><s:message code="user.status.notActivated"></s:message></td>
-								<td><a href="editUser?username=${user.username}&r=userManagement" class="btn btn-block btn-warning"><s:message code="ui.activate" text="ui.activate" /></a></td>
+								<td><a href="editUser?username=${user.username}&r=userManagement" class="btn btn-block btn-warning">&nbsp;<s:message code="ui.activate" text="ui.activate" />&nbsp;</a></td>
+								<td><a href="#deleteModal_${user.id}" class="btn btn-block btn-danger" data-toggle="modal">&nbsp;<s:message code="ui.delete" text="ui.delete" />&nbsp;</a></td>	
 							</tr>
 						</c:otherwise>
 					</c:choose>
+					
+					<div class="modal hide fade" id="deleteModal_${user.id}">
+						<div class="modal-header">
+							<h3><s:message code="ui.deleteUser" text="ui.deleteUser"/>?</h3>
+						</div>
+						<div class="modal-body">
+							<s:message code="ui.deleteUser.really" text="ui.deleteUser.really" arguments="${user.username}"/>
+						</div>
+						<div class="modal-footer">
+							<a href="#" class="btn" data-dismiss="modal" aria-hidden="true"><s:message code="ui.cancel" text="ui.cancel"/></a>
+							<a href="userManagement?page=${page}&sort=${lastSorting}&isDescending=${isDescending}&deleteUser=true&deleteUserId=${user.id}" class="btn btn-danger" aria-hidden="true"><s:message code="ui.delete" text="ui.delete"/></a>
+						</div>
+					</div>
     			</c:forEach>
 			</tbody>
 		</table>

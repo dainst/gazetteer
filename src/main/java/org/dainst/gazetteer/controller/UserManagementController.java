@@ -159,7 +159,16 @@ public class UserManagementController {
 		
 	@RequestMapping(value="/userManagement")
 	public String getUserManagement(@RequestParam(required=false) String sort, @RequestParam(required=false) boolean isDescending,
-									@RequestParam(required=false) Integer page, @RequestParam(required=false) String showUser, ModelMap model) {
+									@RequestParam(required=false) Integer page, @RequestParam(required=false) String showUser,
+									@RequestParam(required=false) boolean deleteUser, @RequestParam(required=false) String deleteUserId, ModelMap model) {
+		
+		if (deleteUser) {			
+			User user = userRepository.findById(deleteUserId);
+			if (user != null && !user.isEnabled()) {			
+				userRepository.delete(user);
+				model.addAttribute("userDeleted", user.getUsername());
+			}	
+		}
 		
 		List<User> users = null;
 		int pages;
@@ -440,7 +449,7 @@ public class UserManagementController {
 		model.addAttribute("version", version);
 	
 		if (r != null && r.equals("userManagement") && adminEdit)
-			return getUserManagement(null, false, 0, null, model);
+			return getUserManagement(null, false, 0, null, false, null, model);
 		else if (r != null && !r.equals(""))
 			return "redirect:app/#!/" + r;
 		else
