@@ -67,6 +67,8 @@ public class Place {
 	
 	private Set<Comment> commentsReisestipendium = new HashSet<Comment>();
 	
+	private String authority;
+	
 	
 	public String getId() {
 		return id;
@@ -296,6 +298,14 @@ public class Place {
 		this.commentsReisestipendium = commentsReisestipendium;
 	}
 	
+	public String getAuthority() {
+		return authority;
+	}
+
+	public void setAuthority(String authority) {
+		this.authority = authority;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -331,6 +341,7 @@ public class Place {
 		result = prime * result + ((tags == null) ? 0 : tags.hashCode());
 		result = prime * result + ((provenance == null) ? 0 : provenance.hashCode());
 		result = prime * result + ((types == null) ? 0 : types.hashCode());
+		result = prime * result + ((authority == null) ? 0 : authority.hashCode());
 		return result;
 	}
 
@@ -429,6 +440,11 @@ public class Place {
 			if (other.types != null)
 				return false;
 		} else if (!types.equals(other.types))
+			return false;
+		if (authority == null) {
+			if (other.authority != null)
+				return false;
+		} else if (!authority.equals(other.authority))
 			return false;
 		return true;
 	}

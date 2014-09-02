@@ -19,9 +19,15 @@ StringBuilder sb = new StringBuilder("{");
 sb.append("\"total\": ").append(hits);
 sb.append(", \"result\": [");
 int i = 0;
+int emptyPlaces = 0;
 for (Place place : places) {
-	sb.append(serializer.serialize(place, 1));
-	if(++i < places.size()) sb.append(",");
+	String serializedPlace = serializer.serialize(place, 1);
+	if (serializedPlace != null) {
+		sb.append(serializedPlace);
+		if (++i < places.size() - emptyPlaces) sb.append(",");
+	}
+	else
+		emptyPlaces++;	
 }
 sb.append("]");
 

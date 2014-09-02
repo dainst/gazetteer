@@ -56,6 +56,15 @@ public class JsonPlaceSerializer {
 		
 		if (place == null) return null;
 		
+		User user = null;
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal instanceof User)
+			user = (User) principal;
+		
+		if (place.getAuthority() != null && !place.getAuthority().isEmpty() && 
+				(user == null || !user.getAuthorities().contains(new SimpleGrantedAuthority(place.getAuthority()))))
+			return null;
+		
 		ObjectNode placeNode = mapper.createObjectNode();
 		logger.debug("serializing: {}", place);
 		placeNode.put("@id", baseUri + "place/" + place.getId());
@@ -247,11 +256,6 @@ public class JsonPlaceSerializer {
 			}
 			placeNode.put("provenance", provenanceNode);
 		}
-		
-		User user = null;
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		if (principal instanceof User)
-			user = (User) principal;
 		
 		// reisestipendium content		
 		logger.debug("serializing reisestipendium content?");
