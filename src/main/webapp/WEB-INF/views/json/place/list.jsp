@@ -3,7 +3,8 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
 <%@ page session="false" import="org.dainst.gazetteer.domain.*,
 	java.util.List, java.util.Map,
-	org.dainst.gazetteer.converter.JsonPlaceSerializer" %>
+	org.dainst.gazetteer.converter.JsonPlaceSerializer,
+	org.dainst.gazetteer.dao.*" %>
 
 <% 
 
@@ -12,6 +13,7 @@ response.setHeader("Content-Type", "application/json; charset=utf-8");
 List<Place> places = (List<Place>) request.getAttribute("places");
 String baseUri = (String) request.getAttribute("baseUri");
 Long hits = (Long) request.getAttribute("hits");
+PlaceRepository placeDao = (PlaceRepository) request.getAttribute("placeDao");
 
 JsonPlaceSerializer serializer = new JsonPlaceSerializer(baseUri);
 
@@ -21,7 +23,7 @@ sb.append(", \"result\": [");
 int i = 0;
 int emptyPlaces = 0;
 for (Place place : places) {
-	String serializedPlace = serializer.serialize(place, 1);
+	String serializedPlace = serializer.serialize(place, placeDao, 1);
 	if (serializedPlace != null) {
 		sb.append(serializedPlace);
 		if (++i < places.size() - emptyPlaces) sb.append(",");

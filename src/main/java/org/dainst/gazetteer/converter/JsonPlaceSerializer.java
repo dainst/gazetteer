@@ -8,6 +8,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.dainst.gazetteer.dao.PlaceChangeRecordRepository;
+import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.dao.UserRepository;
 import org.dainst.gazetteer.domain.Comment;
 import org.dainst.gazetteer.domain.Identifier;
@@ -40,19 +41,19 @@ public class JsonPlaceSerializer {
 		mapper = new ObjectMapper();
 	}
 	
-	public String serialize(Place place) {
-		return serialize(place, null, null, null, 1);
+	public String serialize(Place place, PlaceRepository placeDao) {
+		return serialize(place, null, null, placeDao, null, 1);
 	}
 	
-	public String serialize(Place place, int lod) {
-		return serialize(place, null, null, null, lod);
+	public String serialize(Place place, PlaceRepository placeDao, int lod) {
+		return serialize(place, null, null, placeDao, null, lod);
 	}
 	
-	public String serialize(Place place, UserRepository userDao, PlaceChangeRecordRepository changeRecordDao, HttpServletRequest request) {
-		return serialize(place, userDao, changeRecordDao, request, 1);
+	public String serialize(Place place, UserRepository userDao, PlaceChangeRecordRepository changeRecordDao, PlaceRepository placeDao, HttpServletRequest request) {
+		return serialize(place, userDao, changeRecordDao, placeDao, request, 1);
 	}
 	
-	public String serialize(Place place, UserRepository userDao, PlaceChangeRecordRepository changeRecordDao, HttpServletRequest request, int lod) {
+	public String serialize(Place place, UserRepository userDao, PlaceChangeRecordRepository changeRecordDao, PlaceRepository placeDao, HttpServletRequest request, int lod) {
 		
 		if (place == null) return null;
 		
@@ -61,8 +62,7 @@ public class JsonPlaceSerializer {
 		if (principal instanceof User)
 			user = (User) principal;
 		
-		if (place.getAuthority() != null && !place.getAuthority().isEmpty() && 
-				(user == null || !user.getAuthorities().contains(new SimpleGrantedAuthority(place.getAuthority()))))
+		if (!checkPlaceAccess(place, user, placeDao))
 			return null;
 		
 		ObjectNode placeNode = mapper.createObjectNode();
@@ -257,6 +257,10 @@ public class JsonPlaceSerializer {
 			placeNode.put("provenance", provenanceNode);
 		}
 		
+		// authority
+		if (place.getAuthority() != null && !place.getAuthority().isEmpty())
+			placeNode.put("authority", place.getAuthority());
+		
 		// reisestipendium content		
 		logger.debug("serializing reisestipendium content?");
 		if (user != null && user.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_REISESTIPENDIUM"))) {
@@ -280,6 +284,7 @@ public class JsonPlaceSerializer {
 		
 		// change history
 		if (user != null  && user.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_EDITOR")) && userDao != null && changeRecordDao != null && request != null) {
+			logger.debug("serializing change history");
 			
 			List<PlaceChangeRecord> changeHistory = changeRecordDao.findByPlaceId(place.getId());
 			
@@ -322,6 +327,21 @@ public class JsonPlaceSerializer {
 			return "";
 		}
 		
+	}
+	
+	private boolean checkPlaceAccess(Place place, User user, PlaceRepository placeDao) {
+		
+		if (place.getAuthority() != null && !place.getAuthority().isEmpty() && 
+				(user == null || !user.getAuthorities().contains(new SimpleGrantedAuthority(place.getAuthority()))))
+			return false;
+		
+		if (place.getParent() != null && !place.getParent().isEmpty()) {
+			Place parent = placeDao.findOne(place.getParent());
+			if (parent != null)
+				return checkPlaceAccess(parent, user, placeDao);
+		}
+		
+		return true;
 	}
 	
 }

@@ -12,9 +12,10 @@ Place place = (Place) request.getAttribute("place");
 String baseUri = (String) request.getAttribute("baseUri");
 UserRepository userDao = (UserRepository) request.getAttribute("userDao");
 PlaceChangeRecordRepository changeRecordDao = (PlaceChangeRecordRepository) request.getAttribute("changeRecordDao");
+PlaceRepository placeDao = (PlaceRepository) request.getAttribute("placeDao");
 
 JsonPlaceSerializer serializer = new JsonPlaceSerializer(baseUri);
 
 %>
 
-<%= serializer.serialize(place, userDao, changeRecordDao, request) %>
+<%= serializer.serialize(place, userDao, changeRecordDao, placeDao, request) %>

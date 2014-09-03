@@ -144,6 +144,7 @@ public class SearchController {
 		mav.addObject("limit", limit);
 		mav.addObject("offset", offset);
 		mav.addObject("hits", query.getHits());
+		mav.addObject("placeDao", placeDao);
 		mav.addObject("view", view);
 		mav.addObject("q", q);
 		mav.addObject("googleMapsApiKey", googleMapsApiKey);

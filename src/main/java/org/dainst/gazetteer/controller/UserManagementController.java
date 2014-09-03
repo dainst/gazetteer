@@ -12,9 +12,11 @@ import java.util.concurrent.TimeUnit;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.dainst.gazetteer.dao.UserGroupRepository;
 import org.dainst.gazetteer.dao.UserPasswordChangeRequestRepository;
 import org.dainst.gazetteer.dao.UserRepository;
 import org.dainst.gazetteer.domain.User;
+import org.dainst.gazetteer.domain.UserGroup;
 import org.dainst.gazetteer.domain.UserPasswordChangeRequest;
 import org.dainst.gazetteer.helpers.MailService;
 import org.slf4j.Logger;
@@ -42,6 +44,9 @@ public class UserManagementController {
 	
 	@Autowired
 	private UserPasswordChangeRequestRepository userPasswordChangeRequestRepository;
+	
+	@Autowired
+	private UserGroupRepository userGroupDao;
 	
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
@@ -562,7 +567,41 @@ public class UserManagementController {
 		model.addAttribute("version", version);
 		
 		return "home";
-	}	
+	}
+	
+	@RequestMapping(value="/userGroupManagement")
+	public String getUserGroupManagement(@RequestParam(required=false) String deleteUserGroupId, ModelMap model) {
+	
+		if (deleteUserGroupId != null && !deleteUserGroupId.isEmpty()) {
+			UserGroup userGroup = userGroupDao.findOne(deleteUserGroupId);
+			userGroupDao.delete(userGroup);
+			model.addAttribute("deletedUserGroup", userGroup.getName());
+		}			
+		
+		List<UserGroup> userGroups = (List<UserGroup>) userGroupDao.findAll();
+		
+		model.addAttribute("userGroups", userGroups);
+		
+		return "userGroupManagement";
+	}
+	
+	@RequestMapping(value="/checkCreateUserGroupForm")
+	public String checkCreateUserGroupForm(HttpServletRequest request, ModelMap model) {
+		
+		String groupName = request.getParameter("group_name");
+		
+		if (!groupName.isEmpty()) {			
+			if (userGroupDao.findByName(groupName) != null)
+				model.addAttribute("failure", "groupNameAlreadyExists");				
+			else {
+				UserGroup userGroup = new UserGroup(groupName);
+				userGroupDao.save(userGroup);
+				model.addAttribute("createdUserGroup", userGroup.getName());
+			}
+		}		
+		
+		return getUserGroupManagement(null, model);
+	}
 	
 	private String returnRegisterFailure(String failureType, HttpServletRequest request, String r, ModelMap model) {
 		

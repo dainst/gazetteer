@@ -162,6 +162,7 @@ public class DocumentController {
 			mav.addObject("nativePlaceName", place.getNameMap().get(locale.getISO3Language()));
 			mav.addObject("userDao", userDao);
 			mav.addObject("changeRecordDao", changeRecordDao);
+			mav.addObject("placeDao", placeDao);
 			mav.addObject("googleMapsApiKey", googleMapsApiKey);
 			mav.addObject("languages", langHelper.getLocalizedLanguages(locale));			
 		}

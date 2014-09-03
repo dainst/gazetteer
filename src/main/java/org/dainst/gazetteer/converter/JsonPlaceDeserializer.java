@@ -117,6 +117,7 @@ public class JsonPlaceDeserializer {
 				}
 			}			
 			
+			// update types
 			if (objectNode.has("types")) {
 				Set<String> types = new HashSet<String>();
 				for (JsonNode type : objectNode.get("types"))
@@ -302,8 +303,12 @@ public class JsonPlaceDeserializer {
 			if (provenanceNode != null) for (JsonNode provenanceEntryNode : provenanceNode) {				
 				provenance.add(provenanceEntryNode.asText());	
 			}
-			logger.debug("updated provenance: {}", provenance);	
+			logger.debug("updated provenance: {}", provenance);
 			place.setProvenance(provenance);
+			
+			// update authority
+			if (objectNode.get("authority") != null)
+				place.setAuthority(objectNode.get("authority").asText());
 			
 			// update identifier objects			
 			Set<Identifier> identifiers = new HashSet<Identifier>();

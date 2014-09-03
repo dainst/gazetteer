@@ -56,6 +56,13 @@
    								</a>
    							</li>
    						</sec:authorize>
+   						<sec:authorize access="hasRole('ROLE_ADMIN')">
+   						<li>
+   							<a href="userGroupManagement">
+   								<s:message code="ui.userGroupManagement" text="ui.userGroupManagement"/>
+   							</a>
+   						</li>
+   					</sec:authorize>
    						<li class="divider"></li>
   						<li>
    							<a href="logout">
