@@ -181,12 +181,20 @@
 	
 	<span ng-hide="!place.types || place.types.length == 0">
 		<dt><s:message code="domain.place.type" text="domain.place.type" /></dt>
-			<c:forEach var="placeType" items="${placeTypes}">
-				<dd ng-show="hasType('${placeType}')">
-					<span gaz-translate="'place.types.' + '${placeType}'"></span>
-					<br/>
-				</dd>
-			</c:forEach>
+		<c:forEach var="placeType" items="${placeTypes}">
+			<dd ng-show="hasType('${placeType}')">
+				<span gaz-translate="'place.types.' + '${placeType}'"></span>
+				<br/>
+			</dd>
+		</c:forEach>
+		<br/>
+	</span>
+	
+	<span ng-hide="!place.userGroupId || place.userGroupId.length == 0">
+		<dt><s:message code="domain.place.userGroup" text="domain.place.userGroup" /></dt>
+		<c:forEach var="userGroup" items="${userGroups}">
+			<dd ng-show="'${userGroup.id}' == place.userGroupId">${userGroup.name}</dd>
+		</c:forEach>
 		<br/>
 	</span>
 	

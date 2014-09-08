@@ -306,9 +306,9 @@ public class JsonPlaceDeserializer {
 			logger.debug("updated provenance: {}", provenance);
 			place.setProvenance(provenance);
 			
-			// update authority
-			if (objectNode.get("authority") != null)
-				place.setAuthority(objectNode.get("authority").asText());
+			// update user group
+			if (objectNode.get("userGroupId") != null)
+				place.setUserGroupId(objectNode.get("userGroupId").asText());
 			
 			// update identifier objects			
 			Set<Identifier> identifiers = new HashSet<Identifier>();

@@ -2,15 +2,21 @@ package org.dainst.gazetteer.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.dainst.gazetteer.dao.UserGroupRepository;
+import org.dainst.gazetteer.domain.User;
+import org.dainst.gazetteer.domain.UserGroup;
 import org.dainst.gazetteer.helpers.LanguagesHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,6 +51,9 @@ public class AppController {
 	private String version;
 	
 	@Autowired
+	private UserGroupRepository userGroupDao;
+	
+	@Autowired
 	LanguagesHelper langHelper;
 	@RequestMapping(value="/app/")
 	public String app(ModelMap model, HttpServletRequest request, 
@@ -71,7 +80,7 @@ public class AppController {
 	}
 	
 	@RequestMapping(value="/app/{view}.html")
-	public String app(@PathVariable String view, ModelMap model, HttpServletRequest request) {
+	public String app(@PathVariable String view, ModelMap model, HttpServletRequest request) {		
 		model.addAttribute("baseUri",baseUri);
 		Locale locale = new RequestContext(request).getLocale();
 		model.addAttribute("language", locale.getLanguage());
@@ -86,6 +95,21 @@ public class AppController {
 	
 	@RequestMapping(value="/app/partials/{view}.html")
 	public String appPartials(@PathVariable String view, ModelMap model, HttpServletRequest request) {
+		User user = null;
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal != null && principal instanceof User) {
+			user = (User) principal;
+		
+			List<UserGroup> userGroups = (List<UserGroup>) userGroupDao.findAll();
+			List<UserGroup> availableUserGroups = new ArrayList<UserGroup>();
+			for (UserGroup userGroup : userGroups) {
+				if (user.getUserGroupIds().contains(userGroup.getId()))
+					availableUserGroups.add(userGroup);
+			}
+			
+			model.addAttribute("userGroups", availableUserGroups.toArray());
+		}
+		
 		model.addAttribute("baseUri",baseUri);
 		Locale locale = new RequestContext(request).getLocale();
 		model.addAttribute("language", locale.getLanguage());

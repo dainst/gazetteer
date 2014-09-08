@@ -200,6 +200,21 @@
 						</div>
 					</div>
 					
+					<!-- user group -->
+					<div class="control-group" ng-show="newPlace">
+						<label class="control-label">
+							<s:message code="domain.place.userGroup" text="domain.place.userGroup" />
+							<i class="icon-info-sign" style="color: #5572a1;" gaz-tooltip="'ui.place.user-group-info'"></i>
+						</label>
+						<div class="controls">
+							<select ng-model="place.userGroupId" class="input-large">
+								<c:forEach var="userGroup" items="${userGroups}">
+									<option value="${userGroup.id}">${userGroup.name}</option>
+								</c:forEach>
+							</select>
+						</div>
+					</div>
+					
 					<!-- tags -->
 					<div class="control-group">
 						<label class="control-label">

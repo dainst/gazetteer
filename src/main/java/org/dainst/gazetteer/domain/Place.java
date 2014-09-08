@@ -67,7 +67,7 @@ public class Place {
 	
 	private Set<Comment> commentsReisestipendium = new HashSet<Comment>();
 	
-	private String authority;
+	private String userGroupId;
 	
 	
 	public String getId() {
@@ -298,12 +298,12 @@ public class Place {
 		this.commentsReisestipendium = commentsReisestipendium;
 	}
 	
-	public String getAuthority() {
-		return authority;
+	public String getUserGroupId() {
+		return userGroupId;
 	}
 
-	public void setAuthority(String authority) {
-		this.authority = authority;
+	public void setUserGroupId(String userGroupId) {
+		this.userGroupId = userGroupId;
 	}
 
 	@Override
@@ -341,7 +341,7 @@ public class Place {
 		result = prime * result + ((tags == null) ? 0 : tags.hashCode());
 		result = prime * result + ((provenance == null) ? 0 : provenance.hashCode());
 		result = prime * result + ((types == null) ? 0 : types.hashCode());
-		result = prime * result + ((authority == null) ? 0 : authority.hashCode());
+		result = prime * result + ((userGroupId == null) ? 0 : userGroupId.hashCode());
 		return result;
 	}
 
@@ -441,10 +441,10 @@ public class Place {
 				return false;
 		} else if (!types.equals(other.types))
 			return false;
-		if (authority == null) {
-			if (other.authority != null)
+		if (userGroupId == null) {
+			if (other.userGroupId != null)
 				return false;
-		} else if (!authority.equals(other.authority))
+		} else if (!userGroupId.equals(other.userGroupId))
 			return false;
 		return true;
 	}

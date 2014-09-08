@@ -388,8 +388,10 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 			$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
 			$rootScope.loading--;
 		});		
-	} else 
+	} else {
 		$scope.place = { prefLocation: { publicSite: true } };
+		$scope.newPlace = true;
+	}
 	
 	$scope.$watch("prefLocationCoordinates", function() {
 		if ($scope.place) {
