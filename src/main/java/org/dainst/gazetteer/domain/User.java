@@ -5,7 +5,9 @@ import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -31,6 +33,7 @@ public class User implements UserDetails {
 	private boolean enabled;
 
 	private List<GrantedAuthority> authorities;
+	private Set<String> userGroupIds = new HashSet<String>();
 	
 
 	public User(String username, String firstname, String lastname, String institution,
@@ -179,6 +182,17 @@ public class User implements UserDetails {
 		return enabled;
 	}
 	
+	public Set<String> getUserGroupIds() {
+		if (userGroupIds == null)
+			userGroupIds = new HashSet<String>();
+			
+		return userGroupIds;
+	}
+
+	public void setUserGroupIds(Set<String> userGroupIds) {
+		this.userGroupIds = userGroupIds;
+	}
+
 	public static class UsernameComparator implements Comparator<User> {
 		public int compare(User user1, User user2) {
 			return user1.getUsername().toLowerCase().compareTo(user2.getUsername().toLowerCase());

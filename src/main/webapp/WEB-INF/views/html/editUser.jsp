@@ -295,6 +295,19 @@
 							
 									<s:message code="ui.editUser.roleReisestipendium" text="ui.editUser.roleReisestipendium" />
 								</label>
+								
+								<select name="edit_user_groups" multiple>
+									<c:forEach var="userGroup" items="${userGroups}">
+										<c:choose>
+											<c:when test="${userGroupValues[userGroup.id]}">
+												<option value="${userGroup.id}" selected>${userGroup.name}</option>
+											</c:when>
+											<c:otherwise>
+												<option value="${userGroup.id}">${userGroup.name}</option>
+											</c:otherwise>
+										</c:choose>
+									</c:forEach>
+								</select>
 							</div>
 						</div>
 					</c:if>

@@ -3,10 +3,13 @@ package org.dainst.gazetteer.controller;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import javax.mail.MessagingException;
@@ -331,16 +334,30 @@ public class UserManagementController {
 		if (user == null)
 			return "userManagement";
 		
+		if (adminEdit) {
+			List<UserGroup> userGroups = (List<UserGroup>) userGroupDao.findAll();
+		
+			Map<String, Boolean> userGroupValues = new HashMap<String, Boolean>();
+			for (UserGroup userGroup : userGroups) {
+				if (user.getUserGroupIds().contains(userGroup.getId()))
+					userGroupValues.put(userGroup.getId(), true);
+				else
+					userGroupValues.put(userGroup.getId(), false);
+			}
+			model.addAttribute("userGroups", userGroups);
+			model.addAttribute("userGroupValues", userGroupValues);
+			model.addAttribute("edit_user_activated_value", user.isEnabled());
+			model.addAttribute("edit_user_role_admin_value", user.hasRole("ROLE_ADMIN"));
+			model.addAttribute("edit_user_role_editor_value", user.hasRole("ROLE_EDITOR"));
+			model.addAttribute("edit_user_role_reisestipendium_value", user.hasRole("ROLE_REISESTIPENDIUM"));
+		}
+		
 		model.addAttribute("user", user);
 		model.addAttribute("edit_user_username_value", user.getUsername());
 		model.addAttribute("edit_user_firstname_value", user.getFirstname());
 		model.addAttribute("edit_user_lastname_value", user.getLastname());
 		model.addAttribute("edit_user_institution_value", user.getInstitution());
 		model.addAttribute("edit_user_email_value", user.getEmail());
-		model.addAttribute("edit_user_activated_value", user.isEnabled());
-		model.addAttribute("edit_user_role_admin_value", user.hasRole("ROLE_ADMIN"));
-		model.addAttribute("edit_user_role_editor_value", user.hasRole("ROLE_EDITOR"));
-		model.addAttribute("edit_user_role_reisestipendium_value", user.hasRole("ROLE_REISESTIPENDIUM"));
 		model.addAttribute("adminEdit", adminEdit);
 		model.addAttribute("userEdit", userEdit);
 		model.addAttribute("r", r);
@@ -369,21 +386,39 @@ public class UserManagementController {
 		String newPasswordConfirmation = "";
 		boolean isEnabled = false;
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+		List<UserGroup> userGroups = new ArrayList<UserGroup>();
+		Map<String, Boolean> userGroupValues = new HashMap<String, Boolean>();
 		
 		if (adminEdit) {
-		newUsername = request.getParameter("edit_user_username");
-		isEnabled = request.getParameter("edit_user_activated") != null;
+			newUsername = request.getParameter("edit_user_username");
+			isEnabled = request.getParameter("edit_user_activated") != null;
 		
-		authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+			authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 		
-		if (request.getParameter("edit_user_role_admin") != null)
-			authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+			if (request.getParameter("edit_user_role_admin") != null)
+				authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
 		
-		if (request.getParameter("edit_user_role_editor") != null)
-			authorities.add(new SimpleGrantedAuthority("ROLE_EDITOR"));
+			if (request.getParameter("edit_user_role_editor") != null)
+				authorities.add(new SimpleGrantedAuthority("ROLE_EDITOR"));
 
-		if (request.getParameter("edit_user_role_reisestipendium") != null)
-			authorities.add(new SimpleGrantedAuthority("ROLE_REISESTIPENDIUM"));
+			if (request.getParameter("edit_user_role_reisestipendium") != null)
+				authorities.add(new SimpleGrantedAuthority("ROLE_REISESTIPENDIUM"));
+			
+			List<String> selectedUserGroupIds = new ArrayList<String>(Arrays.asList(request.getParameterValues("edit_user_groups")));
+			userGroups = (List<UserGroup>) userGroupDao.findAll();
+			for (UserGroup userGroup : userGroups) {
+				if (selectedUserGroupIds.contains(userGroup.getId())) {
+					userGroupValues.put(userGroup.getId(), true);
+					if (!user.getUserGroupIds().contains(userGroup.getId()))
+						user.getUserGroupIds().add(userGroup.getId());
+				}
+				
+				if (!selectedUserGroupIds.contains(userGroup.getId())) {
+					userGroupValues.put(userGroup.getId(), false);
+					if (user.getUserGroupIds().contains(userGroup.getId()))
+						user.getUserGroupIds().remove(userGroup.getId());
+				}
+			}
 		}
 		
 		if (userEdit) {
@@ -392,31 +427,31 @@ public class UserManagementController {
 		}
 		
 		if (newFirstname.equals(""))
-			return returnEditUserFailure("missingFirstname", user, r, adminEdit, userEdit, request, model);
+			return returnEditUserFailure("missingFirstname", user, r, adminEdit, userEdit, userGroups, userGroupValues, request, model);
 		
 		if (newLastname.equals(""))
-			return returnEditUserFailure("missingLastname", user, r, adminEdit, userEdit, request, model);
+			return returnEditUserFailure("missingLastname", user, r, adminEdit, userEdit, userGroups, userGroupValues, request, model);
 	
 		if (!user.getEmail().equals(newEmail) && userRepository.findByEmail(newEmail) != null)
-			return returnEditUserFailure("emailExists", user, r, adminEdit, userEdit, request, model);
+			return returnEditUserFailure("emailExists", user, r, adminEdit, userEdit, userGroups, userGroupValues, request, model);
 		
 		if (newEmail.equals("") || !newEmail.matches("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$"))
-			return returnEditUserFailure("invalidEmail", user, r, adminEdit, userEdit, request, model);
+			return returnEditUserFailure("invalidEmail", user, r, adminEdit, userEdit, userGroups, userGroupValues, request, model);
 		
 		if (adminEdit) {
 			if (newUsername.equals(""))
-				return returnEditUserFailure("missingUsername", user, r, adminEdit, userEdit, request, model);
+				return returnEditUserFailure("missingUsername", user, r, adminEdit, userEdit, userGroups, userGroupValues, request, model);
 
 			if (!username.equals(newUsername) && userRepository.findByUsername(newUsername) != null)
-				return returnEditUserFailure("usernameExists", user, r, adminEdit, userEdit, request, model);
+				return returnEditUserFailure("usernameExists", user, r, adminEdit, userEdit, userGroups, userGroupValues, request, model);
 		}
 		
 		if (userEdit) {
 			if (!newPassword.equals("") && (newPassword.length() < 6 || newPassword.length() > 30))
-				return returnEditUserFailure("passwordLength", user, r, adminEdit, userEdit, request, model);
+				return returnEditUserFailure("passwordLength", user, r, adminEdit, userEdit, userGroups, userGroupValues, request, model);
 			
 			if (!(newPassword.equals("") && newPasswordConfirmation.equals("")) && !newPassword.equals(newPasswordConfirmation))
-				return returnEditUserFailure("passwordInequality", user, r, adminEdit, userEdit, request, model);
+				return returnEditUserFailure("passwordInequality", user, r, adminEdit, userEdit, userGroups, userGroupValues, request, model);
 		}
 		
 		user.setFirstname(newFirstname);
@@ -618,8 +653,11 @@ public class UserManagementController {
 	}
 	
 	private String returnEditUserFailure(String failureType, User user, String r, boolean adminEdit, boolean userEdit,
+										 List<UserGroup> userGroups, Map<String, Boolean> userGroupValues,
 										 HttpServletRequest request, ModelMap model) {
 		
+		model.addAttribute("userGroups", userGroups);
+		model.addAttribute("userGroupValues", userGroupValues);
 		model.addAttribute("edit_user_username_value", request.getParameter("edit_user_username"));
 		model.addAttribute("edit_user_firstname_value", request.getParameter("edit_user_firstname"));
 		model.addAttribute("edit_user_lastname_value", request.getParameter("edit_user_lastname"));
