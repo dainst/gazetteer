@@ -183,6 +183,9 @@
 	                "index": "not_analyzed",
 	                "include_in_all": false
 				},
+				"userGroupId": {
+					"type": "string"
+				},
 	            "_class": {
 	                "type": "string",
 					"include_in_all": false

@@ -4,6 +4,7 @@
 <%@ page contentType="text/html; charset=utf-8" session="false"%>
 
 <s:message code="ui.language.notSpecified" text="ui.language.notSpecified" var="langNotSpecified" />
+<s:message code="domain.place.userGroup.noGroup" text="domain.place.userGroup.noGroup" var="userGroupNotSpecified"/>
 
 <div gaz-place-nav active-tab="edit" place="place"></div>
 
@@ -208,6 +209,7 @@
 						</label>
 						<div class="controls">
 							<select ng-model="place.userGroupId" class="input-large">
+								<option value="">${userGroupNotSpecified}</option>
 								<c:forEach var="userGroup" items="${userGroups}">
 									<option value="${userGroup.id}">${userGroup.name}</option>
 								</c:forEach>

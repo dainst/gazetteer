@@ -345,6 +345,7 @@ public class UserManagementController {
 					userGroupValues.put(userGroup.getId(), false);
 			}
 			model.addAttribute("userGroups", userGroups);
+			model.addAttribute("userGroupsSize", userGroups.size());
 			model.addAttribute("userGroupValues", userGroupValues);
 			model.addAttribute("edit_user_activated_value", user.isEnabled());
 			model.addAttribute("edit_user_role_admin_value", user.hasRole("ROLE_ADMIN"));
@@ -657,6 +658,7 @@ public class UserManagementController {
 										 HttpServletRequest request, ModelMap model) {
 		
 		model.addAttribute("userGroups", userGroups);
+		model.addAttribute("userGroupsSize", userGroups.size());
 		model.addAttribute("userGroupValues", userGroupValues);
 		model.addAttribute("edit_user_username_value", request.getParameter("edit_user_username"));
 		model.addAttribute("edit_user_firstname_value", request.getParameter("edit_user_firstname"));

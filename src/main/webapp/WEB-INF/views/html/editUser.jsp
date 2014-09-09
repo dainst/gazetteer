@@ -296,7 +296,7 @@
 									<s:message code="ui.editUser.roleReisestipendium" text="ui.editUser.roleReisestipendium" />
 								</label>
 								
-								<select name="edit_user_groups" multiple>
+								<select name="edit_user_groups" size="${userGroupsSize}" multiple>
 									<c:forEach var="userGroup" items="${userGroups}">
 										<c:choose>
 											<c:when test="${userGroupValues[userGroup.id]}">
