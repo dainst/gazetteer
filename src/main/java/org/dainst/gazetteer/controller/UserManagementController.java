@@ -405,7 +405,9 @@ public class UserManagementController {
 			if (request.getParameter("edit_user_role_reisestipendium") != null)
 				authorities.add(new SimpleGrantedAuthority("ROLE_REISESTIPENDIUM"));
 			
-			List<String> selectedUserGroupIds = new ArrayList<String>(Arrays.asList(request.getParameterValues("edit_user_groups")));
+			List<String> selectedUserGroupIds = new ArrayList<String>();
+			if (request.getParameterValues("edit_user_groups") != null)
+				selectedUserGroupIds = new ArrayList<String>(Arrays.asList(request.getParameterValues("edit_user_groups")));
 			userGroups = (List<UserGroup>) userGroupDao.findAll();
 			for (UserGroup userGroup : userGroups) {
 				if (selectedUserGroupIds.contains(userGroup.getId())) {
