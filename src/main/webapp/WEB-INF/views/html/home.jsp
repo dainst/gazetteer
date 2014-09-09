@@ -71,8 +71,8 @@
    						</sec:authorize>
    						<sec:authorize access="hasRole('ROLE_ADMIN')">
    						<li>
-   							<a href="userGroupManagement">
-   								<s:message code="ui.userGroupManagement" text="ui.userGroupManagement"/>
+   							<a href="recordGroupManagement">
+   								<s:message code="ui.recordGroupManagement" text="ui.recordGroupManagement"/>
    							</a>
    						</li>
    					</sec:authorize>

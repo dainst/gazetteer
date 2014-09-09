@@ -8,9 +8,9 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.dainst.gazetteer.dao.UserGroupRepository;
+import org.dainst.gazetteer.dao.RecordGroupRepository;
 import org.dainst.gazetteer.domain.User;
-import org.dainst.gazetteer.domain.UserGroup;
+import org.dainst.gazetteer.domain.RecordGroup;
 import org.dainst.gazetteer.helpers.LanguagesHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +51,7 @@ public class AppController {
 	private String version;
 	
 	@Autowired
-	private UserGroupRepository userGroupDao;
+	private RecordGroupRepository recordGroupDao;
 	
 	@Autowired
 	LanguagesHelper langHelper;
@@ -100,14 +100,14 @@ public class AppController {
 		if (principal != null && principal instanceof User) {
 			user = (User) principal;
 		
-			List<UserGroup> userGroups = (List<UserGroup>) userGroupDao.findAll();
-			List<UserGroup> availableUserGroups = new ArrayList<UserGroup>();
-			for (UserGroup userGroup : userGroups) {
-				if (user.getUserGroupIds().contains(userGroup.getId()))
-					availableUserGroups.add(userGroup);
+			List<RecordGroup> recordGroups = (List<RecordGroup>) recordGroupDao.findAll();
+			List<RecordGroup> availableRecordGroups = new ArrayList<RecordGroup>();
+			for (RecordGroup recordGroup : recordGroups) {
+				if (user.getRecordGroupId().contains(recordGroup.getId()))
+					availableRecordGroups.add(recordGroup);
 			}
 			
-			model.addAttribute("userGroups", availableUserGroups.toArray());
+			model.addAttribute("recordGroups", availableRecordGroups.toArray());
 		}
 		
 		model.addAttribute("baseUri",baseUri);

@@ -8,7 +8,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
-public class UserGroup {
+public class RecordGroup {
 
 	@Id
 	private String id;
@@ -16,7 +16,7 @@ public class UserGroup {
 	private String name;	
 	private Date creationDate;
 	
-	public UserGroup(String name) {
+	public RecordGroup(String name) {
 		this.setName(name);
 		this.setCreationDate(new Date());
 	}

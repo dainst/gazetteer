@@ -58,8 +58,8 @@
    						</sec:authorize>
    						<sec:authorize access="hasRole('ROLE_ADMIN')">
    						<li>
-   							<a href="userGroupManagement">
-   								<s:message code="ui.userGroupManagement" text="ui.userGroupManagement"/>
+   							<a href="recordGroupManagement">
+   								<s:message code="ui.recordGroupManagement" text="ui.recordGroupManagement"/>
    							</a>
    						</li>
    					</sec:authorize>
@@ -296,14 +296,14 @@
 									<s:message code="ui.editUser.roleReisestipendium" text="ui.editUser.roleReisestipendium" />
 								</label>
 								
-								<select name="edit_user_groups" size="${userGroupsSize}" multiple>
-									<c:forEach var="userGroup" items="${userGroups}">
+								<select name="edit_user_groups" size="${recordGroupsSize}" multiple>
+									<c:forEach var="recordGroup" items="${recordGroups}">
 										<c:choose>
-											<c:when test="${userGroupValues[userGroup.id]}">
-												<option value="${userGroup.id}" selected>${userGroup.name}</option>
+											<c:when test="${recordGroupValues[recordGroup.id]}">
+												<option value="${recordGroup.id}" selected>${recordGroup.name}</option>
 											</c:when>
 											<c:otherwise>
-												<option value="${userGroup.id}">${userGroup.name}</option>
+												<option value="${recordGroup.id}">${recordGroup.name}</option>
 											</c:otherwise>
 										</c:choose>
 									</c:forEach>

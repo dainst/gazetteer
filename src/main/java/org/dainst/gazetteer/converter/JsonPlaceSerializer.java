@@ -257,9 +257,9 @@ public class JsonPlaceSerializer {
 			placeNode.put("provenance", provenanceNode);
 		}
 		
-		// user group
-		if (place.getUserGroupId() != null && !place.getUserGroupId().isEmpty())
-			placeNode.put("userGroupId", place.getUserGroupId());
+		// record group
+		if (place.getRecordGroupId() != null && !place.getRecordGroupId().isEmpty())
+			placeNode.put("recordGroupId", place.getRecordGroupId());
 		
 		// reisestipendium content		
 		logger.debug("serializing reisestipendium content?");
@@ -331,8 +331,8 @@ public class JsonPlaceSerializer {
 	
 	private boolean checkPlaceAccess(Place place, User user, PlaceRepository placeDao) {
 		
-		if (place.getUserGroupId() != null && !place.getUserGroupId().isEmpty() && 
-				(user == null || !user.getUserGroupIds().contains(place.getUserGroupId())))
+		if (place.getRecordGroupId() != null && !place.getRecordGroupId().isEmpty() && 
+				(user == null || !user.getRecordGroupId().contains(place.getRecordGroupId())))
 			return false;
 		
 		if (place.getParent() != null && !place.getParent().isEmpty()) {

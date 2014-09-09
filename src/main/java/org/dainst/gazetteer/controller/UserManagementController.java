@@ -15,11 +15,11 @@ import java.util.concurrent.TimeUnit;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 
-import org.dainst.gazetteer.dao.UserGroupRepository;
+import org.dainst.gazetteer.dao.RecordGroupRepository;
 import org.dainst.gazetteer.dao.UserPasswordChangeRequestRepository;
 import org.dainst.gazetteer.dao.UserRepository;
 import org.dainst.gazetteer.domain.User;
-import org.dainst.gazetteer.domain.UserGroup;
+import org.dainst.gazetteer.domain.RecordGroup;
 import org.dainst.gazetteer.domain.UserPasswordChangeRequest;
 import org.dainst.gazetteer.helpers.MailService;
 import org.slf4j.Logger;
@@ -49,7 +49,7 @@ public class UserManagementController {
 	private UserPasswordChangeRequestRepository userPasswordChangeRequestRepository;
 	
 	@Autowired
-	private UserGroupRepository userGroupDao;
+	private RecordGroupRepository recordGroupDao;
 	
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
@@ -335,18 +335,18 @@ public class UserManagementController {
 			return "userManagement";
 		
 		if (adminEdit) {
-			List<UserGroup> userGroups = (List<UserGroup>) userGroupDao.findAll();
+			List<RecordGroup> recordGroups = (List<RecordGroup>) recordGroupDao.findAll();
 		
-			Map<String, Boolean> userGroupValues = new HashMap<String, Boolean>();
-			for (UserGroup userGroup : userGroups) {
-				if (user.getUserGroupIds().contains(userGroup.getId()))
-					userGroupValues.put(userGroup.getId(), true);
+			Map<String, Boolean> recordGroupValues = new HashMap<String, Boolean>();
+			for (RecordGroup recordGroup : recordGroups) {
+				if (user.getRecordGroupId().contains(recordGroup.getId()))
+					recordGroupValues.put(recordGroup.getId(), true);
 				else
-					userGroupValues.put(userGroup.getId(), false);
+					recordGroupValues.put(recordGroup.getId(), false);
 			}
-			model.addAttribute("userGroups", userGroups);
-			model.addAttribute("userGroupsSize", userGroups.size());
-			model.addAttribute("userGroupValues", userGroupValues);
+			model.addAttribute("recordGroups", recordGroups);
+			model.addAttribute("recordGroupsSize", recordGroups.size());
+			model.addAttribute("recordGroupValues", recordGroupValues);
 			model.addAttribute("edit_user_activated_value", user.isEnabled());
 			model.addAttribute("edit_user_role_admin_value", user.hasRole("ROLE_ADMIN"));
 			model.addAttribute("edit_user_role_editor_value", user.hasRole("ROLE_EDITOR"));
@@ -387,8 +387,8 @@ public class UserManagementController {
 		String newPasswordConfirmation = "";
 		boolean isEnabled = false;
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-		List<UserGroup> userGroups = new ArrayList<UserGroup>();
-		Map<String, Boolean> userGroupValues = new HashMap<String, Boolean>();
+		List<RecordGroup> recordGroups = new ArrayList<RecordGroup>();
+		Map<String, Boolean> recordGroupValues = new HashMap<String, Boolean>();
 		
 		if (adminEdit) {
 			newUsername = request.getParameter("edit_user_username");
@@ -405,21 +405,21 @@ public class UserManagementController {
 			if (request.getParameter("edit_user_role_reisestipendium") != null)
 				authorities.add(new SimpleGrantedAuthority("ROLE_REISESTIPENDIUM"));
 			
-			List<String> selectedUserGroupIds = new ArrayList<String>();
+			List<String> selectedRecordGroupIds = new ArrayList<String>();
 			if (request.getParameterValues("edit_user_groups") != null)
-				selectedUserGroupIds = new ArrayList<String>(Arrays.asList(request.getParameterValues("edit_user_groups")));
-			userGroups = (List<UserGroup>) userGroupDao.findAll();
-			for (UserGroup userGroup : userGroups) {
-				if (selectedUserGroupIds.contains(userGroup.getId())) {
-					userGroupValues.put(userGroup.getId(), true);
-					if (!user.getUserGroupIds().contains(userGroup.getId()))
-						user.getUserGroupIds().add(userGroup.getId());
+				selectedRecordGroupIds = new ArrayList<String>(Arrays.asList(request.getParameterValues("edit_user_groups")));
+			recordGroups = (List<RecordGroup>) recordGroupDao.findAll();
+			for (RecordGroup recordGroup : recordGroups) {
+				if (selectedRecordGroupIds.contains(recordGroup.getId())) {
+					recordGroupValues.put(recordGroup.getId(), true);
+					if (!user.getRecordGroupId().contains(recordGroup.getId()))
+						user.getRecordGroupId().add(recordGroup.getId());
 				}
 				
-				if (!selectedUserGroupIds.contains(userGroup.getId())) {
-					userGroupValues.put(userGroup.getId(), false);
-					if (user.getUserGroupIds().contains(userGroup.getId()))
-						user.getUserGroupIds().remove(userGroup.getId());
+				if (!selectedRecordGroupIds.contains(recordGroup.getId())) {
+					recordGroupValues.put(recordGroup.getId(), false);
+					if (user.getRecordGroupId().contains(recordGroup.getId()))
+						user.getRecordGroupId().remove(recordGroup.getId());
 				}
 			}
 		}
@@ -430,31 +430,31 @@ public class UserManagementController {
 		}
 		
 		if (newFirstname.equals(""))
-			return returnEditUserFailure("missingFirstname", user, r, adminEdit, userEdit, userGroups, userGroupValues, request, model);
+			return returnEditUserFailure("missingFirstname", user, r, adminEdit, userEdit, recordGroups, recordGroupValues, request, model);
 		
 		if (newLastname.equals(""))
-			return returnEditUserFailure("missingLastname", user, r, adminEdit, userEdit, userGroups, userGroupValues, request, model);
+			return returnEditUserFailure("missingLastname", user, r, adminEdit, userEdit, recordGroups, recordGroupValues, request, model);
 	
 		if (!user.getEmail().equals(newEmail) && userRepository.findByEmail(newEmail) != null)
-			return returnEditUserFailure("emailExists", user, r, adminEdit, userEdit, userGroups, userGroupValues, request, model);
+			return returnEditUserFailure("emailExists", user, r, adminEdit, userEdit, recordGroups, recordGroupValues, request, model);
 		
 		if (newEmail.equals("") || !newEmail.matches("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$"))
-			return returnEditUserFailure("invalidEmail", user, r, adminEdit, userEdit, userGroups, userGroupValues, request, model);
+			return returnEditUserFailure("invalidEmail", user, r, adminEdit, userEdit, recordGroups, recordGroupValues, request, model);
 		
 		if (adminEdit) {
 			if (newUsername.equals(""))
-				return returnEditUserFailure("missingUsername", user, r, adminEdit, userEdit, userGroups, userGroupValues, request, model);
+				return returnEditUserFailure("missingUsername", user, r, adminEdit, userEdit, recordGroups, recordGroupValues, request, model);
 
 			if (!username.equals(newUsername) && userRepository.findByUsername(newUsername) != null)
-				return returnEditUserFailure("usernameExists", user, r, adminEdit, userEdit, userGroups, userGroupValues, request, model);
+				return returnEditUserFailure("usernameExists", user, r, adminEdit, userEdit, recordGroups, recordGroupValues, request, model);
 		}
 		
 		if (userEdit) {
 			if (!newPassword.equals("") && (newPassword.length() < 6 || newPassword.length() > 30))
-				return returnEditUserFailure("passwordLength", user, r, adminEdit, userEdit, userGroups, userGroupValues, request, model);
+				return returnEditUserFailure("passwordLength", user, r, adminEdit, userEdit, recordGroups, recordGroupValues, request, model);
 			
 			if (!(newPassword.equals("") && newPasswordConfirmation.equals("")) && !newPassword.equals(newPasswordConfirmation))
-				return returnEditUserFailure("passwordInequality", user, r, adminEdit, userEdit, userGroups, userGroupValues, request, model);
+				return returnEditUserFailure("passwordInequality", user, r, adminEdit, userEdit, recordGroups, recordGroupValues, request, model);
 		}
 		
 		user.setFirstname(newFirstname);
@@ -607,38 +607,38 @@ public class UserManagementController {
 		return "home";
 	}
 	
-	@RequestMapping(value="/userGroupManagement")
-	public String getUserGroupManagement(@RequestParam(required=false) String deleteUserGroupId, ModelMap model) {
+	@RequestMapping(value="/recordGroupManagement")
+	public String getRecordGroupManagement(@RequestParam(required=false) String deleteRecordGroupId, ModelMap model) {
 	
-		if (deleteUserGroupId != null && !deleteUserGroupId.isEmpty()) {
-			UserGroup userGroup = userGroupDao.findOne(deleteUserGroupId);
-			userGroupDao.delete(userGroup);
-			model.addAttribute("deletedUserGroup", userGroup.getName());
+		if (deleteRecordGroupId != null && !deleteRecordGroupId.isEmpty()) {
+			RecordGroup recordGroup = recordGroupDao.findOne(deleteRecordGroupId);
+			recordGroupDao.delete(recordGroup);
+			model.addAttribute("deletedRecordGroup", recordGroup.getName());
 		}			
 		
-		List<UserGroup> userGroups = (List<UserGroup>) userGroupDao.findAll();
+		List<RecordGroup> recordGroups = (List<RecordGroup>) recordGroupDao.findAll();
 		
-		model.addAttribute("userGroups", userGroups);
+		model.addAttribute("recordGroups", recordGroups);
 		
-		return "userGroupManagement";
+		return "recordGroupManagement";
 	}
 	
-	@RequestMapping(value="/checkCreateUserGroupForm")
-	public String checkCreateUserGroupForm(HttpServletRequest request, ModelMap model) {
+	@RequestMapping(value="/checkCreateRecordGroupForm")
+	public String checkCreateRecordGroupForm(HttpServletRequest request, ModelMap model) {
 		
 		String groupName = request.getParameter("group_name");
 		
 		if (!groupName.isEmpty()) {			
-			if (userGroupDao.findByName(groupName) != null)
+			if (recordGroupDao.findByName(groupName) != null)
 				model.addAttribute("failure", "groupNameAlreadyExists");				
 			else {
-				UserGroup userGroup = new UserGroup(groupName);
-				userGroupDao.save(userGroup);
-				model.addAttribute("createdUserGroup", userGroup.getName());
+				RecordGroup recordGroup = new RecordGroup(groupName);
+				recordGroupDao.save(recordGroup);
+				model.addAttribute("createdRecordGroup", recordGroup.getName());
 			}
 		}		
 		
-		return getUserGroupManagement(null, model);
+		return getRecordGroupManagement(null, model);
 	}
 	
 	private String returnRegisterFailure(String failureType, HttpServletRequest request, String r, ModelMap model) {
@@ -656,12 +656,12 @@ public class UserManagementController {
 	}
 	
 	private String returnEditUserFailure(String failureType, User user, String r, boolean adminEdit, boolean userEdit,
-										 List<UserGroup> userGroups, Map<String, Boolean> userGroupValues,
+										 List<RecordGroup> recordGroups, Map<String, Boolean> recordGroupValues,
 										 HttpServletRequest request, ModelMap model) {
 		
-		model.addAttribute("userGroups", userGroups);
-		model.addAttribute("userGroupsSize", userGroups.size());
-		model.addAttribute("userGroupValues", userGroupValues);
+		model.addAttribute("recordGroups", recordGroups);
+		model.addAttribute("recordGroupsSize", recordGroups.size());
+		model.addAttribute("recordGroupValues", recordGroupValues);
 		model.addAttribute("edit_user_username_value", request.getParameter("edit_user_username"));
 		model.addAttribute("edit_user_firstname_value", request.getParameter("edit_user_firstname"));
 		model.addAttribute("edit_user_lastname_value", request.getParameter("edit_user_lastname"));

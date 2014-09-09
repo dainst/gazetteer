@@ -51,7 +51,7 @@ public class MergeController {
 		Place place1 = placeDao.findOne(id1);
 		Place place2 = placeDao.findOne(id2);
 		
-		if (!(place1.getUserGroupId() == null && place2.getUserGroupId() == null) && (place1.getUserGroupId() != null && !place1.getUserGroupId().equals(place2.getUserGroupId())))
+		if (!(place1.getRecordGroupId() == null && place2.getRecordGroupId() == null) && (place1.getRecordGroupId() != null && !place1.getRecordGroupId().equals(place2.getRecordGroupId())))
 			throw new IllegalStateException("Places may not be merged, as they belong to different record groups.");
 		
 		// merge places

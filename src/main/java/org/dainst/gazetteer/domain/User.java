@@ -33,7 +33,7 @@ public class User implements UserDetails {
 	private boolean enabled;
 
 	private List<GrantedAuthority> authorities;
-	private Set<String> userGroupIds = new HashSet<String>();
+	private Set<String> recordGroupIds = new HashSet<String>();
 	
 
 	public User(String username, String firstname, String lastname, String institution,
@@ -182,15 +182,15 @@ public class User implements UserDetails {
 		return enabled;
 	}
 	
-	public Set<String> getUserGroupIds() {
-		if (userGroupIds == null)
-			userGroupIds = new HashSet<String>();
+	public Set<String> getRecordGroupId() {
+		if (recordGroupIds == null)
+			recordGroupIds = new HashSet<String>();
 			
-		return userGroupIds;
+		return recordGroupIds;
 	}
 
-	public void setUserGroupIds(Set<String> userGroupIds) {
-		this.userGroupIds = userGroupIds;
+	public void setRecordGroupIds(Set<String> recordGroupIds) {
+		this.recordGroupIds = recordGroupIds;
 	}
 
 	public static class UsernameComparator implements Comparator<User> {

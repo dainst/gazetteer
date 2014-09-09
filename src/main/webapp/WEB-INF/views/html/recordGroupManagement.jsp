@@ -58,8 +58,8 @@
    					</sec:authorize>
    					<sec:authorize access="hasRole('ROLE_ADMIN')">
    						<li>
-   							<a href="userGroupManagement">
-   								<s:message code="ui.userGroupManagement" text="ui.userGroupManagement"/>
+   							<a href="recordGroupManagement">
+   								<s:message code="ui.recordGroupManagement" text="ui.recordGroupManagement"/>
    							</a>
    						</li>
    					</sec:authorize>
@@ -115,65 +115,65 @@
 	<div class="container">
 		<c:if test="${failure eq 'groupNameAlreadyExists'}">
 			<div class="alert alert-error">
-				<s:message code="ui.userGroupManagement.groupNameAlreadyExists" text="ui.userGroupManagement.groupNameAlreadyExists" />
+				<s:message code="ui.recordGroupManagement.groupNameAlreadyExists" text="ui.recordGroupManagement.groupNameAlreadyExists" />
 			</div>
 		</c:if>
 	</div>
 	
 	<div class="container">
-		<c:if test="${createdUserGroup != null}">
+		<c:if test="${createdRecordGroup != null}">
 			<div class="alert alert-success">
-				<s:message code="ui.userGroupManagement.groupCreated" text="ui.userGroupManagement.groupCreated" arguments="${createdUserGroup}"/>
+				<s:message code="ui.recordGroupManagement.groupCreated" text="ui.recordGroupManagement.groupCreated" arguments="${createdRecordGroup}"/>
 			</div>
 		</c:if>
 	</div>
 	
 	<div class="container">
-		<c:if test="${deletedUserGroup != null}">
+		<c:if test="${deletedRecordGroup != null}">
 			<div class="alert alert-success">
-				<s:message code="ui.deleteUserGroup.success" text="ui.deleteUserGroup.success" arguments="${deletedUserGroup}"/>
+				<s:message code="ui.deleteRecordGroup.success" text="ui.deleteRecordGroup.success" arguments="${deletedRecordGroup}"/>
 			</div>
 		</c:if>
 	</div>
 
 	<div class="container">
 		<h3>
-			<s:message code="ui.userGroupManagement" text="ui.userGroupManagement" />
+			<s:message code="ui.recordGroupManagement" text="ui.recordGroupManagement" />
 		</h3>
 		
-		<form class="form-horizontal" name="form" action="checkCreateUserGroupForm" accept-charset="UTF-8" method="POST">
-			<s:message code="user.userGroup.name" text="user.userGroup.name" var="defaultGroupNameValue" />
+		<form class="form-horizontal" name="form" action="checkCreateRecordGroupForm" accept-charset="UTF-8" method="POST">
+			<s:message code="user.recordGroup.name" text="user.recordGroup.name" var="defaultGroupNameValue" />
 			<input type="text" name="group_name" value="${defaultGroupNameValue}" />
-			<s:message code="ui.userGroupManagement.create" text="ui.userGroupManagement.create" var="submitValue" />
+			<s:message code="ui.recordGroupManagement.create" text="ui.recordGroupManagement.create" var="submitValue" />
 			<input type="submit" class="btn btn-primary" value="${submitValue}" />	
 		</form>
 		
 		<table class="table table-condensed table-hover user-management-table">
 			<thead>
 				<tr>			
-					<th><s:message code="user.userGroup.name" text="user.userGroup.name" /></th>
-					<th><s:message code="user.userGroup.creationDate" text="user.userGroup.creationDate" /></th>
+					<th><s:message code="user.recordGroup.name" text="user.recordGroup.name" /></th>
+					<th><s:message code="user.recordGroup.creationDate" text="user.recordGroup.creationDate" /></th>
 					<th></th>
 				</tr>
 			</thead>
 			<tbody>
-				<c:forEach var="userGroup" items="${userGroups}">
+				<c:forEach var="recordGroup" items="${recordGroups}">
     				<tr>
-						<td>${userGroup.name}</td>
-						<td>${userGroup.creationDateAsText}</td>
-						<td><a href="#deleteGroupModal_${userGroup.id}" class="btn btn-danger" data-toggle="modal">&nbsp;<s:message code="ui.delete" text="ui.delete" />&nbsp;</a></td>
+						<td>${recordGroup.name}</td>
+						<td>${recordGroup.creationDateAsText}</td>
+						<td><a href="#deleteGroupModal_${recordGroup.id}" class="btn btn-danger" data-toggle="modal">&nbsp;<s:message code="ui.delete" text="ui.delete" />&nbsp;</a></td>
 					</tr>
 					
-					<div class="modal hide fade" id="deleteGroupModal_${userGroup.id}">
+					<div class="modal hide fade" id="deleteGroupModal_${recordGroup.id}">
 						<div class="modal-header">
-							<h3><s:message code="ui.deleteUserGroup" text="ui.deleteUserGroup"/>?</h3>
+							<h3><s:message code="ui.deleteRecordGroup" text="ui.deleteRecordGroup"/>?</h3>
 						</div>
 						<div class="modal-body">
-							<s:message code="ui.deleteUserGroup.really" text="ui.deleteUserGroup.really" arguments="${userGroup.name}"/>
+							<s:message code="ui.deleteRecordGroup.really" text="ui.deleteRecordGroup.really" arguments="${recordGroup.name}"/>
 						</div>
 						<div class="modal-footer">
 							<a href="#" class="btn" data-dismiss="modal" aria-hidden="true"><s:message code="ui.cancel" text="ui.cancel"/></a>
-							<a href="userGroupManagement?deleteUserGroupId=${userGroup.id}" class="btn btn-danger" aria-hidden="true"><s:message code="ui.delete" text="ui.delete"/></a>
+							<a href="recordGroupManagement?deleteRecordGroupId=${recordGroup.id}" class="btn btn-danger" aria-hidden="true"><s:message code="ui.delete" text="ui.delete"/></a>
 						</div>
 					</div>
 				</c:forEach>

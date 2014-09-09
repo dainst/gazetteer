@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.dainst.gazetteer.converter.JsonPlaceDeserializer;
 import org.dainst.gazetteer.dao.PlaceRepository;
-import org.dainst.gazetteer.dao.UserGroupRepository;
+import org.dainst.gazetteer.dao.RecordGroupRepository;
 import org.dainst.gazetteer.dao.UserRepository;
 import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.User;
@@ -108,19 +108,19 @@ public class SearchController {
 			query.addFilter(fq);
 		}
 		
-		String userGroupFilter = "_missing_:userGroupId";
-		if (user != null && user.getUserGroupIds().size() > 0) {
+		String recordGroupFilter = "_missing_:recordGroupId";
+		if (user != null && user.getRecordGroupId().size() > 0) {
 			boolean first = true;
-			userGroupFilter += " OR userGroupId:(";
-			for (String userGroupId : user.getUserGroupIds()) {
+			recordGroupFilter += " OR recordGroupId:(";
+			for (String recordGroupId : user.getRecordGroupId()) {
 				if (!first)
-					userGroupFilter += " OR ";
-				userGroupFilter += userGroupId;
+					recordGroupFilter += " OR ";
+				recordGroupFilter += recordGroupId;
 				first = false;
 			}
-			userGroupFilter += ")";
+			recordGroupFilter += ")";
 		}
-		query.addFilter(userGroupFilter);
+		query.addFilter(recordGroupFilter);
 		
 		query.addBoostForChildren();
 		query.limit(limit);
@@ -192,19 +192,19 @@ public class SearchController {
 		query.addBoostForChildren();
 		query.addFilter("deleted:false");
 		
-		String userGroupFilter = "_missing_:userGroupId";
-		if (user != null && user.getUserGroupIds().size() > 0) {
+		String recordGroupFilter = "_missing_:recordGroupId";
+		if (user != null && user.getRecordGroupId().size() > 0) {
 			boolean first = true;
-			userGroupFilter += " OR userGroupId:(";
-			for (String userGroupId : user.getUserGroupIds()) {
+			recordGroupFilter += " OR recordGroupId:(";
+			for (String recordGroupId : user.getRecordGroupId()) {
 				if (!first)
-					userGroupFilter += " OR ";
-				userGroupFilter += userGroupId;
+					recordGroupFilter += " OR ";
+				recordGroupFilter += recordGroupId;
 				first = false;
 			}
-			userGroupFilter += ")";
+			recordGroupFilter += ")";
 		}
-		query.addFilter(userGroupFilter);
+		query.addFilter(recordGroupFilter);
 		
 		if (!"true".equals(showInReview)) query.addFilter("needsReview:false");
 		query.addFacet("parent");
@@ -261,19 +261,19 @@ public class SearchController {
 		query.offset(offset);
 		query.addFilter("deleted:false");
 		
-		String userGroupFilter = "_missing_:userGroupId";
-		if (user != null && user.getUserGroupIds().size() > 0) {
+		String recordGroupFilter = "_missing_:recordGroupId";
+		if (user != null && user.getRecordGroupId().size() > 0) {
 			boolean first = true;
-			userGroupFilter += " OR userGroupId:(";
-			for (String userGroupId : user.getUserGroupIds()) {
+			recordGroupFilter += " OR recordGroupId:(";
+			for (String recordGroupId : user.getRecordGroupId()) {
 				if (!first)
-					userGroupFilter += " OR ";
-				userGroupFilter += userGroupId;
+					recordGroupFilter += " OR ";
+				recordGroupFilter += recordGroupId;
 				first = false;
 			}
-			userGroupFilter += ")";
+			recordGroupFilter += ")";
 		}
-		query.addFilter(userGroupFilter);
+		query.addFilter(recordGroupFilter);
 		
 		if (!"true".equals(showInReview)) query.addFilter("needsReview:false");
 		query.addFacet("parent");

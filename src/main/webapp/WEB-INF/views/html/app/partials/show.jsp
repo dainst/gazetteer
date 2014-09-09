@@ -190,10 +190,10 @@
 		<br/>
 	</span>
 	
-	<span ng-hide="!place.userGroupId || place.userGroupId.length == 0">
-		<dt><s:message code="domain.place.userGroup" text="domain.place.userGroup" /></dt>
-		<c:forEach var="userGroup" items="${userGroups}">
-			<dd ng-show="'${userGroup.id}' == place.userGroupId">${userGroup.name}</dd>
+	<span ng-hide="!place.recordGroupId || place.recordGroupId.length == 0">
+		<dt><s:message code="domain.place.recordGroup" text="domain.place.recordGroup" /></dt>
+		<c:forEach var="recordGroup" items="${recordGroups}">
+			<dd ng-show="'${recordGroup.id}' == place.recordGroupId">${recordGroup.name}</dd>
 		</c:forEach>
 		<br/>
 	</span>

@@ -4,7 +4,7 @@
 <%@ page contentType="text/html; charset=utf-8" session="false"%>
 
 <s:message code="ui.language.notSpecified" text="ui.language.notSpecified" var="langNotSpecified" />
-<s:message code="domain.place.userGroup.noGroup" text="domain.place.userGroup.noGroup" var="userGroupNotSpecified"/>
+<s:message code="domain.place.recordGroup.noGroup" text="domain.place.recordGroup.noGroup" var="recordGroupNotSpecified"/>
 
 <div gaz-place-nav active-tab="edit" place="place"></div>
 
@@ -201,17 +201,17 @@
 						</div>
 					</div>
 					
-					<!-- user group -->
+					<!-- record group -->
 					<div class="control-group" ng-show="newPlace">
 						<label class="control-label">
-							<s:message code="domain.place.userGroup" text="domain.place.userGroup" />
+							<s:message code="domain.place.recordGroup" text="domain.place.recordGroup" />
 							<i class="icon-info-sign" style="color: #5572a1;" gaz-tooltip="'ui.place.user-group-info'"></i>
 						</label>
 						<div class="controls">
-							<select ng-model="place.userGroupId" class="input-large">
-								<option value="">${userGroupNotSpecified}</option>
-								<c:forEach var="userGroup" items="${userGroups}">
-									<option value="${userGroup.id}">${userGroup.name}</option>
+							<select ng-model="place.recordGroupId" class="input-large">
+								<option value="">${recordGroupNotSpecified}</option>
+								<c:forEach var="recordGroup" items="${recordGroups}">
+									<option value="${recordGroup.id}">${recordGroup.name}</option>
 								</c:forEach>
 							</select>
 						</div>

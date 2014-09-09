@@ -21,7 +21,7 @@ messages.factory('messages', function(){
 		"ui.place.remove.success": "Successfully deleted place",
 		"ui.place.remove.failure": "Could not delete place",
 		"ui.place.protected-site-info": "Please log in to gain access to the exact coordinates.",
-		"ui.place.user-group-info": "If an user group is set, this place is only visible to members of that group. This setting cannot be changed at a later point in time.",
+		"ui.place.user-group-info": "If a record group is set, this place is only visible to members of that group. This setting cannot be changed at a later point in time.",
 		"ui.thesaurus": "Thesaurus",
 		"ui.link.tooltip": "Link to current place",
 		"ui.place.deleted": "This place has been deleted",
