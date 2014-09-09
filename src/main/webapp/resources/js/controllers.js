@@ -256,11 +256,9 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 			else
 				$scope.facets = null;
 			$rootScope.loading--;
-			var placesSize = 0;
 			for (var i=0; i < $scope.places.length; i++) {
 				$rootScope.loading++;				
-				if ($scope.places[i]) {
-					placesSize++;				
+				if ($scope.places[i]) {		
 					if ($scope.places[i].parent && !$scope.parents[$scope.places[i].parent]) {
 						var parentId = getIdFromUri($scope.places[i].parent);					
 						$scope.parents[$scope.places[i].parent] = Place.get({id:parentId});
@@ -268,8 +266,8 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 				}
 				$rootScope.loading--;
 			}
-			if ($scope.total != placesSize)
-				$scope.total = placesSize;
+			if ($scope.total != result.total)
+				$scope.total = result.total;
 		}, function() {
 			if($scope.search.type !== "prefix")
 				$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");

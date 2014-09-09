@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.dainst.gazetteer.converter.JsonPlaceDeserializer;
 import org.dainst.gazetteer.dao.PlaceRepository;
+import org.dainst.gazetteer.dao.UserGroupRepository;
 import org.dainst.gazetteer.dao.UserRepository;
 import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.User;
@@ -84,6 +85,11 @@ public class SearchController {
 		RequestContext requestContext = new RequestContext(request);
 		Locale locale = requestContext.getLocale();
 		
+		User user = null;
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal instanceof User)
+			user = (User) principal;
+		
 		logger.debug("Searching places with query: " + q + ", fq: " + fq + ", limit: " + limit + ", offset: " + offset + ", type: " + type);
 		
 		ElasticSearchPlaceQuery query = new ElasticSearchPlaceQuery(client);
@@ -101,6 +107,21 @@ public class SearchController {
 		if (fq != null && !fq.isEmpty()) {
 			query.addFilter(fq);
 		}
+		
+		String userGroupFilter = "_missing_:userGroupId";
+		if (user != null && user.getUserGroupIds().size() > 0) {
+			boolean first = true;
+			userGroupFilter += " OR userGroupId:(";
+			for (String userGroupId : user.getUserGroupIds()) {
+				if (!first)
+					userGroupFilter += " OR ";
+				userGroupFilter += userGroupId;
+				first = false;
+			}
+			userGroupFilter += ")";
+		}
+		query.addFilter(userGroupFilter);
+		
 		query.addBoostForChildren();
 		query.limit(limit);
 		query.offset(offset);
@@ -127,11 +148,6 @@ public class SearchController {
 		List<Place> places = placesForList(result);
 		logger.debug("Places: {}", places);
 		Map<String,List<String[]>> facets = processFacets(query, locale);
-		
-		User user = null;
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		if (principal instanceof User)
-			user = (User) principal;
 		
 		for (Place place : places)
 			ProtectLocationsService.protectLocations(user, place);
@@ -164,12 +180,32 @@ public class SearchController {
 		RequestContext requestContext = new RequestContext(request);
 		Locale locale = requestContext.getLocale();
 		
+		User user = null;
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal instanceof User)
+			user = (User) principal;
+		
 		ElasticSearchPlaceQuery query = new ElasticSearchPlaceQuery(client);
 		query.extendedSearch(jsonQuery);
 		query.limit(limit);
 		query.offset(offset);
 		query.addBoostForChildren();
 		query.addFilter("deleted:false");
+		
+		String userGroupFilter = "_missing_:userGroupId";
+		if (user != null && user.getUserGroupIds().size() > 0) {
+			boolean first = true;
+			userGroupFilter += " OR userGroupId:(";
+			for (String userGroupId : user.getUserGroupIds()) {
+				if (!first)
+					userGroupFilter += " OR ";
+				userGroupFilter += userGroupId;
+				first = false;
+			}
+			userGroupFilter += ")";
+		}
+		query.addFilter(userGroupFilter);
+		
 		if (!"true".equals(showInReview)) query.addFilter("needsReview:false");
 		query.addFacet("parent");
 		query.addFacet("type");
@@ -182,11 +218,6 @@ public class SearchController {
 		
 		List<Place> places = placesForList(result);
 		Map<String,List<String[]>> facets = processFacets(query, locale);
-		
-		User user = null;
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		if (principal instanceof User)
-			user = (User) principal;
 		
 		for (Place place : places)
 			ProtectLocationsService.protectLocations(user, place);
@@ -218,12 +249,32 @@ public class SearchController {
 		RequestContext requestContext = new RequestContext(request);
 		Locale locale = requestContext.getLocale();
 		
+		User user = null;
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal instanceof User)
+			user = (User) principal;
+		
 		ElasticSearchPlaceQuery query = new ElasticSearchPlaceQuery(client);
 		query.geoDistanceSearch(lon, lat, distance);
 		query.addGeoDistanceSort(lon, lat);
 		query.limit(limit);
 		query.offset(offset);
 		query.addFilter("deleted:false");
+		
+		String userGroupFilter = "_missing_:userGroupId";
+		if (user != null && user.getUserGroupIds().size() > 0) {
+			boolean first = true;
+			userGroupFilter += " OR userGroupId:(";
+			for (String userGroupId : user.getUserGroupIds()) {
+				if (!first)
+					userGroupFilter += " OR ";
+				userGroupFilter += userGroupId;
+				first = false;
+			}
+			userGroupFilter += ")";
+		}
+		query.addFilter(userGroupFilter);
+		
 		if (!"true".equals(showInReview)) query.addFilter("needsReview:false");
 		query.addFacet("parent");
 		query.addFacet("type");
@@ -240,11 +291,6 @@ public class SearchController {
 		logger.debug("Querying index returned: " + result.length + " places");
 		
 		List<Place> places = placesForList(result);
-		
-		User user = null;
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		if (principal instanceof User)
-			user = (User) principal;
 		
 		for (Place place : places)
 			ProtectLocationsService.protectLocations(user, place);
