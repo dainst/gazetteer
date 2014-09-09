@@ -27,6 +27,8 @@ public class SimpleMerger implements Merger {
 		
 		Place result = new Place();
 		
+		result.setUserGroupId(place1.getUserGroupId());
+		
 		result.getComments().addAll(place1.getComments());
 		result.getComments().addAll(place2.getComments());
 		result.getCommentsReisestipendium().addAll(place1.getCommentsReisestipendium());

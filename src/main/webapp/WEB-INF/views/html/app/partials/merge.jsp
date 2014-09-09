@@ -63,20 +63,38 @@
 				<td>
 					<sec:authorize access="hasRole('ROLE_USER')">
 						<div class="modal hide" id="mergeModal-{{candidatePlace.gazId}}">
-							<div class="modal-header">
-								<button type="button" class="close" data-dismiss="modal">×</button>
-								<h3><s:message code="ui.merge.dialog.head" text="ui.merge.dialog.head"/></h3>
+							<div ng-show="place.userGroupId == candidatePlace.userGroupId">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">×</button>
+									<h3><s:message code="ui.merge.dialog.head" text="ui.merge.dialog.head"/></h3>
+								</div>
+								<div class="modal-body">
+									<p><s:message code="ui.merge.dialog.body" text="ui.merge.dialog.body"/></p>
+									<ul>
+										<li><a href="#/show/{{place.gazId}}">{{place.prefName.title}}</a></li>
+										<li><a href="#/show/{{candidatePlace.gazId}}">{{candidatePlace.prefName.title}}</a></li>
+									</ul>
+								</div>
+								<div class="modal-footer">
+									<button class="btn" data-dismiss="modal"><s:message code="ui.cancel" text="ui.cancel"/></button>
+									<a ng-click="merge(place, candidatePlace)" data-dismiss="modal" class="btn btn-primary"><s:message code="ui.ok" text="ui.ok"/></a>
+								</div>
 							</div>
-							<div class="modal-body">
-								<p><s:message code="ui.merge.dialog.body" text="ui.merge.dialog.body"/></p>
-								<ul>
-									<li><a href="#/show/{{place.gazId}}">{{place.prefName.title}}</a></li>
-									<li><a href="#/show/{{candidatePlace.gazId}}">{{candidatePlace.prefName.title}}</a></li>
-								</ul>
-							</div>
-							<div class="modal-footer">
-								<button class="btn" data-dismiss="modal"><s:message code="ui.cancel" text="ui.cancel"/></button>
-								<a ng-click="merge(place, candidatePlace)" data-dismiss="modal" class="btn btn-primary"><s:message code="ui.ok" text="ui.ok"/></a>
+							<div ng-hide="place.userGroupId == candidatePlace.userGroupId">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal">×</button>
+									<h3><s:message code="ui.merge.notAllowed.head" text="ui.merge.notAllowed.head"/></h3>
+								</div>
+								<div class="modal-body">
+									<p><s:message code="ui.merge.notAllowed.body" text="ui.merge.notAllowed.body"/></p>
+									<ul>
+										<li><a href="#/show/{{place.gazId}}">{{place.prefName.title}}</a></li>
+										<li><a href="#/show/{{candidatePlace.gazId}}">{{candidatePlace.prefName.title}}</a></li>
+									</ul>
+								</div>
+								<div class="modal-footer">
+									<button class="btn" data-dismiss="modal"><s:message code="ui.ok" text="ui.ok"/></button>
+								</div>
 							</div>
 						</div>
 						<div style="text-align:center;">
