@@ -23,6 +23,7 @@ messages.factory('messages', function(){
 		"ui.place.protected-site-info": "Bitte loggen Sie sich ein, um Zugriff auf die exakten Koordinaten zu erhalten.",
 		"ui.place.user-group-info": "Wenn eine Datensatzgruppe festgelegt wird, ist der Ort nur für Mitglieder dieser Gruppe sichtbar. Diese Einstellung kann zu einem späteren Zeitpunkt nicht mehr geändert werden.",
 		"ui.thesaurus": "Thesaurus",
+		"ui.create": "Ort anlegen",
 		"ui.link.tooltip": "Mit aktuellem Ort verknüpfen",
 		"ui.place.deleted": "Dieser Ort wurde gelöscht",
 		"ui.place.provenance-info": "Dieses Objekt enthält Daten aus den angegebenen Quellen.",

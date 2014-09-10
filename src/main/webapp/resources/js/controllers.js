@@ -320,6 +320,82 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 
 }
 
+function CreateCtrl($scope, $rootScope, $routeParams, $location, Place, messages) {
+	
+	$scope.place = { prefLocation: { publicSite: true } };
+	$rootScope.title = messages["ui.create"];
+	$rootScope.subtitle = "";
+	
+	$scope.addPlaceType = function(placeType) {
+		var pos = $scope.getListPos($scope.place.types, placeType);
+		
+		if (pos == -1) {
+			if (!$scope.place.types)
+				$scope.place.types = [];
+			$scope.place.types.push(placeType);
+		}
+		else
+			$scope.place.types.splice(pos, 1);
+	};
+	
+	$scope.getListPos = function(list, placeType) {				
+		if (!list)
+			return -1;			
+		
+	    for (var i = 0; i < list.length; i++) {
+	        if (list[i] == placeType)
+	            return i;
+	    }
+	    
+	    return -1;
+	};
+	
+	$scope.hasType = function(placeType) {		
+		if (!$scope.place || !$scope.place.types)
+			return false;
+		
+	   if ($scope.getListPos($scope.place.types, placeType) != -1)
+		   return true;
+	   else
+		   return false;
+	};
+	
+	$scope.save = function() {
+		$rootScope.loading++;
+		
+		if ("archaeological-site" in $scope.place.types) {
+			$scope.place.prefLocation.publicSite = false;
+		}
+		
+		Place.save(
+			$scope.place,
+			function(data) {
+				if (data.message == null) {
+					if (data.gazId) {
+						$scope.place.gazId = data.gazId;
+					}
+					window.scrollTo(0,0);
+					$rootScope.loading--;
+					$location.path("edit/" + $scope.place.gazId); 
+					$rootScope.addAlert(messages["ui.place.save.success"], null, "success");
+				} else {
+					$scope.failure = data.message;
+					$rootScope.addAlert(messages["ui.place.save.failure." + $scope.failure], null, "error");
+					window.scrollTo(0,0); 
+					$rootScope.loading--;
+				}
+				
+			},
+			function(result) {
+				$scope.failure = result.data.message;
+				$rootScope.addAlert(messages["ui.place.save.failure"], null, "error");
+				window.scrollTo(0,0);
+				$rootScope.loading--;
+			}
+		);
+	};
+}
+
 
 function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages) {
 	
@@ -592,11 +668,6 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 	
 	$scope.addPlaceType = function(placeType) {
 		var pos = $scope.getListPos($scope.place.types, placeType);
-		
-		if (placeType == "archaeological-site" && pos == -1) {
-			$scope.place.prefLocation.publicSite = false;
-			$scope.location.publicSite = false;
-		}
 		
 		if (pos == -1) {
 			if (!$scope.place.types)

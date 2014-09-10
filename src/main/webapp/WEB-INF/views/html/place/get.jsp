@@ -55,7 +55,7 @@ iDAI.gazetteer - ${place.prefName.title}
 							<li><a href="app/#!/extended-search"> <s:message
 										code="ui.search.extendedSearch" text="ui.search.extendedSearch" />
 							</a></li>
-							<li><a href="app/#!/edit/"> <s:message
+							<li><a href="app/#!/create/"> <s:message
 										code="ui.place.create" text="ui.place.create" />
 							</a></li>
 						</ul>

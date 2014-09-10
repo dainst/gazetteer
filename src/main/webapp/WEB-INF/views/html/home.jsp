@@ -109,7 +109,7 @@
 										code="ui.search.extendedSearch" text="ui.search.extendedSearch" />
 							</a></li>
 							<sec:authorize access="hasRole('ROLE_EDITOR')">
-								<li><a href="app/#!/edit/"> <s:message
+								<li><a href="app/#!/create/"> <s:message
 											code="ui.place.create" text="ui.place.create" />
 								</a></li>
 							</sec:authorize>							
