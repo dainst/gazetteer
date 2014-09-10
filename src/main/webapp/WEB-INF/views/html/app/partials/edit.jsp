@@ -201,22 +201,6 @@
 						</div>
 					</div>
 					
-					<!-- record group -->
-					<div class="control-group" ng-show="newPlace">
-						<label class="control-label">
-							<s:message code="domain.place.recordGroup" text="domain.place.recordGroup" />
-							<i class="icon-info-sign" style="color: #5572a1;" gaz-tooltip="'ui.place.user-group-info'"></i>
-						</label>
-						<div class="controls">
-							<select ng-model="place.recordGroupId" class="input-large">
-								<option value="">${recordGroupNotSpecified}</option>
-								<c:forEach var="recordGroup" items="${recordGroups}">
-									<option value="${recordGroup.id}">${recordGroup.name}</option>
-								</c:forEach>
-							</select>
-						</div>
-					</div>
-					
 					<!-- tags -->
 					<div class="control-group">
 						<label class="control-label">
