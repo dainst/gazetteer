@@ -109,10 +109,10 @@ public class SearchController {
 		}
 		
 		String recordGroupFilter = "_missing_:recordGroupId";
-		if (user != null && user.getRecordGroupId().size() > 0) {
+		if (user != null && user.getRecordGroupIds().size() > 0) {
 			boolean first = true;
 			recordGroupFilter += " OR recordGroupId:(";
-			for (String recordGroupId : user.getRecordGroupId()) {
+			for (String recordGroupId : user.getRecordGroupIds()) {
 				if (!first)
 					recordGroupFilter += " OR ";
 				recordGroupFilter += recordGroupId;
@@ -193,10 +193,10 @@ public class SearchController {
 		query.addFilter("deleted:false");
 		
 		String recordGroupFilter = "_missing_:recordGroupId";
-		if (user != null && user.getRecordGroupId().size() > 0) {
+		if (user != null && user.getRecordGroupIds().size() > 0) {
 			boolean first = true;
 			recordGroupFilter += " OR recordGroupId:(";
-			for (String recordGroupId : user.getRecordGroupId()) {
+			for (String recordGroupId : user.getRecordGroupIds()) {
 				if (!first)
 					recordGroupFilter += " OR ";
 				recordGroupFilter += recordGroupId;
@@ -262,10 +262,10 @@ public class SearchController {
 		query.addFilter("deleted:false");
 		
 		String recordGroupFilter = "_missing_:recordGroupId";
-		if (user != null && user.getRecordGroupId().size() > 0) {
+		if (user != null && user.getRecordGroupIds().size() > 0) {
 			boolean first = true;
 			recordGroupFilter += " OR recordGroupId:(";
-			for (String recordGroupId : user.getRecordGroupId()) {
+			for (String recordGroupId : user.getRecordGroupIds()) {
 				if (!first)
 					recordGroupFilter += " OR ";
 				recordGroupFilter += recordGroupId;

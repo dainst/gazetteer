@@ -103,7 +103,7 @@ public class AppController {
 			List<RecordGroup> recordGroups = (List<RecordGroup>) recordGroupDao.findAll();
 			List<RecordGroup> availableRecordGroups = new ArrayList<RecordGroup>();
 			for (RecordGroup recordGroup : recordGroups) {
-				if (user.getRecordGroupId().contains(recordGroup.getId()))
+				if (user.getRecordGroupIds().contains(recordGroup.getId()))
 					availableRecordGroups.add(recordGroup);
 			}
 			

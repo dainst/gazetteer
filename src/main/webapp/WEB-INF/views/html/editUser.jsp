@@ -242,6 +242,23 @@
 						</div>
 					</c:if>
 					
+					<c:if test="${!adminEdit && !empty user.recordGroupIds}">
+						<div class="control-group">
+							<div class="controls">
+								<div><em><s:message code="ui.editUser.recordGroupAccess" text="ui.editUser.recordGroupAccess" />:</em></div>
+								<ul>
+									<c:forEach var="recordGroup" items="${recordGroups}">
+										<c:forEach var="recordGroupId" items="${user.recordGroupIds}">
+											<c:if test="${recordGroup.id == recordGroupId}">
+												<li>${recordGroup.name}</li>
+											</c:if>
+										</c:forEach>
+									</c:forEach>
+								</ul>
+							</div>
+						</div>
+					</c:if>
+					
 					<c:if test="${adminEdit}">
 						<div class="control-group">
 							<div class="controls">
@@ -296,7 +313,7 @@
 									<s:message code="ui.editUser.roleReisestipendium" text="ui.editUser.roleReisestipendium" />
 								</label>
 								
-								<select name="edit_user_groups" size="${recordGroupsSize}" multiple>
+								<select name="edit_record_groups" size="${recordGroupsSize}" multiple>
 									<c:forEach var="recordGroup" items="${recordGroups}">
 										<c:choose>
 											<c:when test="${recordGroupValues[recordGroup.id]}">

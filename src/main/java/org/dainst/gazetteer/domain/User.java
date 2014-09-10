@@ -182,7 +182,7 @@ public class User implements UserDetails {
 		return enabled;
 	}
 	
-	public Set<String> getRecordGroupId() {
+	public Set<String> getRecordGroupIds() {
 		if (recordGroupIds == null)
 			recordGroupIds = new HashSet<String>();
 			

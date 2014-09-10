@@ -332,7 +332,7 @@ public class JsonPlaceSerializer {
 	private boolean checkPlaceAccess(Place place, User user, PlaceRepository placeDao) {
 		
 		if (place.getRecordGroupId() != null && !place.getRecordGroupId().isEmpty() && 
-				(user == null || !user.getRecordGroupId().contains(place.getRecordGroupId())))
+				(user == null || !user.getRecordGroupIds().contains(place.getRecordGroupId())))
 			return false;
 		
 		if (place.getParent() != null && !place.getParent().isEmpty()) {

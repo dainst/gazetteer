@@ -334,17 +334,17 @@ public class UserManagementController {
 		if (user == null)
 			return "userManagement";
 		
+		List<RecordGroup> recordGroups = (List<RecordGroup>) recordGroupDao.findAll();
+		
 		if (adminEdit) {
-			List<RecordGroup> recordGroups = (List<RecordGroup>) recordGroupDao.findAll();
 		
 			Map<String, Boolean> recordGroupValues = new HashMap<String, Boolean>();
 			for (RecordGroup recordGroup : recordGroups) {
-				if (user.getRecordGroupId().contains(recordGroup.getId()))
+				if (user.getRecordGroupIds().contains(recordGroup.getId()))
 					recordGroupValues.put(recordGroup.getId(), true);
 				else
 					recordGroupValues.put(recordGroup.getId(), false);
 			}
-			model.addAttribute("recordGroups", recordGroups);
 			model.addAttribute("recordGroupsSize", recordGroups.size());
 			model.addAttribute("recordGroupValues", recordGroupValues);
 			model.addAttribute("edit_user_activated_value", user.isEnabled());
@@ -353,6 +353,7 @@ public class UserManagementController {
 			model.addAttribute("edit_user_role_reisestipendium_value", user.hasRole("ROLE_REISESTIPENDIUM"));
 		}
 		
+		model.addAttribute("recordGroups", recordGroups);
 		model.addAttribute("user", user);
 		model.addAttribute("edit_user_username_value", user.getUsername());
 		model.addAttribute("edit_user_firstname_value", user.getFirstname());
@@ -387,7 +388,7 @@ public class UserManagementController {
 		String newPasswordConfirmation = "";
 		boolean isEnabled = false;
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-		List<RecordGroup> recordGroups = new ArrayList<RecordGroup>();
+		List<RecordGroup> recordGroups = (List<RecordGroup>) recordGroupDao.findAll();
 		Map<String, Boolean> recordGroupValues = new HashMap<String, Boolean>();
 		
 		if (adminEdit) {
@@ -406,20 +407,19 @@ public class UserManagementController {
 				authorities.add(new SimpleGrantedAuthority("ROLE_REISESTIPENDIUM"));
 			
 			List<String> selectedRecordGroupIds = new ArrayList<String>();
-			if (request.getParameterValues("edit_user_groups") != null)
-				selectedRecordGroupIds = new ArrayList<String>(Arrays.asList(request.getParameterValues("edit_user_groups")));
-			recordGroups = (List<RecordGroup>) recordGroupDao.findAll();
+			if (request.getParameterValues("edit_record_groups") != null)
+				selectedRecordGroupIds = new ArrayList<String>(Arrays.asList(request.getParameterValues("edit_record_groups")));
 			for (RecordGroup recordGroup : recordGroups) {
 				if (selectedRecordGroupIds.contains(recordGroup.getId())) {
 					recordGroupValues.put(recordGroup.getId(), true);
-					if (!user.getRecordGroupId().contains(recordGroup.getId()))
-						user.getRecordGroupId().add(recordGroup.getId());
+					if (!user.getRecordGroupIds().contains(recordGroup.getId()))
+						user.getRecordGroupIds().add(recordGroup.getId());
 				}
 				
 				if (!selectedRecordGroupIds.contains(recordGroup.getId())) {
 					recordGroupValues.put(recordGroup.getId(), false);
-					if (user.getRecordGroupId().contains(recordGroup.getId()))
-						user.getRecordGroupId().remove(recordGroup.getId());
+					if (user.getRecordGroupIds().contains(recordGroup.getId()))
+						user.getRecordGroupIds().remove(recordGroup.getId());
 				}
 			}
 		}
