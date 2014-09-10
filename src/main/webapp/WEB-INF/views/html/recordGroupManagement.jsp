@@ -153,6 +153,7 @@
 				<tr>			
 					<th><s:message code="user.recordGroup.name" text="user.recordGroup.name" /></th>
 					<th><s:message code="user.recordGroup.creationDate" text="user.recordGroup.creationDate" /></th>
+					<th><s:message code="user.recordGroup.members" text="user.recordGroup.members" /></th>
 					<th></th>
 				</tr>
 			</thead>
@@ -161,6 +162,7 @@
     				<tr>
 						<td>${recordGroup.name}</td>
 						<td>${recordGroup.creationDateAsText}</td>
+						<td>${recordGroupSizes[recordGroup.id]}</td>
 						<td><a href="#deleteGroupModal_${recordGroup.id}" class="btn btn-danger" data-toggle="modal">&nbsp;<s:message code="ui.delete" text="ui.delete" />&nbsp;</a></td>
 					</tr>
 					

@@ -617,8 +617,20 @@ public class UserManagementController {
 		}			
 		
 		List<RecordGroup> recordGroups = (List<RecordGroup>) recordGroupDao.findAll();
+		List<User> users = (List<User>) userRepository.findAll();
+		
+		Map<String, Integer> recordGroupSizes = new HashMap<String, Integer>();
+		for (RecordGroup recordGroup : recordGroups) {
+			int size = 0;
+			for (User user : users) {
+				if (user.getRecordGroupIds().contains(recordGroup.getId()))
+					size++;
+			}
+			recordGroupSizes.put(recordGroup.getId(), size);
+		}
 		
 		model.addAttribute("recordGroups", recordGroups);
+		model.addAttribute("recordGroupSizes", recordGroupSizes);
 		
 		return "recordGroupManagement";
 	}
