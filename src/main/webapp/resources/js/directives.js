@@ -169,7 +169,7 @@ directives.directive('gazShapeEditor', function($document) {
 					$scope.initialized = true;
 					$scope.gmapsShapes = [];
 					
-					if ($scope.pos)
+					if ($scope.pos && $scope.pos.length != 0)
 						$scope.map.setCenter(new google.maps.LatLng($scope.pos[1], $scope.pos[0]));
 				
 					var drawingManager = new google.maps.drawing.DrawingManager({
