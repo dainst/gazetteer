@@ -363,7 +363,7 @@ function CreateCtrl($scope, $rootScope, $routeParams, $location, Place, messages
 	$scope.save = function() {
 		$rootScope.loading++;
 		
-		if ("archaeological-site" in $scope.place.types) {
+		if ($scope.place.types && "archaeological-site" in $scope.place.types) {
 			$scope.place.prefLocation.publicSite = false;
 		}
 		
