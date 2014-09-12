@@ -212,6 +212,12 @@
 				<i class="icon-external-link"></i>
 			</a>
 		</dd>
+		<dd ng-show="getIdsByContext('pleiades') != false">
+			<a ng-href="http://pelagios.org/api/places/http%3A%2F%2Fpleiades.stoa.org%2Fplaces%2F{{getIdsByContext('pleiades')[0]}}" target="_blank">
+				<s:message code="ui.link.pelagios" text="ui.link.pelagios"/>
+				<i class="icon-external-link"></i>
+			</a>
+		</dd>
 		<br/>
 	</span>
 	
