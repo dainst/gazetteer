@@ -8,7 +8,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.dainst.gazetteer.dao.PlaceChangeRecordRepository;
-import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.dao.UserRepository;
 import org.dainst.gazetteer.domain.Comment;
 import org.dainst.gazetteer.domain.Identifier;
@@ -41,19 +40,19 @@ public class JsonPlaceSerializer {
 		mapper = new ObjectMapper();
 	}
 	
-	public String serialize(Place place, PlaceRepository placeDao) {
-		return serialize(place, null, null, placeDao, null, 1);
+	public String serialize(Place place) {
+		return serialize(place, null, null, null, 1);
 	}
 	
-	public String serialize(Place place, PlaceRepository placeDao, int lod) {
-		return serialize(place, null, null, placeDao, null, lod);
+	public String serialize(Place place, int lod) {
+		return serialize(place, null, null, null, lod);
 	}
 	
-	public String serialize(Place place, UserRepository userDao, PlaceChangeRecordRepository changeRecordDao, PlaceRepository placeDao, HttpServletRequest request) {
-		return serialize(place, userDao, changeRecordDao, placeDao, request, 1);
+	public String serialize(Place place, UserRepository userDao, PlaceChangeRecordRepository changeRecordDao, HttpServletRequest request) {
+		return serialize(place, userDao, changeRecordDao, request, 1);
 	}
 	
-	public String serialize(Place place, UserRepository userDao, PlaceChangeRecordRepository changeRecordDao, PlaceRepository placeDao, HttpServletRequest request, int lod) {
+	public String serialize(Place place, UserRepository userDao, PlaceChangeRecordRepository changeRecordDao, HttpServletRequest request, int lod) {
 		
 		if (place == null) return null;
 		
@@ -62,16 +61,13 @@ public class JsonPlaceSerializer {
 		if (principal instanceof User)
 			user = (User) principal;
 		
-		if (!checkPlaceAccess(place, user, placeDao))
-			return null;
-		
 		ObjectNode placeNode = mapper.createObjectNode();
 		logger.debug("serializing: {}", place);
 		placeNode.put("@id", baseUri + "place/" + place.getId());
-		placeNode.put("gazId", place.getId());
+		placeNode.put("gazId", place.getId());				
 		
 		if (place.isDeleted()) {
-			placeNode.put("deleted", true);
+			placeNode.put("deleted", true);			
 			try {
 				return mapper.writeValueAsString(placeNode);
 			} catch (Exception e) {
@@ -80,6 +76,32 @@ public class JsonPlaceSerializer {
 			}
 		}
 		
+		// parent
+		if (place.getParent() != null && !place.getParent().isEmpty())
+			placeNode.put("parent", baseUri + "place/" + place.getParent());
+		
+		// related places
+		if (!place.getRelatedPlaces().isEmpty()) {
+			ArrayNode relatedPlacesNode = mapper.createArrayNode();
+			for (String relatedPlaceId : place.getRelatedPlaces()) {
+				if (relatedPlaceId != null) {
+					relatedPlacesNode.add(baseUri + "place/" + relatedPlaceId);
+				}
+			}
+			placeNode.put("relatedPlaces", relatedPlacesNode);
+		}
+		
+		if (!checkPlaceAccess(place, user)) {
+			placeNode.put("accessDenied", true);	
+			try {
+				return mapper.writeValueAsString(placeNode);
+			} catch (Exception e) {
+				logger.error("Unable to serialize place in JSON.", e);
+				return "";
+			}
+		}
+		
+		// place types
 		if (place.getTypes() != null && !place.getTypes().isEmpty()) {
 			ArrayNode typesNode = mapper.createArrayNode();
 			for (String type : place.getTypes())
@@ -212,21 +234,6 @@ public class JsonPlaceSerializer {
 			placeNode.put("links", linksNode);
 		}
 		
-		// parent
-		if (place.getParent() != null && !place.getParent().isEmpty())
-			placeNode.put("parent", baseUri + "place/" + place.getParent());
-		
-		// related places
-		if (!place.getRelatedPlaces().isEmpty()) {
-			ArrayNode relatedPlacesNode = mapper.createArrayNode();
-			for (String relatedPlaceId : place.getRelatedPlaces()) {
-				if (relatedPlaceId != null) {
-					relatedPlacesNode.add(baseUri + "place/" + relatedPlaceId);
-				}
-			}
-			placeNode.put("relatedPlaces", relatedPlacesNode);
-		}
-		
 		// comments
 		if (!place.getComments().isEmpty()) {
 			ArrayNode commentsNode = mapper.createArrayNode();
@@ -329,19 +336,13 @@ public class JsonPlaceSerializer {
 		
 	}
 	
-	private boolean checkPlaceAccess(Place place, User user, PlaceRepository placeDao) {
+	private boolean checkPlaceAccess(Place place, User user) {
 		
 		if (place.getRecordGroupId() != null && !place.getRecordGroupId().isEmpty() && 
 				(user == null || !user.getRecordGroupIds().contains(place.getRecordGroupId())))
 			return false;
-		
-		if (place.getParent() != null && !place.getParent().isEmpty()) {
-			Place parent = placeDao.findOne(place.getParent());
-			if (parent != null)
-				return checkPlaceAccess(parent, user, placeDao);
-		}
-		
-		return true;
+		else
+			return true;
 	}
 	
 }

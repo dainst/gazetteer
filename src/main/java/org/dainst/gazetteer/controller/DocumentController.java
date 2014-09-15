@@ -211,19 +211,28 @@ public class DocumentController {
 			@PathVariable String placeId,
 			HttpServletResponse response) throws Exception {
 
-			Place placeToCheck = place;
-			while (placeToCheck.getParent() != null && !placeToCheck.getParent().equals("")) {
-				placeToCheck = placeDao.findOne(placeToCheck.getParent());
-				
-				if (placeToCheck.getId().equals(place.getId())) {
-					ModelAndView mav = new ModelAndView("place/validation");
-					ValidationResult result = new ValidationResult();
-					result.setSuccess(false);
-					result.setMessage("parentError");
-					mav.addObject("result", result);
-					return mav;
-				}
+		Place placeToCheck = place;
+		while (placeToCheck.getParent() != null && !placeToCheck.getParent().equals("")) {
+			placeToCheck = placeDao.findOne(placeToCheck.getParent());
+			
+			if (placeToCheck.getId().equals(place.getId())) {
+				ModelAndView mav = new ModelAndView("place/validation");
+				ValidationResult result = new ValidationResult();
+				result.setSuccess(false);
+				result.setMessage("parentError");
+				mav.addObject("result", result);
+				return mav;
 			}
+		}
+		
+		if (!checkPlaceAccess(place)) {
+			ModelAndView mav = new ModelAndView("place/validation");
+			ValidationResult result = new ValidationResult();
+			result.setSuccess(false);
+			result.setMessage("accessDeniedError");
+			mav.addObject("result", result);
+			return mav;
+		}
 		
 		if (placeDao.exists(place.getId()))
 			changeRecordDao.save(createChangeRecord(place, "edit"));
@@ -280,11 +289,11 @@ public class DocumentController {
 		
 		List<Place> children = placeDao.findByParent(placeId);
 		List<Place> relatedPlaces = placeDao.findByRelatedPlaces(placeId);
+		Place place = placeDao.findOne(placeId);
 		
-		if (children.size() > 0 || relatedPlaces.size() > 0) {
+		if (children.size() > 0 || relatedPlaces.size() > 0 || !checkPlaceAccess(place)) {
 			response.setStatus(409);
-		} else {
-			Place place = placeDao.findOne(placeId);
+		} else {			
 			place.setDeleted(true);
 			placeDao.save(place);
 		
@@ -306,5 +315,16 @@ public class DocumentController {
 		changeRecord.setChangeDate(new Date());
 		
 		return changeRecord;
+	}
+	
+	private boolean checkPlaceAccess(Place place) {
+		
+		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		if (place.getRecordGroupId() != null && !place.getRecordGroupId().isEmpty() && 
+				(user == null || !user.getRecordGroupIds().contains(place.getRecordGroupId())))
+			return false;
+		else
+			return true;
 	}
 }

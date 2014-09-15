@@ -27,33 +27,37 @@
 
 <dl class="dl-horizontal">
 
-	<dt><s:message code="domain.place.names" /></dt>
-	<dd>
-		<em><s:message code="domain.place.prefName" text="domain.place.prefName"/>: </em>
-		{{place.prefName.title}}
-		<span ng-show="place.prefName.ancient">
-			(<small gaz-translate="'place.name.ancient'"></small>)
+	<span ng-show="place.prefName || (place.names && place.names.length > 0)">
+		<dt><s:message code="domain.place.names" /></dt>
+		<span ng-show="place.prefName">
+			<dd>
+				<em><s:message code="domain.place.prefName" text="domain.place.prefName"/>: </em>
+				{{place.prefName.title}}
+				<span ng-show="place.prefName.ancient">
+					(<small gaz-translate="'place.name.ancient'"></small>)
+				</span>
+				<small ng-show="place.prefName.language">
+					<em gaz-translate="'languages.' + place.prefName.language"></em>
+				</small>
+				<em ng-show="place.prefName.transliterated">
+					(<small gaz-translate="'place.name.transliterated'"></small>)
+				</em>
+			</dd>
 		</span>
-		<small ng-show="place.prefName.language">
-			<em gaz-translate="'languages.' + place.prefName.language"></em>
-		</small>
-		<em ng-show="place.prefName.transliterated">
-			(<small gaz-translate="'place.name.transliterated'"></small>)
-		</em>
-	</dd>
-	<dd ng-repeat="placename in place.names | orderBy:['language','title']">
-		{{placename.title}}
-		<span ng-show="placename.ancient">
-			(<small gaz-translate="'place.name.ancient'"></small>)
-		</span>
-		<small ng-hide="!placename.language">
-			<em gaz-translate="'languages.' + placename.language"></em>
-		</small>
-		<em ng-show="placename.transliterated">
-			(<small gaz-translate="'place.name.transliterated'"></small>)
-		</em>
-	</dd>
-	<br/>
+		<dd ng-repeat="placename in place.names | orderBy:['language','title']">
+			{{placename.title}}
+			<span ng-show="placename.ancient">
+				(<small gaz-translate="'place.name.ancient'"></small>)
+			</span>
+			<small ng-hide="!placename.language">
+				<em gaz-translate="'languages.' + placename.language"></em>
+			</small>
+			<em ng-show="placename.transliterated">
+				(<small gaz-translate="'place.name.transliterated'"></small>)
+			</em>
+		</dd>
+		<br/>
+	</span>
 	
 	<span ng-hide="!place.tags">
 		<dt><s:message code="domain.place.tags" text="domain.place.tags" /></dt>

@@ -51,6 +51,9 @@ public class MergeController {
 		Place place1 = placeDao.findOne(id1);
 		Place place2 = placeDao.findOne(id2);
 		
+		if (!checkPlaceAccess(place1) || !checkPlaceAccess(place2))
+			throw new IllegalStateException("Places may not be merged, as you don't have the permission to edit at least one of the places.");
+		
 		if (!(place1.getRecordGroupId() == null && place2.getRecordGroupId() == null) && (place1.getRecordGroupId() != null && !place1.getRecordGroupId().equals(place2.getRecordGroupId())))
 			throw new IllegalStateException("Places may not be merged, as they belong to different record groups.");
 		
@@ -123,4 +126,14 @@ public class MergeController {
 		return changeRecord;
 	}
 	
+	private boolean checkPlaceAccess(Place place) {
+		
+		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		if (place.getRecordGroupId() != null && !place.getRecordGroupId().isEmpty() && 
+				(user == null || !user.getRecordGroupIds().contains(place.getRecordGroupId())))
+			return false;
+		else
+			return true;
+	}
 }

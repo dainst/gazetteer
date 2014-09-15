@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
 <%@ page session="false" import="org.dainst.gazetteer.domain.*,
-	java.util.List, java.util.Map,
+	java.util.List, java.util.ArrayList, java.util.Map,
 	org.dainst.gazetteer.converter.JsonPlaceSerializer,
 	org.dainst.gazetteer.dao.*" %>
 
@@ -13,28 +13,42 @@ response.setHeader("Content-Type", "application/json; charset=utf-8");
 List<Place> places = (List<Place>) request.getAttribute("places");
 String baseUri = (String) request.getAttribute("baseUri");
 Long hits = (Long) request.getAttribute("hits");
-PlaceRepository placeDao = (PlaceRepository) request.getAttribute("placeDao");
 
 JsonPlaceSerializer serializer = new JsonPlaceSerializer(baseUri);
 
 StringBuilder sb = new StringBuilder("{");
 sb.append("\"total\": ").append(hits);
 sb.append(", \"result\": [");
-int i = 0;
-int emptyPlaces = 0;
+int numberOfPlaces = 0;
+List<String> accessGrantedPlaces = new ArrayList<String>();
+List<String> accessDeniedPlaces = new ArrayList<String>();
 for (Place place : places) {
-	String serializedPlace = serializer.serialize(place, placeDao, 1);
+	String serializedPlace = serializer.serialize(place, 1);
 	if (serializedPlace != null) {
-		sb.append(serializedPlace);
-		if (++i < places.size() - emptyPlaces) sb.append(",");
-	}
-	else
-		emptyPlaces++;	
+		if (serializedPlace.indexOf("\"accessDenied\":true") > 0)		
+			accessDeniedPlaces.add(serializedPlace);
+		else
+			accessGrantedPlaces.add(serializedPlace);
+		numberOfPlaces++;
+	}	
+}
+int appendedPlaces = 0;
+for (String serializedPlace : accessGrantedPlaces) {
+	sb.append(serializedPlace);
+	appendedPlaces++;
+	if (numberOfPlaces > appendedPlaces)
+		sb.append(",");
+}
+for (String serializedPlace : accessDeniedPlaces) {
+	sb.append(serializedPlace);
+	appendedPlaces++;
+	if (numberOfPlaces > appendedPlaces)
+		sb.append(",");
 }
 sb.append("]");
 
 Map<String, List<String[]>> facets = (Map<String, List<String[]>>) request.getAttribute("facets");
-i = 0;
+int i = 0;
 if (facets != null) {
 	sb.append(", \"facets\": {");
 	for (Map.Entry<String,List<String[]>> facet : facets.entrySet()) {

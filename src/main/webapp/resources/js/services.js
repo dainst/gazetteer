@@ -12,6 +12,7 @@ services.factory('Place', function($resource){
 				query: { method:'GET', params: { method:'search' }, isArray:false },
 				extendedQuery: { method:'POST', params: { method:'search' }, isArray:false },
 				distance: { method:'GET', params: { method:'geoSearch'}, isArray:false },
+				children: { method:'GET', params: { method:'children'}, isArray:false },
 				get: { method:'GET', params: { method:'doc'} },
 				save: { method:'PUT', params: { method:'doc'} },
 				remove: { method: 'DELETE', params: { method: 'doc'} },

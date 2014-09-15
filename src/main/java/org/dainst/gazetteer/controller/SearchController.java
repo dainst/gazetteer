@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.dainst.gazetteer.converter.JsonPlaceDeserializer;
 import org.dainst.gazetteer.dao.PlaceRepository;
-import org.dainst.gazetteer.dao.RecordGroupRepository;
 import org.dainst.gazetteer.dao.UserRepository;
 import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.User;
@@ -29,6 +28,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -77,6 +77,7 @@ public class SearchController {
 			@RequestParam(required=false) String callback,
 			@RequestParam(required=false) String showInReview,
 			@RequestParam(required=false) double[] bbox,
+			@RequestParam(required=false) boolean showHiddenPlaces,
 			HttpServletRequest request,
 			HttpServletResponse response) {
 		
@@ -108,19 +109,21 @@ public class SearchController {
 			query.addFilter(fq);
 		}
 		
-		String recordGroupFilter = "_missing_:recordGroupId";
-		if (user != null && user.getRecordGroupIds().size() > 0) {
-			boolean first = true;
-			recordGroupFilter += " OR recordGroupId:(";
-			for (String recordGroupId : user.getRecordGroupIds()) {
-				if (!first)
-					recordGroupFilter += " OR ";
-				recordGroupFilter += recordGroupId;
-				first = false;
+		if (!showHiddenPlaces) {
+			String recordGroupFilter = "_missing_:recordGroupId";
+			if (user != null && user.getRecordGroupIds().size() > 0) {
+				boolean first = true;
+				recordGroupFilter += " OR recordGroupId:(";
+				for (String recordGroupId : user.getRecordGroupIds()) {
+					if (!first)
+						recordGroupFilter += " OR ";
+					recordGroupFilter += recordGroupId;
+					first = false;
+				}
+				recordGroupFilter += ")";
 			}
-			recordGroupFilter += ")";
+			query.addFilter(recordGroupFilter);
 		}
-		query.addFilter(recordGroupFilter);
 		
 		query.addBoostForChildren();
 		query.limit(limit);
@@ -378,4 +381,41 @@ public class SearchController {
 		
 	}
 	
+	@RequestMapping(value="/children/{id}", method=RequestMethod.GET)
+	public ModelAndView childrenSearch(@PathVariable String id,
+			@RequestParam(required=false, defaultValue="map,table") String view,
+			HttpServletRequest request,
+			HttpServletResponse response) {
+		ElasticSearchPlaceQuery query = new ElasticSearchPlaceQuery(client);
+		query.metaSearch("parent: " + id);
+		query.addSort("prefName.title.sort", "asc");
+		query.addFilter("deleted:false");
+		query.limit(1000);
+		String[] result = query.execute();
+		
+		List<Place> places = placesForList(result);
+		logger.debug("Places: {}", places);
+		
+		RequestContext requestContext = new RequestContext(request);
+		Locale locale = requestContext.getLocale();
+		
+		User user = null;
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal instanceof User)
+			user = (User) principal;
+		
+		for (Place place : places)
+			ProtectLocationsService.protectLocations(user, place);
+		
+		ModelAndView mav = new ModelAndView("place/list");
+		mav.addObject("places", places);
+		mav.addObject("placeDao", placeDao);
+		mav.addObject("view", view);
+		mav.addObject("baseUri", baseUri);
+		mav.addObject("language", locale.getISO3Language());
+		mav.addObject("googleMapsApiKey", googleMapsApiKey);
+		
+		return mav;
+	}
+		
 }

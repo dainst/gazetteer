@@ -21,19 +21,19 @@
 			</ul>
 		</li>
 		<sec:authorize access="hasRole('ROLE_EDITOR')">
-			<li class="pull-right" ng-class="isActive('change-history')">
+			<li class="pull-right" ng-class="isActive('change-history')" ng-hide="place.accessDenied">
 				<a href="#!/change-history/{{place.gazId}}">
 					<i class="icon-eye-open"></i> <s:message code="ui.changeHistory" text="ui.changeHistory"/>
 				</a>
-			</li>		
+			</li>
 		</sec:authorize>
-		<li class="pull-right" ng-class="isActive('merge')">	
+		<li class="pull-right" ng-class="isActive('merge')" ng-hide="place.accessDenied">	
 			<a href="#!/merge/{{place.gazId}}">
 				<i class="icon-globe"></i> <s:message code="ui.similarPlaces" text="ui.merge"/>
 			</a>
 		</li>
 		<sec:authorize access="hasRole('ROLE_EDITOR')">
-			<li class="pull-right" ng-class="isActive('edit')">
+			<li class="pull-right" ng-class="isActive('edit')" ng-hide="place.accessDenied">
 				<a href="#!/edit/{{place.gazId}}">
 					<i class="icon-edit"></i> <s:message code="ui.edit" text="ui.edit"/>
 				</a>

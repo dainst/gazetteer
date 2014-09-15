@@ -430,7 +430,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 				$rootScope.loading--;
 			}
 			$rootScope.loading++;
-			Place.query({q: "relatedPlaces:" + $scope.place.gazId, sort:"prefName.title.sort" }, function(result) {
+			Place.query({q: "relatedPlaces:" + $scope.place.gazId, sort:"prefName.title.sort", showHiddenPlaces: true }, function(result) {
 				$scope.totalRelatedPlaces = result.total;
 				$scope.relatedPlaces = result.result;
 				$scope.offsetRelatedPlaces = 0;
@@ -439,7 +439,8 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 				$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
 				$rootScope.loading--;
 			});
-			Place.query({q: "relatedPlaces:" + $scope.place.gazId, sort:"prefName.title.sort", limit: "1000" }, function(result) {
+			$rootScope.loading++;
+			Place.query({q: "relatedPlaces:" + $scope.place.gazId, sort:"prefName.title.sort", limit: "1000", showHiddenPlaces: true }, function(result) {
 				$scope.allRelatedPlaces = result.result;
 				$rootScope.loading--;
 			}, function() {
@@ -447,7 +448,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 				$rootScope.loading--;
 			});
 			$rootScope.loading++;
-			Place.query({q: "parent:" + $scope.place.gazId, sort:"prefName.title.sort"}, function(result) {
+			Place.query({q: "parent:" + $scope.place.gazId, sort:"prefName.title.sort", showHiddenPlaces: true}, function(result) {
 				$scope.totalChildren = result.total;
 				$scope.children = result.result;
 				$scope.offsetChildren = 0;
@@ -854,10 +855,8 @@ function ThesaurusCtrl($scope, $rootScope, $location, Place, messages) {
 	
 	$scope.open = function(place) {
 		place.isOpen = true;
-		Place.query({
-			sort: 'prefName.title.sort',
-			limit: 10000,
-			q: 'parent:' + place.gazId
+		Place.children({
+			id: place.gazId
 		}, function(result) {
 			place.children = result.result;
 		}, function() {
