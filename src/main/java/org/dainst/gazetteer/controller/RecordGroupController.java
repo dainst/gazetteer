@@ -34,15 +34,28 @@ public class RecordGroupController {
 	@RequestMapping(value="/recordGroupManagement")
 	public String getRecordGroupManagement(@RequestParam(required=false) String deleteRecordGroupId, ModelMap model) {
 	
-		if (deleteRecordGroupId != null && !deleteRecordGroupId.isEmpty()) {
-			RecordGroup recordGroup = recordGroupDao.findOne(deleteRecordGroupId);
-			recordGroupDao.delete(recordGroup);
-			model.addAttribute("deletedRecordGroup", recordGroup.getName());
-		}			
-		
 		List<RecordGroup> recordGroups = (List<RecordGroup>) recordGroupDao.findAll();
 		List<User> users = (List<User>) userDao.findAll();
 		List<Place> places = (List<Place>) placeDao.findAll();
+		
+		if (deleteRecordGroupId != null && !deleteRecordGroupId.isEmpty()) {
+			RecordGroup recordGroup = recordGroupDao.findOne(deleteRecordGroupId);
+			
+			boolean assignedToPlace = false;
+			for (Place place : places) {
+				if (place.getRecordGroupId() != null && place.getRecordGroupId().equals(recordGroup.getId())) {
+					assignedToPlace = true;
+					break;
+				}
+			}
+			
+			if (!assignedToPlace) { 
+				recordGroupDao.delete(recordGroup);
+				model.addAttribute("deletedRecordGroup", recordGroup.getName());
+			}
+		}
+		
+		recordGroups = (List<RecordGroup>) recordGroupDao.findAll();
 		
 		Map<String, Integer> recordGroupMembers = new HashMap<String, Integer>();
 		Map<String, Integer> recordGroupPlaces = new HashMap<String, Integer>();
