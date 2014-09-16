@@ -419,6 +419,8 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 				$scope.prefLocationCoordinates = $scope.place.prefLocation.coordinates.slice();
 				$scope.prefLocationCoordinates.reverse();
 			}
+			if ($scope.place.accessDenied)
+				$rootScope.title = messages["ui.place.hiddenPlace"];
 			if (!$scope.place.prefLocation && !$scope.hasType("archaeological-site"))
 				$scope.place.prefLocation = { publicSite : true };			
 			if ($scope.hasType("archaeological-site"))

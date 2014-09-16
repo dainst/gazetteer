@@ -154,6 +154,7 @@
 					<th><s:message code="user.recordGroup.name" text="user.recordGroup.name" /></th>
 					<th><s:message code="user.recordGroup.creationDate" text="user.recordGroup.creationDate" /></th>
 					<th><s:message code="user.recordGroup.members" text="user.recordGroup.members" /></th>
+					<th><s:message code="user.recordGroup.places" text="user.recordGroup.places" /></th>
 					<th></th>
 				</tr>
 			</thead>
@@ -162,22 +163,39 @@
     				<tr>
 						<td>${recordGroup.name}</td>
 						<td>${recordGroup.creationDateAsText}</td>
-						<td>${recordGroupSizes[recordGroup.id]}</td>
+						<td>${recordGroupMembers[recordGroup.id]}</td>
+						<td>${recordGroupPlaces[recordGroup.id]}</td>
 						<td><a href="#deleteGroupModal_${recordGroup.id}" class="btn btn-danger" data-toggle="modal">&nbsp;<s:message code="ui.delete" text="ui.delete" />&nbsp;</a></td>
 					</tr>
 					
 					<div class="modal hide fade" id="deleteGroupModal_${recordGroup.id}">
-						<div class="modal-header">
-							<h3><s:message code="ui.deleteRecordGroup" text="ui.deleteRecordGroup"/>?</h3>
-						</div>
-						<div class="modal-body">
-							<s:message code="ui.deleteRecordGroup.really" text="ui.deleteRecordGroup.really" arguments="${recordGroup.name}"/>
-						</div>
-						<div class="modal-footer">
-							<a href="#" class="btn" data-dismiss="modal" aria-hidden="true"><s:message code="ui.cancel" text="ui.cancel"/></a>
-							<a href="recordGroupManagement?deleteRecordGroupId=${recordGroup.id}" class="btn btn-danger" aria-hidden="true"><s:message code="ui.delete" text="ui.delete"/></a>
-						</div>
+						<c:choose>
+							<c:when test="${recordGroupPlaces[recordGroup.id] == 0}">
+								<div class="modal-header">
+									<h3><s:message code="ui.deleteRecordGroup" text="ui.deleteRecordGroup"/>?</h3>
+								</div>
+								<div class="modal-body">
+									<s:message code="ui.deleteRecordGroup.really" text="ui.deleteRecordGroup.really" arguments="${recordGroup.name}"/>
+								</div>
+								<div class="modal-footer">
+									<a href="#" class="btn" data-dismiss="modal" aria-hidden="true"><s:message code="ui.cancel" text="ui.cancel"/></a>
+									<a href="recordGroupManagement?deleteRecordGroupId=${recordGroup.id}" class="btn btn-danger" aria-hidden="true"><s:message code="ui.delete" text="ui.delete"/></a>
+								</div>
+							</c:when>
+							<c:otherwise>
+								<div class="modal-header">
+									<h3><s:message code="ui.deleteRecordGroup.notAllowed" text="ui.deleteRecordGroup.notAllowed"/></h3>
+								</div>
+								<div class="modal-body">
+									<s:message code="ui.deleteRecordGroup.notAllowedInfo" text="ui.deleteRecordGroup.notAllowedInfo" arguments="${recordGroup.name}"/>
+								</div>
+								<div class="modal-footer">
+									<a href="#" class="btn" data-dismiss="modal" aria-hidden="true"><s:message code="ui.ok" text="ui.ok"/></a>
+								</div>
+							</c:otherwise>
+						</c:choose>
 					</div>
+												
 				</c:forEach>
 			</tbody>
 		</table>

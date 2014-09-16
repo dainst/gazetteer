@@ -43,10 +43,10 @@ import org.springframework.web.servlet.support.RequestContext;
 public class UserManagementController {
 	
 	@Autowired
-	private UserRepository userRepository;
+	private UserRepository userDao;
 	
 	@Autowired
-	private UserPasswordChangeRequestRepository userPasswordChangeRequestRepository;
+	private UserPasswordChangeRequestRepository userPasswordChangeRequestDao;
 	
 	@Autowired
 	private RecordGroupRepository recordGroupDao;
@@ -104,7 +104,7 @@ public class UserManagementController {
 		if (username.equals(""))
 			return returnRegisterFailure("missingUsername", request, r, model);
 
-		if (userRepository.findByUsername(username) != null)
+		if (userDao.findByUsername(username) != null)
 			return returnRegisterFailure("usernameExists", request, r, model);
 		
 		if (firstname.equals(""))
@@ -113,7 +113,7 @@ public class UserManagementController {
 		if (lastname.equals(""))
 			return returnRegisterFailure("missingLastname", request, r, model);
 		
-		if (userRepository.findByEmail(email) != null)
+		if (userDao.findByEmail(email) != null)
 			return returnRegisterFailure("emailExists", request, r, model);
 		
 		if (email.equals("") || !email.matches("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$"))
@@ -132,7 +132,7 @@ public class UserManagementController {
 		
 		User user = new User(username, firstname, lastname, institution, email, encodedPassword, new Date(), authorities);
 		
-		userRepository.save(user);
+		userDao.save(user);
 		
 		String link = baseUri + "editUser?username=" + username + "&r=userManagement";
 		RequestContext context = new RequestContext(request);
@@ -171,9 +171,9 @@ public class UserManagementController {
 									@RequestParam(required=false) boolean deleteUser, @RequestParam(required=false) String deleteUserId, ModelMap model) {
 		
 		if (deleteUser) {			
-			User user = userRepository.findById(deleteUserId);
+			User user = userDao.findById(deleteUserId);
 			if (user != null && !user.isEnabled()) {			
-				userRepository.delete(user);
+				userDao.delete(user);
 				model.addAttribute("userDeleted", user.getUsername());
 			}	
 		}
@@ -183,12 +183,12 @@ public class UserManagementController {
 
 		if (showUser != null && !showUser.equals("")) {
 			
-			User userToShow = userRepository.findById(showUser);
+			User userToShow = userDao.findById(showUser);
 			
 			if (userToShow == null)
 				return "home";
 			
-			users = (List<User>) userRepository.findAll();
+			users = (List<User>) userDao.findAll();
 			Collections.sort(users, new User.UsernameComparator());	
 			
 			pages = (users.size() + usersPerPage - 1) / usersPerPage;
@@ -219,42 +219,42 @@ public class UserManagementController {
 		
 			if (sort == null || sort.equals("")) {
 				if (isDescending)
-					users = (List<User>) userRepository.findAll(new Sort(Sort.Direction.DESC, "enabled"));
+					users = (List<User>) userDao.findAll(new Sort(Sort.Direction.DESC, "enabled"));
 				else
-					users = (List<User>) userRepository.findAll(new Sort(Sort.Direction.ASC, "enabled"));				
+					users = (List<User>) userDao.findAll(new Sort(Sort.Direction.ASC, "enabled"));				
 			}
 			else {
 				switch (sort) {
 				case "username":
-					users = (List<User>) userRepository.findAll();
+					users = (List<User>) userDao.findAll();
 					if (isDescending)
 						Collections.sort(users, Collections.reverseOrder(new User.UsernameComparator()));
 					else
 						Collections.sort(users, new User.UsernameComparator());					
 					break;
 				case "firstname":
-					users = (List<User>) userRepository.findAll();
+					users = (List<User>) userDao.findAll();
 					if (isDescending)
 						Collections.sort(users, Collections.reverseOrder(new User.FirstnameComparator()));
 					else
 						Collections.sort(users, new User.FirstnameComparator());
 					break;
 				case "lastname":
-				users = (List<User>) userRepository.findAll();
+				users = (List<User>) userDao.findAll();
 					if (isDescending)
 						Collections.sort(users, Collections.reverseOrder(new User.LastnameComparator()));
 					else
 						Collections.sort(users, new User.LastnameComparator());
 					break;
 				case "institution":
-					users = (List<User>) userRepository.findAll();
+					users = (List<User>) userDao.findAll();
 					if (isDescending)
 						Collections.sort(users, Collections.reverseOrder(new User.InstitutionComparator()));
 					else
 						Collections.sort(users, new User.InstitutionComparator());
 					break;
 				case "email":
-					users = (List<User>) userRepository.findAll();
+					users = (List<User>) userDao.findAll();
 					if (isDescending)
 						Collections.sort(users, Collections.reverseOrder(new User.EmailComparator()));
 					else
@@ -262,32 +262,32 @@ public class UserManagementController {
 					break;
 				case "lastLogin":
 					if (isDescending)
-						users = (List<User>) userRepository.findAll(new Sort(Sort.Direction.ASC, "lastLogin"));
+						users = (List<User>) userDao.findAll(new Sort(Sort.Direction.ASC, "lastLogin"));
 					else
-						users = (List<User>) userRepository.findAll(new Sort(Sort.Direction.DESC, "lastLogin"));
+						users = (List<User>) userDao.findAll(new Sort(Sort.Direction.DESC, "lastLogin"));
 					break;
 				case "registrationDate":
 					if (isDescending)
-						users = (List<User>) userRepository.findAll(new Sort(Sort.Direction.ASC, "registrationDate"));
+						users = (List<User>) userDao.findAll(new Sort(Sort.Direction.ASC, "registrationDate"));
 					else
-						users = (List<User>) userRepository.findAll(new Sort(Sort.Direction.DESC, "registrationDate"));
+						users = (List<User>) userDao.findAll(new Sort(Sort.Direction.DESC, "registrationDate"));
 					break;
 				case "admin":
-					users = (List<User>) userRepository.findAll();
+					users = (List<User>) userDao.findAll();
 					if (isDescending)
 						Collections.sort(users, Collections.reverseOrder(new User.AdminComparator()));
 					else
 						Collections.sort(users, new User.AdminComparator());
 				break;
 				case "editor":
-					users = (List<User>) userRepository.findAll();
+					users = (List<User>) userDao.findAll();
 					if (isDescending)
 						Collections.sort(users, Collections.reverseOrder(new User.EditorComparator()));
 					else
 						Collections.sort(users, new User.EditorComparator());
 				break;
 				case "reisestipendium":
-					users = (List<User>) userRepository.findAll();
+					users = (List<User>) userDao.findAll();
 					if (isDescending)
 						Collections.sort(users, Collections.reverseOrder(new User.ReisestipendiumComparator()));
 					else
@@ -330,7 +330,7 @@ public class UserManagementController {
 		if (!userEdit && !adminEdit)
 			return "home";
 		
-		User user = userRepository.findByUsername(username);
+		User user = userDao.findByUsername(username);
 		if (user == null)
 			return "userManagement";
 		
@@ -372,7 +372,7 @@ public class UserManagementController {
 	public String checkEditUserForm(HttpServletRequest request, @RequestParam(required=true) String username,
 									@RequestParam(required=false) String r, ModelMap model) {
 		
-		User user = userRepository.findByUsername(username);
+		User user = userDao.findByUsername(username);
 		if (user == null)
 			return "register";
 		
@@ -435,7 +435,7 @@ public class UserManagementController {
 		if (newLastname.equals(""))
 			return returnEditUserFailure("missingLastname", user, r, adminEdit, userEdit, recordGroups, recordGroupValues, request, model);
 	
-		if (!user.getEmail().equals(newEmail) && userRepository.findByEmail(newEmail) != null)
+		if (!user.getEmail().equals(newEmail) && userDao.findByEmail(newEmail) != null)
 			return returnEditUserFailure("emailExists", user, r, adminEdit, userEdit, recordGroups, recordGroupValues, request, model);
 		
 		if (newEmail.equals("") || !newEmail.matches("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$"))
@@ -445,7 +445,7 @@ public class UserManagementController {
 			if (newUsername.equals(""))
 				return returnEditUserFailure("missingUsername", user, r, adminEdit, userEdit, recordGroups, recordGroupValues, request, model);
 
-			if (!username.equals(newUsername) && userRepository.findByUsername(newUsername) != null)
+			if (!username.equals(newUsername) && userDao.findByUsername(newUsername) != null)
 				return returnEditUserFailure("usernameExists", user, r, adminEdit, userEdit, recordGroups, recordGroupValues, request, model);
 		}
 		
@@ -487,7 +487,7 @@ public class UserManagementController {
 		if (userEdit && !newPassword.equals(""))
 			user.setPassword(passwordEncoder.encode(newPassword));		
 		
-		userRepository.save(user);
+		userDao.save(user);
 		
 		model.addAttribute("version", version);
 	
@@ -515,15 +515,15 @@ public class UserManagementController {
 		if (username.equals(""))
 			return returnPasswordChangeRequestFailure("missingUsername", r, model);
 
-		User user = userRepository.findByUsername(username);
+		User user = userDao.findByUsername(username);
 		if (user == null)
 			return returnPasswordChangeRequestFailure("userNotFound", r, model);
 	
-		UserPasswordChangeRequest changeRequest = userPasswordChangeRequestRepository.findByUserId(user.getId());
+		UserPasswordChangeRequest changeRequest = userPasswordChangeRequestDao.findByUserId(user.getId());
 		if (changeRequest != null) {
 			Date changeRequestDate = changeRequest.getRequestDate();
 		    if (TimeUnit.HOURS.convert(new Date().getTime() - changeRequestDate.getTime(), TimeUnit.MILLISECONDS) > 23)
-		    	userPasswordChangeRequestRepository.delete(changeRequest);
+		    	userPasswordChangeRequestDao.delete(changeRequest);
 		    else
 		    	return returnPasswordChangeRequestFailure("requestExists", r, model);			
 		}
@@ -535,7 +535,7 @@ public class UserManagementController {
 		changeRequest.setUserId(user.getId());		
 		changeRequest.setResetKey(passwordEncoder.encode(resetKey));
 		changeRequest.setRequestDate(new Date());		
-		userPasswordChangeRequestRepository.save(changeRequest);
+		userPasswordChangeRequestDao.save(changeRequest);
 		
 		String link = baseUri + "changePassword?userid=" + user.getId() + "&key=" + resetKey;
 		RequestContext context = new RequestContext(request);
@@ -563,15 +563,15 @@ public class UserManagementController {
 	@RequestMapping(value="/changePassword")
 	public String getChangePassword(@RequestParam(required=true) String userid, @RequestParam(required=true) String key, ModelMap model) {
 		
-		UserPasswordChangeRequest changeRequest = userPasswordChangeRequestRepository.findByUserId(userid);
-		User user = userRepository.findById(userid);
+		UserPasswordChangeRequest changeRequest = userPasswordChangeRequestDao.findByUserId(userid);
+		User user = userDao.findById(userid);
 		
 		if (changeRequest == null || !passwordEncoder.matches(key, changeRequest.getResetKey()))
 			return "home";
 		
 		Date changeRequestDate = changeRequest.getRequestDate();
 	    if (TimeUnit.HOURS.convert(new Date().getTime() - changeRequestDate.getTime(), TimeUnit.MILLISECONDS) > 23) {
-	    	userPasswordChangeRequestRepository.delete(changeRequest);
+	    	userPasswordChangeRequestDao.delete(changeRequest);
 	    	return "home";
 	    }
 	    
@@ -587,7 +587,7 @@ public class UserManagementController {
 		String newPassword = request.getParameter("change_password_password");
 		String newPasswordConfirmation = request.getParameter("change_password_password_confirmation");
 		
-		User user = userRepository.findById(userid);
+		User user = userDao.findById(userid);
 		
 		if (newPassword.length() < 6 || newPassword.length() > 30)
 			return returnChangePasswordFailure("passwordLength", user, model);
@@ -596,63 +596,17 @@ public class UserManagementController {
 			return returnChangePasswordFailure("passwordInequality", user, model);
 		
 		user.setPassword(passwordEncoder.encode(newPassword));
-		userRepository.save(user);
+		userDao.save(user);
 		
-		UserPasswordChangeRequest changeRequest = userPasswordChangeRequestRepository.findByUserId(userid);
-		userPasswordChangeRequestRepository.delete(changeRequest);
+		UserPasswordChangeRequest changeRequest = userPasswordChangeRequestDao.findByUserId(userid);
+		userPasswordChangeRequestDao.delete(changeRequest);
 		
 		model.addAttribute("successMessage", "changePassword");
 		model.addAttribute("version", version);
 		
 		return "home";
 	}
-	
-	@RequestMapping(value="/recordGroupManagement")
-	public String getRecordGroupManagement(@RequestParam(required=false) String deleteRecordGroupId, ModelMap model) {
-	
-		if (deleteRecordGroupId != null && !deleteRecordGroupId.isEmpty()) {
-			RecordGroup recordGroup = recordGroupDao.findOne(deleteRecordGroupId);
-			recordGroupDao.delete(recordGroup);
-			model.addAttribute("deletedRecordGroup", recordGroup.getName());
-		}			
-		
-		List<RecordGroup> recordGroups = (List<RecordGroup>) recordGroupDao.findAll();
-		List<User> users = (List<User>) userRepository.findAll();
-		
-		Map<String, Integer> recordGroupSizes = new HashMap<String, Integer>();
-		for (RecordGroup recordGroup : recordGroups) {
-			int size = 0;
-			for (User user : users) {
-				if (user.getRecordGroupIds().contains(recordGroup.getId()))
-					size++;
-			}
-			recordGroupSizes.put(recordGroup.getId(), size);
-		}
-		
-		model.addAttribute("recordGroups", recordGroups);
-		model.addAttribute("recordGroupSizes", recordGroupSizes);
-		
-		return "recordGroupManagement";
-	}
-	
-	@RequestMapping(value="/checkCreateRecordGroupForm")
-	public String checkCreateRecordGroupForm(HttpServletRequest request, ModelMap model) {
-		
-		String groupName = request.getParameter("group_name");
-		
-		if (!groupName.isEmpty()) {			
-			if (recordGroupDao.findByName(groupName) != null)
-				model.addAttribute("failure", "groupNameAlreadyExists");				
-			else {
-				RecordGroup recordGroup = new RecordGroup(groupName);
-				recordGroupDao.save(recordGroup);
-				model.addAttribute("createdRecordGroup", recordGroup.getName());
-			}
-		}		
-		
-		return getRecordGroupManagement(null, model);
-	}
-	
+
 	private String returnRegisterFailure(String failureType, HttpServletRequest request, String r, ModelMap model) {
 		
 		model.addAttribute("register_username_value", request.getParameter("register_username"));
@@ -730,7 +684,7 @@ public class UserManagementController {
 	
 	private void sendMailToAdmins(String subject, String content) throws MessagingException {
 				
-		List<User> users = (List<User>) userRepository.findAll();
+		List<User> users = (List<User>) userDao.findAll();
 				
 		for (User user : users) {
 			if (user.hasRole("ROLE_ADMIN")) {
