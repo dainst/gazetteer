@@ -157,7 +157,7 @@
 		
 					<legend><s:message code="domain.place.general" text="domain.place.general"/></legend>
 				
-					<!-- type -->
+					<!-- types -->
 					<div class="control-group">
 						<label class="control-label">
 							<s:message code="domain.place.type" text="domain.place.type" />
@@ -316,40 +316,58 @@
 				
 				<div class="tab-pane" id="locations">
 				
-					<legend><s:message code="domain.place.locations" text="domain.place.locations"/></legend>
+					<legend><s:message code="domain.place.prefLocation" text="domain.place.prefLocation"/></legend>
 					
 					<!-- preferred location -->
 					<div class="control-group">
 						<label class="control-label">
-							<s:message code="domain.place.prefLocation" text="domain.place.prefLocation" />
+							<s:message code="domain.location.coordinates" text="domain.location.coordinates" />
 						</label>
 						<div class="controls">
 							<div gaz-location-picker coordinates="prefLocationCoordinates"></div>
-							<select ng-model="place.prefLocation.confidence" class="input-small">
+							<select ng-model="place.prefLocation.confidence" class="input-medium">
 								<option value="0" gaz-translate="'location.confidence.0'">
 								<option value="1" gaz-translate="'location.confidence.1'">
 								<option value="2" gaz-translate="'location.confidence.2'">
 								<option value="3" gaz-translate="'location.confidence.3'">
 							</select>
-							<br /><br />
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">
+							<s:message code="domain.location.altitudeInMeters" text="domain.location.altitudeInMeters" />
+						</label>
+						<div class="controls">							
+							<input type="text" ng-model="place.prefLocation.altitude" />
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">
+							<s:message code="domain.location.polygon" text="domain.location.polygon" />
+						</label>
+						<div class="controls">
 							<div gaz-shape-editor shape="place.prefLocation.shape" pos="place.prefLocation.coordinates"></div>
-							<br />
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="controls">
 							<label class="checkbox inline">
 								<input type="checkbox" ng-model="place.prefLocation.publicSite"/>
 								<span gaz-translate="'location.public'"></span>
 							</label>
-
 						</div>
 					</div>
+					
+					<legend><s:message code="domain.place.otherLocations" text="domain.place.otherLocations"/></legend>
 					
 					<!-- additional locations -->
 					<div class="control-group">
 						<label class="control-label">
-							<s:message code="domain.place.otherLocations" text="domain.place.otherLocations" />
+							<s:message code="domain.location.coordinates" text="domain.location.coordinates" />
 						</label>
 						<div class="controls">
 							<div gaz-location-picker coordinates="location.coordinates"></div>
-							<select ng-model="location.confidence" class="input-small">
+							<select ng-model="location.confidence" class="input-medium">
 								<option value="0" gaz-translate="'location.confidence.0'">
 								<option value="1" gaz-translate="'location.confidence.1'">
 								<option value="2" gaz-translate="'location.confidence.2'">
@@ -358,30 +376,46 @@
 							<div class="btn btn-primary plus" ng-click="addLocation()" ng-disabled="!location.coordinates && !location.shape">
 								<i class="icon-plus icon-white"></i>
 							</div>
-							<br/> <br/>
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">
+							<s:message code="domain.location.altitudeInMeters" text="domain.location.altitudeInMeters" />
+						</label>
+						<div class="controls">							
+							<input type="text" ng-model="location.altitude" />
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">
+							<s:message code="domain.location.polygon" text="domain.location.polygon" />
+						</label>
+						<div class="controls">
 							<div gaz-shape-editor shape="location.shape" pos="location.coordinates"></div>
-							<br />
+						</div>
+					</div>
+					<div class="control-group">
+						<div class="controls">
 							<label class="checkbox inline">
 								<input type="checkbox" ng-model="location.publicSite" />
 								<span gaz-translate="'location.public'"></span>
 							</label>
-							<br/>
-							<div ng-repeat="location in place.locations">
-								<br /><a ng-click="place.locations.splice($index,1)"><i class="icon-remove-sign"></i></a>
-								<span ng-show="location.coordinates">
-									<em><s:message code="domain.location.latitude" text="domain.location.latitude" />:</em> {{location.coordinates[1]}},
-									<em><s:message code="domain.location.longitude" text="domain.location.longitude" />:</em> {{location.coordinates[0]}}
-									<br />(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />:</em>
-									<span gaz-translate="'location.confidence.'+location.confidence"></span>,
-									<em gaz-translate="'location.public'"></em>:
-									<span ng-show="location.publicSite"><s:message code="ui.yes" text="ui.yes" /></span><span ng-hide="location.publicSite"><s:message code="ui.no" text="ui.no" /></span>)
-									<span ng-show="location.shape"><br /></span>
-								</span>								
-								<em ng-show="location.shape"><s:message code="domain.location.polygon" text="domain.location.polygon" /></em>
-							</div>
 						</div>
 					</div>
-				
+					<div ng-repeat="location in place.locations">
+						<br /><a ng-click="place.locations.splice($index,1)"><i class="icon-remove-sign"></i></a>
+						<span>
+							<span ng-show="location.coordinates"><em><s:message code="domain.location.latitude" text="domain.location.latitude" />:</em> {{location.coordinates[1]}},</span>
+							<span ng-show="location.coordinates"><em><s:message code="domain.location.longitude" text="domain.location.longitude" />:</em> {{location.coordinates[0]}}</span><span ng-show="location.coordinates && location.altitude">,</span>
+							<span ng-show="location.altitude"><em><s:message code="domain.location.altitude" text="domain.location.altitude" />:</em> {{location.altitude}}</span>
+							<br ng-show="location.coordinates || location.altitude"/>
+							<em ng-show="location.shape"><s:message code="domain.location.polygon" text="domain.location.polygon" /></em>
+							(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />:</em>
+							<span gaz-translate="'location.confidence.'+location.confidence"></span>,
+							<em gaz-translate="'location.public'"></em>:
+							<span ng-show="location.publicSite"><s:message code="ui.yes" text="ui.yes" /></span><span ng-hide="location.publicSite"><s:message code="ui.no" text="ui.no" /></span>)
+						</span>								
+					</div>
 				</div>
 				
 				<div class="tab-pane" id="connections">

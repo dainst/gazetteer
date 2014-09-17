@@ -166,7 +166,9 @@ public class JsonPlaceSerializer {
 					shapeNode.add(shapeCoordinatesNode1);
 				}
 				locationNode.put("shape", shapeNode);
-			}								
+			}
+			if (place.getPrefLocation().getAltitude() != null)
+				locationNode.put("altitude", place.getPrefLocation().getAltitude());
 			locationNode.put("confidence", place.getPrefLocation().getConfidence());
 			locationNode.put("publicSite", place.getPrefLocation().isPublicSite());
 			locationNode.put("area", 0);
@@ -203,6 +205,8 @@ public class JsonPlaceSerializer {
 					}
 					locationNode.put("shape", shapeNode);
 				}
+				if (location.getAltitude() != null)
+					locationNode.put("altitude", location.getAltitude());
 				locationNode.put("confidence", location.getConfidence());
 				locationNode.put("publicSite", location.isPublicSite());
 				locationsNode.add(locationNode);

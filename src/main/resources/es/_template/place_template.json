@@ -105,6 +105,10 @@
 	                        "type": "geo_point",
 							"include_in_all": false
 						},
+						"altitude": {
+	            			"type": "double",
+	            			"include_in_all": false
+	            		},
 						"shape": {
 							"type": "geo_shape",
 							"include_in_all": false
@@ -122,6 +126,10 @@
 	                        "type": "geo_point",
 							"include_in_all": false
 						},
+						"altitude": {
+	            			"type": "double",
+	            			"include_in_all": false
+	            		},
 						"shape": {
 							"type": "geo_shape",
 							"include_in_all": false

@@ -7,8 +7,10 @@ public class Location {
 
 	private double[] coordinates;
 	
-	private Shape shape;
+	private Double altitude;
 	
+	private Shape shape;
+		
 	private int confidence = 0;
 
 	private boolean publicSite = true;
@@ -28,7 +30,7 @@ public class Location {
 	public void setCoordinates(double[] point) {
 		this.coordinates = point;
 	}
-	
+
 	public double getLat() {
 		if (coordinates != null && coordinates.length >= 2)
 			return coordinates[1];
@@ -41,6 +43,14 @@ public class Location {
 			return coordinates[0];
 		else
 			return 0;
+	}
+	
+	public Double getAltitude() {
+		return altitude;
+	}
+
+	public void setAltitude(Double altitude) {
+		this.altitude = altitude;
 	}
 
 	public int getConfidence() {
@@ -70,6 +80,8 @@ public class Location {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + confidence;
+		if (altitude != null)
+			result = prime * result + altitude.intValue();
 		result = prime * result + (publicSite ? 1231 : 1237);
 		result = prime * result + Arrays.hashCode(coordinates);
 		if (shape != null)
@@ -92,10 +104,12 @@ public class Location {
 			return false;
 		if (!Arrays.equals(coordinates, other.coordinates))
 			return false;
+		if (altitude != other.altitude)
+			return false;
 		if ((shape == null) != (other.shape == null))
 			return false;
 		if (shape != null && !shape.equals(other.shape))
-			return false;
+			return false;		
 		return true;
 	}
 
@@ -106,5 +120,4 @@ public class Location {
 	public void setShape(Shape shape) {
 		this.shape = shape;
 	}
-
 }

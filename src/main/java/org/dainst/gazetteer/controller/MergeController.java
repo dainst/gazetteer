@@ -52,7 +52,7 @@ public class MergeController {
 		Place place2 = placeDao.findOne(id2);
 		
 		if (!checkPlaceAccess(place1) || !checkPlaceAccess(place2))
-			throw new IllegalStateException("Places may not be merged, as you don't have the permission to edit at least one of the places.");
+			throw new IllegalStateException("Places may not be merged, as the user doesn't have the permission to edit both places.");
 		
 		if (!(place1.getRecordGroupId() == null && place2.getRecordGroupId() == null) && (place1.getRecordGroupId() != null && !place1.getRecordGroupId().equals(place2.getRecordGroupId())))
 			throw new IllegalStateException("Places may not be merged, as they belong to different record groups.");

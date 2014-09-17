@@ -131,10 +131,10 @@
 	<span ng-hide="!place.prefLocation || !((place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0) || place.prefLocation.shape)">
 		<dt><s:message code="domain.place.locations" text="domain.place.locations" /></dt>
 		<dd>
-			<span ng-show="place.prefLocation.coordinates">
-				<em><s:message code="domain.location.latitude" text="domain.location.latitude" />: </em>{{place.prefLocation.coordinates[1]}},
-				<em><s:message code="domain.location.longitude" text="domain.location.longitude" />: </em>{{place.prefLocation.coordinates[0]}}
-				<span ng-show="!place.prefLocation.publicSite">
+			<span ng-show="place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0"><em><s:message code="domain.location.latitude" text="domain.location.latitude" />: </em>{{place.prefLocation.coordinates[1]}},
+				<em><s:message code="domain.location.longitude" text="domain.location.longitude" />: </em>{{place.prefLocation.coordinates[0]}}</span><span ng-show="place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0 && place.prefLocation.altitude">,</span>
+				<span ng-show="place.prefLocation.altitude"><em><s:message code="domain.location.altitude" text="domain.location.altitude" />: </em>{{place.prefLocation.altitude}} m</span>
+				<span ng-show="place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0 && !place.prefLocation.publicSite">
 					<sec:authorize access="hasRole('ROLE_USER')">
 						(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />:</em>
 						<span gaz-translate="'location.confidence.'+place.prefLocation.confidence"></span>)
@@ -147,9 +147,9 @@
 					(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />: </em>
 					<span gaz-translate="'location.confidence.'+place.prefLocation.confidence"></span>)
 				</span>
-				<br />
+				<br ng-show="(place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0) || place.prefLocation.altitude"/>
 			</span>
-			<em ng-show="place.prefLocation.shape"><s:message code="domain.location.polygon" text="domain.location.polygon" /></em>
+			<em ng-show="place.prefLocation.shape"><s:message code="domain.location.polygonSpecified" text="domain.location.polygonSpecified" /></em>
 		</dd>
 		<span ng-hide="!place.locations">
 			<br />
@@ -158,24 +158,23 @@
 				<ul>
 					<li ng-repeat="location in place.locations">
 						<span ng-show="location.coordinates">
-							<em><s:message code="domain.location.latitude" text="domain.location.latitude" />: </em>{{location.coordinates[1]}},
-							<em><s:message code="domain.location.longitude" text="domain.location.longitude" />: </em>{{location.coordinates[0]}}
-							<span ng-show="!location.publicSite">
-								<sec:authorize access="hasRole('ROLE_USER')">
-									(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />:</em>
-									<span gaz-translate="'location.confidence.'+location.confidence"></span>)
-								</sec:authorize>
-								<sec:authorize access="!hasRole('ROLE_USER')">
-									(<span><s:message code="domain.location.rounded" text="domain.location.rounded" /> <i class="icon-info-sign" style="color: #5572a1;" gaz-tooltip="'ui.place.protected-site-info'"></i></span>)
-								</sec:authorize>
-							</span>
-							<span ng-hide="!location.publicSite">
+							<em><s:message code="domain.location.latitude" text="domain.location.latitude" />: </em>{{location.coordinates[1]}},&nbsp;
+							<em><s:message code="domain.location.longitude" text="domain.location.longitude" />: </em>{{location.coordinates[0]}}</span><span ng-show="location.coordinates && location.altitude">,&nbsp;</span>
+						<span ng-show="location.altitude"><em><s:message code="domain.location.altitude" text="domain.location.altitude" />: </em>{{location.altitude}} m</span><span ng-show="(location.coordinates || location.altitude) && location.shape">,</span>
+						<em ng-show="location.shape"><s:message code="domain.location.polygonSpecified" text="domain.location.polygonSpecified" /></em>
+						<span ng-show="!location.publicSite">
+							<sec:authorize access="hasRole('ROLE_USER')">
 								(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />:</em>
 								<span gaz-translate="'location.confidence.'+location.confidence"></span>)
-							</span>
-							<br />
+							</sec:authorize>
+							<sec:authorize access="!hasRole('ROLE_USER')">
+								(<span><s:message code="domain.location.rounded" text="domain.location.rounded" /> <i class="icon-info-sign" style="color: #5572a1;" gaz-tooltip="'ui.place.protected-site-info'"></i></span>)
+							</sec:authorize>
 						</span>
-						<em ng-show="location.shape"><s:message code="domain.location.polygon" text="domain.location.polygon" /></em>
+						<span ng-hide="!location.publicSite">
+							(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />:</em>
+							<span gaz-translate="'location.confidence.'+location.confidence"></span>)
+						</span>
 					</li>
 				</ul>
 			</dd>
