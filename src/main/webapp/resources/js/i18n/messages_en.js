@@ -67,6 +67,7 @@ messages.factory('messages', function(){
 		"location.confidence.1": "Uncertain",
 		"location.confidence.2": "Certain",
 		"location.confidence.3": "Exact",
+		"location.confidence.4": "Incorrect",
 		"location.public": "Public coordinates",
 		"languages.deu": "German",
 		"languages.eng": "English",

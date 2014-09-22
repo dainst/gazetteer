@@ -327,6 +327,7 @@
 							<div gaz-location-picker coordinates="prefLocationCoordinates"></div>
 							<select ng-model="place.prefLocation.confidence" class="input-medium">
 								<option value="0" gaz-translate="'location.confidence.0'">
+								<option value="4" gaz-translate="'location.confidence.4'">
 								<option value="1" gaz-translate="'location.confidence.1'">
 								<option value="2" gaz-translate="'location.confidence.2'">
 								<option value="3" gaz-translate="'location.confidence.3'">
@@ -369,6 +370,7 @@
 							<div gaz-location-picker coordinates="location.coordinates"></div>
 							<select ng-model="location.confidence" class="input-medium">
 								<option value="0" gaz-translate="'location.confidence.0'">
+								<option value="4" gaz-translate="'location.confidence.4'">
 								<option value="1" gaz-translate="'location.confidence.1'">
 								<option value="2" gaz-translate="'location.confidence.2'">
 								<option value="3" gaz-translate="'location.confidence.3'">

@@ -67,6 +67,7 @@ messages.factory('messages', function(){
 		"location.confidence.1": "Ungenau",
 		"location.confidence.2": "Genau",
 		"location.confidence.3": "Exakt",
+		"location.confidence.4": "Falsch",
 		"location.public": "Öffentliche Koordinaten",
 		"languages.deu": "Deutsch",
 		"languages.eng": "Englisch",
