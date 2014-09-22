@@ -185,8 +185,11 @@ public class JsonPlaceDeserializer {
 						prefLocation.setConfidence(prefLocationNode.get("confidence").asInt());
 				}
 				
-				if (prefLocationNode.get("altitude") != null && !prefLocationNode.get("altitude").asText().isEmpty())
-					prefLocation.setAltitude(Double.valueOf(prefLocationNode.get("altitude").asText()));
+				if (prefLocationNode.get("altitude") != null && !prefLocationNode.get("altitude").asText().isEmpty()) {
+					String altitude = prefLocationNode.get("altitude").asText();
+					altitude = altitude.replace(",", ".");
+					prefLocation.setAltitude(Double.valueOf(altitude));
+				}
 				else
 					prefLocation.setAltitude(null);
 				
@@ -247,8 +250,11 @@ public class JsonPlaceDeserializer {
 						location.setConfidence(locationNode.get("confidence").asInt());
 				}
 				
-				if (locationNode.get("altitude") != null && !locationNode.get("altitude").asText().isEmpty())
-					location.setAltitude(Double.valueOf(locationNode.get("altitude").asText()));
+				if (locationNode.get("altitude") != null && !locationNode.get("altitude").asText().isEmpty()) {
+					String altitude = locationNode.get("altitude").asText();
+					altitude = altitude.replace(",", ".");
+					location.setAltitude(Double.valueOf(altitude));
+				}
 				else
 					location.setAltitude(null);
 				
