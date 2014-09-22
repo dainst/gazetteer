@@ -67,6 +67,7 @@ public class Place {
 	
 	private Set<Comment> commentsReisestipendium = new HashSet<Comment>();
 	
+	@Indexed
 	private String recordGroupId;
 	
 	

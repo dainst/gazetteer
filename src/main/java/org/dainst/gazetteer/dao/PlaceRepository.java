@@ -69,5 +69,7 @@ public interface PlaceRepository extends PagingAndSortingRepository<Place, Strin
 
 	public List<Place> findByProvenanceNotAndIdsContext(String string,
 			String string2);
+	
+	public List<Place> findByRecordGroupId(String recordGroupId);
 
 }

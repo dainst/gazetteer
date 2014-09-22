@@ -36,20 +36,11 @@ public class RecordGroupController {
 	
 		List<RecordGroup> recordGroups = (List<RecordGroup>) recordGroupDao.findAll();
 		List<User> users = (List<User>) userDao.findAll();
-		List<Place> places = (List<Place>) placeDao.findAll();
 		
 		if (deleteRecordGroupId != null && !deleteRecordGroupId.isEmpty()) {
-			RecordGroup recordGroup = recordGroupDao.findOne(deleteRecordGroupId);
-			
-			boolean assignedToPlace = false;
-			for (Place place : places) {
-				if (place.getRecordGroupId() != null && place.getRecordGroupId().equals(recordGroup.getId())) {
-					assignedToPlace = true;
-					break;
-				}
-			}
-			
-			if (!assignedToPlace) { 
+			RecordGroup recordGroup = recordGroupDao.findOne(deleteRecordGroupId);			
+			List<Place> assignedPlaces = placeDao.findByRecordGroupId(deleteRecordGroupId);		
+			if (assignedPlaces.size() == 0) { 
 				recordGroupDao.delete(recordGroup);
 				model.addAttribute("deletedRecordGroup", recordGroup.getName());
 			}
@@ -60,19 +51,11 @@ public class RecordGroupController {
 		Map<String, Integer> recordGroupMembers = new HashMap<String, Integer>();
 		Map<String, Integer> recordGroupPlaces = new HashMap<String, Integer>();
 		for (RecordGroup recordGroup : recordGroups) {
-			int members = 0;
-			int numberOfPlaces = 0;
-			for (User user : users) {
-				if (user.getRecordGroupIds().contains(recordGroup.getId()))
-					members++;
-			}
-			for (Place place : places) {
-				if (place.getRecordGroupId() != null && place.getRecordGroupId().equals(recordGroup.getId())) {
-					numberOfPlaces++;
-				}	
-			}
-			recordGroupMembers.put(recordGroup.getId(), members);
-			recordGroupPlaces.put(recordGroup.getId(), numberOfPlaces);
+			List<User> members = userDao.findByRecordGroupIds(recordGroup.getId());
+			List<Place> assignedPlaces = placeDao.findByRecordGroupId(recordGroup.getId());
+
+			recordGroupMembers.put(recordGroup.getId(), members.size());
+			recordGroupPlaces.put(recordGroup.getId(), assignedPlaces.size());
 		}
 		
 		model.addAttribute("recordGroups", recordGroups);
