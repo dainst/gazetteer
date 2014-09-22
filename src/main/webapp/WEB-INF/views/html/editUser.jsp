@@ -38,7 +38,7 @@
 					</button>	
 					<ul class="dropdown-menu pull-right" role="menu">
 	   					<li>
-   							<a href="">
+   							<a href="editUser?username=${pageContext['request'].userPrincipal.name}&r=${r}">
    								<s:message code="ui.userSettings" text="ui.userSettings"/>
    							</a>
    						</li>
