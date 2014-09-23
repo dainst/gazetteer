@@ -14,6 +14,8 @@ messages.factory('messages', function(){
 		"ui.search.sort.id.tooltip": "Nach ID sortieren",
 		"ui.search.sort.name.tooltip": "Nach Namen sortieren",
 		"ui.search.sort.thesaurus.tooltip": "Nach Thesaurus sortieren",
+		"ui.place.names.more": "mehr",
+		"ui.place.names.less": "weniger",
 		"ui.place.children.search": "Orte in Suche anzeigen",
 		"ui.place.save.success": "Ort erfolgreich gespeichert",
 		"ui.place.save.failure": "Ort konnte nicht gespeichert werden",

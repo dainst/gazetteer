@@ -44,7 +44,7 @@
 				</em>
 			</dd>
 		</span>
-		<dd ng-repeat="placename in place.names | orderBy:['language','title']">
+		<dd ng-repeat="placename in place.names | orderBy:['language','title'] | limitTo: namesDisplayed">
 			{{placename.title}}
 			<span ng-show="placename.ancient">
 				(<small gaz-translate="'place.name.ancient'"></small>)
@@ -55,6 +55,12 @@
 			<em ng-show="placename.transliterated">
 				(<small gaz-translate="'place.name.transliterated'"></small>)
 			</em>
+		</dd>
+		<dd ng-show="place.names.length > 4">
+			<a href="" ng-click="changeNumberOfDisplayedNames()">
+				<small ng-show="namesDisplayed == 4">(<span gaz-translate="'ui.place.names.more'"></span>)</small>
+				<small ng-hide="namesDisplayed == 4">(<span gaz-translate="'ui.place.names.less'"></span>)</small>
+			</a>
 		</dd>
 		<br/>
 	</span>

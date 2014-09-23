@@ -14,6 +14,8 @@ messages.factory('messages', function(){
 		"ui.search.sort.id.tooltip": "Sort by ID",
 		"ui.search.sort.name.tooltip": "Sort by name",
 		"ui.search.sort.thesaurus.tooltip": "sort by thesaurus",
+		"ui.place.names.more": "more",
+		"ui.place.names.less": "less",
 		"ui.place.children.search": "Show places in search",
 		"ui.place.save.success": "Successfully created place",
 		"ui.place.save.failure": "Could not create place",

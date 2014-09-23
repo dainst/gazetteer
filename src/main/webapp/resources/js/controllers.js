@@ -405,6 +405,8 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 	
 	$rootScope.title = "";
 	$rootScope.subtitle = "";
+	
+	$scope.namesDisplayed = 4;
 
 	if ($routeParams.id) {
 		$rootScope.loading++;
@@ -502,6 +504,13 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 		if ($scope.place && $scope.place["@id"])
 			$rootScope.subtitle = $scope.place["@id"]	+ '<a data-toggle="modal" href="#copyUriModal"><i class="icon-share" style="font-size:0.7em"></i></a>';
 	});
+	
+	$scope.changeNumberOfDisplayedNames = function() {
+		if ($scope.namesDisplayed == 4)
+			$scope.namesDisplayed = 10000;
+		else
+			$scope.namesDisplayed = 4;
+	}
 
 	$scope.prevChildren = function() {
 		$scope.offsetChildren -= 10;
