@@ -255,4 +255,62 @@ public class User implements UserDetails {
 				return 1;			
 		}
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		User other = (User) obj;
+		if (id == null && other.id != null)
+			return false;
+		if (id != null && !id.equals(other.id))
+			return false;
+		if (username == null && other.username != null)
+			return false;
+		if (username != null && !username.equals(other.username))
+			return false;
+		if (firstname == null && other.firstname != null)
+			return false;
+		if (firstname != null && !firstname.equals(other.firstname))
+			return false;
+		if (lastname == null && other.lastname != null)
+			return false;
+		if (lastname != null && !lastname.equals(other.lastname))
+			return false;
+		if (institution == null && other.institution != null)
+			return false;
+		if (institution != null && !institution.equals(other.institution))
+			return false;
+		if (password == null && other.password != null)
+			return false;
+		if (password != null && !password.equals(other.password))
+			return false;
+		if (email == null && other.email != null)
+			return false;
+		if (email != null && !email.equals(other.email))
+			return false;
+		if (registrationDate == null && other.registrationDate != null)
+			return false;
+		if (registrationDate != null && !registrationDate.equals(other.registrationDate))
+			return false;
+		if (lastLogin == null && other.lastLogin != null)
+			return false;
+		if (lastLogin != null && !lastLogin.equals(other.lastLogin))
+			return false;
+		if (enabled != other.enabled)
+			return false;
+		if (authorities == null && other.authorities != null)
+			return false;
+		if (authorities != null && !authorities.equals(other.authorities))
+			return false;
+		if (recordGroupIds == null && other.recordGroupIds != null)
+			return false;
+		if (recordGroupIds != null && !recordGroupIds.equals(other.recordGroupIds))
+			return false;
+		return true;
+	}
 }

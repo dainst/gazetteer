@@ -168,7 +168,8 @@ public class UserManagementController {
 	@RequestMapping(value="/userManagement")
 	public String getUserManagement(@RequestParam(required=false) String sort, @RequestParam(required=false) boolean isDescending,
 									@RequestParam(required=false) Integer page, @RequestParam(required=false) String showUser,
-									@RequestParam(required=false) boolean deleteUser, @RequestParam(required=false) String deleteUserId, ModelMap model) {
+									@RequestParam(required=false) String showRecordGroupMembers, @RequestParam(required=false) boolean deleteUser,
+									@RequestParam(required=false) String deleteUserId, ModelMap model) {
 		
 		if (deleteUser) {			
 			User user = userDao.findById(deleteUserId);
@@ -295,6 +296,11 @@ public class UserManagementController {
 					break;
 				}
 			}
+			
+			if (showRecordGroupMembers != null && showRecordGroupMembers != "") {
+				List<User> nonMembers = userDao.findByRecordGroupIdsNot(showRecordGroupMembers);
+				users.removeAll(nonMembers);
+			}
 		
 			pages = (users.size() + usersPerPage - 1) / usersPerPage;
 		
@@ -316,6 +322,7 @@ public class UserManagementController {
 		model.addAttribute("users", users);		
 		model.addAttribute("isDescending", isDescending);
 		model.addAttribute("lastSorting", sort);
+		model.addAttribute("showRecordGroupMembers", showRecordGroupMembers);
 		model.addAttribute("version", version);
 		
 		return "userManagement";
@@ -492,7 +499,7 @@ public class UserManagementController {
 		model.addAttribute("version", version);
 	
 		if (r != null && r.equals("userManagement") && adminEdit)
-			return getUserManagement(null, false, 0, null, false, null, model);
+			return getUserManagement(null, false, 0, null, null, false, null, model);
 		else if (r != null && !r.equals(""))
 			return "redirect:app/#!/" + r;
 		else

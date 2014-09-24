@@ -163,8 +163,22 @@
     				<tr>
 						<td>${recordGroup.name}</td>
 						<td>${recordGroup.creationDateAsText}</td>
-						<td>${recordGroupMembers[recordGroup.id]}</td>
-						<td>${recordGroupPlaces[recordGroup.id]}</td>
+						<c:choose>
+							<c:when test="${recordGroupMembers[recordGroup.id] > 0}">
+								<td><a href="userManagement?showRecordGroupMembers=${recordGroup.id}">${recordGroupMembers[recordGroup.id]}</a></td>
+							</c:when>
+							<c:otherwise>
+								<td>${recordGroupMembers[recordGroup.id]}</td>
+							</c:otherwise>
+						</c:choose>
+						<c:choose>
+							<c:when test="${recordGroupPlaces[recordGroup.id] > 0}">
+								<td><a href="app/#!/search?q=recordGroupId:${recordGroup.id}">${recordGroupPlaces[recordGroup.id]}</a></td>
+							</c:when>
+							<c:otherwise>
+								<td>${recordGroupPlaces[recordGroup.id]}</td>
+							</c:otherwise>
+						</c:choose>
 						<td><a href="#deleteGroupModal_${recordGroup.id}" class="btn btn-danger" data-toggle="modal">&nbsp;<s:message code="ui.delete" text="ui.delete" />&nbsp;</a></td>
 					</tr>
 					

@@ -11,4 +11,5 @@ public interface UserRepository extends PagingAndSortingRepository<User, String>
 	public User findByUsername(String username);
 	public User findByEmail(String email);
 	public List<User> findByRecordGroupIds(String recordGroupId);
+	public List<User> findByRecordGroupIdsNot(String recordGroupId);
 }

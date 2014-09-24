@@ -123,106 +123,115 @@
 		<h3>
 			<s:message code="ui.userManagement" text="ui.userManagement" />
 		</h3>
+		
+		<c:choose>
+			<c:when test="${showRecordGroupMembers != null && showRecordGroupMembers != ''}">
+				<c:set var="recordGroupParameter" value="showRecordGroupMembers=${showRecordGroupMembers}&" />
+			</c:when>
+			<c:otherwise>
+				<c:set var="recordGroupParameter" value="" />
+			</c:otherwise>
+		</c:choose>
 	
 		<table class="table table-condensed table-hover user-management-table">
 			<thead>
 				<tr>
 					<c:choose>
 						<c:when test="${lastSorting eq 'username'}">
-							<th><a href="userManagement?sort=username&isDescending=<c:out value="${!isDescending}" />"><s:message code="user.username" text="user.username" /></a></th>
+							<th><a href="userManagement?${recordGroupParameter}sort=username&isDescending=${!isDescending}"><s:message code="user.username" text="user.username" /></a></th>
 						</c:when>
 						<c:otherwise>
-							<th><a href="userManagement?sort=username&isDescending=false"><s:message code="user.username" text="user.username" /></a></th>
+							<th><a href="userManagement?${recordGroupParameter}sort=username&isDescending=false"><s:message code="user.username" text="user.username" /></a></th>
 						</c:otherwise>
 					</c:choose>
 					
 					<c:choose>
 						<c:when test="${lastSorting eq 'firstname'}">
-							<th><a href="userManagement?sort=firstname&isDescending=<c:out value="${!isDescending}" />"><s:message code="user.firstname" text="user.firstname" /></a></th>
+							<th><a href="userManagement?${recordGroupParameter}sort=firstname&isDescending=${!isDescending}"><s:message code="user.firstname" text="user.firstname" /></a></th>
 						</c:when>
 						<c:otherwise>
-							<th><a href="userManagement?sort=firstname&isDescending=false"><s:message code="user.firstname" text="user.firstname" /></a></th>
+							<th><a href="userManagement?${recordGroupParameter}sort=firstname&isDescending=false"><s:message code="user.firstname" text="user.firstname" /></a></th>
 						</c:otherwise>
 					</c:choose>
 					
 					<c:choose>
 						<c:when test="${lastSorting eq 'lastname'}">
-							<th><a href="userManagement?sort=lastname&isDescending=<c:out value="${!isDescending}" />"><s:message code="user.lastname" text="user.lastname" /></a></th>
+							<th><a href="userManagement?${recordGroupParameter}sort=lastname&isDescending=${!isDescending}"><s:message code="user.lastname" text="user.lastname" /></a></th>
 						</c:when>
 						<c:otherwise>
-							<th><a href="userManagement?sort=lastname&isDescending=false"><s:message code="user.lastname" text="user.lastname" /></a></th>
+							<th><a href="userManagement?${recordGroupParameter}sort=lastname&isDescending=false"><s:message code="user.lastname" text="user.lastname" /></a></th>
 						</c:otherwise>
 					</c:choose>
 					
 					<c:choose>
 						<c:when test="${lastSorting eq 'institution'}">
-							<th><a href="userManagement?sort=institution&isDescending=<c:out value="${!isDescending}" />"><s:message code="user.institution" text="user.institution" /></a></th>
+							<th><a href="userManagement?${recordGroupParameter}sort=institution&isDescending=${!isDescending}"><s:message code="user.institution" text="user.institution" /></a></th>
 						</c:when>
 						<c:otherwise>
-							<th><a href="userManagement?sort=institution&isDescending=false"><s:message code="user.institution" text="user.institution" /></a></th>
+							<th><a href="userManagement?${recordGroupParameter}sort=institution&isDescending=false"><s:message code="user.institution" text="user.institution" /></a></th>
 						</c:otherwise>
 					</c:choose>
 				
 					<c:choose>
 						<c:when test="${lastSorting eq 'email'}">
-							<th><a href="userManagement?sort=email&isDescending=<c:out value="${!isDescending}" />"><s:message code="user.email" text="user.email" /></a></th>
+							<th><a href="userManagement?${recordGroupParameter}sort=email&isDescending=${!isDescending}"><s:message code="user.email" text="user.email" /></a></th>
 						</c:when>
 						<c:otherwise>
-							<th><a href="userManagement?sort=email&isDescending=false"><s:message code="user.email" text="user.email" /></a></th>
+							<th><a href="userManagement?${recordGroupParameter}sort=email&isDescending=false"><s:message code="user.email" text="user.email" /></a></th>
 						</c:otherwise>
 					</c:choose>
 					
 					<c:choose>
 						<c:when test="${lastSorting eq 'lastLogin'}">
-							<th><a href="userManagement?sort=lastLogin&isDescending=<c:out value="${!isDescending}" />"><s:message code="user.lastLogin" text="user.lastLogin" /></a></th>
+							<th><a href="userManagement?${recordGroupParameter}sort=lastLogin&isDescending=${!isDescending}"><s:message code="user.lastLogin" text="user.lastLogin" /></a></th>
 						</c:when>
 						<c:otherwise>
-							<th><a href="userManagement?sort=lastLogin&isDescending=false"><s:message code="user.lastLogin" text="user.lastLogin" /></a></th>
+							<th><a href="userManagement?${recordGroupParameter}sort=lastLogin&isDescending=false"><s:message code="user.lastLogin" text="user.lastLogin" /></a></th>
 						</c:otherwise>
 					</c:choose>
 							
 					<c:choose>
 						<c:when test="${lastSorting eq 'registrationDate'}">
-							<th><a href="userManagement?sort=registrationDate&isDescending=<c:out value="${!isDescending}" />"><s:message code="user.registrationDate" text="user.registrationDate" /></a></th>
+							<th><a href="userManagement?${recordGroupParameter}sort=registrationDate&isDescending=${!isDescending}"><s:message code="user.registrationDate" text="user.registrationDate" /></a></th>
 						</c:when>
 						<c:otherwise>
-							<th><a href="userManagement?sort=registrationDate&isDescending=false"><s:message code="user.registrationDate" text="user.registrationDate" /></a></th>
+							<th><a href="userManagement?${recordGroupParameter}sort=registrationDate&isDescending=false"><s:message code="user.registrationDate" text="user.registrationDate" /></a></th>
 						</c:otherwise>
 					</c:choose>
 							
 					<c:choose>
 						<c:when test="${lastSorting eq 'admin'}">
-							<th><a href="userManagement?sort=admin&isDescending=<c:out value="${!isDescending}" />"><s:message code="user.roles.admin" text="user.roles.admin" /></a></th>
+							<th><a href="userManagement?${recordGroupParameter}sort=admin&isDescending=${!isDescending}"><s:message code="user.roles.admin" text="user.roles.admin" /></a></th>
 						</c:when>
 						<c:otherwise>
-							<th><a href="userManagement?sort=admin&isDescending=false"><s:message code="user.roles.admin" text="user.roles.admin" /></a></th>
+							<th><a href="userManagement?${recordGroupParameter}sort=admin&isDescending=false"><s:message code="user.roles.admin" text="user.roles.admin" /></a></th>
 						</c:otherwise>
 					</c:choose>
 					
 					<c:choose>
 						<c:when test="${lastSorting eq 'editor'}">
-							<th><a href="userManagement?sort=editor&isDescending=<c:out value="${!isDescending}" />"><s:message code="user.roles.editor" text="user.roles.editor" /></a></th>
+							<th><a href="userManagement?${recordGroupParameter}sort=editor&isDescending=${!isDescending}"><s:message code="user.roles.editor" text="user.roles.editor" /></a></th>
 						</c:when>
 						<c:otherwise>
-							<th><a href="userManagement?sort=editor&isDescending=false"><s:message code="user.roles.editor" text="user.roles.editor" /></a></th>
+							<th><a href="userManagement?${recordGroupParameter}sort=editor&isDescending=false"><s:message code="user.roles.editor" text="user.roles.editor" /></a></th>
 						</c:otherwise>
 					</c:choose>
 					
 					<c:choose>
 						<c:when test="${lastSorting eq 'reisestipendium'}">
-							<th><a href="userManagement?sort=reisestipendium&isDescending=<c:out value="${!isDescending}" />"><s:message code="user.roles.reisestipendium" text="user.roles.reisestipendium" /></a></th>
+							<th><a href="userManagement?${recordGroupParameter}sort=reisestipendium&isDescending=${!isDescending}"><s:message code="user.roles.reisestipendium" text="user.roles.reisestipendium" /></a></th>
 						</c:when>
 						<c:otherwise>
-							<th><a href="userManagement?sort=reisestipendium&isDescending=false"><s:message code="user.roles.reisestipendium" text="user.roles.reisestipendium" /></a></th>
+							<th><a href="userManagement?${recordGroupParameter}sort=reisestipendium&isDescending=false"><s:message code="user.roles.reisestipendium" text="user.roles.reisestipendium" /></a></th>
 						</c:otherwise>
 					</c:choose>
 					
 					<c:choose>
 						<c:when test="${lastSorting == null or lastSorting == ''}">
-							<th><a href="userManagement?isDescending=<c:out value="${!isDescending}" />"><s:message code="user.status" text="user.status" /></a></th>
+							<th><a href="userManagement?${recordGroupParameter}isDescending=${!isDescending}"><s:message code="user.status" text="user.status" /></a></th>
 						</c:when>
 						<c:otherwise>
-							<th><a href="userManagement?isDescending=false"><s:message code="user.status" text="user.status" /></a></th>
+							<th><a href="userManagement?${recordGroupParameter}isDescending=false"><s:message code="user.status" text="user.status" /></a></th>
 						</c:otherwise>
 					</c:choose>
 					
@@ -320,7 +329,7 @@
 						</div>
 						<div class="modal-footer">
 							<a href="#" class="btn" data-dismiss="modal" aria-hidden="true"><s:message code="ui.cancel" text="ui.cancel"/></a>
-							<a href="userManagement?page=${page}&sort=${lastSorting}&isDescending=${isDescending}&deleteUser=true&deleteUserId=${user.id}" class="btn btn-danger" aria-hidden="true"><s:message code="ui.delete" text="ui.delete"/></a>
+							<a href="userManagement?${recordGroupParameter}page=${page}&sort=${lastSorting}&isDescending=${isDescending}&deleteUser=true&deleteUserId=${user.id}" class="btn btn-danger" aria-hidden="true"><s:message code="ui.delete" text="ui.delete"/></a>
 						</div>
 					</div>
     			</c:forEach>
