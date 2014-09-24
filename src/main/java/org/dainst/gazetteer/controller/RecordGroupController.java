@@ -35,12 +35,16 @@ public class RecordGroupController {
 	public String getRecordGroupManagement(@RequestParam(required=false) String deleteRecordGroupId, ModelMap model) {
 	
 		List<RecordGroup> recordGroups = (List<RecordGroup>) recordGroupDao.findAll();
-		List<User> users = (List<User>) userDao.findAll();
 		
 		if (deleteRecordGroupId != null && !deleteRecordGroupId.isEmpty()) {
 			RecordGroup recordGroup = recordGroupDao.findOne(deleteRecordGroupId);			
 			List<Place> assignedPlaces = placeDao.findByRecordGroupId(deleteRecordGroupId);		
-			if (assignedPlaces.size() == 0) { 
+			if (assignedPlaces.size() == 0) {
+				List<User> members = userDao.findByRecordGroupIds(deleteRecordGroupId);
+				for (User member : members) {
+					member.getRecordGroupIds().remove(deleteRecordGroupId);
+					userDao.save(member);
+				}
 				recordGroupDao.delete(recordGroup);
 				model.addAttribute("deletedRecordGroup", recordGroup.getName());
 			}
