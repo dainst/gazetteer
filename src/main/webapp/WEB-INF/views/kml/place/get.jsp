@@ -91,9 +91,15 @@
 				</ul>
 			</c:if>
 			
-			<c:if test="${!empty(place.type)}">
+			<c:if test="${!empty(place.types)}">
 				<h2><s:message code="domain.place.type" text="domain.place.type" /></h2>
-				<p><s:message code="types.${place.type}" text="${place.type}"/></p>
+				<ul>
+					<c:forEach var="type" items="${place.types}">
+						<li>
+							<s:message code="place.types.${type}" text="${type}"/>
+						</li>
+					</c:forEach>
+				</ul>
 			</c:if>
 			
 			<c:if test="${not empty place.arachneId or not empty place.zenonId}">
