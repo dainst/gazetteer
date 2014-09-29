@@ -186,15 +186,9 @@ public class DocumentController {
 		
 		changeRecordDao.save(createChangeRecord(place, "create"));
 		
-		logger.debug(place.getId());
+		logger.debug("created place {}", place);
 		
-		// add count for children (for scoring)
-		while (place.getParent() != null) {
-			place = placeDao.findOne(place.getParent());
-			place.setChildren(place.getChildren()+1);
-			placeDao.save(place);
-			logger.debug("updated children count: {}", place.getChildren());
-		}
+		increaseChildrenCount(place);
 		
 		response.setStatus(201);
 		response.setHeader("Location", baseUri + "place/" + place.getId());
@@ -205,7 +199,7 @@ public class DocumentController {
 		return mav;
 		
 	}
-	
+
 	@RequestMapping(value="/doc/{placeId}", method={RequestMethod.POST, RequestMethod.PUT})
 	public ModelAndView updateOrCreatePlace(@RequestBody Place place, 
 			@PathVariable String placeId,
@@ -244,20 +238,10 @@ public class DocumentController {
 		
 		logger.debug("saved place {}", place);
 		
-		// add count for children (for scoring)
-		if (place.getParent() != null) {
-			Place parent = placeDao.findOne(place.getParent());
-			try {
-				parent.setChildren(parent.getChildren()+1);
-				placeDao.save(parent);				
-				logger.debug("updated children count: {}", parent.getChildren());
-			} catch (NullPointerException e) {
-				logger.warn("Could not find parent {} for {}", place.getParent(), place);
-			}
-		}
+		increaseChildrenCount(place);
 		
 		response.setStatus(201);
-		response.setHeader("location", baseUri + "place/" + place.getId());
+		response.setHeader("Location", baseUri + "place/" + place.getId());
 		
 		ModelAndView mav = new ModelAndView("place/validation");
 		mav.addObject("result", new ValidationResult());
@@ -300,6 +284,22 @@ public class DocumentController {
 			changeRecordDao.save(createChangeRecord(place, "delete"));
 		
 			response.setStatus(204);
+		}
+		
+	}
+	
+	// add count for children (for scoring)
+	private void increaseChildrenCount(Place place) {
+		Place parent = placeDao.findOne(place.getParent());
+		while (parent != null) {
+			parent.setChildren(parent.getChildren()+1);
+			placeDao.save(parent);				
+			logger.debug("updated children of {} count: {}", parent.getId(), parent.getChildren());
+			if (parent.getParent() != null) {
+				parent = placeDao.findOne(parent.getParent());
+			} else {
+				parent = null;
+			}
 		}
 		
 	}
