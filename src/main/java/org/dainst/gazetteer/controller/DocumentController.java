@@ -214,6 +214,7 @@ public class DocumentController {
 				ValidationResult result = new ValidationResult();
 				result.setSuccess(false);
 				result.setMessage("parentError");
+				response.setStatus(422);
 				mav.addObject("result", result);
 				return mav;
 			}
@@ -224,6 +225,7 @@ public class DocumentController {
 			ValidationResult result = new ValidationResult();
 			result.setSuccess(false);
 			result.setMessage("accessDeniedError");
+			response.setStatus(403);
 			mav.addObject("result", result);
 			return mav;
 		}
@@ -290,6 +292,7 @@ public class DocumentController {
 	
 	// add count for children (for scoring)
 	private void increaseChildrenCount(Place place) {
+		//if (place.getParent() == null) return;
 		Place parent = placeDao.findOne(place.getParent());
 		while (parent != null) {
 			parent.setChildren(parent.getChildren()+1);
