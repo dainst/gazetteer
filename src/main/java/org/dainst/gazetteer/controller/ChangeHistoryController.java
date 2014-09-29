@@ -97,6 +97,8 @@ public class ChangeHistoryController {
 		calendarStart.setTime(start);
 		calendarEnd.setTime(end);
 		
+		RequestContext context = new RequestContext(request);
+		
 		for (PlaceChangeRecord changeRecord : changeHistory) {
 			
 			Calendar calendarChangeDate = Calendar.getInstance();
@@ -121,13 +123,16 @@ public class ChangeHistoryController {
 				}
 				else {
 					presChangeRecord.setUserId(null);
-					RequestContext context = new RequestContext(request);
 					presChangeRecord.setUsername(context.getMessage("ui.changeHistory.deletedUser"));
 				}
 				presChangeRecord.setPlaceId(changeRecord.getPlaceId());
 				
 				Place place = placeRepository.findOne(changeRecord.getPlaceId());
-				if (place.getPrefName() != null)
+				if (place == null) {
+					presChangeRecord.setPlacename(context.getMessage("ui.changeHistory.completelyDeletedPlace"));
+					presChangeRecord.setNotFound(true);
+				}
+				else if (place.getPrefName() != null)
 					presChangeRecord.setPlacename(place.getPrefName().getTitle());
 				
 				presChangeRecord.setChangeType(changeRecord.getChangeType());
@@ -214,6 +219,8 @@ public class ChangeHistoryController {
 		private String placename;
 		
 		private String changeType;
+		
+		private boolean notFound = false;
 			
 		public Date getChangeDate() {
 			return changeDate;
@@ -270,6 +277,14 @@ public class ChangeHistoryController {
 
 		public void setChangeType(String changeType) {
 			this.changeType = changeType;
+		}
+
+		public boolean isNotFound() {
+			return notFound;
+		}
+
+		public void setNotFound(boolean notFound) {
+			this.notFound = notFound;
 		}
 	}
 	

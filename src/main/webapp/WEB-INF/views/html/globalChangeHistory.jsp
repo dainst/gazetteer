@@ -269,12 +269,27 @@
 								</c:otherwise>
 							</c:choose>
 						</sec:authorize>
-						<td><a href="place/${changeRecord.placeId}">${changeRecord.placeId}</a>
 						<td>
+							<c:choose>
+								<c:when test="${changeRecord.notFound}">
+									${changeRecord.placeId}
+								</c:when>
+								<c:otherwise>
+									<a href="place/${changeRecord.placeId}">${changeRecord.placeId}</a>
+								</c:otherwise>
+							</c:choose>
+						</td>
+						<td>
+							<c:if test="${changeRecord.notFound or (changeRecord.placename == null or changeRecord.placename eq '')}">
+								<em>
+							</c:if>
 							<c:choose>
 								<c:when test="${changeRecord.placename == null or changeRecord.placename eq ''}"><s:message code="domain.place.untitled" text="domain.place.untitled" /></c:when>
 								<c:otherwise>${changeRecord.placename}</c:otherwise>
 							</c:choose>
+							<c:if test="${changeRecord.notFound or (changeRecord.placename == null or changeRecord.placename eq '')}">
+								</em>
+							</c:if>
 						</td>
 						<td><s:message code="ui.changeHistory.changeType.${changeRecord.changeType}" text="ui.changeHistory.changeType.${changeRecord.changeType}" /></td>
 					</tr>
