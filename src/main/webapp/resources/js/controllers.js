@@ -510,7 +510,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 			$scope.namesDisplayed = 10000;
 		else
 			$scope.namesDisplayed = 4;
-	}
+	};
 
 	$scope.prevChildren = function() {
 		$scope.offsetChildren -= 10;

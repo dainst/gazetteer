@@ -1,7 +1,9 @@
 package org.dainst.gazetteer.controller;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -67,27 +69,37 @@ public class MergeController {
 			throw new IllegalStateException("Could not merge places! Creation of place failed because generated ID already exists: " + newPlace.getId());
 		}
 		
-		// update IDs in related places
-		for (String relatedPlaceId : newPlace.getRelatedPlaces()) {
-			Place relatedPlace = placeDao.findOne(relatedPlaceId);
-			if(relatedPlace != null && relatedPlace.getRelatedPlaces() != null) {
-				relatedPlace.getRelatedPlaces().remove(id1);
-				relatedPlace.getRelatedPlaces().remove(id2);
-				relatedPlace.getRelatedPlaces().add(newPlace.getId());
-				placeDao.save(relatedPlace);
+		Set<Place> updatedPlaces = new HashSet<Place>();
+		try {
+			// update IDs in related places
+			for (String relatedPlaceId : newPlace.getRelatedPlaces()) {
+				Place relatedPlace = placeDao.findOne(relatedPlaceId);
+				if (relatedPlace != null && relatedPlace.getRelatedPlaces() != null) {
+					relatedPlace.getRelatedPlaces().remove(id1);
+					relatedPlace.getRelatedPlaces().remove(id2);
+					relatedPlace.getRelatedPlaces().add(newPlace.getId());
+					updatedPlaces.add(relatedPlace);
+				}
 			}
+		
+			// update IDs in children
+			List<Place> children = placeDao.findByParent(id1);
+			for (Place child : children) {
+				child.setParent(newPlace.getId());
+				updatedPlaces.add(child);
+			}		
+			children = placeDao.findByParent(id2);
+			for (Place child : children) {
+				child.setParent(newPlace.getId());
+				updatedPlaces.add(child);
+			}
+		} catch (Exception e) {
+			placeDao.delete(newPlace);			
+			throw new RuntimeException("Could not merge places: Failed to update related places / children.", e);
 		}
 		
-		// update IDs in children
-		List<Place> children = placeDao.findByParent(id1);
-		for (Place child : children) {
-			child.setParent(newPlace.getId());
-			placeDao.save(child);
-		}		
-		children = placeDao.findByParent(id2);
-		for (Place child : children) {
-			child.setParent(newPlace.getId());
-			placeDao.save(child);
+		for (Place place : updatedPlaces) {
+			placeDao.save(place);
 		}
 		
 		place1.setReplacedBy(newPlace.getId());

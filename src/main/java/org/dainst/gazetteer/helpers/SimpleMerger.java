@@ -1,6 +1,8 @@
 package org.dainst.gazetteer.helpers;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.domain.Place;
@@ -41,8 +43,6 @@ public class SimpleMerger implements Merger {
 		result.getLocations().addAll(place2.getLocations());
 		result.getNames().addAll(place1.getNames());
 		result.getNames().addAll(place2.getNames());
-		result.getRelatedPlaces().addAll(place1.getRelatedPlaces());
-		result.getRelatedPlaces().addAll(place2.getRelatedPlaces());
 		result.getTags().addAll(place1.getTags());
 		result.getTags().addAll(place2.getTags());
 		result.getProvenance().addAll(place1.getProvenance());
@@ -51,6 +51,19 @@ public class SimpleMerger implements Merger {
 		result.getTypes().addAll(place2.getTypes());
 		
 		result.setChildren(place1.getChildren() + place2.getChildren());
+		
+		Set<String> relatedPlaces = new HashSet<String>();
+		relatedPlaces.addAll(place1.getRelatedPlaces());
+		relatedPlaces.addAll(place2.getRelatedPlaces());
+		for (String relatedPlaceId : relatedPlaces) {
+			if (relatedPlaceId != null) {
+				Place relatedPlace = placeRepository.findOne(relatedPlaceId);
+				if (relatedPlace != null && relatedPlace.getRelatedPlaces() != null
+						&& (relatedPlace.getRelatedPlaces().contains(place1.getId()) || relatedPlace.getRelatedPlaces().contains(place2.getId())
+						&& !relatedPlace.getId().equals(place1.getId()) && !relatedPlace.getId().equals(place2.getId())))
+					result.getRelatedPlaces().add(relatedPlaceId);
+			}
+		}
 		
 		if (place1.getPrefName() != null) {
 			result.setPrefName(place1.getPrefName());
@@ -87,15 +100,6 @@ public class SimpleMerger implements Merger {
 		for (Place child : children) {
 			child.setParent(result.getId());
 			placeRepository.save(child);
-		}
-		
-		// update id in related places
-		List<Place> relatedPlaces = getPlaceRepository().findByRelatedPlaces(oldId);
-		logger.info("got {} related places", relatedPlaces.size());
-		for (Place relatedPlace : relatedPlaces) {
-			relatedPlace.getRelatedPlaces().remove(oldId);
-			relatedPlace.getRelatedPlaces().add(result.getId());
-			placeRepository.save(relatedPlace);
 		}
 		
 		if (place1.getNoteReisestipendium() != null && !place1.getNoteReisestipendium().isEmpty())

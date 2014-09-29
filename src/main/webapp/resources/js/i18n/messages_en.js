@@ -38,6 +38,8 @@ messages.factory('messages', function(){
 		"ui.change-history.change-type.create": "Created",
 		"ui.change-history.change-type.edit": "Edited",
 		"ui.change-history.change-type.delete": "Deleted",
+		"ui.change-history.change-type.merge": "Merged",
+		"ui.change-history.change-type.replace": "Replaced",
 		"ui.change-history.change-type.unknown": "Unknown",
 		"place.name.ancient": "Ancient",
 		"place.name.transliterated": "Transliterated",
