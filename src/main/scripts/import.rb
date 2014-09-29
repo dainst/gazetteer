@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+require 'ostruct'
 require 'optparse'
 require 'rest-client'
 require 'json'
@@ -21,7 +22,7 @@ template = '{
   "prefLocation": {
     "coordinates": [ #{_[4].gsub(/,/,\'.\').to_f}, #{_[5].gsub(/,/,\'.\').to_f} ]
   },
-  "ids": [
+  "identifiers": [
     {
       "value": "#{_[6]}",
       "context": "geonames"
@@ -74,6 +75,10 @@ OptionParser.new do |opts|
   	options.template = open(t).read
   end
 
+  opts.on("-T", "--temp-id ROWNUMBER" "") do |t|
+  	options.temp_id = t.to_i
+  end
+
   options.commit = false
   opts.on("-c", "--[no-]commit", "Commit changes to gazetteer instead of only printing them") do |c|
   	options.commit = c
@@ -112,6 +117,16 @@ merger = lambda do |key, oldval, newval|
   end
 end
 
+# id map helper
+$ids = {}
+def id(temp_id)
+	if $ids.key?(temp_id.to_s)
+		$ids[temp_id.to_s]
+	else
+		raise IndexError, "Temporary ID #{temp_id} has not been assigned a permanent ID. Make sure rows are processed in the right order."
+	end
+end
+
 # main program
 
 gaz = RestClient::Resource.new(options.uri, :user => options.user, :password => options.password)
@@ -122,8 +137,11 @@ merged = 0
 replaced = 0
 
 parsed_headers = false
+row_no = 0
 
 CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
+
+  row_no += 1
   
   if options.headers and !parsed_headers
     parsed_headers = true
@@ -132,22 +150,34 @@ CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
 
   id_present = false
 
+  if options.temp_id
+  	temp_id = row[options.temp_id]
+  else
+  	temp_id = row_no
+  end
+
   # create place object by applying template
   _ = row
   _.map! { |val| val.to_s } # convert nils to empty strings
   eval_str = "\"#{options.template.gsub(/\"/){|m|"\\"+m}}\""
-  place = JSON.parse(eval(eval_str), :symbolize_names => true)
+  begin
+  	place = JSON.parse(eval(eval_str), :symbolize_names => true)
+  rescue Exception => e
+  	puts e.message
+  	next
+  end
 
   # postprocess to delete empty fields
+  place.delete(:gazId) if place[:gazId].to_s.empty?
   place[:prefName].delete(:language) if place[:prefName][:language].to_s.empty?
   place[:prefName].delete(:ancient) if !place[:prefName][:ancient]
   if place[:alternativeNames] 
     place[:alternativeNames].delete_if { |id| id[:title].to_s.empty? }
   end
   place.delete(:types) if place[:types].empty?
-  place.delete(:prefLocation) if place[:prefLocation][:coordinates] == [0, 0]
-  if place[:ids] 
-    place[:ids].delete_if { |id| id[:value].to_s.empty? }
+  place.delete(:prefLocation) if place[:prefLocation] and place[:prefLocation][:coordinates] == [0, 0]
+  if place[:identifiers] 
+    place[:identifiers].delete_if { |id| id[:value].to_s.empty? || id[:value] == "0" }
   end
 
   id_present = true if !place[:gazId].to_s.empty?
@@ -196,9 +226,11 @@ CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
       # perform POST to gazetteer API
       if id_present
         response = gaz["doc/#{place[:gazId]}"].put(place.to_json, :content_type => :json, :accept => :json)
+        $ids[temp_id.to_s] = place[:gazId]
         puts "updated: " + JSON.parse(response.body)["@id"] if options.verbose
       else
         response = gaz['doc'].post(place.to_json, :content_type => :json, :accept => :json)
+        $ids[temp_id.to_s] = JSON.parse(response.body)["gazId"]
         puts "created: " + JSON.parse(response.body)["@id"] if options.verbose
       end
     rescue RestClient::Exception => e
@@ -211,11 +243,18 @@ CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
     end
   else
     # dry run
+    if id_present
+      $ids[temp_id.to_s] = place[:gazId]
+    else
+      $ids[temp_id.to_s] = "temp_#{temp_id}"
+    	place[:gazId] = $ids[temp_id.to_s]
+    end
     puts JSON.pretty_generate(place) if options.verbose
   end
 
 end
 
+pp $ids if options.verbose
 puts "OK: read #{total} places"
 puts "inserted #{inserted}"
 puts "skipped #{skipped}"
