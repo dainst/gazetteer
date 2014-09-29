@@ -289,29 +289,53 @@ public class ChangeHistoryController {
 	
 	public static class UsernameComparator implements Comparator<PresentablePlaceChangeRecord> {
 		public int compare(PresentablePlaceChangeRecord changeRecord1, PresentablePlaceChangeRecord changeRecord2) {
+			if (changeRecord1.getUsername() == null && changeRecord2.getUsername() == null)
+				return 0;
+			if (changeRecord1.getUsername() == null && changeRecord2.getUsername() != null)
+				return 1;
+			if (changeRecord1.getUsername() != null && changeRecord2.getUsername() == null)
+				return -1;
+			
 			return changeRecord1.getUsername().toLowerCase().compareTo(changeRecord2.getUsername().toLowerCase());
-
 		}
 	}
 	
 	public static class PlaceIdComparator implements Comparator<PresentablePlaceChangeRecord> {
 		public int compare(PresentablePlaceChangeRecord changeRecord1, PresentablePlaceChangeRecord changeRecord2) {
+			if (changeRecord1.getPlaceId() == null && changeRecord2.getPlaceId() == null)
+				return 0;
+			if (changeRecord1.getPlaceId() == null && changeRecord2.getPlaceId() != null)
+				return 1;
+			if (changeRecord1.getPlaceId() != null && changeRecord2.getPlaceId() == null)
+				return -1;
+			
 			return changeRecord1.getPlaceId().toLowerCase().compareTo(changeRecord2.getPlaceId().toLowerCase());
-
 		}
 	}
 	
 	public static class PlacenameComparator implements Comparator<PresentablePlaceChangeRecord> {
 		public int compare(PresentablePlaceChangeRecord changeRecord1, PresentablePlaceChangeRecord changeRecord2) {
+			if (changeRecord1.getPlacename() == null && changeRecord2.getPlacename() == null)
+				return 0;
+			if (changeRecord1.getPlacename() == null && changeRecord2.getPlacename() != null)
+				return 1;
+			if (changeRecord1.getPlacename() != null && changeRecord2.getPlacename() == null)
+				return -1;
+			
 			return changeRecord1.getPlacename().toLowerCase().compareTo(changeRecord2.getPlacename().toLowerCase());
-
 		}
 	}
 	
 	public static class ChangeTypeComparator implements Comparator<PresentablePlaceChangeRecord> {
 		public int compare(PresentablePlaceChangeRecord changeRecord1, PresentablePlaceChangeRecord changeRecord2) {
+			if (changeRecord1.getChangeType() == null && changeRecord2.getChangeType() == null)
+				return 0;
+			if (changeRecord1.getChangeType() == null && changeRecord2.getChangeType() != null)
+				return 1;
+			if (changeRecord1.getChangeType() != null && changeRecord2.getChangeType() == null)
+				return -1;
+			
 			return changeRecord1.getChangeType().toLowerCase().compareTo(changeRecord2.getChangeType().toLowerCase());
-
 		}
 	}
 }
