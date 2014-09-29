@@ -98,7 +98,6 @@ public class SearchController {
 			q = q.replace("/", "\\/");
 			
 			if ("fuzzy".equals(type)) query.fuzzySearch(q);
-			else if ("prefix".equals(type)) query.prefixSearch(q);
 			else if ("queryString".equals(type)) query.queryStringSearch(q);
 			else if ("extended".equals(type)) query.extendedSearch(q);
 			else query.metaSearch(q);

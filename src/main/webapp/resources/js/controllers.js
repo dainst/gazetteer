@@ -17,14 +17,6 @@ function AppCtrl($scope, $location, $rootScope) {
 	$rootScope.zoom = 2;
 	$scope.highlight = null;
 	
-	// search while typing
-	$scope.$watch("q", function() {
-		if ($scope.q != null && $scope.q.indexOf(':') == -1 && $scope.q.indexOf('*') == -1) {
-			$scope.zoom = 2;
-			$location.path('/search').search({q:$scope.q, type: "prefix"});
-		}
-	});
-	
 	$scope.submit = function() {
 		$scope.zoom = 2;
 		$location.path('/search').search({q:$scope.q, type: $scope.type});
@@ -251,10 +243,8 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 		Place.query($scope.search, function(result) {
 			$scope.parents = {};
 			$scope.places = result.result;
-			if ($scope.search.type != 'prefix')
-				$scope.facets = result.facets;
-			else
-				$scope.facets = null;
+			$scope.facets = result.facets;
+
 			$rootScope.loading--;
 			for (var i=0; i < $scope.places.length; i++) {
 				$rootScope.loading++;				
@@ -269,8 +259,7 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 			if ($scope.total != result.total)
 				$scope.total = result.total;
 		}, function() {
-			if($scope.search.type !== "prefix")
-				$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
+			$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
 			$rootScope.loading--;
 		});
 	};
