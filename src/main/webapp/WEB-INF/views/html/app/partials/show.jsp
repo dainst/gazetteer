@@ -37,7 +37,9 @@
 					(<small gaz-translate="'place.name.ancient'"></small>)
 				</span>
 				<small ng-show="place.prefName.language">
-					<em gaz-translate="'languages.' + place.prefName.language"></em>
+					<c:forEach var="language" items="${languages}">
+						<em ng-show="'${language.key}' == place.prefName.language">${language.value}</em>
+					</c:forEach>
 				</small>
 				<em ng-show="place.prefName.transliterated">
 					(<small gaz-translate="'place.name.transliterated'"></small>)
@@ -50,7 +52,9 @@
 				(<small gaz-translate="'place.name.ancient'"></small>)
 			</span>
 			<small ng-hide="!placename.language">
-				<em gaz-translate="'languages.' + placename.language"></em>
+				<c:forEach var="language" items="${languages}">
+					<em ng-show="'${language.key}' == placename.language">${language.value}</em>
+				</c:forEach>
 			</small>
 			<em ng-show="placename.transliterated">
 				(<small gaz-translate="'place.name.transliterated'"></small>)
