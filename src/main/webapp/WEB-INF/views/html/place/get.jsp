@@ -157,8 +157,8 @@ iDAI.gazetteer - ${place.prefName.title}
 					<c:forEach var="relatedPlace" items="${relatedPlaces}">
 						<li>
 							<a href="${baseUri}place/${relatedPlace.id}">${relatedPlace.prefName.title}
-								<c:if test="${relatedPlace.type != null}">
-									<em>(${relatedPlace.type})</em>
+								<c:if test="${relatedPlace.types != null && !empty(relatedPlace.types)}">
+									<em>(${relatedPlace.types[0]})</em>
 								</c:if>	
 							</a>
 						</li>
@@ -189,9 +189,14 @@ iDAI.gazetteer - ${place.prefName.title}
 				</ul>
 			</c:if>
 			
-			<c:if test="${!empty(place.type)}">
+			<c:if test="${place.types != null && !empty(place.types)}">
 				<h2><s:message code="domain.place.type" text="domain.place.type" /></h2>
-				<p><s:message code="types.${place.type}" text="${place.type}"/></p>
+				<ul>
+					<c:forEach var="type" items="${place.types}">
+						<li><s:message code="place.types.${type}" text="${type}"/></li>
+					</c:forEach>
+				</ul>
+				
 			</c:if>
 			
 			<c:if test="${not empty place.arachneId or not empty place.zenonId}">
