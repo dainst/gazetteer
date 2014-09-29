@@ -39,9 +39,13 @@ template = '{
 # option parsing
 
 options = OpenStruct.new
-OptionParser.new do |opts|
+opts = OptionParser.new do |opts|
   
   opts.banner = "Usage: example.rb [options] [file ...]"
+
+  opts.on("-P", "--provenance TAG", "Add TAG to provenance field (mandatory)") do |p|
+    options.provenance = p
+  end
 
   opts.on("-u", "--username USERNAME", "Gazetteer user name") do |u|
     options.user = u
@@ -51,7 +55,7 @@ OptionParser.new do |opts|
     if p
       options.password = p
     else
-      ask("Gazetteer password:") { |q| q.echo = false }
+      options.password = ask("Gazetteer password:") { |q| q.echo = false }
     end
   end
 
@@ -75,7 +79,7 @@ OptionParser.new do |opts|
   	options.template = open(t).read
   end
 
-  opts.on("-T", "--temp-id ROWNUMBER" "") do |t|
+  opts.on("-T", "--temp-id ROW_NUMBER", "Use values in row ROW_NUMBER as temporary IDs.\n                                     Temporary IDs can be referenced in the template to with \"\#{id[_[ROW_NUMBER]]}\" in order to insert the generated gazetter IDs.\n                                     Note: In order for this mechanism to work referenced places have to occur before being referred to.\n                                     When no value is given the line number is used as the temporary ID.") do |t|
   	options.temp_id = t.to_i
   end
 
@@ -100,11 +104,19 @@ OptionParser.new do |opts|
   end
 
   opts.on_tail("-h", "--help", "Show this message") do
-  puts opts
+    puts opts
     exit
   end
 
-end.parse!
+end
+
+opts.parse!
+
+if !options.provenance
+  puts "ERROR: provenance not set!"
+  puts opts
+  exit(1)
+end
 
 # merge helper
 merger = lambda do |key, oldval, newval|
@@ -136,6 +148,7 @@ skipped = 0
 merged = 0
 replaced = 0
 
+ids = {} # map to store mapping between temporary and gazetteer IDs
 parsed_headers = false
 row_no = 0
 
@@ -167,7 +180,8 @@ CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
   	next
   end
 
-  # postprocess to delete empty fields
+  # postprocess to delete empty fields and add provenance
+  place[:provenance] = [options.provenance]
   place.delete(:gazId) if place[:gazId].to_s.empty?
   place[:prefName].delete(:language) if place[:prefName][:language].to_s.empty?
   place[:prefName].delete(:ancient) if !place[:prefName][:ancient]
@@ -207,13 +221,17 @@ CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
           # new place has priority
           place = existing_place.merge(place, &merger)
         end
-        puts JSON.pretty_generate(place)
         merged += 1
       end
     rescue RestClient::Exception => e
+      if e.http_code == 401
+        puts "ERROR: user name or password incorrect, aborting ..."
+        exit(1)
+      end
       puts "WARNING: gazetteer id #{place[:gazId]} not present in gazetteer, generation of custom ids is not supported"
       puts "HTTP response code: #{e.http_code}" if options.verbose
       place.delete(:gazId)
+      id_present = false
       inserted += 1
     end
   else
@@ -227,18 +245,20 @@ CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
       if id_present
         response = gaz["doc/#{place[:gazId]}"].put(place.to_json, :content_type => :json, :accept => :json)
         $ids[temp_id.to_s] = place[:gazId]
-        puts "updated: " + JSON.parse(response.body)["@id"] if options.verbose
+        puts "updated: " + response.headers[:location] if options.verbose
       else
-        response = gaz['doc'].post(place.to_json, :content_type => :json, :accept => :json)
+        response = gaz["doc/"].post(place.to_json, :content_type => :json, :accept => :json)
         $ids[temp_id.to_s] = JSON.parse(response.body)["gazId"]
-        puts "created: " + JSON.parse(response.body)["@id"] if options.verbose
+        puts "created: " + response.headers[:location] if options.verbose
       end
     rescue RestClient::Exception => e
-      puts "ERROR: #{e.http_code}" if options.verbose
-      puts e.response.body if options.verbose
       if e.http_code == 401
         puts "ERROR: user name or password incorrect, aborting ..."
         exit(1)
+      else
+        puts "ERROR: #{e.http_code}"
+        puts JSON.pretty_generate(place)
+        puts e.response.body
       end
     end
   else
