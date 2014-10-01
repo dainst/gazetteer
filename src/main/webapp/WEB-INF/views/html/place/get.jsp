@@ -133,9 +133,9 @@ iDAI.gazetteer - ${place.prefName.title}
 				<h2><s:message code="domain.place.parent" text="domain.place.parent" /></h2>
 				<p>
 					<a href="${baseUri}place/${parent.id}" itemprop="containedIn">${parent.prefName.title}
-						<c:if test="${parent.type != null}">
-							<em>(<s:message code="types.${parent.type}" text="${parent.type}"/>)</em>
-						</c:if>
+						<c:if test="${parent.types != null && !empty(parent.types)}">
+							<em>(<s:message code="place.types.${parent.types.toArray()[0]}" text="${parent.types.toArray()[0]}"/>)</em>
+						</c:if>	
 					</a>
 				</p>
 			</c:if>
@@ -158,7 +158,7 @@ iDAI.gazetteer - ${place.prefName.title}
 						<li>
 							<a href="${baseUri}place/${relatedPlace.id}">${relatedPlace.prefName.title}
 								<c:if test="${relatedPlace.types != null && !empty(relatedPlace.types)}">
-									<em>(${relatedPlace.types[0]})</em>
+									<em>(<s:message code="place.types.${relatedPlace.types.toArray()[0]}" text="${relatedPlace.types.toArray()[0]}"/>)</em>
 								</c:if>	
 							</a>
 						</li>
