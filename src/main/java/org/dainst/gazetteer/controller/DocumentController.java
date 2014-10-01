@@ -292,7 +292,7 @@ public class DocumentController {
 	
 	// add count for children (for scoring)
 	private void increaseChildrenCount(Place place) {
-		//if (place.getParent() == null) return;
+		if (place.getParent() == null) return;
 		Place parent = placeDao.findOne(place.getParent());
 		while (parent != null) {
 			parent.setChildren(parent.getChildren()+1);
