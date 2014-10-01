@@ -23,7 +23,7 @@ int numberOfPlaces = 0;
 List<String> accessGrantedPlaces = new ArrayList<String>();
 List<String> accessDeniedPlaces = new ArrayList<String>();
 for (Place place : places) {
-	String serializedPlace = serializer.serialize(place, 1);
+	String serializedPlace = serializer.serialize(place);
 	if (serializedPlace != null) {
 		if (serializedPlace.indexOf("\"accessDenied\":true") > 0)		
 			accessDeniedPlaces.add(serializedPlace);

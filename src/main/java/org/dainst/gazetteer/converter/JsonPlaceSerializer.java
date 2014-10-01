@@ -41,25 +41,38 @@ public class JsonPlaceSerializer {
 	}
 	
 	public String serialize(Place place) {
-		return serialize(place, null, null, null, 1);
-	}
-	
-	public String serialize(Place place, int lod) {
-		return serialize(place, null, null, null, lod);
+		return serialize(place, null, null, null);
 	}
 	
 	public String serialize(Place place, UserRepository userDao, PlaceChangeRecordRepository changeRecordDao, HttpServletRequest request) {
-		return serialize(place, userDao, changeRecordDao, request, 1);
+		
+		ObjectNode placeNode = createJsonNodes(place, userDao, changeRecordDao, request);
+		
+		try {
+			return mapper.writeValueAsString(placeNode);
+		} catch (Exception e) {
+			logger.error("Unable to serialize place in JSON.", e);
+			return "";
+		}
 	}
 	
-	public String serialize(Place place, UserRepository userDao, PlaceChangeRecordRepository changeRecordDao, HttpServletRequest request, int lod) {
+	public String serializeGeoJson(Place place, UserRepository userDao, PlaceChangeRecordRepository changeRecordDao, HttpServletRequest request) {
+		
+		ObjectNode geoJsonPlaceNode = createGeoJsonNodes(place);		
+		ObjectNode placeNode = createJsonNodes(place, userDao, changeRecordDao, request);
+		geoJsonPlaceNode.put("properties", placeNode);
+		
+		try {
+			return mapper.writeValueAsString(geoJsonPlaceNode);
+		} catch (Exception e) {
+			logger.error("Unable to serialize place in GeoJSON.", e);
+			return "";
+		}
+	}
+		
+	private ObjectNode createJsonNodes(Place place, UserRepository userDao, PlaceChangeRecordRepository changeRecordDao, HttpServletRequest request) { 
 		
 		if (place == null) return null;
-		
-		User user = null;
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		if (principal instanceof User)
-			user = (User) principal;
 		
 		ObjectNode placeNode = mapper.createObjectNode();
 		logger.debug("serializing: {}", place);
@@ -68,12 +81,7 @@ public class JsonPlaceSerializer {
 		
 		if (place.isDeleted()) {
 			placeNode.put("deleted", true);			
-			try {
-				return mapper.writeValueAsString(placeNode);
-			} catch (Exception e) {
-				logger.error("Unable to serialize place in JSON.", e);
-				return "";
-			}
+			return placeNode;
 		}
 		
 		// parent
@@ -91,14 +99,11 @@ public class JsonPlaceSerializer {
 			placeNode.put("relatedPlaces", relatedPlacesNode);
 		}
 		
+		User user = getUser();
+		
 		if (!checkPlaceAccess(place, user)) {
-			placeNode.put("accessDenied", true);	
-			try {
-				return mapper.writeValueAsString(placeNode);
-			} catch (Exception e) {
-				logger.error("Unable to serialize place in JSON.", e);
-				return "";
-			}
+			placeNode.put("accessDenied", true);
+			return placeNode;
 		}
 		
 		// place types
@@ -149,29 +154,13 @@ public class JsonPlaceSerializer {
 				locationNode.put("coordinates", coordinatesNode);
 			}
 			if (place.getPrefLocation().getShape() != null) {
-				ArrayNode shapeNode = mapper.createArrayNode();
-				for (int i = 0; i < place.getPrefLocation().getShape().getCoordinates().length; i++) {
-					ArrayNode shapeCoordinatesNode1 = mapper.createArrayNode();
-					for (int j = 0; j < place.getPrefLocation().getShape().getCoordinates()[i].length; j++) {
-						ArrayNode shapeCoordinatesNode2 = mapper.createArrayNode();
-						for (int k = 0; k < place.getPrefLocation().getShape().getCoordinates()[i][j].length; k++) {
-							ArrayNode shapeCoordinatesNode3 = mapper.createArrayNode();
-							for (int l = 0; l < place.getPrefLocation().getShape().getCoordinates()[i][j][k].length; l++) {
-								shapeCoordinatesNode3.add(place.getPrefLocation().getShape().getCoordinates()[i][j][k][l]);
-							}
-							shapeCoordinatesNode2.add(shapeCoordinatesNode3);
-						}
-						shapeCoordinatesNode1.add(shapeCoordinatesNode2);
-					}
-					shapeNode.add(shapeCoordinatesNode1);
-				}
+				ArrayNode shapeNode = createPolygonCoordinatesNode(place.getPrefLocation().getShape().getCoordinates());
 				locationNode.put("shape", shapeNode);
 			}
 			if (place.getPrefLocation().getAltitude() != null)
 				locationNode.put("altitude", place.getPrefLocation().getAltitude());
 			locationNode.put("confidence", place.getPrefLocation().getConfidence());
 			locationNode.put("publicSite", place.getPrefLocation().isPublicSite());
-			locationNode.put("area", 0);
 			placeNode.put("prefLocation", locationNode);
 		}
 		
@@ -187,22 +176,7 @@ public class JsonPlaceSerializer {
 					locationNode.put("coordinates", coordinatesNode);
 				}
 				if (location.getShape() != null) {
-					ArrayNode shapeNode = mapper.createArrayNode();
-					for (int i = 0; i < location.getShape().getCoordinates().length; i++) {
-						ArrayNode shapeCoordinatesNode1 = mapper.createArrayNode();
-						for (int j = 0; j < location.getShape().getCoordinates()[i].length; j++) {
-							ArrayNode shapeCoordinatesNode2 = mapper.createArrayNode();
-							for (int k = 0; k < location.getShape().getCoordinates()[i][j].length; k++) {
-								ArrayNode shapeCoordinatesNode3 = mapper.createArrayNode();
-								for (int l = 0; l < location.getShape().getCoordinates()[i][j][k].length; l++) {
-									shapeCoordinatesNode3.add(location.getShape().getCoordinates()[i][j][k][l]);
-								}
-								shapeCoordinatesNode2.add(shapeCoordinatesNode3);
-							}
-							shapeCoordinatesNode1.add(shapeCoordinatesNode2);
-						}
-						shapeNode.add(shapeCoordinatesNode1);
-					}
+					ArrayNode shapeNode = createPolygonCoordinatesNode(location.getShape().getCoordinates());
 					locationNode.put("shape", shapeNode);
 				}
 				if (location.getAltitude() != null)
@@ -331,13 +305,93 @@ public class JsonPlaceSerializer {
 			}
 		}
 				
-		try {
-			return mapper.writeValueAsString(placeNode);
-		} catch (Exception e) {
-			logger.error("Unable to serialize place in JSON.", e);
-			return "";
+		return placeNode;
+	}
+	
+	private ObjectNode createGeoJsonNodes(Place place) {
+	
+		if (place == null) return null;		
+		
+		ObjectNode placeNode = mapper.createObjectNode();
+		placeNode.put("type", "Feature");
+		placeNode.put("id", baseUri + "place/" + place.getId());
+		
+		ObjectNode geometryCollectionNode = mapper.createObjectNode();
+		geometryCollectionNode.put("type", "GeometryCollection");
+		
+		ArrayNode geometriesNode = mapper.createArrayNode();
+		
+		User user = getUser();
+		
+		if (!checkPlaceAccess(place, user)) {
+			geometryCollectionNode.put("geometries", geometriesNode);
+			placeNode.put("geometry", geometryCollectionNode);
+			return placeNode;
 		}
 		
+		// preferred location
+		if (place.getPrefLocation() != null) {
+			if (place.getPrefLocation().getCoordinates() != null) {
+				ObjectNode pointNode = mapper.createObjectNode();
+				pointNode.put("type", "Point");
+				
+				ArrayNode coordinatesNode = mapper.createArrayNode();
+				coordinatesNode.add(place.getPrefLocation().getLng());
+				coordinatesNode.add(place.getPrefLocation().getLat());
+				pointNode.put("coordinates", coordinatesNode);
+				
+				geometriesNode.add(pointNode);
+			}
+			if (place.getPrefLocation().getShape() != null) {
+				ObjectNode polygonNode = mapper.createObjectNode();
+				polygonNode.put("type", "MultiPolygon");
+				
+				ArrayNode coordinatesNode = createPolygonCoordinatesNode(place.getPrefLocation().getShape().getCoordinates());
+				polygonNode.put("coordinates", coordinatesNode);
+				
+				geometriesNode.add(polygonNode);
+			}
+		}
+
+		// other locations
+		if (!place.getLocations().isEmpty()) {
+			for (Location location : place.getLocations()) {
+				if (location.getCoordinates() != null) {
+					ObjectNode pointNode = mapper.createObjectNode();
+					pointNode.put("type", "Point");
+					
+					ArrayNode coordinatesNode = mapper.createArrayNode();
+					coordinatesNode.add(location.getLng());
+					coordinatesNode.add(location.getLat());					
+					pointNode.put("coordinates", coordinatesNode);
+					
+					geometriesNode.add(pointNode);
+				}
+				if (location.getShape() != null) {
+					ObjectNode polygonNode = mapper.createObjectNode();
+					polygonNode.put("type", "MultiPolygon");
+										
+					ArrayNode coordinatesNode = createPolygonCoordinatesNode(location.getShape().getCoordinates());
+					polygonNode.put("coordinates", coordinatesNode);
+					
+					geometriesNode.add(polygonNode);
+				}
+			}
+		}
+		
+		geometryCollectionNode.put("geometries", geometriesNode);
+		placeNode.put("geometry", geometryCollectionNode);
+		
+		return placeNode;
+	}
+	
+	private User getUser() {
+		User user = null;
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal instanceof User)
+			user = (User) principal;
+		
+		return user;
 	}
 	
 	private boolean checkPlaceAccess(Place place, User user) {
@@ -347,6 +401,31 @@ public class JsonPlaceSerializer {
 			return false;
 		else
 			return true;
+	}
+
+	private ArrayNode createPolygonCoordinatesNode(double[][][][] polygonCoordinates) {
+		ArrayNode coordinatesNode = mapper.createArrayNode();
+		
+		for (int i = 0; i < polygonCoordinates.length; i++) {
+			ArrayNode shapeCoordinatesNode1 = mapper.createArrayNode();
+			
+			for (int j = 0; j < polygonCoordinates[i].length; j++) {
+				ArrayNode shapeCoordinatesNode2 = mapper.createArrayNode();
+				
+				for (int k = 0; k < polygonCoordinates[i][j].length; k++) {
+					ArrayNode shapeCoordinatesNode3 = mapper.createArrayNode();
+					
+					for (int l = 0; l < polygonCoordinates[i][j][k].length; l++) {
+						shapeCoordinatesNode3.add(polygonCoordinates[i][j][k][l]);
+					}
+					shapeCoordinatesNode2.add(shapeCoordinatesNode3);
+				}
+				shapeCoordinatesNode1.add(shapeCoordinatesNode2);
+			}
+			coordinatesNode.add(shapeCoordinatesNode1);
+		}
+		
+		return coordinatesNode;
 	}
 	
 }

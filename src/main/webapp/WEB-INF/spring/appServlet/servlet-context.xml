@@ -27,6 +27,7 @@
 		<entry key="html" value="text/html" />
 		<entry key="kml" value="application/vnd.google-earth.kml+xml" />
 		<entry key="json" value="application/json" />
+		<entry key="geojson" value="application/vnd.geo+json" />
 		<entry key="js" value="application/javascript" />
 		<entry key="rdf" value="application/rdf+xml" />
 	</util:map>
@@ -46,7 +47,13 @@
 					<property name="contentType" value="application/json" />
 					<property name="prefix" value="/WEB-INF/views/json/" />
 					<property name="suffix" value=".jsp" />
-				</bean>	
+				</bean>
+				<bean
+					class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+					<property name="contentType" value="application/vnd.geo+json" />
+					<property name="prefix" value="/WEB-INF/views/geojson/" />
+					<property name="suffix" value=".jsp" />					
+				</bean>
 				<bean
 					class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 					<property name="contentType" value="application/vnd.google-earth.kml+xml" />
