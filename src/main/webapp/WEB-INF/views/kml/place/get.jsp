@@ -1,6 +1,6 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%><%@ taglib uri="http://www.springframework.org/tags" prefix="s"%><%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %><%@ page session="false" import="org.dainst.gazetteer.domain.*" %><% response.setHeader("Content-Type", "application/vnd.google-earth.kml+xml; charset=utf-8"); %><?xml version="1.0" encoding="UTF-8"?>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%><%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %><%@ taglib uri="http://www.springframework.org/tags" prefix="s"%><%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %><%@ page session="false" import="org.dainst.gazetteer.domain.*" %><% response.setHeader("Content-Type", "application/vnd.google-earth.kml+xml; charset=utf-8"); %><?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
-	<Placemark id="${baseUri}place/${place.id}">
+	<Placemark id="place_${place.id}">
 		<name><c:out value="${place.prefName.title}"/></name>
 		<description>
 			<![CDATA[
@@ -167,8 +167,48 @@
 			</c:if>
 			]]>
 		</description>
-		<Point>
-			<coordinates><c:out value="${place.prefLocation.lng}" />,<c:out value="${place.prefLocation.lat}" /></coordinates>
-		</Point>
+		<MultiGeometry>
+			<Point>
+				<coordinates><c:out value="${place.prefLocation.lng}" />,<c:out value="${place.prefLocation.lat}" /></coordinates>
+			</Point>
+			<c:if test="${place.prefLocation.shape != null && place.prefLocation.shape.coordinates != null && !empty(place.prefLocation.shape.coordinates)}">
+				<c:forEach var="polygon" items="${place.prefLocation.shape.coordinates}">
+					<Polygon>
+						<c:forEach var="ring" items="${polygon}" varStatus="ringStatus">
+							<c:choose>
+								<c:when test="${ringStatus.index == 0}">
+									<outerBoundaryIs>
+										<LinearRing>
+											<coordinates>
+												<c:forEach var="coordinates" items="${ring}">
+													${coordinates[0]},${coordinates[1]}
+												</c:forEach>
+												<c:if test="${ring[0] != ring[fn:length(ring) - 1]}">
+													${ring[0][0]},${ring[0][1]}
+												</c:if>
+											</coordinates>
+										</LinearRing>
+									</outerBoundaryIs>
+								</c:when>
+								<c:otherwise>
+									<innerBoundaryIs>
+										<LinearRing>
+											<coordinates>
+												<c:forEach var="coordinates" items="${ring}">
+													${coordinates[0]},${coordinates[1]}
+												</c:forEach>
+												<c:if test="${ring[0] != ring[fn:length(ring) - 1]}">
+													${ring[0][0]},${ring[0][1]}
+												</c:if>
+											</coordinates>
+										</LinearRing>
+									</innerBoundaryIs>
+								</c:otherwise>
+							</c:choose>
+						</c:forEach>
+					</Polygon>
+				</c:forEach>
+			</c:if>
+		</MultiGeometry>	
 	</Placemark>
 </kml>
