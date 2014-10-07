@@ -74,7 +74,7 @@ messages.factory('messages', function(){
 		"location.confidence.4": "Incorrect",
 		"location.public": "Public coordinates",
 		"domain.place.parent": "Falls within",
-		"domain.place.type": "Type",
+		"domain.place.types": "Type",
 		"domain.place.tags": "Tags"
 	};
 });

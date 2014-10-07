@@ -133,7 +133,7 @@ public class SearchController {
 		query.addFilter("deleted:false");
 		if (!"true".equals(showInReview)) query.addFilter("needsReview:false");		
 		query.addFacet("parent");
-		query.addFacet("type");
+		query.addFacet("types");
 		//query.addFacet("tags");
 		
 		if (bbox != null && bbox.length > 0) {
@@ -210,7 +210,7 @@ public class SearchController {
 		
 		if (!"true".equals(showInReview)) query.addFilter("needsReview:false");
 		query.addFacet("parent");
-		query.addFacet("type");
+		query.addFacet("types");
 		//query.addFacet("tags");
 		
 		logger.debug("executing extended search with query: {}", jsonQuery);
@@ -279,7 +279,7 @@ public class SearchController {
 		
 		if (!"true".equals(showInReview)) query.addFilter("needsReview:false");
 		query.addFacet("parent");
-		query.addFacet("type");
+		query.addFacet("types");
 		//query.addFacet("tags");
 		
 		if (filter != null) {
@@ -347,7 +347,7 @@ public class SearchController {
 					term[2] = String.valueOf(entry.getCount());
 					terms.add(term);
 				}
-			} else if (facet.getName().equals("type")) {
+			} else if (facet.getName().equals("types")) {
 				for (TermsFacet.Entry entry : f) {
 					String message;
 					try {
