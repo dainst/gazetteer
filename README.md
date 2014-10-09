@@ -6,11 +6,11 @@ In dem Projekt befinden sich sowohl Frontend als auch Backend-Code. Als IDE empf
 
 ### Test VM
 
-Mongodb und Elasticsearch können mit Hilfe von "Test Kitchen":http://kitchen.ci/ in einer lokalen VM angelegt werden.
+Mongodb und Elasticsearch können mit Hilfe von [Test Kitchen](http://kitchen.ci/ in einer lokalen VM angelegt werden.)
 
 Folgende Tools müssen dafür installiert sein:
-* "VirtualBox":https://www.virtualbox.org/
-* "Vagrant":http://www.vagrantup.com/
+* [VirtualBox](https://www.virtualbox.org/)
+* [Vagrant](http://www.vagrantup.com/)
 * Bundler, installieren mit: @gem install bundler@
 
 VM erstellen und starten:
