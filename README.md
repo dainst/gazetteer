@@ -1,4 +1,4 @@
-# Entwicklung
+# iDAI.gazetteer
 
 In dem Projekt befinden sich sowohl Frontend als auch Backend-Code. Als IDE empfiehlt sich STS. Außerdem werden lokale Instanzen von MongoDB und Elasticsearch benötigt.
 
