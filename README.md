@@ -51,9 +51,9 @@ Backend (Java/SpringMVC) und Frontend (Javascript/AngularJS) werden im gleichen 
 
 ## Deployment
 
-Es gibt zwei Maven-Profile für das Deployment: @test@ und @prod@. Die WARs können dementsprechend mit folgenden befehlen erstellt werden:
+Es gibt zwei Maven-Profile für das Deployment: _test_ und _prod_. Die WARs können dementsprechend mit folgenden befehlen erstellt werden:
 
-* @mvn -Ptest clean package@
-* @mvn -Pprod clean package@
+* `mvn -Ptest clean package`
+* `mvn -Pprod clean package`
 
 Das resultierende Web-Archiv kann dann in einem beliebigen Servlet-Container deployt werden.
