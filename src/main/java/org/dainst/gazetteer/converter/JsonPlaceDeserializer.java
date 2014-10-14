@@ -307,7 +307,7 @@ public class JsonPlaceDeserializer {
 			// update tags	
 			Set<String> tags = new HashSet<String>();
 			JsonNode tagsNode = objectNode.get("tags");
-			if (tagsNode != null) for (JsonNode tagNode : tagsNode) {				
+			if (tagsNode != null) for (JsonNode tagNode : tagsNode) {
 				tags.add(tagNode.asText());	
 			}
 			logger.debug("updated tags: {}", tags);	

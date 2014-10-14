@@ -207,12 +207,7 @@
 							<s:message code="domain.place.tags" text="domain.place.tags" />
 						</label>
 						<div class="controls">
-							<input type="text" ng-model="place.tags" ng-list />
-							<div>
-								<span ng-repeat="tag in place.tags">
-									<span class="label label-info">{{tag}}</span>&nbsp; 
-								</span>
-							</div>
+							<div gaz-tag-field tags="place.tags" fieldname="tags" number="0"></div>
 						</div>
 					</div>
 					
@@ -222,12 +217,7 @@
 							<s:message code="domain.place.provenance" text="domain.place.provenance" />
 						</label>
 						<div class="controls">
-							<input type="text" ng-model="place.provenance" ng-list />
-							<div>
-								<span ng-repeat="provenanceEntry in place.provenance">
-									<span class="label label-info">{{provenanceEntry}}</span>&nbsp; 
-								</span>
-							</div>
+							<div gaz-tag-field tags="place.provenance" fieldname="provenance" number="1"></div>	
 						</div>
 					</div>
 					

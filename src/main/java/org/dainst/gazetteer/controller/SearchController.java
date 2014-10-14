@@ -17,6 +17,7 @@ import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.User;
 import org.dainst.gazetteer.helpers.ProtectLocationsService;
 import org.dainst.gazetteer.search.ElasticSearchPlaceQuery;
+import org.dainst.gazetteer.search.ElasticSearchSuggestionQuery;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.search.facet.Facet;
 import org.elasticsearch.search.facet.terms.TermsFacet;
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.RequestContext;
 
@@ -100,6 +102,7 @@ public class SearchController {
 			if ("fuzzy".equals(type)) query.fuzzySearch(q);
 			else if ("queryString".equals(type)) query.queryStringSearch(q);
 			else if ("extended".equals(type)) query.extendedSearch(q);
+			else if ("prefix".equals(type)) query.prefixSearch(q);
 			else query.metaSearch(q);
 		} else {
 			query.listAll();
@@ -309,6 +312,20 @@ public class SearchController {
 		
 		return mav;
 		
+	}
+
+	@RequestMapping(value="/suggestions", method=RequestMethod.GET)
+	@ResponseBody
+	public Map<String, List<String>> getSuggestions(@RequestParam String field, 
+						  @RequestParam String text) {
+		
+		ElasticSearchSuggestionQuery query = new ElasticSearchSuggestionQuery(client);
+		List<String> suggestions = query.getSuggestions(field, text);
+		
+		Map<String, List<String>> resultMap = new HashMap<String,List<String>>();
+		resultMap.put("suggestions", suggestions);
+		
+		return resultMap;
 	}
 	
 	// get places for the result ids from db

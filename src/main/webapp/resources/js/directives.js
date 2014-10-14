@@ -132,6 +132,108 @@ directives.directive('gazPlacePicker', function($document) {
 	};
 });
 
+directives.directive('gazTagField', function($document) {
+	return {
+		replace: true,
+		scope: { tags: '=', fieldname: '@', number: '='},
+		templateUrl: 'partials/tagField.html',
+		controller: function($scope, $element, Place) {
+			
+			$scope.inputText = "";
+			$scope.suggestions = [];
+			$scope.selectedSuggestionIndex = 0;
+			$scope.textFieldPos = document.getElementsByName("tagTextField")[parseInt($scope.number)].getBoundingClientRect().left;
+			
+			$scope.$watch("inputText", function() {
+				if ($scope.inputText.slice(-1) == "," || $scope.inputText.slice(-1) == ";") {
+					var newTag = $scope.inputText.replace(",", "").replace(";", "").trim();
+					if (newTag != "" && !$scope.searchInList(newTag)) {
+						if ($scope.tags == undefined || $scope.tags == null)
+							$scope.tags = [];
+						$scope.tags.push(newTag);
+					}
+					$scope.inputText = "";
+				}
+				
+				$scope.updateSuggestions();
+				$scope.selectedSuggestionIndex = 0;
+				$scope.textFieldPos = document.getElementsByName("tagTextField")[parseInt($scope.number)].getBoundingClientRect().left;
+			});
+			
+			$scope.removeTag = function(tagToRemove) {
+				for (var i = 0; i < $scope.tags.length; i++) {
+					if ($scope.tags[i] == tagToRemove) {
+						$scope.tags.splice(i, 1);
+					}
+				}
+			};
+			
+			$scope.backspace = function() {
+				if ($scope.inputText != "")
+					$scope.inputText = $scope.inputText.slice(0, -1);
+				else if ($scope.tags != null && $scope.tags != undefined && $scope.tags.length > 0)
+					$scope.tags.pop();
+			};
+			
+			$scope.searchInList = function(tag) {
+				if ($scope.tags == undefined || $scope.tags == null)
+					return false;
+				
+				for (var i = 0; i < $scope.tags.length; i++) {
+					if ($scope.tags[i] == tag)
+						return true;
+				}
+				
+				return false;
+			};
+			
+			$scope.updateSuggestions = function() {
+				Place.suggestions({ field: $scope.fieldname + ".suggest", text: $scope.inputText }, function(result) {
+					$scope.suggestions = [];
+					
+					for (var i = 0; i < result.suggestions.length; i++) {
+						if (!$scope.searchInList(result.suggestions[i]))
+							$scope.suggestions.push(result.suggestions[i]);
+					}
+				});
+			};
+			
+			$scope.chooseSuggestion = function() {
+				
+				if ($scope.suggestions.length != 0) {
+					var suggestion = $scope.suggestions[$scope.selectedSuggestionIndex];
+				
+					if ($scope.tags == undefined || $scope.tags == null)
+						$scope.tags = [];
+					$scope.tags.push(suggestion);
+				
+					$scope.inputText = "";
+				}
+			};
+			
+				$scope.setSelectedSuggestionIndex = function(index) {
+					$scope.selectedSuggestionIndex = index;
+				};
+			
+			$scope.selectPreviousSuggestion = function() {
+				if ($scope.suggestions.length > 0) {
+					$scope.selectedSuggestionIndex -= 1;
+					if ($scope.selectedSuggestionIndex < 0)
+						$scope.selectedSuggestionIndex = $scope.suggestions.length - 1;
+				}
+			};
+			
+			$scope.selectNextSuggestion = function() {
+				if ($scope.suggestions.length > 0) {
+					$scope.selectedSuggestionIndex += 1;
+					if ($scope.selectedSuggestionIndex >= $scope.suggestions.length)
+						$scope.selectedSuggestionIndex = 0;
+				}
+			};
+		}
+	};
+});
+
 directives.directive('gazShapeEditor', function($document) {
 	return {
 		replace: true,
@@ -637,4 +739,60 @@ directives.directive('focusMe', function($timeout, $parse) {
       });
     }
   };
+});
+
+directives.directive('onBackspace', function () {
+    return function (scope, element, attrs) {
+        element.bind("keydown keypress", function (event) {
+            if(event.which === 8) {
+                scope.$apply(function (){
+                    scope.$eval(attrs.onBackspace);
+                });
+ 
+                event.preventDefault();
+            }
+        });
+    };
+});
+
+directives.directive('onEnter', function () {
+    return function (scope, element, attrs) {
+        element.bind("keydown keypress", function (event) {
+            if(event.which === 13) {
+                scope.$apply(function (){
+                    scope.$eval(attrs.onEnter);
+                });
+ 
+                event.preventDefault();
+            }
+        });
+    };
+});
+
+directives.directive('onArrowUp', function () {
+    return function (scope, element, attrs) {
+        element.bind("keydown keypress", function (event) {
+            if(event.which === 38) {
+                scope.$apply(function (){
+                    scope.$eval(attrs.onArrowUp);
+                });
+ 
+                event.preventDefault();
+            }
+        });
+    };
+});
+
+directives.directive('onArrowDown', function () {
+    return function (scope, element, attrs) {
+        element.bind("keydown keypress", function (event) {
+            if(event.which === 40) {
+                scope.$apply(function (){
+                    scope.$eval(attrs.onArrowDown);
+                });
+ 
+                event.preventDefault();
+            }
+        });
+    };
 });
