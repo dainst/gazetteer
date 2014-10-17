@@ -144,7 +144,8 @@ directives.directive('gazTagField', function($document) {
 			$scope.selectedSuggestionIndex = 0;
 			$scope.textFieldPos = document.getElementsByName("tagTextField")[parseInt($scope.number)].getBoundingClientRect().left;
 			
-			$scope.$watch("inputText", function() {
+			$scope.$watch("inputText", function() {				
+				$scope.showSuggestions = true;
 				if ($scope.inputText.slice(-1) == "," || $scope.inputText.slice(-1) == ";") {
 					var newTag = $scope.inputText.replace(",", "").replace(";", "").trim();
 					if (newTag != "" && !$scope.searchInList(newTag)) {
@@ -211,9 +212,9 @@ directives.directive('gazTagField', function($document) {
 				}
 			};
 			
-				$scope.setSelectedSuggestionIndex = function(index) {
-					$scope.selectedSuggestionIndex = index;
-				};
+			$scope.setSelectedSuggestionIndex = function(index) {
+				$scope.selectedSuggestionIndex = index;
+			};
 			
 			$scope.selectPreviousSuggestion = function() {
 				if ($scope.suggestions.length > 0) {
@@ -229,6 +230,10 @@ directives.directive('gazTagField', function($document) {
 					if ($scope.selectedSuggestionIndex >= $scope.suggestions.length)
 						$scope.selectedSuggestionIndex = 0;
 				}
+			};
+			
+			$scope.removeSuggestions = function() {
+				$scope.suggestions = [];
 			};
 		}
 	};
@@ -796,3 +801,13 @@ directives.directive('onArrowDown', function () {
         });
     };
 });
+
+directives.directive('onBlur', function() {
+    return function( scope, element, attrs ) {
+    	element.bind("blur", function() {
+    		scope.$apply(function (){
+    			scope.$eval(attrs.onBlur);
+    		});
+    	});
+    };
+  });
