@@ -146,20 +146,23 @@ directives.directive('gazTagField', function($document) {
 			
 			$scope.$watch("inputText", function() {				
 				$scope.showSuggestions = true;
-				if ($scope.inputText.slice(-1) == "," || $scope.inputText.slice(-1) == ";") {
-					var newTag = $scope.inputText.replace(",", "").replace(";", "").trim();
-					if (newTag != "" && !$scope.searchInList(newTag)) {
-						if ($scope.tags == undefined || $scope.tags == null)
-							$scope.tags = [];
-						$scope.tags.push(newTag);
-					}
-					$scope.inputText = "";
-				}
+				if ($scope.inputText.slice(-1) == "," || $scope.inputText.slice(-1) == ";")
+					$scope.addTag();
 				
 				$scope.updateSuggestions();
 				$scope.selectedSuggestionIndex = 0;
 				$scope.textFieldPos = document.getElementsByName("tagTextField")[parseInt($scope.number)].getBoundingClientRect().left;
 			});
+			
+			$scope.addTag = function() {
+				var newTag = $scope.inputText.replace(",", "").replace(";", "").trim();
+				if (newTag != "" && !$scope.searchInList(newTag)) {
+					if ($scope.tags == undefined || $scope.tags == null)
+						$scope.tags = [];
+					$scope.tags.push(newTag);
+				}
+				$scope.inputText = "";
+			};
 			
 			$scope.removeTag = function(tagToRemove) {
 				for (var i = 0; i < $scope.tags.length; i++) {
@@ -199,8 +202,7 @@ directives.directive('gazTagField', function($document) {
 				});
 			};
 			
-			$scope.chooseSuggestion = function() {
-				
+			$scope.chooseSuggestion = function() {				
 				if ($scope.suggestions.length != 0) {
 					var suggestion = $scope.suggestions[$scope.selectedSuggestionIndex];
 				
@@ -232,7 +234,9 @@ directives.directive('gazTagField', function($document) {
 				}
 			};
 			
-			$scope.removeSuggestions = function() {
+			$scope.lostFocus = function() {
+				if ($scope.inputText != "")
+					$scope.addTag();
 				$scope.suggestions = [];
 			};
 		}

@@ -39,7 +39,7 @@
 			cursor: pointer;
 		}
 		.selected {
-			background-color: #6786ad;
+			background-color: #83a6de;
 			color: #ffffff;
 		}
 	</style>
@@ -47,7 +47,7 @@
 	<span>
 	
 		<div class="tag-field">
-			<span ng-repeat="tag in tags"><span class="label label-info">{{tag}} <i class="icon-remove-sign" style="cursor: pointer;" ng-click="removeTag(tag)" ng-hide="mouseOver" ng-mouseenter="mouseOver = true" ng-mouseleave="mouseOver = false"></i><i class="icon-remove-sign remove-icon-mouseover" style="cursor: pointer;" ng-click="removeTag(tag)" ng-show="mouseOver" ng-mouseenter="mouseOver = true" ng-mouseleave="mouseOver = false"></i></span>&nbsp;</span><input type="text" name="tagTextField" class="input" ng-model="inputText" on-enter="chooseSuggestion()" on-backspace="backspace()" on-arrow-up="selectPreviousSuggestion()" on-arrow-down="selectNextSuggestion()" on-blur="removeSuggestions()"/>
+			<span ng-repeat="tag in tags"><span class="label label-info">{{tag}} <i class="icon-remove-sign" style="cursor: pointer;" ng-click="removeTag(tag)" ng-hide="mouseOver" ng-mouseenter="mouseOver = true" ng-mouseleave="mouseOver = false"></i><i class="icon-remove-sign remove-icon-mouseover" style="cursor: pointer;" ng-click="removeTag(tag)" ng-show="mouseOver" ng-mouseenter="mouseOver = true" ng-mouseleave="mouseOver = false"></i></span>&nbsp;</span><input type="text" name="tagTextField" class="input" ng-model="inputText" on-enter="chooseSuggestion()" on-backspace="backspace()" on-arrow-up="selectPreviousSuggestion()" on-arrow-down="selectNextSuggestion()" on-blur="lostFocus()"/>
 		</div>
 		<div style="position: absolute; left: {{textFieldPos + 5}}px; z-index: 2000">
 			<div ng-repeat="suggestion in suggestions">
