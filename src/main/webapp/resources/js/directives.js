@@ -144,8 +144,7 @@ directives.directive('gazTagField', function($document) {
 			$scope.selectedSuggestionIndex = 0;
 			$scope.textFieldPos = document.getElementsByName("tagTextField")[parseInt($scope.number)].getBoundingClientRect().left;
 			
-			$scope.$watch("inputText", function() {				
-				$scope.showSuggestions = true;
+			$scope.$watch("inputText", function() {
 				if ($scope.inputText.slice(-1) == "," || $scope.inputText.slice(-1) == ";")
 					$scope.addTag();
 				

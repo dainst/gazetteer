@@ -58,9 +58,12 @@
 	                    		"sort" : {
 									"type": "string",
 									"analyzer": "collation"
+								},
+								"suggest" : {
+									"type": "completion"
 								}
-							}
-	                    }
+							}   
+						}
 	                }
 	            },
 	            "names": {
@@ -90,6 +93,9 @@
 	                    		"sort" : {
 									"type": "string",
 									"analyzer": "collation"
+								},
+								"suggest" : {
+									"type": "completion"
 								}
 							}
 	                    }
@@ -211,7 +217,11 @@
 	                "type": "string",
 					"include_in_all": false
 	            }
-	        }
+	        },
+			"transform" : {
+				"script": "if (ctx._source['deleted'] == true) ctx._source['prefName'] = null",
+				"lang": "groovy"
+    		}
 	    }
     }
 }

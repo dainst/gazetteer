@@ -1,6 +1,6 @@
 'use strict';
 
-function AppCtrl($scope, $location, $rootScope) {
+function AppCtrl($scope, $location, $rootScope, Place) {
 	
 	$scope.q = null;
 	$scope.type = "";
@@ -17,7 +17,51 @@ function AppCtrl($scope, $location, $rootScope) {
 	$rootScope.zoom = 2;
 	$scope.highlight = null;
 	
+	$scope.searchSuggestions = [];
+	$scope.selectedSuggestionIndex = -1;
+	
+	$scope.$watch("q", function() {				
+		
+		$scope.updateSuggestions();		
+		$scope.selectedSuggestionIndex = -1;
+		$scope.textFieldPosLeft = document.getElementsByName("searchField")[0].getBoundingClientRect().left;
+		$scope.textFieldPosRight = document.getElementsByName("searchField")[0].getBoundingClientRect().right;
+	});
+	
+	$scope.updateSuggestions = function() {
+		Place.suggestions({ field: "prefName.title.suggest", text: $scope.q }, function(result) {
+			$scope.searchSuggestions = result.suggestions;
+		});
+	};
+	
+	$scope.selectPreviousSuggestion = function() {
+		if ($scope.searchSuggestions.length > 0) {
+			$scope.selectedSuggestionIndex -= 1;
+			if ($scope.selectedSuggestionIndex < 0)
+				$scope.selectedSuggestionIndex = $scope.searchSuggestions.length - 1;
+		}
+	};
+	
+	$scope.selectNextSuggestion = function() {
+		if ($scope.searchSuggestions.length > 0) {
+			$scope.selectedSuggestionIndex += 1;
+			if ($scope.selectedSuggestionIndex >= $scope.searchSuggestions.length)
+				$scope.selectedSuggestionIndex = 0;
+		}
+	};
+	
+	$scope.setSelectedSuggestionIndex = function(index) {
+		$scope.selectedSuggestionIndex = index;
+	};
+	
+	$scope.lostFocus = function() {
+		$scope.searchSuggestions = [];
+	};
+	
 	$scope.submit = function() {
+		if ($scope.selectedSuggestionIndex != -1)
+			$scope.q = $scope.searchSuggestions[$scope.selectedSuggestionIndex];
+		
 		$scope.zoom = 2;
 		$location.path('/search').search({q:$scope.q, type: $scope.type});
 		$scope.q = null;

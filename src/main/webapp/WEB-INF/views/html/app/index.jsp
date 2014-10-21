@@ -30,6 +30,24 @@
 <script src="../resources/js/lib/angular/ui-bootstrap-custom-0.4.0.min.js"></script>
 </head>
 <body class="ng-cloak" ng-controller="AppCtrl">
+	<style type="text/css">
+		.suggestion {
+			display: block;
+			border: 1px solid #CCC;
+			width: auto;
+			height: 20px;
+			margin-top: -6px;
+			margin-bottom: 5px;
+			padding: 4px;
+			background-color: #ffffff;
+			z-index: 2000;
+			cursor: pointer;
+		}
+		.selected {
+			background-color: #6786ad;
+			color: #ffffff;
+		}
+	</style>
 
 	<div class="archaeo-fixed-menu">
 		<div class="container archaeo-fixed-menu-header">
@@ -121,11 +139,17 @@
 						<form novalidate class="navbar-search pull-left" ng-submit="submit()">
 							<s:message code="ui.search.simpleSearch" text="ui.search.simpleSearch"
 								var="titleSimpleSearch" />
-							<input type="text" class="search-query" ng-model="q"
-								placeholder="${titleSimpleSearch}"> <i class="icon-search"></i>
-						</form>
+							<input type="text" class="search-query" name="searchField" ng-model="q"	placeholder="${titleSimpleSearch}" 
+								on-arrow-up="selectPreviousSuggestion()" on-arrow-down="selectNextSuggestion()" on-blur="lostFocus()"> <i class="icon-search"></i>
+						</form>						
 					</div>
 				</div>
+			</div>
+		</div>
+		<div style="margin-top: 1px; position: absolute; left: {{textFieldPosLeft}}px; width: {{textFieldPosRight - textFieldPosLeft}}px; z-index: 2000">
+			<div ng-repeat="suggestion in searchSuggestions">
+				<div class="suggestion" ng-mousedown="submit()" ng-hide="selectedSuggestionIndex == $index" ng-mouseover="setSelectedSuggestionIndex($index)">{{suggestion}}</div>
+				<div class="suggestion selected" ng-mousedown="submit()" ng-show="selectedSuggestionIndex == $index">{{suggestion}}</div>
 			</div>
 		</div>
 	</div>

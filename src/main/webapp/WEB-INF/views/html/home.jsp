@@ -155,7 +155,7 @@
 					<div class="input-append">
 						<s:message code="ui.search.simpleSearch" text="ui.search.simpleSearch"
 								var="titleSimpleSearch" />
-						<input class="search-query input-xxlarge" name="q" type="text" placeholder="${titleSimpleSearch}">
+						<input class="search-query input-xxlarge" name="q" type="text" placeholder="${titleSimpleSearch}" autocomplete="off">
 						<button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
 					</div>
 				</div>
