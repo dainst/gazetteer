@@ -21,7 +21,6 @@ function AppCtrl($scope, $location, $rootScope, Place) {
 	$scope.selectedSuggestionIndex = -1;
 	
 	$scope.$watch("q", function() {				
-		
 		$scope.updateSuggestions();		
 		$scope.selectedSuggestionIndex = -1;
 		$scope.textFieldPosLeft = document.getElementsByName("searchField")[0].getBoundingClientRect().left;
@@ -29,8 +28,24 @@ function AppCtrl($scope, $location, $rootScope, Place) {
 	});
 	
 	$scope.updateSuggestions = function() {
+		$scope.searchSuggestions = [];
+		
 		Place.suggestions({ field: "prefName.title.suggest", text: $scope.q }, function(result) {
 			$scope.searchSuggestions = result.suggestions;
+			
+			Place.suggestions({ field: "names.title.suggest", text: $scope.q }, function(result) {
+				for (var newSuggestion in result.suggestions) {
+					var sameAsPrefName = false;
+					for (var prefNameSuggestion in $scope.searchSuggestions) {
+						if ($scope.searchSuggestions[prefNameSuggestion].trim() == result.suggestions[newSuggestion].trim()) {
+							sameAsPrefName = true;
+							break;
+						}
+					} 
+					if (!sameAsPrefName && $scope.searchSuggestions.length < 10)
+						$scope.searchSuggestions.push(result.suggestions[newSuggestion]);
+				}
+			});
 		});
 	};
 	

@@ -148,8 +148,8 @@
 		</div>
 		<div style="margin-top: 1px; position: absolute; left: {{textFieldPosLeft}}px; width: {{textFieldPosRight - textFieldPosLeft}}px; z-index: 2000">
 			<div ng-repeat="suggestion in searchSuggestions">
-				<div class="suggestion" ng-mousedown="submit()" ng-hide="selectedSuggestionIndex == $index" ng-mouseover="setSelectedSuggestionIndex($index)">{{suggestion}}</div>
-				<div class="suggestion selected" ng-mousedown="submit()" ng-show="selectedSuggestionIndex == $index">{{suggestion}}</div>
+				<div class="suggestion" ng-mousedown="submit()" ng-hide="selectedSuggestionIndex == $index" ng-mouseover="setSelectedSuggestionIndex($index)"><span ng-show="suggestion.length < 31">{{suggestion}}</span><span ng-hide="suggestion.length < 31">{{suggestion.substring(0,30)}}...</span></div>
+				<div class="suggestion selected" ng-mousedown="submit()" ng-show="selectedSuggestionIndex == $index"><span ng-show="suggestion.length < 31">{{suggestion}}</span><span ng-hide="suggestion.length < 31">{{suggestion.substring(0,30)}}...</span></div>
 			</div>
 		</div>
 	</div>
