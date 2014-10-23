@@ -43,7 +43,7 @@ function AppCtrl($scope, $location, $rootScope, Place) {
 							break;
 						}
 					} 
-					if (!sameAsPrefName && $scope.searchSuggestions.length < 10)
+					if (!sameAsPrefName && $scope.searchSuggestions.length < 7)
 						$scope.searchSuggestions.push(result.suggestions[newSuggestion]);
 				}
 			});
@@ -198,7 +198,7 @@ function HomeCtrl($scope, $location, $rootScope, Place) {
 							break;
 						}
 					} 
-					if (!sameAsPrefName && $scope.homeSearchSuggestions.length < 10)
+					if (!sameAsPrefName && $scope.homeSearchSuggestions.length < 7)
 						$scope.homeSearchSuggestions.push(result.suggestions[newSuggestion]);
 				}
 			});

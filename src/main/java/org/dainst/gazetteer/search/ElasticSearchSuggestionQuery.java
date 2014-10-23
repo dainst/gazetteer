@@ -24,7 +24,7 @@ public class ElasticSearchSuggestionQuery {
 	
 	public List<String> getSuggestions(String field, String text) {
 		
-		SuggestResponse response = suggestRequestBuilder.addSuggestion(new CompletionSuggestionBuilder("suggestions").field(field).text(text).size(10)).execute().actionGet();
+		SuggestResponse response = suggestRequestBuilder.addSuggestion(new CompletionSuggestionBuilder("suggestions").field(field).text(text).size(7)).execute().actionGet();
 		
 	
 		List<String> suggestions = new ArrayList<String>();
