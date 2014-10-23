@@ -110,6 +110,8 @@ function HomeCtrl($scope, $location, $rootScope, Place) {
 	$rootScope.viewClass = "";
 	$rootScope.title = "";
 	$rootScope.subtitle = "";
+	$scope.homeSearchSuggestions = [];
+	$scope.selectedSuggestionIndex = -1;
 	
 	var map_canvas = document.getElementById('home_map_canvas');
 	
@@ -172,6 +174,69 @@ function HomeCtrl($scope, $location, $rootScope, Place) {
 	   	});
 		heatmap.setMap($scope.homeMap);		
 	});
+	
+	$scope.$watch("searchFieldInput", function() {				
+		$scope.updateSuggestions();		
+		$scope.selectedSuggestionIndex = -1;
+		$scope.textFieldPosLeft = document.getElementsByName("homeSearchField")[0].getBoundingClientRect().left;
+		$scope.textFieldPosRight = document.getElementsByName("homeSearchField")[0].getBoundingClientRect().right;
+		$scope.textFieldPosBottom = document.getElementsByName("homeSearchField")[0].getBoundingClientRect().bottom;
+	});
+	
+	$scope.updateSuggestions = function() {
+		$scope.homeSearchSuggestions = [];
+		
+		Place.suggestions({ field: "prefName.title.suggest", text: $scope.searchFieldInput }, function(result) {
+			$scope.homeSearchSuggestions = result.suggestions;
+			
+			Place.suggestions({ field: "names.title.suggest", text: $scope.searchFieldInput }, function(result) {
+				for (var newSuggestion in result.suggestions) {
+					var sameAsPrefName = false;
+					for (var prefNameSuggestion in $scope.homeSearchSuggestions) {
+						if ($scope.homeSearchSuggestions[prefNameSuggestion].trim() == result.suggestions[newSuggestion].trim()) {
+							sameAsPrefName = true;
+							break;
+						}
+					} 
+					if (!sameAsPrefName && $scope.homeSearchSuggestions.length < 10)
+						$scope.homeSearchSuggestions.push(result.suggestions[newSuggestion]);
+				}
+			});
+		});
+	};
+	
+	$scope.selectPreviousSuggestion = function() {
+		if ($scope.homeSearchSuggestions.length > 0) {
+			$scope.selectedSuggestionIndex -= 1;
+			if ($scope.selectedSuggestionIndex < 0)
+				$scope.selectedSuggestionIndex = $scope.homeSearchSuggestions.length - 1;
+		}
+	};
+	
+	$scope.selectNextSuggestion = function() {
+		if ($scope.homeSearchSuggestions.length > 0) {
+			$scope.selectedSuggestionIndex += 1;
+			if ($scope.selectedSuggestionIndex >= $scope.homeSearchSuggestions.length)
+				$scope.selectedSuggestionIndex = 0;
+		}
+	};
+	
+	$scope.setSelectedSuggestionIndex = function(index) {
+		$scope.selectedSuggestionIndex = index;
+	};
+	
+	$scope.lostFocus = function() {
+		$scope.homeSearchSuggestions = [];
+	};
+	
+	$scope.submit = function() {
+		if ($scope.selectedSuggestionIndex != -1)
+			$scope.searchFieldInput = $scope.homeSearchSuggestions[$scope.selectedSuggestionIndex];
+		
+		$scope.zoom = 2;
+		$location.path('/search').search({q:$scope.searchFieldInput, type: $scope.type});
+		$scope.searchFieldInput = null;
+	};
 }
 
 function ExtendedSearchCtrl($scope, $rootScope, $location, messages) {
