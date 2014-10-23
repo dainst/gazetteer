@@ -27,6 +27,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -324,6 +327,26 @@ public class SearchController {
 		
 		Map<String, List<String>> resultMap = new HashMap<String,List<String>>();
 		resultMap.put("suggestions", suggestions);
+		
+		return resultMap;
+	}
+	
+	@RequestMapping(value="/heatmapCoordinates", method=RequestMethod.GET)
+	@ResponseBody
+	public Map<String, List<String>> getHeatmapCoordinates() {
+		
+		List<Place> places = placeDao.findByPrefLocationIsNotNullAndChildrenGreaterThan(
+				0, new PageRequest(0, 5000, new Sort(Direction.DESC, "children")));
+		
+		List<String> heatmapCoordinates = new ArrayList<String>();
+		
+		for (Place place : places) {
+			heatmapCoordinates.add(String.valueOf(place.getPrefLocation().getLat()));
+			heatmapCoordinates.add(String.valueOf(place.getPrefLocation().getLng()));
+		}
+		
+		Map<String, List<String>> resultMap = new HashMap<String, List<String>>();
+		resultMap.put("coordinates", heatmapCoordinates);
 		
 		return resultMap;
 	}

@@ -136,7 +136,7 @@
 								</a></li>
 							</sec:authorize>
 						</ul>
-						<form novalidate class="navbar-search pull-left" ng-submit="submit()">
+						<form novalidate class="navbar-search pull-left" ng-show="showNavbarSearch" ng-submit="submit()">
 							<s:message code="ui.search.simpleSearch" text="ui.search.simpleSearch"
 								var="titleSimpleSearch" />
 							<input type="text" class="search-query" name="searchField" ng-model="q"	placeholder="${titleSimpleSearch}" 
@@ -176,7 +176,7 @@
 		</div>
 	
 		<!-- Page title -->
-		<div class="page-header">
+		<div ng-show="showHeader" class="page-header">
 			<h2>
 				<span ng-show="title">{{title}}</span>
 				<span ng-hide="title">&nbsp;</span>
@@ -184,18 +184,14 @@
 			</h2>
 		</div>
 		
-		<div class="row-fluid">
-		
-			<div class="span5" id="map-well-wrapper">
+		<div class="row-fluid">		
+			<div ng-show="showMap" class="span5" id="map-well-wrapper">
 				<div class="well" id="map-well">
 					<div gaz-map places="activePlaces" height="500" zoom="zoom" bbox="bbox" highlight="highlight"></div>
 				</div>
 			</div>
 			
-			<div ng-view class="span7" style="min-height:530px">
-			
-			</div>
-			
+			<div class="{{viewClass}}" ng-view style="min-height:530px"></div>			
 		</div>
 		
 		<!-- Footer -->

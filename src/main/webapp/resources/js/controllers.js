@@ -1,5 +1,6 @@
 'use strict';
 
+
 function AppCtrl($scope, $location, $rootScope, Place) {
 	
 	$scope.q = null;
@@ -101,12 +102,87 @@ function AppCtrl($scope, $location, $rootScope, Place) {
 	
 }
 
+function HomeCtrl($scope, $location, $rootScope, Place) {
+	$scope.q = null;
+	$scope.type = "";
+	$rootScope.showHeader = false;
+	$rootScope.showNavbarSearch = false;
+	$rootScope.viewClass = "";
+	$rootScope.title = "";
+	$rootScope.subtitle = "";
+	
+	var map_canvas = document.getElementById('home_map_canvas');
+	
+	Place.heatmapCoordinates({}, function(result) {
+		var coordinates = result.coordinates;
+		
+		$scope.homeMap = new google.maps.Map(map_canvas, {
+			center: new google.maps.LatLng(20,0),
+			zoom: 2,
+			disableDefaultUI: true,
+			mapTypeId: google.maps.MapTypeId.ROADMAP,
+			zoomControlOptions: {
+				style: google.maps.ZoomControlStyle.SMALL
+			},
+			styles: [
+	        	{
+	       	    "featureType": "administrative",
+	       	    "stylers": [
+	       	      { "visibility": "off" }
+	       	    ]
+	       	  },{
+	       	    "featureType": "landscape",
+	       	    "stylers": [
+	       	      { "visibility": "simplified" },
+	       	      { "saturation": -100 },
+	       	      { "lightness": -31 }
+	       	    ]
+	       	  },{
+	       	    "featureType": "water",
+	       	    "stylers": [
+	       	      { "saturation": -100 },
+	       	      { "lightness": 32 }
+	       	    ]
+	       	  },{
+	       	    "featureType": "road",
+	       	    "stylers": [
+	       	      { "visibility": "off" }
+	       	    ]
+	       	  },{
+	       	    "featureType": "poi",
+	       	    "stylers": [
+	       	      { "visibility": "off" }
+	       	    ]
+	       	  },{
+	       	    "elementType": "labels"  }
+	       	]
+		});
+
+		var heatmapData = [];
+		for (var i = 0; i < coordinates.length - 1; i+= 2) {
+			heatmapData.push(new google.maps.LatLng(coordinates[i], coordinates[i+1]));		
+		}
+		
+		var heatmap = new google.maps.visualization.HeatmapLayer({
+	        data: heatmapData,
+	        opacity: 0.8,
+	        maxIntensity: 10,
+	        radius: 3,
+			gradient: ['transparent', '#5283d2', '#ffffff']
+	   	});
+		heatmap.setMap($scope.homeMap);		
+	});
+}
+
 function ExtendedSearchCtrl($scope, $rootScope, $location, messages) {
 	
 	$rootScope.title = messages["ui.extendedSearch"];
 	$rootScope.subtitle = "";
-	$rootScope.showMap = false;
-	$rootScope.activePlaces = [];
+	$rootScope.showMap = true;
+	$rootScope.showHeader = true;
+	$rootScope.showNavbarSearch = true;
+	$rootScope.viewClass = "span7";
+	$rootScope.activePlaces = [];	
 	
 	$scope.meta = null;
 	$scope.type = "";
@@ -233,6 +309,9 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 	$rootScope.title = messages["ui.search.results"];
 	$rootScope.subtitle = "";
 	$rootScope.showMap = true;
+	$rootScope.showHeader = true;
+	$rootScope.showNavbarSearch = true;
+	$rootScope.viewClass = "span7";
 	
 	setSearchFromLocation();
 	
@@ -373,6 +452,11 @@ function CreateCtrl($scope, $rootScope, $routeParams, $location, Place, messages
 	$scope.place = { prefLocation: { publicSite: true } };
 	$rootScope.title = messages["ui.create"];
 	$rootScope.subtitle = "";
+	$rootScope.showMap = true;
+	$rootScope.showHeader = true;
+	$rootScope.showNavbarSearch = true;
+	$rootScope.viewClass = "span7";
+	$rootScope.activePlaces = [];	
 	
 	$scope.addPlaceType = function(placeType) {
 		var pos = $scope.getListPos($scope.place.types, placeType);
@@ -450,11 +534,15 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 	$scope.location = { confidence: 0, publicSite: true };
 	$scope.link = { predicate: "owl:sameAs" };
 	$rootScope.showMap = true;
+	$rootScope.showHeader = true;
+	$rootScope.showNavbarSearch = true;
+	$rootScope.viewClass = "span7";
 	
 	$rootScope.title = "";
 	$rootScope.subtitle = "";
 	
 	$scope.namesDisplayed = 4;
+	$scope.prefLocationCoordinates = [];
 
 	if ($routeParams.id) {
 		$rootScope.loading++;
@@ -892,11 +980,15 @@ function MergeCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 	
 }
 
-function ThesaurusCtrl($scope, $rootScope, $location, Place, messages) {
+function ThesaurusCtrl($scope, $rootScope, $location, Place, messages, $route) {
 	
 	$rootScope.title = messages["ui.thesaurus"];
 	$rootScope.subtitle = "";
 	$rootScope.showMap = true;
+	$rootScope.showHeader = true;
+	$rootScope.showNavbarSearch = true;
+	$rootScope.viewClass = "span7";
+	$rootScope.activePlaces = [];
 	
 	$rootScope.loading++;
 	Place.query({
@@ -905,12 +997,11 @@ function ThesaurusCtrl($scope, $rootScope, $location, Place, messages) {
 				q: 'types:continent'
 		}, function(result) {
 			$rootScope.loading--;
-			$scope.places = result.result;
-		
+			$scope.places = result.result;		
 	}, function() {
 		$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
 		$rootScope.loading--;
-	});
+	});	
 	
 	$scope.open = function(place) {
 		place.isOpen = true;
@@ -939,5 +1030,4 @@ function ThesaurusCtrl($scope, $rootScope, $location, Place, messages) {
 	$scope.hideMarker = function() {
 		$rootScope.activePlaces = [];
 	};
-	
 }

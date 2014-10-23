@@ -18,6 +18,7 @@ services.factory('Place', function($resource){
 				save: { method:'PUT', params: { method:'doc'} },
 				remove: { method: 'DELETE', params: { method: 'doc'} },
 				merge: { method: 'POST', params: { method:'merge' } },
+				heatmapCoordinates: { method:'GET', params: { method:'heatmapCoordinates'} }
 			});
 });
 
