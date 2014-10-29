@@ -740,7 +740,7 @@ directives.directive('focusMe', function($timeout, $parse) {
       scope.$watch(model, function(value) {
         if(value === true) { 
           $timeout(function() {
-            element[0].focus(); 
+            element[0].focus();
           });
         }
       });

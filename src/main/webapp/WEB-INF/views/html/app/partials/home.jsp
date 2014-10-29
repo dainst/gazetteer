@@ -35,7 +35,7 @@
 						var="titleSimpleSearch" />
 				<input class="search-query input-xxlarge" name="homeSearchField" ng-model="searchFieldInput" placeholder="${titleSimpleSearch}" 
 						on-arrow-up="selectPreviousSuggestion()" on-arrow-down="selectNextSuggestion()" on-blur="lostFocus()"
-						type="text" autocomplete="off">
+						type="text" autocomplete="off" focus-me="true">
 				<button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
 			</div>
 		</div>

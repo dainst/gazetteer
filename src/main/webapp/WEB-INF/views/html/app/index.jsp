@@ -121,9 +121,9 @@
 					<a class="brand" href="../">iDAI.gazetteer</a>
 					<div class="nav-collapse pull-left">
 						<ul class="nav">
-							<li><a href="#!/thesaurus"><s:message
+							<li><a href="#!/thesaurus/"><s:message
 										code="ui.thesaurus.list" text="ui.thesaurus.list" /></a></li>
-							<li><a href="#!/extended-search"> <s:message
+							<li><a href="#!/extended-search/"> <s:message
 										code="ui.search.extendedSearch" text="ui.search.extendedSearch" />
 							</a></li>
 							<sec:authorize access="hasRole('ROLE_EDITOR')">
@@ -141,7 +141,7 @@
 							<s:message code="ui.search.simpleSearch" text="ui.search.simpleSearch"
 								var="titleSimpleSearch" />
 							<input type="text" class="search-query" name="searchField" ng-model="q"	placeholder="${titleSimpleSearch}" 
-								on-arrow-up="selectPreviousSuggestion()" on-arrow-down="selectNextSuggestion()" on-blur="lostFocus()" autocomplete="off"> <i class="icon-search"></i>
+								on-arrow-up="selectPreviousSuggestion()" on-arrow-down="selectNextSuggestion()" on-blur="lostFocus()" autocomplete="off" focus-me="isFocused"> <i class="icon-search"></i>
 						</form>						
 					</div>
 				</div>

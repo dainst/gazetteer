@@ -14,6 +14,8 @@ function AppCtrl($scope, $location, $rootScope, Place) {
 	
 	$rootScope.loading = 0;
 	
+	$rootScope.isFocused = false;
+	
 	$rootScope.bbox = [];
 	$rootScope.zoom = 2;
 	$scope.highlight = null;
@@ -93,6 +95,7 @@ function AppCtrl($scope, $location, $rootScope, Place) {
 	
 	$scope.lostFocus = function() {
 		$scope.searchSuggestions = [];
+		$rootScope.isFocused = false;
 	};
 	
 	$scope.submit = function() {
@@ -131,6 +134,7 @@ function HomeCtrl($scope, $location, $rootScope, Place) {
 	$rootScope.viewClass = "";
 	$rootScope.title = "";
 	$rootScope.subtitle = "";
+	$rootScope.isFocused = false;
 	$scope.homeSearchSuggestions = [];
 	$scope.selectedSuggestionIndex = -1;
 	
@@ -278,6 +282,7 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages) {
 	$rootScope.showNavbarSearch = true;
 	$rootScope.viewClass = "span7";
 	$rootScope.activePlaces = [];	
+	$rootScope.isFocused = false;
 	
 	$scope.meta = null;
 	$scope.type = "";
@@ -407,6 +412,7 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 	$rootScope.showHeader = true;
 	$rootScope.showNavbarSearch = true;
 	$rootScope.viewClass = "span7";
+	$rootScope.isFocused = true;
 	
 	setSearchFromLocation();
 	
@@ -551,7 +557,8 @@ function CreateCtrl($scope, $rootScope, $routeParams, $location, Place, messages
 	$rootScope.showHeader = true;
 	$rootScope.showNavbarSearch = true;
 	$rootScope.viewClass = "span7";
-	$rootScope.activePlaces = [];	
+	$rootScope.activePlaces = [];
+	$rootScope.isFocused = true;
 	
 	$scope.addPlaceType = function(placeType) {
 		var pos = $scope.getListPos($scope.place.types, placeType);
@@ -632,6 +639,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 	$rootScope.showHeader = true;
 	$rootScope.showNavbarSearch = true;
 	$rootScope.viewClass = "span7";
+	$rootScope.isFocused = true;
 	
 	$rootScope.title = "";
 	$rootScope.subtitle = "";
@@ -1084,6 +1092,7 @@ function ThesaurusCtrl($scope, $rootScope, $location, Place, messages, $route) {
 	$rootScope.showNavbarSearch = true;
 	$rootScope.viewClass = "span7";
 	$rootScope.activePlaces = [];
+	$rootScope.isFocused = true;
 	
 	$rootScope.loading++;
 	Place.query({

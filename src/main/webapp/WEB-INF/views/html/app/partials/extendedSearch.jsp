@@ -16,7 +16,7 @@
 			</label>
 			<div class="controls">
 				<div class="inline">
-					<input type="text" class="input-xlarge" id="inputMeta" ng-model="meta">
+					<input type="text" class="input-xlarge" id="inputMeta" ng-model="meta" focus-me="true">
 					<label class="checkbox inline" style="width: 140px; padding-top: 0;"> <input type="checkbox" ng-model="fuzzy">
 						<s:message code="ui.extendedSearch.fuzzy" text="ui.extendedSearch.fuzzy" />
 					</label>
