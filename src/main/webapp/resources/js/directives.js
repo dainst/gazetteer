@@ -642,7 +642,7 @@ directives.directive('gazMap', function($location) {
 			
 			// add markers/shapes for locations and auto zoom and center map
 			$scope.$watch("places", function() {
-				google.maps.event.trigger($scope.map, 'resize');
+				window.setTimeout(function() { google.maps.event.trigger($scope.map, 'resize'); }, 20);
 				$scope.markerMap = {};
 				for (var i in $scope.markers)
 					$scope.markers[i].setMap(null);
