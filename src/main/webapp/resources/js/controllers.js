@@ -178,9 +178,18 @@ function HomeCtrl($scope, $location, $rootScope, Place) {
 	$scope.$watch("searchFieldInput", function() {				
 		$scope.updateSuggestions();		
 		$scope.selectedSuggestionIndex = -1;
-		$scope.textFieldPosLeft = document.getElementsByName("homeSearchField")[0].getBoundingClientRect().left;
-		$scope.textFieldPosRight = document.getElementsByName("homeSearchField")[0].getBoundingClientRect().right;
-		$scope.textFieldPosBottom = document.getElementsByName("homeSearchField")[0].getBoundingClientRect().bottom;
+		var scrollTopPos = document.documentElement.scrollTop;
+		if (scrollTopPos == 0)
+			scrollTopPos = document.body.scrollTop;		
+		var textFieldPosLeft = document.getElementsByName("homeSearchField")[0].getBoundingClientRect().left;
+		var textFieldPosWidth = (document.getElementsByName("homeSearchField")[0].getBoundingClientRect().right - textFieldPosLeft);
+		var textFieldPosTop = document.getElementsByName("homeSearchField")[0].getBoundingClientRect().bottom + scrollTopPos;
+		$scope.suggestionsStyle = { 'margin-top': '5px',
+								  'position': 'absolute',
+								  'top': textFieldPosTop + "px",
+								  'left': textFieldPosLeft + "px",
+								  'width': textFieldPosWidth + "px",
+								  'z-index': '2000' };
 	});
 	
 	$scope.updateSuggestions = function() {

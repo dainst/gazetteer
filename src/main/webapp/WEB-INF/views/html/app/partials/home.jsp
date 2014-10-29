@@ -42,7 +42,7 @@
 	</form>
 </div>
 	
-<div style="margin-top: 5px; position: absolute; top: {{textFieldPosBottom}}px; left: {{textFieldPosLeft}}px; width: {{textFieldPosRight - textFieldPosLeft}}px; z-index: 2000">
+<div ng-style="suggestionsStyle">
 	<div ng-repeat="suggestion in homeSearchSuggestions">
 		<div class="suggestion" ng-mousedown="submit()" ng-hide="selectedSuggestionIndex == $index" ng-mouseover="setSelectedSuggestionIndex($index)">{{suggestion}}</div>
 		<div class="suggestion selected" ng-mousedown="submit()" ng-show="selectedSuggestionIndex == $index">{{suggestion}}</div>
