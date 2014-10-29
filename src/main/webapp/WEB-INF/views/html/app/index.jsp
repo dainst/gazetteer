@@ -140,7 +140,7 @@
 							<s:message code="ui.search.simpleSearch" text="ui.search.simpleSearch"
 								var="titleSimpleSearch" />
 							<input type="text" class="search-query" name="searchField" ng-model="q"	placeholder="${titleSimpleSearch}" 
-								on-arrow-up="selectPreviousSuggestion()" on-arrow-down="selectNextSuggestion()" on-blur="lostFocus()"> <i class="icon-search"></i>
+								on-arrow-up="selectPreviousSuggestion()" on-arrow-down="selectNextSuggestion()" on-blur="lostFocus()" autocomplete="off"> <i class="icon-search"></i>
 						</form>						
 					</div>
 				</div>
