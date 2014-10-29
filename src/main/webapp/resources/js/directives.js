@@ -766,7 +766,7 @@ directives.directive('onEnter', function () {
     return function (scope, element, attrs) {
         element.bind("keydown keypress", function (event) {
             if(event.which === 13) {
-                scope.$apply(function (){
+                scope.$apply(function () {
                     scope.$eval(attrs.onEnter);
                 });
  
@@ -780,7 +780,7 @@ directives.directive('onArrowUp', function () {
     return function (scope, element, attrs) {
         element.bind("keydown keypress", function (event) {
             if(event.which === 38) {
-                scope.$apply(function (){
+                scope.$apply(function () {
                     scope.$eval(attrs.onArrowUp);
                 });
  
@@ -794,7 +794,7 @@ directives.directive('onArrowDown', function () {
     return function (scope, element, attrs) {
         element.bind("keydown keypress", function (event) {
             if(event.which === 40) {
-                scope.$apply(function (){
+                scope.$apply(function () {
                     scope.$eval(attrs.onArrowDown);
                 });
  
@@ -805,11 +805,27 @@ directives.directive('onArrowDown', function () {
 });
 
 directives.directive('onBlur', function() {
-    return function( scope, element, attrs ) {
+    return function(scope, element, attrs) {
     	element.bind("blur", function() {
-    		scope.$apply(function (){
+    		scope.$apply(function () {
     			scope.$eval(attrs.onBlur);
     		});
     	});
     };
   });
+
+directives.directive('scrollPosition', function($window) {
+	  return {
+	    scope: {
+	      scroll: '=scrollPosition'
+	    },
+	    link: function(scope, element, attrs) {
+	      var windowElement = angular.element($window);
+	      var handler = function() {
+	        scope.scroll = windowElement.scrollTop();
+	      };
+	      windowElement.on('scroll', scope.$apply.bind(scope, handler));
+	      handler();
+	    }
+	  };
+	});

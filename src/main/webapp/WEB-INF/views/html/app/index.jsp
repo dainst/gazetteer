@@ -49,6 +49,7 @@
 		}
 	</style>
 
+	<div scroll-position="scrollPosition"></div>
 	<div class="archaeo-fixed-menu">
 		<div class="container archaeo-fixed-menu-header">
 			<sec:authorize access="isAnonymous()">
@@ -146,7 +147,7 @@
 				</div>
 			</div>
 		</div>
-		<div style="margin-top: 1px; position: absolute; left: {{textFieldPosLeft}}px; width: {{textFieldPosRight - textFieldPosLeft}}px; z-index: 2000">
+		<div name="suggestionsContainer" ng-style="suggestionsStyle">
 			<div ng-repeat="suggestion in searchSuggestions">
 				<div class="suggestion" ng-mousedown="submit()" ng-hide="selectedSuggestionIndex == $index" ng-mouseover="setSelectedSuggestionIndex($index)"><span ng-show="suggestion.length < 31">{{suggestion}}</span><span ng-hide="suggestion.length < 31">{{suggestion.substring(0,30)}}...</span></div>
 				<div class="suggestion selected" ng-mousedown="submit()" ng-show="selectedSuggestionIndex == $index"><span ng-show="suggestion.length < 31">{{suggestion}}</span><span ng-hide="suggestion.length < 31">{{suggestion.substring(0,30)}}...</span></div>
@@ -212,6 +213,8 @@
 	<script src="../resources/js/filters.js"></script>
 	<script src="../resources/js/directives.js"></script>
 	<script src="../resources/js/i18n/messages_${language}.js"></script>
+	
+
 	
 </body>
 </html>

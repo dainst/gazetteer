@@ -21,15 +21,36 @@ function AppCtrl($scope, $location, $rootScope, Place) {
 	$scope.searchSuggestions = [];
 	$scope.selectedSuggestionIndex = -1;
 	
+	$scope.scrollPosition = 0;
+	
 	$scope.$watch("q", function() {				
-		$scope.updateSuggestions();		
-		$scope.selectedSuggestionIndex = -1;
-		$scope.textFieldPosLeft = document.getElementsByName("searchField")[0].getBoundingClientRect().left;
-		$scope.textFieldPosRight = document.getElementsByName("searchField")[0].getBoundingClientRect().right;
+		$scope.updateSuggestions();
+		$scope.updateSuggestionsStyle();	
 	});
+	
+	$scope.$watch("scrollPosition", function() {
+		$scope.updateSuggestionsStyle();
+	});
+		
+	$scope.updateSuggestionsStyle = function() {
+		var scrollTopPos = document.documentElement.scrollTop;
+		if (scrollTopPos == 0)
+			scrollTopPos = document.body.scrollTop;		
+		var textFieldPosTop = document.getElementsByName("searchField")[0].getBoundingClientRect().bottom + scrollTopPos;
+		var textFieldPosLeft = document.getElementsByName("searchField")[0].getBoundingClientRect().left;
+		var textFieldPosWidth = (document.getElementsByName("searchField")[0].getBoundingClientRect().right - textFieldPosLeft);
+		
+		$scope.suggestionsStyle = { 'margin-top': '5px',
+				  'position': 'absolute',
+				  'top': textFieldPosTop + 'px',
+				  'left': textFieldPosLeft + 'px',
+				  'width': textFieldPosWidth + 'px',
+				  'z-index': '200000' };
+	};
 	
 	$scope.updateSuggestions = function() {
 		$scope.searchSuggestions = [];
+		$scope.selectedSuggestionIndex = -1;
 		
 		Place.suggestions({ field: "prefName.title.suggest", text: $scope.q }, function(result) {
 			$scope.searchSuggestions = result.suggestions;
@@ -175,20 +196,20 @@ function HomeCtrl($scope, $location, $rootScope, Place) {
 		heatmap.setMap($scope.homeMap);		
 	});
 	
-	$scope.$watch("searchFieldInput", function() {				
+	$scope.$watch("searchFieldInput", function() {
 		$scope.updateSuggestions();		
 		$scope.selectedSuggestionIndex = -1;
 		var scrollTopPos = document.documentElement.scrollTop;
 		if (scrollTopPos == 0)
-			scrollTopPos = document.body.scrollTop;		
+			scrollTopPos = document.body.scrollTop;
 		var textFieldPosLeft = document.getElementsByName("homeSearchField")[0].getBoundingClientRect().left;
 		var textFieldPosWidth = (document.getElementsByName("homeSearchField")[0].getBoundingClientRect().right - textFieldPosLeft);
 		var textFieldPosTop = document.getElementsByName("homeSearchField")[0].getBoundingClientRect().bottom + scrollTopPos;
 		$scope.suggestionsStyle = { 'margin-top': '5px',
 								  'position': 'absolute',
-								  'top': textFieldPosTop + "px",
-								  'left': textFieldPosLeft + "px",
-								  'width': textFieldPosWidth + "px",
+								  'top': textFieldPosTop + 'px',
+								  'left': textFieldPosLeft + 'px',
+								  'width': textFieldPosWidth + 'px',
 								  'z-index': '2000' };
 	});
 	
