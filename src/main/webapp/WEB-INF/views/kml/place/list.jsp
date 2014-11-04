@@ -40,8 +40,10 @@
 							<h2><s:message code="domain.place.parent" text="domain.place.parent" /></h2>
 							<p>
 								<a href="${baseUri}place/${parent.id}">${parent.prefName.title}
-									<c:if test="${parent.type != null}">
-										<em>(<s:message code="types.${parent.type}" text="${parent.type}"/>)</em>
+									<c:if test="${parent.types != null}">
+										<c:forEach var="type" items="${parent.types}">
+											<em>(<s:message code="place.types.${type}" text="${type}"/>)</em>
+										</c:forEach>
 									</c:if>
 								</a>
 							</p>
@@ -64,8 +66,10 @@
 								<c:forEach var="relatedPlace" items="${relatedPlaces}">
 									<li>
 										<a href="${baseUri}place/${relatedPlace.id}">${relatedPlace.prefName.title}
-											<c:if test="${relatedPlace.type != null}">
-												<em>(${relatedPlace.type})</em>
+											<c:if test="${relatedPlace.types != null}">
+												<c:forEach var="type" items="${relatedPlace.types}">
+													<em>(<s:message code="place.types.${type}" text="${type}"/>)</em>
+												</c:forEach>
 											</c:if>	
 										</a>
 									</li>
@@ -94,9 +98,11 @@
 							</ul>
 						</c:if>
 						
-						<c:if test="${!empty(place.type)}">
+						<c:if test="${place.types != null}">
 							<h2><s:message code="domain.place.type" text="domain.place.type" /></h2>
-							<p><s:message code="types.${place.type}" text="${place.type}"/></p>
+							<c:forEach var="type" items="${place.types}">
+								<p><s:message code="place.types.${type}" text="${type}"/></p>
+							</c:forEach>
 						</c:if>
 						
 						<c:if test="${not empty place.arachneId or not empty place.zenonId}">
