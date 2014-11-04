@@ -23,9 +23,10 @@
 <link href="../resources/css/angular-ui.css" rel="stylesheet">
 <link href="../resources/css/app.css" rel="stylesheet">
 <script	src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular.min.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular-resource.min.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.5/angular-cookies.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-resource.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-cookies.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-route.min.js"></script>
 <script src="../resources/js/lib/angular/angular-ui.js"></script>
 <script src="../resources/js/lib/angular/ui-bootstrap-custom-0.4.0.min.js"></script>
 </head>
@@ -46,6 +47,10 @@
 		.selected {
 			background-color: #6786ad;
 			color: #ffffff;
+		}
+		.hiddenMapContainer {
+			position: absolute;
+			left: -10000px;
 		}
 	</style>
 
@@ -186,8 +191,8 @@
 		</div>
 		
 		<div class="row-fluid">		
-			<div ng-show="showMap" class="span5" id="map-well-wrapper">
-				<div class="well" id="map-well">
+			<div class="span5" id="map-well-wrapper" ng-style="mapContainerStyle">
+				<div class="well" style="width: 430px;" id="map-well">
 					<div gaz-map places="activePlaces" height="500" zoom="zoom" bbox="bbox" highlight="highlight"></div>
 				</div>
 			</div>

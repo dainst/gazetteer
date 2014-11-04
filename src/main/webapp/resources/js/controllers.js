@@ -33,6 +33,13 @@ function AppCtrl($scope, $location, $rootScope, Place) {
 	$scope.$watch("scrollPosition", function() {
 		$scope.updateSuggestionsStyle();
 	});
+	
+	$scope.$watch("showMap", function() {
+		if ($rootScope.showMap)
+			$scope.mapContainerStyle = {};
+		else
+			$scope.mapContainerStyle = { 'position': 'absolute', 'left': '-10000px' };
+	});
 		
 	$scope.updateSuggestionsStyle = function() {
 		var scrollTopPos = document.documentElement.scrollTop;
@@ -129,6 +136,7 @@ function AppCtrl($scope, $location, $rootScope, Place) {
 function HomeCtrl($scope, $location, $rootScope, Place) {
 	$scope.q = null;
 	$scope.type = "";
+	$rootScope.showMap = false;
 	$rootScope.showHeader = false;
 	$rootScope.showNavbarSearch = false;
 	$rootScope.viewClass = "";

@@ -1,7 +1,7 @@
 'use strict';
 
 // Declare app level module which depends on filters, and services
-angular.module('gazetteer', ['gazetteer.filters', 'gazetteer.services', 'gazetteer.directives', 'ui']).
+angular.module('gazetteer', ['gazetteer.filters', 'gazetteer.services', 'gazetteer.directives', 'ngRoute', 'ui']).
   config(['$routeProvider', function($routeProvider) {
 	$routeProvider.when('/home', { templateUrl: 'partials/home.html', controller: HomeCtrl});
     $routeProvider.when('/search', { templateUrl: 'partials/search.html', reloadOnSearch: false, controller: SearchCtrl});

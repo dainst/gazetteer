@@ -600,8 +600,7 @@ directives.directive('gazMap', function($location) {
 			$scope.mapOptions = {
 				center: new google.maps.LatLng(0, 0),
 				zoom: $scope.zoom,
-				mapTypeId: google.maps.MapTypeId.TERRAIN,
-				streetViewControl: false
+				mapTypeId: google.maps.MapTypeId.TERRAIN
 			};
 			
 			$attrs.$observe('height', function(height) {
@@ -642,7 +641,6 @@ directives.directive('gazMap', function($location) {
 			
 			// add markers/shapes for locations and auto zoom and center map
 			$scope.$watch("places", function() {
-				window.setTimeout(function() { google.maps.event.trigger($scope.map, 'resize'); }, 20);
 				$scope.markerMap = {};
 				for (var i in $scope.markers)
 					$scope.markers[i].setMap(null);
