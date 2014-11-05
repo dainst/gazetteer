@@ -337,7 +337,7 @@
 							<s:message code="domain.location.polygon" text="domain.location.polygon" />
 						</label>
 						<div class="controls">
-							<div gaz-shape-editor shape="place.prefLocation.shape" pos="place.prefLocation.coordinates"></div>
+							<div gaz-shape-editor shape="place.prefLocation.shape" pos="place.prefLocation.coordinates" editor-name="'prefLocationShapeEditor'"></div>
 						</div>
 					</div>
 					<div class="control-group">
@@ -383,7 +383,7 @@
 							<s:message code="domain.location.polygon" text="domain.location.polygon" />
 						</label>
 						<div class="controls">
-							<div gaz-shape-editor shape="location.shape" pos="location.coordinates"></div>
+							<div gaz-shape-editor shape="location.shape" pos="location.coordinates" editor-name="'additionalLocationsShapeEditor'"></div>
 						</div>
 					</div>
 					<div class="control-group">

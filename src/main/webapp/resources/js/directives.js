@@ -247,7 +247,8 @@ directives.directive('gazShapeEditor', function($document) {
 		replace: true,
 		scope: {
 			shape: '=',
-			pos: '='
+			pos: '=',
+			editorName: '='
 		},
 		templateUrl: 'partials/shapeEditor.html',
 		controller: function($scope, $element) {
@@ -565,6 +566,10 @@ directives.directive('gazShapeEditor', function($document) {
 			    	betweenLngs = (latlng1.lng() >= latlng3.lng() && latlng2.lng() <= latlng3.lng());
 			    
 			    return (betweenLats && betweenLngs);
+			};
+			
+			$scope.deleteShape = function() {
+				$scope.shape = null;
 			};
 		}
 	};

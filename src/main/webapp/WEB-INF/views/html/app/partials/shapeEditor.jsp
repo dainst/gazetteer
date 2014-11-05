@@ -35,7 +35,13 @@
 		</div>
 		<button class="btn gaz-pick-button shape-editor-btn" type="button" ng-click="openOverlay()">
 			<i class="icon-pencil"></i>
-		</button>	
+		</button>
+		<button ng-show="shape" class="btn shape-editor-btn" href="#deleteShapeModal_{{editorName}}" data-toggle="modal">
+			<i class="icon-remove"></i>
+		</button>
+		<button ng-hide="shape" class="btn shape-editor-btn disabled">
+			<i class="icon-remove"></i>
+		</button>
 	</span>
 	
 	<div modal="showOverlay" close="closeOverlay()">
@@ -51,5 +57,21 @@
  			<button type="button" class="btn btn-primary" ng-click="saveShape()"><s:message code="ui.ok" text="ui.ok" /></button>
  			<button type="button" class="btn" ng-click="closeOverlay()"><s:message code="ui.cancel" text="ui.cancel" /></button>
  		</div>
+	</div>
+	
+	<div class="modal hide fade" id="deleteShapeModal_{{editorName}}">
+		<span>
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">&times;</button>
+				<h3><s:message code="ui.deleteShape" text="ui.deleteShape"/>?</h3>
+			</div>
+			<div class="modal-body">
+				<p><s:message code="ui.deleteShape.really" text="ui.deleteShape.really"/></p>
+			</div>
+			<div class="modal-footer">
+				<a href="#" class="btn" data-dismiss="modal" aria-hidden="true"><s:message code="ui.cancel" text="ui.cancel"/></a>
+				<a ng-click="deleteShape(shape)" data-dismiss="modal" class="btn btn-danger"><s:message code="ui.delete" text="ui.delete"/></a>
+			</div>
 	</div>
 </span>
