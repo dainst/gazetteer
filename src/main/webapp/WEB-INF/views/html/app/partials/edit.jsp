@@ -10,33 +10,33 @@
 
 <ul class="nav nav-tabs">
 	<li class="active">
-		<a href="#names" data-toggle="tab">
+		<a data-target="#names" data-toggle="tab" style="cursor: pointer">
 			<s:message code="domain.place.names" text="domain.place.names"/>
 		</a>
 	</li>
 	<li>
-		<a href="#general" data-toggle="tab">
+		<a data-target="#general" data-toggle="tab" style="cursor: pointer">
 			<s:message code="domain.place.general" text="domain.place.general"/>
 		</a>
 	</li>
 	<li>
-		<a href="#identification" data-toggle="tab">
+		<a data-target="#identification" data-toggle="tab" style="cursor: pointer">
 			<s:message code="domain.place.identification" text="domain.place.identification"/>
 		</a>
 	</li>
 	<li>
-		<a href="#locations" data-toggle="tab">
+		<a data-target="#locations" data-toggle="tab" style="cursor: pointer">
 			<s:message code="domain.place.locations" text="domain.place.locations"/>
 		</a>
 	</li>
 	<li>
-		<a href="#connections" data-toggle="tab">
+		<a data-target="#connections" data-toggle="tab" style="cursor: pointer">
 			<s:message code="domain.place.connections" text="domain.place.connections"/>
 		</a>
 	</li>
 	<sec:authorize access="hasRole('ROLE_REISESTIPENDIUM')">
 		<li>
-			<a href="#reisestipendium" data-toggle="tab">
+			<a data-target="#reisestipendium" data-toggle="tab" style="cursor: pointer">
 				<s:message code="domain.place.reisestipendium" text="domain.place.reisestipendium"/>
 			</a>
 		</li>
