@@ -365,7 +365,7 @@
 								<option value="2" gaz-translate="'location.confidence.2'">
 								<option value="3" gaz-translate="'location.confidence.3'">
 							</select>
-							<div class="btn btn-primary plus" ng-click="addLocation()" ng-disabled="!location.coordinates && !location.shape">
+							<div class="btn btn-primary plus" ng-click="addLocation()" ng-disabled="(!location.coordinates || location.coordinates.length == 0) && !location.shape">
 								<i class="icon-plus icon-white"></i>
 							</div>
 						</div>

@@ -879,7 +879,10 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 	};
 	
 	$scope.addLocation = function() {
-		if (!$scope.location.coordinates && (!$scope.location.shape || !$scope.location.shape.coordinates || $scope.location.shape.coordinates.length == 0)) return;
+		if ($scope.location.shape && $scope.location.shape.coordinates && $scope.location.shape.coordinates.length == 0)
+			$scope.location.shape = null;
+		
+		if ((!$scope.location.coordinates || $scope.location.coordinates.length == 0) && !$scope.location.shape) return;
 		if ($scope.location.coordinates)
 			$scope.location.coordinates.reverse();
 		if ($scope.place.locations == undefined)
