@@ -32,7 +32,7 @@ template = '{
       "context": "pleiades"
     }
   ],
-  "parent": "http://gazetteer.dainst.org/place/#{_[8]}"
+  "parent": "http://gazetteer.dainst.org/place/#{_[8].empty? ? id(_[9]) : _[8]}"
 }'
 
 
