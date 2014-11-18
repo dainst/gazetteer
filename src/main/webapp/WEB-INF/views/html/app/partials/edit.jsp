@@ -207,7 +207,7 @@
 							<s:message code="domain.place.tags" text="domain.place.tags" />
 						</label>
 						<div class="controls">
-							<div gaz-tag-field tags="place.tags" fieldname="tags" number="0"></div>
+							<div gaz-tag-field tags="place.tags" fieldname="tags" fieldwidth="475px" number="0"></div>
 						</div>
 					</div>
 					
@@ -217,7 +217,7 @@
 							<s:message code="domain.place.provenance" text="domain.place.provenance" />
 						</label>
 						<div class="controls">
-							<div gaz-tag-field tags="place.provenance" fieldname="provenance" number="1"></div>	
+							<div gaz-tag-field tags="place.provenance" fieldname="provenance" fieldwidth="475px" number="1"></div>	
 						</div>
 					</div>
 					

@@ -135,7 +135,7 @@ directives.directive('gazPlacePicker', function($document) {
 directives.directive('gazTagField', function($document) {
 	return {
 		replace: true,
-		scope: { tags: '=', fieldname: '@', number: '='},
+		scope: { tags: '=', fieldwidth: '@', fieldname: '@', number: '='},
 		templateUrl: 'partials/tagField.html',
 		controller: function($scope, $element, Place) {
 			
@@ -201,8 +201,8 @@ directives.directive('gazTagField', function($document) {
 				});
 			};
 			
-			$scope.chooseSuggestion = function() {				
-				if ($scope.suggestions.length != 0) {
+			$scope.chooseSuggestion = function() {
+				if ($scope.suggestions.length != 0) {					
 					var suggestion = $scope.suggestions[$scope.selectedSuggestionIndex];
 				
 					if ($scope.tags == undefined || $scope.tags == null)

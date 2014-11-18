@@ -297,8 +297,8 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages) {
 	$scope.names = { title: "", language: "" };
 	$scope.parent = null;
 	$scope.type = "";
-	$scope.tags = "";
-	$scope.provenance = "";
+	$scope.tags = [];
+	$scope.provenance = [];
 	$scope.ids = { value: "", context: ""};
 	$scope.fuzzy = false;
 	$scope.hasCoordinates = false;
@@ -375,13 +375,17 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages) {
 		}
 		
 		// tags
-		if ($scope.tags != "") {
-			queries.push({ match: { "tags": $scope.tags } });
+		if ($scope.tags != []) {
+			for (var i = 0; i < $scope.tags.length; i++) {
+				queries.push({ match: { "tags": $scope.tags[i] } });
+			}
 		}
 		
 		// provenance
-		if ($scope.provenance != "") {
-			queries.push({ match: { "provenance": $scope.provenance } });
+		if ($scope.provenance != []) {
+			for (var i = 0; i < $scope.provenance.length; i++) {
+				queries.push({ match: { "provenance": $scope.provenance[i] } });
+			}
 		}
 		
 		// ids
