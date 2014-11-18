@@ -369,7 +369,7 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages) {
 		
 		// type
 		if ($scope.type !== "") {
-			queries.push({ match: { "type": $scope.type	} });
+			queries.push({ match: { "types": $scope.type	} });
 		}
 		
 		// ids
