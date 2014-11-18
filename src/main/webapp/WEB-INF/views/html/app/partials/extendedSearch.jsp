@@ -63,6 +63,24 @@
 		</div>
 		
 		<div class="control-group">
+			<label class="control-label" for="inputTags"> <s:message
+					code="ui.extendedSearch.tags" text="ui.extendedSearch.tags" />
+			</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="inputTags" ng-model="tags">
+			</div>
+		</div>
+		
+		<div class="control-group">
+			<label class="control-label" for="inputProvenance"> <s:message
+					code="ui.extendedSearch.provenance" text="ui.extendedSearch.provenance" />
+			</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="inputProvenance" ng-model="provenance">
+			</div>
+		</div>
+		
+		<div class="control-group">
 			<label class="control-label" for="inputIDs"> <s:message
 					code="ui.extendedSearch.ids" text="ui.extendedSearch.ids" />
 			</label>

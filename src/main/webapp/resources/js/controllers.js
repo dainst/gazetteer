@@ -297,6 +297,8 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages) {
 	$scope.names = { title: "", language: "" };
 	$scope.parent = null;
 	$scope.type = "";
+	$scope.tags = "";
+	$scope.provenance = "";
 	$scope.ids = { value: "", context: ""};
 	$scope.fuzzy = false;
 	$scope.hasCoordinates = false;
@@ -369,7 +371,17 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages) {
 		
 		// type
 		if ($scope.type !== "") {
-			queries.push({ match: { "types": $scope.type	} });
+			queries.push({ match: { "types": $scope.type } });
+		}
+		
+		// tags
+		if ($scope.tags != "") {
+			queries.push({ match: { "tags": $scope.tags } });
+		}
+		
+		// provenance
+		if ($scope.provenance != "") {
+			queries.push({ match: { "provenance": $scope.provenance } });
 		}
 		
 		// ids
