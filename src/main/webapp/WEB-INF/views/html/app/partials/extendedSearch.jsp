@@ -53,7 +53,7 @@
 					code="ui.extendedSearch.types" text="ui.extendedSearch.types" />
 			</label>
 			<div class="controls">
-				<select ng-model="type" class="input-xlarge">
+				<select ng-model="type" style="width: 285px;">
 					<option value=""></option>
 					<c:forEach var="placeType" items="${placeTypes}">
 						<option value="${placeType}" gaz-translate="'place.types.' + '${placeType}'"></option>
