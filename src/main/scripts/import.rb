@@ -185,6 +185,7 @@ CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
   place.delete(:gazId) if place[:gazId].to_s.empty?
   place[:prefName].delete(:language) if place[:prefName][:language].to_s.empty?
   place[:prefName].delete(:ancient) if !place[:prefName][:ancient]
+  place[:prefName][:title] = "-Untitled-" if place[:prefName][:title].to_s.empty?
   if place[:alternativeNames] 
     place[:alternativeNames].delete_if { |id| id[:title].to_s.empty? }
   end
@@ -192,6 +193,9 @@ CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
   place.delete(:prefLocation) if place[:prefLocation] and place[:prefLocation][:coordinates] == [0, 0]
   if place[:identifiers] 
     place[:identifiers].delete_if { |id| id[:value].to_s.empty? || id[:value] == "0" }
+  end
+  if place[:comments]
+    place[:comments].delete_if { |comment| comment[:text].to_s.empty? }
   end
 
   id_present = true if !place[:gazId].to_s.empty?
