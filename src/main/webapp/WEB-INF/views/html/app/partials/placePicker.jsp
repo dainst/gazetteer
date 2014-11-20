@@ -5,14 +5,14 @@
 
 	<style type="text/css">
 		.place-picker-field {
-			background-colour: #fff;
+			background-color: #fcfcfc;
 			border-radius: 0 0 0 0;
 			border: 1px solid #CCC;
-			height: 20px;
+			height: 23px;
 			padding: 4px 6px;
 			font-size: 14px;
 			line-height: 20px;
-			width: 210px;
+			width: 220px;
 			display: inline-block;
 			overflow: hidden;
 		}
@@ -21,6 +21,7 @@
 			border-radius: 0 0 0 0;
 			border: 1px solid #cccccc;
 			vertical-align: top;
+			height: 33px;
 		}
 	</style>
 	

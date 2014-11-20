@@ -5,7 +5,7 @@
 
 	<style type="text/css">
 		.tag-field {
-			background-color: white;
+			background-color: #fcfcfc;
 			border-radius: 0 0 0 0;
 			border: 1px solid #CCC;
 			height: 23px;

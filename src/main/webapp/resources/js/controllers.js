@@ -295,7 +295,7 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages) {
 	$scope.meta = null;
 	$scope.type = "";
 	$scope.names = { title: "", language: "" };
-	$scope.parent = "";
+	$scope.parent = null;
 	$scope.type = "";
 	$scope.tags = [];
 	$scope.provenance = [];
@@ -365,9 +365,8 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages) {
 		}
 		
 		// parent
-		if ($scope.parent !== "") {
-			
-			queries.push({ match: { "parent": $scope.parent	} });
+		if ($scope.parent !== null) {			
+			queries.push({ match: { "parent": $scope.parent.gazId } });
 		}
 		
 		// type

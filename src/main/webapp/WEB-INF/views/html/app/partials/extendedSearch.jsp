@@ -40,15 +40,15 @@
 		</div>
 		
 		<div class="control-group">
-			<label class="control-label" for="inputParent"> <s:message
+			<label class="control-label"> <s:message
 					code="ui.extendedSearch.parent" text="ui.extendedSearch.parent" />
 			</label>
 			<div class="controls">
-				<input type="text" class="input-xlarge" id="inputParent" ng-model="parent">
+				<div gaz-place-picker place="parent"></div>
 			</div>
 		</div>
 		
-		<div class="control-group">
+		<div class="control-group" style="margin-top: -5px;">
 			<label class="control-label" for="inputTypes"> <s:message
 					code="ui.extendedSearch.types" text="ui.extendedSearch.types" />
 			</label>
