@@ -5,10 +5,10 @@
 
 	<style type="text/css">
 		.tag-field {
-			background-colour: #fff;
+			background-color: white;
 			border-radius: 0 0 0 0;
 			border: 1px solid #CCC;
-			height: 20px;
+			height: 23px;
 			padding	: 0px 4px 6px 4px;
 			font-size: 14px;
 			line-height: 20px;

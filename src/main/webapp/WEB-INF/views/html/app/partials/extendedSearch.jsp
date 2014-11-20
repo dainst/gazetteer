@@ -53,7 +53,7 @@
 					code="ui.extendedSearch.types" text="ui.extendedSearch.types" />
 			</label>
 			<div class="controls">
-				<select ng-model="type" style="width: 285px;">
+				<select ng-model="type" style="width: 284px;">
 					<option value=""></option>
 					<c:forEach var="placeType" items="${placeTypes}">
 						<option value="${placeType}" gaz-translate="'place.types.' + '${placeType}'"></option>
@@ -67,7 +67,7 @@
 					code="ui.extendedSearch.tags" text="ui.extendedSearch.tags" />
 			</label>
 			<div class="controls">
-				<div gaz-tag-field tags="tags" fieldname="tags" fieldwidth="270px" number="0"></div>
+				<div gaz-tag-field tags="tags" fieldname="tags" fieldwidth="274px" number="0"></div>
 			</div>
 		</div>
 		
@@ -76,7 +76,7 @@
 					code="ui.extendedSearch.provenance" text="ui.extendedSearch.provenance" />
 			</label>
 			<div class="controls">
-				<div gaz-tag-field tags="provenance" fieldname="provenance" fieldwidth="270px" number="1"></div>
+				<div gaz-tag-field tags="provenance" fieldname="provenance" fieldwidth="274px" number="1"></div>
 			</div>
 		</div>
 		
