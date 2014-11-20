@@ -144,8 +144,10 @@
 								<em ng-show="placename.ancient && placename.transliterated">
 									(<small gaz-translate="'place.name.ancient'"></small>/<small gaz-translate="'place.name.transliterated'"></small>)
 								</em>
-								<small ng-hide="!placename.language">
-									<em gaz-translate="'languages.' + placename.language"></em>
+								<small ng-show="placename.language">
+									<c:forEach var="language" items="${languages}">
+										<em ng-show="'${language.key}' == placename.language">${language.value}</em>
+									</c:forEach>
 								</small>
 							</div>
 						</div>
