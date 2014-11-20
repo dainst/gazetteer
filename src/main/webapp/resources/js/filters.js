@@ -25,4 +25,9 @@ angular.module('gazetteer.filters', []).
     	else
     		return text;
     };
-  });
+  }).
+  filter('toTrusted', ['$sce', function($sce){
+      return function(text) {
+          return $sce.trustAsHtml(text);
+      };
+  }]);

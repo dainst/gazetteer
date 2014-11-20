@@ -47,7 +47,7 @@ function AppCtrl($scope, $location, $rootScope, Place) {
 			scrollTopPos = document.body.scrollTop;		
 		var textFieldPosTop = document.getElementsByName("searchField")[0].getBoundingClientRect().bottom + scrollTopPos;
 		var textFieldPosLeft = document.getElementsByName("searchField")[0].getBoundingClientRect().left;
-		var textFieldPosWidth = (document.getElementsByName("searchField")[0].getBoundingClientRect().right - textFieldPosLeft);
+		var textFieldPosWidth = document.getElementsByName("searchField")[0].getBoundingClientRect().right - textFieldPosLeft;
 		
 		$scope.suggestionsStyle = { 'margin-top': '5px',
 				  'position': 'absolute',
@@ -215,7 +215,7 @@ function HomeCtrl($scope, $location, $rootScope, Place) {
 		if (scrollTopPos == 0)
 			scrollTopPos = document.body.scrollTop;
 		var textFieldPosLeft = document.getElementsByName("homeSearchField")[0].getBoundingClientRect().left;
-		var textFieldPosWidth = (document.getElementsByName("homeSearchField")[0].getBoundingClientRect().right - textFieldPosLeft);
+		var textFieldPosWidth = document.getElementsByName("homeSearchField")[0].getBoundingClientRect().right - textFieldPosLeft;
 		var textFieldPosTop = document.getElementsByName("homeSearchField")[0].getBoundingClientRect().bottom + scrollTopPos;
 		$scope.suggestionsStyle = { 'margin-top': '5px',
 								  'position': 'absolute',
@@ -765,7 +765,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 	// show live changes of id
 	$scope.$watch("place.gazId", function() {
 		if ($scope.place && $scope.place["@id"])
-			$rootScope.subtitle = $scope.place["@id"]	+ '<a data-toggle="modal" href="#copyUriModal"><i class="icon-share" style="font-size:0.7em"></i></a>';
+			$rootScope.subtitle = $scope.place["@id"] + '<a data-toggle="modal" href="#copyUriModal"><i class="icon-share" style="font-size:0.7em"></i></a>';
 	});
 	
 	$scope.changeNumberOfDisplayedNames = function() {

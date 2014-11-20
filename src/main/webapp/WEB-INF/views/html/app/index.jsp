@@ -186,7 +186,7 @@
 			<h2>
 				<span ng-show="title">{{title}}</span>
 				<span ng-hide="title">&nbsp;</span>
-				<small ng-bind-html-unsafe="subtitle"></small>
+				<small ng-bind-html="subtitle | toTrusted"></small>
 			</h2>
 		</div>
 		
