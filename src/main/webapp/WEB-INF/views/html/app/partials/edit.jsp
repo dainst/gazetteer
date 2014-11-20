@@ -298,7 +298,7 @@
 							<div type="text" ng.hide="!place.linkss">
 								<div ng-repeat="link in place.links">
 									<a ng-click="place.links.splice($index,1)"><i class="icon-remove-sign"></i></a>
-									<em>{{link.predicate}}:</em> <a href="{{link.object}}" target="_blank">{{link.object}}</a>
+									<em>{{link.predicate}}:</em> <a href="{{link.object}}" target="_blank">{{decodeUri(link.object)}}</a>
 								</div>
 							</div>
 						</div>

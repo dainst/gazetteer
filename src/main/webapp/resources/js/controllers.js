@@ -993,6 +993,11 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 		for (var i in $scope.allRelatedPlaces)
 			$scope.place.relatedPlaces.push($scope.allRelatedPlaces[i]["@id"]);
 	};
+	
+	$scope.decodeUri = function(uri) {
+		var decodedURI = decodeURI(uri); 
+		return decodedURI.replace("%2C", ",");
+	};
 
 	// update relatedPlaces attribute of place when relatedPlaces in scope changes
 	$scope.$watch("allRelatedPlaces.length", $scope.updateRelatedPlaces());
