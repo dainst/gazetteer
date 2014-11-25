@@ -160,9 +160,9 @@ public class UserManagementController {
 	public String redirect(@RequestParam(required=false) String r) {
 		
 		if (r == null || r.equals(""))
-			return "home";
-		else 
-			return "redirect:app/#!/" + r;
+			r = "home";
+		
+		return "redirect:app/#!/" + r;
 	}
 		
 	@RequestMapping(value="/userManagement")
