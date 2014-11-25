@@ -132,19 +132,19 @@
 				<i ng-show="search.sort == '_score' && search.order == 'desc'" class="icon-chevron-down"></i>
 			</th>
 			<th style="width:50px">
-				<a ng-click="orderBy('_id')" gaz-tooltip="'ui.search.sort.id.tooltip'">#</a>
+				<a ng-click="orderBy('_id')" gaz-tooltip="'ui.search.sort.id.tooltip'" style="cursor: pointer;">#</a>
 				<i ng-show="search.sort == '_id' && search.order == 'asc'" class="icon-chevron-up"></i>
 				<i ng-show="search.sort == '_id' && search.order == 'desc'" class="icon-chevron-down"></i>
 			</th>
 			<th>
-				<a ng-click="orderBy('prefName.title.sort')" gaz-tooltip="'ui.search.sort.name.tooltip'"><s:message code="domain.placename.title" text="domain.placename.title" /></a>
+				<a ng-click="orderBy('prefName.title.sort')" gaz-tooltip="'ui.search.sort.name.tooltip'" style="cursor: pointer;"><s:message code="domain.placename.title" text="domain.placename.title" /></a>
 				<i ng-show="search.sort == 'prefName.title.sort' && search.order == 'asc'" class="icon-chevron-up"></i>
 				<i ng-show="search.sort == 'prefName.title.sort' && search.order == 'desc'" class="icon-chevron-down"></i>
 			</th>
 			<th>
-				<a ng-click="orderBy('type')" gaz-tooltip="'ui.search.sort.type.tooltip'"><s:message code="domain.place.type" text="domain.place.type" /></a>
-				<i ng-show="search.sort == 'type' && search.order == 'asc'" class="icon-chevron-up"></i>
-				<i ng-show="search.sort == 'type' && search.order == 'desc'" class="icon-chevron-down"></i>
+				<a ng-click="orderBy('types')" gaz-tooltip="'ui.search.sort.type.tooltip'" style="cursor: pointer;"><s:message code="domain.place.type" text="domain.place.type" /></a>
+				<i ng-show="search.sort == 'types' && search.order == 'asc'" class="icon-chevron-up"></i>
+				<i ng-show="search.sort == 'types' && search.order == 'desc'" class="icon-chevron-down"></i>
 			</th>
 			<th style="width:30px"><s:message code="domain.place.uri" text="domain.place.uri" /></th>
 		</tr>

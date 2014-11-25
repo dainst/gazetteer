@@ -13,6 +13,7 @@ messages.factory('messages', function(){
 		"ui.search.sort.score.tooltip": "Nach Relevanz sortieren",
 		"ui.search.sort.id.tooltip": "Nach ID sortieren",
 		"ui.search.sort.name.tooltip": "Nach Namen sortieren",
+		"ui.search.sort.type.tooltip": "Nach Art sortieren",
 		"ui.search.sort.thesaurus.tooltip": "Nach Thesaurus sortieren",
 		"ui.place.names.more": "mehr",
 		"ui.place.names.less": "weniger",
