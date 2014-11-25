@@ -78,14 +78,7 @@
 					<td ng-repeat="(facetName,facet) in facets" style="border: 0; vertical-align:top; padding:2px 8px;">
 						<table>
 							<tr>
-								<td ng-show="facet.length == 1">
-									<ul class="unstyled" style="margin:0;">
-										<li>
-											<small><i class="icon-angle-right"></i>{{facet[0].label}}</small>
-										</li>
-									</ul>
-								</td>
-								<td style="vertical-align:top;" ng-show="facet.length > 1">
+								<td style="vertical-align:top;" ng-show="facet.length > 0">
 									<ul class="unstyled" style="margin:0;">
 										<li ng-repeat="entry in facet | orderBy:'count':true | limitTo:5">
 											<small>
