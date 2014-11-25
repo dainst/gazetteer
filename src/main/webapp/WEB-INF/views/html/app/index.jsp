@@ -6,9 +6,9 @@
 <%@ page contentType="text/html; charset=utf-8" session="false"%>
 
 <!doctype html>
-<html ng-app="gazetteer">
+<html ng-app="gazetteer" ng-controller="AppCtrl">
 <head>
-<title>iDAI.gazetteer</title>
+<title ng-bind="pageTitle">iDAI.gazetteer</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" href="resources/ico/favicon.ico">
@@ -30,7 +30,7 @@
 <script src="../resources/js/lib/angular/angular-ui.js"></script>
 <script src="../resources/js/lib/angular/ui-bootstrap-custom-0.4.0.min.js"></script>
 </head>
-<body class="ng-cloak" ng-controller="AppCtrl">
+<body class="ng-cloak">
 	<style type="text/css">
 		.suggestion {
 			display: block;

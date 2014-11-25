@@ -9,7 +9,7 @@
 <!doctype html>
 <html>
 <head>
-<title>iDAI.gazetteer</title>
+<title><s:message code="ui.globalChangeHistory" text="ui.globalChangeHistory" /> | iDAI.gazetteer</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="google-site-verification" content="axehIuQKDs9bKUYzUl7hj1IvFMePho1--MppShoNQWk" />

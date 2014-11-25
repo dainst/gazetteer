@@ -5,6 +5,7 @@ function AppCtrl($scope, $location, $rootScope, Place) {
 	
 	$scope.q = null;
 	$scope.type = "";
+	$rootScope.pageTitle = "iDAI.gazetteer";
 	$rootScope.title = "";
 	$rootScope.subtitle = "";
 	
@@ -140,6 +141,7 @@ function HomeCtrl($scope, $location, $rootScope, Place) {
 	$rootScope.showHeader = false;
 	$rootScope.showNavbarSearch = false;
 	$rootScope.viewClass = "";
+	$rootScope.pageTitle = "iDAI.gazetteer";
 	$rootScope.title = "";
 	$rootScope.subtitle = "";
 	$rootScope.isFocused = false;
@@ -283,6 +285,7 @@ function HomeCtrl($scope, $location, $rootScope, Place) {
 
 function ExtendedSearchCtrl($scope, $rootScope, $location, messages) {
 	
+	$rootScope.pageTitle = messages["ui.extendedSearch"] + " | iDAI.gazetteer";
 	$rootScope.title = messages["ui.extendedSearch"];
 	$rootScope.subtitle = "";
 	$rootScope.showMap = true;
@@ -430,6 +433,7 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages) {
 
 function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages) {
 	
+	$rootScope.pageTitle = messages["ui.search.results"] + " | iDAI.gazetteer";
 	$rootScope.title = messages["ui.search.results"];
 	$rootScope.subtitle = "";
 	$rootScope.showMap = true;
@@ -575,6 +579,7 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 function CreateCtrl($scope, $rootScope, $routeParams, $location, Place, messages) {
 	
 	$scope.place = { prefLocation: { publicSite: true } };
+	$rootScope.pageTitle = messages["ui.create"] + " | iDAI.gazetteer";
 	$rootScope.title = messages["ui.create"];
 	$rootScope.subtitle = "";
 	$rootScope.showMap = true;
@@ -665,6 +670,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 	$rootScope.viewClass = "span7";
 	$rootScope.isFocused = true;
 	
+	$rootScope.pageTitle = "iDAI.gazetteer";
 	$rootScope.title = "";
 	$rootScope.subtitle = "";
 	
@@ -684,8 +690,10 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 				$scope.prefLocationCoordinates = $scope.place.prefLocation.coordinates.slice();
 				$scope.prefLocationCoordinates.reverse();
 			}
-			if ($scope.place.accessDenied)
+			if ($scope.place.accessDenied) {
 				$rootScope.title = messages["ui.place.hiddenPlace"];
+				$rootScope.pageTitle = messages["ui.place.hiddenPlace"] + " | iDAI.gazetteer";
+			}
 			if (!$scope.place.prefLocation && !$scope.hasType("archaeological-site"))
 				$scope.place.prefLocation = { publicSite : true };			
 			if ($scope.hasType("archaeological-site"))
@@ -746,8 +754,10 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 	
 	// show live changes of title
 	$scope.$watch("place.prefName.title", function() {
-		if ($scope.place && $scope.place.prefName)
+		if ($scope.place && $scope.place.prefName) {
 			$rootScope.title = $scope.place.prefName.title;
+			$rootScope.pageTitle = $scope.place.prefName.title + " | iDAI.gazetteer";
+		}
 	});
 	
 	// show live changes of location coordinates
@@ -1117,6 +1127,7 @@ function MergeCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 
 function ThesaurusCtrl($scope, $rootScope, $location, Place, messages, $route) {
 	
+	$rootScope.pageTitle = messages["ui.thesaurus"] + " | iDAI.gazetteer";
 	$rootScope.title = messages["ui.thesaurus"];
 	$rootScope.subtitle = "";
 	$rootScope.showMap = true;
