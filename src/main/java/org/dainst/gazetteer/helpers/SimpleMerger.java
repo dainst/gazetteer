@@ -82,11 +82,6 @@ public class SimpleMerger implements Merger {
 			result.setPrefLocation(place2.getPrefLocation());
 		}
 		
-		if (place1.getParent() != null && !place1.getParent().isEmpty())
-			result.setParent(place1.getParent());
-		else
-			result.setParent(place2.getParent());
-		
 		// the id is always determined by the first parameter of this function
 		if (newHasPriority) result.setId(place2.getId());
 		else result.setId(place1.getId());
@@ -101,6 +96,19 @@ public class SimpleMerger implements Merger {
 			child.setParent(result.getId());
 			placeRepository.save(child);
 		}
+		
+		if (place1.getParent() != null && !place1.getParent().isEmpty()) {
+			result.setParent(place1.getParent());
+			
+			Place otherParent = placeRepository.findOne(place2.getParent());
+			if (otherParent != null) {
+				result.getRelatedPlaces().add(otherParent.getId());
+				otherParent.getRelatedPlaces().add(result.getId());
+				placeRepository.save(otherParent);
+			}
+		}
+		else
+			result.setParent(place2.getParent());
 		
 		if (place1.getNoteReisestipendium() != null && !place1.getNoteReisestipendium().isEmpty())
 			result.setNoteReisestipendium(place1.getNoteReisestipendium());
