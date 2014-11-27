@@ -449,6 +449,10 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 	$scope.total = 0;
 	$scope.zoom = 2;
 	$scope.facets = null;
+	$scope.coordinatesFilter = false;
+	$scope.noCoordinatesFilter = false;
+	$scope.polygonFilter = false;
+	$scope.noPolygonFilter = false;
 	
 	// search while zooming
 	$scope.$watch(function() { return $scope.bbox.join(","); }, function() {
