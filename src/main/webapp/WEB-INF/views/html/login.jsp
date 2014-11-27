@@ -31,7 +31,7 @@
 <body>
 
 	<div class="archaeo-fixed-menu">
-		<div class="container archaeo-fixed-menu-header">
+		<div class="gaz-container archaeo-fixed-menu-header">
 			<div class="btn-group pull-right" style="margin-top:12px">
 				<a href="register?r=${r}" class="btn btn-small btn-primary">
 					<s:message code="ui.register" text="ui.register"/>
@@ -45,7 +45,7 @@
 		</div>
 		<div class="affix-menu-wrapper">
 			<div id="affix-menu" style="z-index: 100000"
-				class="navbar navbar-inverse container" data-spy="affix">
+				class="navbar navbar-inverse gaz-container" data-spy="affix">
 				<div class="navbar-inner">
 					<div id="archaeo-fixed-menu-icon"></div>
 					<a class="btn btn-navbar" data-toggle="collapse"
@@ -73,7 +73,7 @@
 		</div>
 	</div>
 
-	<div class="container">
+	<div class="gaz-container">
 	
 		<c:if test="${not empty error}">
 			<div class="alert alert-error">

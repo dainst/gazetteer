@@ -35,7 +35,7 @@
 <body>
 
 	<div class="archaeo-fixed-menu">
-		<div class="container archaeo-fixed-menu-header">
+		<div class="gaz-container archaeo-fixed-menu-header">
 			<div class="btn-group pull-right" style="margin-top:12px">
 				<button type="button" class="btn btn-primary btn-small dropdown-toggle" data-toggle="dropdown">
    					<sec:authentication property="principal.username" /> <span class="caret"></span>
@@ -81,7 +81,7 @@
 		</div>
 		<div class="affix-menu-wrapper">
 			<div id="affix-menu" style="z-index: 100000"
-				class="navbar navbar-inverse container" data-spy="affix">
+				class="navbar navbar-inverse gaz-container" data-spy="affix">
 				<div class="navbar-inner">
 					<div id="archaeo-fixed-menu-icon"></div>
 					<a class="btn btn-navbar" data-toggle="collapse"
@@ -114,7 +114,7 @@
 		</div>
 	</div>
 
-	<div class="container">
+	<div class="gaz-container">
 		
 		<h3>
 			<s:message code="ui.globalChangeHistory" text="ui.globalChangeHistory" />
