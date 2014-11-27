@@ -140,7 +140,7 @@ public class SearchController {
 		if (!"true".equals(showInReview)) query.addFilter("needsReview:false");		
 		query.addFacet("parent");
 		query.addFacet("types");
-		//query.addFacet("tags");
+		query.addFacet("tags");
 		
 		if (bbox != null && bbox.length > 0) {
 			query.addBBoxFilter(bbox[0], bbox[1], bbox[2], bbox[3]);

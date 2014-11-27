@@ -56,7 +56,7 @@
 
 	<div scroll-position="scrollPosition"></div>
 	<div class="archaeo-fixed-menu">
-		<div class="container archaeo-fixed-menu-header">
+		<div class="gaz-container archaeo-fixed-menu-header">
 			<sec:authorize access="isAnonymous()">
 				<div class="btn-group pull-right" style="margin-top:12px">
 					<a href="javascript:window.location.href='../login?r=' + window.location.hash.substring(3);" class="btn btn-small btn-primary">
@@ -116,7 +116,7 @@
 		</div>
 		<div class="affix-menu-wrapper">
 			<div id="affix-menu" style="z-index: 100000"
-				class="navbar navbar-inverse container" data-spy="affix">
+				class="navbar navbar-inverse gaz-container" data-spy="affix">
 				<div class="navbar-inner">
 					<div id="archaeo-fixed-menu-icon"></div>
 					<a class="btn btn-navbar" data-toggle="collapse"
@@ -160,7 +160,7 @@
 		</div>
 	</div>
 	
-	<div class="container">
+	<div class="gaz-container">
 	
 		<c:if test="${successMessage eq 'register'}">
 			<div class="alert alert-success">
@@ -190,14 +190,14 @@
 			</h2>
 		</div>
 		
-		<div class="row-fluid">		
+		<div class="row-fluid">
 			<div class="span5" id="map-well-wrapper" ng-style="mapContainerStyle">
 				<div class="well" style="width: 430px;" id="map-well">
 					<div gaz-map places="activePlaces" height="500" zoom="zoom" bbox="bbox" highlight="highlight"></div>
 				</div>
 			</div>
 			
-			<div class="{{viewClass}}" ng-view style="min-height:530px"></div>			
+			<div class="{{viewClass}}" ng-view style="min-height: 530px;"></div>
 		</div>
 		
 		<!-- Footer -->
