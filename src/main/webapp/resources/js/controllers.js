@@ -475,7 +475,10 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 	};
 	
 	$scope.totalPages = function() {
-		return ($scope.total - ($scope.total % $scope.search.limit)) / $scope.search.limit + 1;
+		var totalPages = ($scope.total - ($scope.total % $scope.search.limit)) / $scope.search.limit;
+		if ($scope.total % $scope.search.limit > 0 || totalPages == 0)
+			totalPages += 1;
+		return totalPages;
 	};
 	
 	$scope.setLimit = function(limit) {
