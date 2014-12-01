@@ -16,7 +16,7 @@ template = '{
   "prefName": {
     "title": "#{_[0]}",
     "language": "#{_[1]}",
-    "ancient": #{_[2].gsub(/yes/,\'true\').gsub(/no/,\'false\')}
+    "ancient": #{ case _[2]; when \'yes\' then true; else false; end }
   },
   "types": [ "#{_[3]}" ],
   "prefLocation": {
