@@ -186,8 +186,8 @@ CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
   place[:prefName].delete(:language) if place[:prefName][:language].to_s.empty?
   place[:prefName].delete(:ancient) if !place[:prefName][:ancient]
   place[:prefName][:title] = "-Untitled-" if place[:prefName][:title].to_s.empty?
-  if place[:alternativeNames] 
-    place[:alternativeNames].delete_if { |id| id[:title].to_s.empty? }
+  if place[:names] 
+    place[:names].delete_if { |id| id[:title].to_s.empty? }
   end
   place.delete(:types) if place[:types].empty?
   place.delete(:prefLocation) if place[:prefLocation] and place[:prefLocation][:coordinates] == [0, 0]
