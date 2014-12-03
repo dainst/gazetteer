@@ -90,7 +90,7 @@
 		<br/>
 	</span>
 	
-	<span ng-hide="!parents" ng-cloak>
+	<span ng-hide="!parents || parents.length == 0" ng-cloak>
 		<dt><s:message code="domain.place.parent" text="domain.place.parent" /></dt>
 		<dd ng-repeat="parent in parents">
 			<div style="margin-left: {{$index * 16}}px;"><i ng-show="$index != 0" class="icon-caret-right"></i><div gaz-place-title place="parent"></div></div>
