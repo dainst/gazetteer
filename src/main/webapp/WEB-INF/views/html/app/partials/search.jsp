@@ -118,7 +118,7 @@
 				</tr>
 			</tbody>
 		</table>
-		<table class="table table-condensed" style="width: auto; margin-bottom: 0;" ng-show="places.length > 0">
+		<table class="table table-condensed" style="width: auto; margin-bottom: 0;">
 			<thead>
 				<tr>
 					<th><span gaz-translate="'ui.search.filter'"></span></th>
@@ -126,51 +126,51 @@
 			</thead>
 			<tbody>
 				<tr>
-					<td ng-hide="noCoordinatesFilter">
+					<td ng-hide="filters.noCoordinates">
 						<label class="checkbox inline">
-							<input type="checkbox" ng-model="coordinatesFilter" />
+							<input type="checkbox" ng-model="filters.coordinates" />
 							<span gaz-translate="'ui.search.filter.coordinates'"></span>
 						</label>
 					</td>
-					<td ng-show="noCoordinatesFilter">
+					<td ng-show="filters.noCoordinates">
 						<label class="checkbox inline" style="cursor: default !important;">
-							<input type="checkbox" ng-model="coordinatesFilter" disabled />
+							<input type="checkbox" ng-model="filters.coordinates" disabled />
 							<span gaz-translate="'ui.search.filter.coordinates'" style="color: grey;"></span>
 						</label>
 					</td>
-					<td ng-hide="coordinatesFilter" style="padding-left: 20px;">
+					<td ng-hide="filters.coordinates" style="padding-left: 20px;">
 						<label class="checkbox inline">
-							<input type="checkbox" ng-model="noCoordinatesFilter" />
+							<input type="checkbox" ng-model="filters.noCoordinates" />
 							<span gaz-translate="'ui.search.filter.no-coordinates'"></span>
 						</label>
 					</td>
-					<td ng-show="coordinatesFilter" style="padding-left: 20px;">
+					<td ng-show="filters.coordinates" style="padding-left: 20px;">
 						<label class="checkbox inline" style="cursor: default !important;">
-							<input type="checkbox" ng-model="noCoordinatesFilter" disabled />
+							<input type="checkbox" ng-model="filters.noCoordinates" disabled />
 							<span gaz-translate="'ui.search.filter.no-coordinates'" style="color: grey;"></span>
 						</label>
 					</td>
-					<td ng-hide="noPolygonFilter" style="padding-left: 20px;">
+					<td ng-hide="filters.noPolygon" style="padding-left: 20px;">
 						<label class="checkbox inline">
-							<input type="checkbox" ng-model="polygonFilter" />
+							<input type="checkbox" ng-model="filters.polygon" />
 							<span gaz-translate="'ui.search.filter.polygon'"></span>
 						</label>
 					</td>
-					<td ng-show="noPolygonFilter" style="padding-left: 20px;">
+					<td ng-show="filters.noPolygon" style="padding-left: 20px;">
 						<label class="checkbox inline" style="cursor: default !important;">
-							<input type="checkbox" ng-model="polygonFilter" disabled />
+							<input type="checkbox" ng-model="filters.polygon" disabled />
 							<span gaz-translate="'ui.search.filter.polygon'" style="color: grey;"></span>
 						</label>
 					</td>
-					<td ng-hide="polygonFilter" style="padding-left: 20px;">
+					<td ng-hide="filters.polygon" style="padding-left: 20px;">
 						<label class="checkbox inline">
-							<input type="checkbox" ng-model="noPolygonFilter" />
+							<input type="checkbox" ng-model="filters.noPolygon" />
 							<span gaz-translate="'ui.search.filter.no-polygon'"></span>
 						</label>
 					</td>
-					<td ng-show="polygonFilter" style="padding-left: 20px;">
+					<td ng-show="filters.polygon" style="padding-left: 20px;">
 						<label class="checkbox inline" style="cursor: default !important;">
-							<input type="checkbox" ng-model="noPolygonFilter" disabled />
+							<input type="checkbox" ng-model="filters.noPolygon" disabled />
 							<span gaz-translate="'ui.search.filter.no-polygon'" style="color: grey;"></span>
 						</label>
 					</td>
@@ -208,9 +208,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr ng-repeat="place in places" ng-click="$location.path('show/'+place.gazId)" ng-mouseover="setHighlight(place.gazId)" ng-mouseout="setHighlight(null)" ng-class="{info: place.gazId==highlight}"
-				ng-show="(!coordinatesFilter || place.prefLocation.coordinates) && (!noCoordinatesFilter || !place.prefLocation.coordinates)
-				 && (!polygonFilter || place.prefLocation.shape) && (!noPolygonFilter || !place.prefLocation.shape)">
+		<tr ng-repeat="place in places" ng-click="$location.path('show/'+place.gazId)" ng-mouseover="setHighlight(place.gazId)" ng-mouseout="setHighlight(null)" ng-class="{info: place.gazId==highlight}">
 			<td></td>
 			<td>{{place.gazId}}</td>
 			<td>

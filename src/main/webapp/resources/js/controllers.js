@@ -449,11 +449,13 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 	$scope.total = 0;
 	$scope.zoom = 2;
 	$scope.facets = null;
-	$scope.coordinatesFilter = false;
-	$scope.noCoordinatesFilter = false;
-	$scope.polygonFilter = false;
-	$scope.noPolygonFilter = false;
-	
+	$scope.filters = {
+			coordinatesFilter : false,
+			noCoordinatesFilter : false,
+			polygonFilter : false,
+			noPolygonFilter : false
+	};
+		
 	// search while zooming
 	$scope.$watch(function() { return $scope.bbox.join(","); }, function() {
 		if ($scope.bbox.length == 4) {
@@ -466,7 +468,7 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 		$rootScope.subtitle = $scope.total + " " + messages["ui.search.hits"];
 	});
 	
-	$scope.$watch(("places"), function() {
+	$scope.$watch("places", function() {
 		$rootScope.activePlaces = $scope.places;
 	});
 	
@@ -514,6 +516,9 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 	
 	$scope.submit = function() {
 		$rootScope.loading++;
+		
+		$scope.updateFilters();
+		
 		Place.query($scope.search, function(result) {
 			$scope.parents = {};
 			$scope.places = result.result;
@@ -551,6 +556,61 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 		}
 		$scope.search.offset = 0;
 		$location.search($scope.search);
+	};
+	
+	$scope.$watch("filters.coordinates", function() { $scope.changeFilters(); });
+	
+	$scope.$watch("filters.noCoordinates", function() { $scope.changeFilters(); });
+	
+	$scope.$watch("filters.polygon", function() { $scope.changeFilters(); });
+	
+	$scope.$watch("filters.noPolygon", function() { $scope.changeFilters(); });
+	
+	$scope.changeFilters = function() {
+		$scope.search.offset = 0;
+		$scope.updateFilters();
+		$location.search($scope.search);
+	};
+	
+	$scope.updateFilters = function() {
+		var filterQuery = "";
+		if ($scope.filters.coordinates)
+			filterQuery += "_exists_:prefLocation.coordinates";
+		else if ($scope.filters.noCoordinates)
+			filterQuery += "_missing_:prefLocation.coordinates";
+		if ($scope.filters.polygon) {
+			if (filterQuery != "")
+				filterQuery += " AND ";
+			filterQuery += "_exists_:prefLocation.shape";
+		}
+		else if ($scope.filters.noPolygon) {
+			if (filterQuery != "")
+				filterQuery += " AND ";
+			filterQuery += "_missing_:prefLocation.shape";
+		}
+		
+		if ($scope.search.fq) {
+			$scope.search.fq = $scope.search.fq.replace(" AND _exists_:prefLocation.coordinates", "");
+			$scope.search.fq = $scope.search.fq.replace("_exists_:prefLocation.coordinates", "");
+			$scope.search.fq = $scope.search.fq.replace(" AND _missing_:prefLocation.coordinates", "");
+			$scope.search.fq = $scope.search.fq.replace("_missing_:prefLocation.coordinates", "");
+			$scope.search.fq = $scope.search.fq.replace(" AND _exists_:prefLocation.shape", "");
+			$scope.search.fq = $scope.search.fq.replace("_exists_:prefLocation.shape", "");
+			$scope.search.fq = $scope.search.fq.replace(" AND _missing_:prefLocation.shape", "");
+			$scope.search.fq = $scope.search.fq.replace("_missing_:prefLocation.shape", "");
+				
+			if ($scope.search.fq.slice(0, 5) == " AND ")
+				$scope.search.fq = $scope.search.fq.slice(4);
+			
+			$scope.search.fq = $scope.search.fq.trim();
+			
+			if ($scope.search.fq != "" && filterQuery != "")
+				$scope.search.fq += " AND ";
+			
+			$scope.search.fq += filterQuery;
+		}
+		else
+			$scope.search.fq = filterQuery;
 	};
 	
 	// needed to keep $scope.search and $location.search() in sync
@@ -694,7 +754,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 			}
 			$scope.prefLocationCoordinates = [];
 			if ($scope.place && $scope.place.prefLocation && $scope.place.prefLocation.coordinates) {
-				$scope.prefLocationCoordinates = $scope.place.prefLocation.coordinates.slice();
+				$scope.prefLocationCoordinates = $scope.place.prefLocation.coordinates.slice(0);
 				$scope.prefLocationCoordinates.reverse();
 			}
 			if ($scope.place.accessDenied) {
@@ -754,7 +814,9 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 		if ($scope.place) {
 			if (!$scope.place.prefLocation)
 				$scope.place.prefLocation = { confidence: 0, coordinates: [] };
-			$scope.place.prefLocation.coordinates = $scope.prefLocationCoordinates.slice();
+			if (!$scope.prefLocationCoordinates)
+				$scope.prefLocationCoordinates = [];
+			$scope.place.prefLocation.coordinates = $scope.prefLocationCoordinates.slice(0);
 			$scope.place.prefLocation.coordinates.reverse();
 		}
 	});
