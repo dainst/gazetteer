@@ -741,6 +741,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 	$rootScope.title = "";
 	$rootScope.subtitle = "";
 	
+	$scope.parents = [];
 	$scope.namesDisplayed = 4;
 	$scope.prefLocationCoordinates = [];
 
@@ -767,8 +768,8 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 				$scope.location.publicSite = false;
 			if (result.parent) {
 				$rootScope.loading++;
-				var parentId = getIdFromUri(result.parent);
-				$scope.parent = Place.get({id:parentId});
+				$scope.parent = Place.get({id:result.parent});
+				$scope.getParent(result, 0);
 				$rootScope.loading--;
 			}
 			$rootScope.loading++;
@@ -852,6 +853,16 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 			$scope.namesDisplayed = 10000;
 		else
 			$scope.namesDisplayed = 4;
+	};
+	
+	$scope.getParent = function(place, listIndex) {		
+		var parentId = getIdFromUri(place.parent);
+		var parent = null;
+		parent = Place.get({id:parentId}, function(result) {
+			if (result.parent)
+				$scope.getParent(result, listIndex + 1);
+		});		
+		$scope.parents[listIndex] = parent;
 	};
 
 	$scope.prevChildren = function() {
