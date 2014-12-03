@@ -190,9 +190,9 @@
 				<i ng-show="search.sort == '_score' && search.order == 'desc'" class="icon-chevron-down"></i>
 			</th>
 			<th style="width:50px">
-				<a ng-click="orderBy('_id')" gaz-tooltip="'ui.search.sort.id.tooltip'" style="cursor: pointer;">#</a>
-				<i ng-show="search.sort == '_id' && search.order == 'asc'" class="icon-chevron-up"></i>
-				<i ng-show="search.sort == '_id' && search.order == 'desc'" class="icon-chevron-down"></i>
+				<a ng-click="orderBy('_uid')" gaz-tooltip="'ui.search.sort.id.tooltip'" style="cursor: pointer;">#</a>
+				<i ng-show="search.sort == '_uid' && search.order == 'asc'" class="icon-chevron-up"></i>
+				<i ng-show="search.sort == '_uid' && search.order == 'desc'" class="icon-chevron-down"></i>
 			</th>
 			<th>
 				<a ng-click="orderBy('prefName.title.sort')" gaz-tooltip="'ui.search.sort.name.tooltip'" style="cursor: pointer;"><s:message code="domain.placename.title" text="domain.placename.title" /></a>
