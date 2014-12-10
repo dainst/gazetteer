@@ -6,6 +6,7 @@ import org.elasticsearch.client.Client;
 import org.elasticsearch.index.query.FilterBuilders;
 import org.elasticsearch.index.query.GeoBoundingBoxFilterBuilder;
 import org.elasticsearch.index.query.GeoDistanceFilterBuilder;
+import org.elasticsearch.index.query.GeoPolygonFilterBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.QueryFilterBuilder;
@@ -132,6 +133,15 @@ public class ElasticSearchPlaceQuery {
 		queryBuilder = QueryBuilders.filteredQuery(queryBuilder, filterBuilder);
 		return this;
 	}
+	
+	public ElasticSearchPlaceQuery addPolygonFilter(double[][] coordinates) {
+		GeoPolygonFilterBuilder filterBuilder = FilterBuilders.geoPolygonFilter("prefLocation.coordinates");
+		for (double[] lngLat : coordinates) {
+			filterBuilder.addPoint(lngLat[1], lngLat[0]);
+		}
+		queryBuilder = QueryBuilders.filteredQuery(queryBuilder, filterBuilder);
+		return this;
+	};
 
 	public void listAll() {
 		queryBuilder = QueryBuilders.matchAllQuery();		

@@ -593,6 +593,7 @@ directives.directive('gazMap', function($location) {
 			zoom: "=",
 			bbox: "=",
 			highlight: "=",
+			map: "=",
 			height: "@"
 		},
 		templateUrl: 'partials/map.html',

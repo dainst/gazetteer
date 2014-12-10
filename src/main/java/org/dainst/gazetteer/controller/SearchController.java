@@ -82,6 +82,7 @@ public class SearchController {
 			@RequestParam(required=false) String callback,
 			@RequestParam(required=false) String showInReview,
 			@RequestParam(required=false) double[] bbox,
+			@RequestParam(required=false) double[] polygonFilterCoordinates,
 			@RequestParam(required=false) boolean showHiddenPlaces,
 			HttpServletRequest request,
 			HttpServletResponse response) {
@@ -99,6 +100,7 @@ public class SearchController {
 		logger.debug("Searching places with query: " + q + ", fq: " + fq + ", limit: " + limit + ", offset: " + offset + ", type: " + type);
 		
 		ElasticSearchPlaceQuery query = new ElasticSearchPlaceQuery(client);
+		
 		if (q != null) {
 			q = q.replace("/", "\\/");
 			
@@ -110,9 +112,9 @@ public class SearchController {
 		} else {
 			query.listAll();
 		}
-		if (fq != null && !fq.isEmpty()) {
+		
+		if (fq != null && !fq.isEmpty())
 			query.addFilter(fq);
-		}
 		
 		if (!showHiddenPlaces) {
 			String recordGroupFilter = "_missing_:recordGroupId";
@@ -145,6 +147,20 @@ public class SearchController {
 		if (bbox != null && bbox.length > 0) {
 			query.addBBoxFilter(bbox[0], bbox[1], bbox[2], bbox[3]);
 		}
+		
+		if (polygonFilterCoordinates != null && polygonFilterCoordinates.length > 0) {
+			
+			double[][] polygon = new double[polygonFilterCoordinates.length / 2][];
+			
+			for (int i = 0; i < polygonFilterCoordinates.length / 2; i++) {
+				polygon[i] = new double[2];
+				polygon[i][0] = polygonFilterCoordinates[i * 2];
+				polygon[i][1] = polygonFilterCoordinates[i * 2 + 1];
+			}
+			
+			query.addPolygonFilter(polygon);
+		} else
+			throw new RuntimeException();
 		
 		// get ids from elastic search
 		String[] result = query.execute();
@@ -215,9 +231,10 @@ public class SearchController {
 		query.addFilter(recordGroupFilter);
 		
 		if (!"true".equals(showInReview)) query.addFilter("needsReview:false");
+		
 		query.addFacet("parent");
 		query.addFacet("types");
-		//query.addFacet("tags");
+		query.addFacet("tags");
 		
 		logger.debug("executing extended search with query: {}", jsonQuery);
 		
@@ -286,7 +303,7 @@ public class SearchController {
 		if (!"true".equals(showInReview)) query.addFilter("needsReview:false");
 		query.addFacet("parent");
 		query.addFacet("types");
-		//query.addFacet("tags");
+		query.addFacet("tags");
 		
 		if (filter != null) {
 			query.addFilter(filter);

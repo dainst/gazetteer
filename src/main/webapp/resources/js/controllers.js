@@ -305,6 +305,56 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages) {
 	$scope.ids = { value: "", context: ""};
 	$scope.fuzzy = false;
 	$scope.hasCoordinates = false;
+	$scope.geoSearchPolygon = new google.maps.Polygon({
+		strokeColor: "#FF0000",
+		strokeOpacity: 0.8,
+		strokeWeight: 2,
+		fillColor: "#FF0000",
+		fillOpacity: 0.35,
+		draggable: true,
+		editable: true
+	});
+	
+	google.maps.event.addListener($rootScope.map, "click", function(event) {
+		
+		var scale = Math.pow(2, $rootScope.map.getZoom());
+		var clickPosition = $rootScope.map.getProjection().fromLatLngToPoint(event.latLng);	
+		var northWestPosition = $rootScope.map.getProjection().fromLatLngToPoint(
+				new google.maps.LatLng($rootScope.map.getBounds().getNorthEast().lat(), $rootScope.map.getBounds().getSouthWest().lng()));
+		var clickPositionX = Math.floor((clickPosition.x - northWestPosition.x) * scale);
+		var clickPositionY = Math.floor((clickPosition.y - northWestPosition.y) * scale);		
+		
+		var polygonCoordinates = [ $rootScope.map.getProjection().fromPointToLatLng(new google.maps.Point((clickPositionX - 50) / scale + northWestPosition.x, (clickPositionY - 50) / scale + northWestPosition.y)), 
+		                           $rootScope.map.getProjection().fromPointToLatLng(new google.maps.Point((clickPositionX + 50) / scale + northWestPosition.x, (clickPositionY - 50) / scale + northWestPosition.y)),
+								   $rootScope.map.getProjection().fromPointToLatLng(new google.maps.Point((clickPositionX + 50) / scale + northWestPosition.x, (clickPositionY + 50) / scale + northWestPosition.y)),
+								   $rootScope.map.getProjection().fromPointToLatLng(new google.maps.Point((clickPositionX - 50) / scale + northWestPosition.x, (clickPositionY + 50) / scale + northWestPosition.y)) 
+								 ];
+		
+		$scope.geoSearchPolygon.setPath(polygonCoordinates);		
+		$scope.geoSearchPolygon.setMap($rootScope.map);
+		
+		$rootScope.map.setOptions({ disableDoubleClickZoom: true });
+	});
+	
+	google.maps.event.addListener($rootScope.map, "rightclick", function(event) {
+		if ($scope.geoSearchPolygon.getMap() == null) {
+			$rootScope.map.setOptions({ disableDoubleClickZoom: false });
+			console.log("[]");
+		}
+		else {
+			$scope.geoSearchPolygon.setPath([]);
+			$scope.geoSearchPolygon.setMap(null);
+			console.log("!");
+		}
+	});
+
+	$scope.$on("$destroy", function() {
+		$scope.geoSearchPolygon.setPath([]);
+		$scope.geoSearchPolygon.setMap(null);		
+		google.maps.event.clearListeners($rootScope.map, "click");
+		google.maps.event.clearListeners($rootScope.map, "rightclick");
+		$rootScope.map.setOptions({ disableDoubleClickZoom: false });
+    });
 	
 	$scope.submit = function() {
 		
@@ -424,8 +474,16 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages) {
 		}
 		
 		var query = { "bool": { "must": queries } };
+
+		var geoSearchCoordinates = [];
+		if ($scope.geoSearchPolygon.getMap() != null) {
+			for (var i = 0; i < $scope.geoSearchPolygon.getPath().getLength(); i++) {
+				geoSearchCoordinates[i * 2] = $scope.geoSearchPolygon.getPath().getAt(i).lng();
+				geoSearchCoordinates[i * 2 + 1] = $scope.geoSearchPolygon.getPath().getAt(i).lat();
+			}
+		}
 		
-		$location.path('/search').search({q:angular.toJson(query), type: "extended"});
+		$location.path('/search').search({q:angular.toJson(query), polygonFilterCoordinates: geoSearchCoordinates, type: "extended"});
 		
 	};
 	
@@ -638,6 +696,7 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 		if ($location.search().sort) $scope.search.sort = $location.search().sort;
 		if ($location.search().order) $scope.search.order = $location.search().order;
 		if ($location.search().bbox) $scope.search.bbox = $location.search().bbox;
+		if ($location.search().polygonFilterCoordinates) $scope.search.polygonFilterCoordinates = $location.search().polygonFilterCoordinates;
 		if ($location.search().showInReview) $scope.search.showInReview = $location.search().showInReview;
 	}
 
