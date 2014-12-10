@@ -159,8 +159,7 @@ public class SearchController {
 			}
 			
 			query.addPolygonFilter(polygon);
-		} else
-			throw new RuntimeException();
+		}
 		
 		// get ids from elastic search
 		String[] result = query.execute();
