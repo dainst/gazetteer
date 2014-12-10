@@ -104,6 +104,12 @@
 		
 		<div class="control-group">
 			<div class="controls">
+				<label><s:message code="ui.extendedSearch.polygonFilterInfo" text="ui.extendedSearch.polygonFilterInfo" /></label>
+			</div>
+		</div>
+		
+		<div class="control-group">
+			<div class="controls">
 				<button type="reset" class="btn">
 					<s:message code="ui.reset" text="ui.reset" />
 					<i class="icon-remove-sign"></i>
