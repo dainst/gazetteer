@@ -337,14 +337,11 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages) {
 	});
 	
 	google.maps.event.addListener($rootScope.map, "rightclick", function(event) {
-		if ($scope.geoSearchPolygon.getMap() == null) {
+		if ($scope.geoSearchPolygon.getMap() == null)
 			$rootScope.map.setOptions({ disableDoubleClickZoom: false });
-			console.log("[]");
-		}
 		else {
 			$scope.geoSearchPolygon.setPath([]);
 			$scope.geoSearchPolygon.setMap(null);
-			console.log("!");
 		}
 	});
 
