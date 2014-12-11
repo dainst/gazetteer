@@ -283,7 +283,7 @@ function HomeCtrl($scope, $location, $rootScope, Place) {
 	};
 }
 
-function ExtendedSearchCtrl($scope, $rootScope, $location, messages) {
+function ExtendedSearchCtrl($scope, $rootScope, $location, messages, PolygonValidator) {
 	
 	$rootScope.pageTitle = messages["ui.extendedSearch"] + " | iDAI.gazetteer";
 	$rootScope.title = messages["ui.extendedSearch"];
@@ -332,6 +332,16 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages) {
 		
 		$scope.geoSearchPolygon.setPath(polygonCoordinates);		
 		$scope.geoSearchPolygon.setMap($rootScope.map);
+		
+		google.maps.event.addListener($scope.geoSearchPolygon.getPaths().getAt(0), "insert_at", function(index) {
+			if (PolygonValidator.checkForPathIntersection(this, this))
+				this.removeAt(index);
+		});
+		
+		google.maps.event.addListener($scope.geoSearchPolygon.getPaths().getAt(0), "set_at", function(index, oldLatLng) {
+			if (PolygonValidator.checkForPathIntersection(this, this))
+				this.setAt(index, oldLatLng);
+		});
 		
 		$rootScope.map.setOptions({ disableDoubleClickZoom: true });
 	});
