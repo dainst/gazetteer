@@ -3,10 +3,14 @@ package org.dainst.gazetteer.search;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Client;
+import org.elasticsearch.common.geo.ShapeRelation;
+import org.elasticsearch.common.geo.builders.PolygonBuilder;
+import org.elasticsearch.common.geo.builders.ShapeBuilder;
 import org.elasticsearch.index.query.FilterBuilders;
 import org.elasticsearch.index.query.GeoBoundingBoxFilterBuilder;
 import org.elasticsearch.index.query.GeoDistanceFilterBuilder;
 import org.elasticsearch.index.query.GeoPolygonFilterBuilder;
+import org.elasticsearch.index.query.GeoShapeFilterBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.QueryFilterBuilder;
@@ -18,6 +22,7 @@ import org.elasticsearch.search.facet.Facets;
 import org.elasticsearch.search.sort.GeoDistanceSortBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -135,11 +140,17 @@ public class ElasticSearchPlaceQuery {
 	}
 	
 	public ElasticSearchPlaceQuery addPolygonFilter(double[][] coordinates) {
-		GeoPolygonFilterBuilder filterBuilder = FilterBuilders.geoPolygonFilter("prefLocation.coordinates");
+		GeoPolygonFilterBuilder geoPolygonFilterBuilder = FilterBuilders.geoPolygonFilter("prefLocation.coordinates");
+		PolygonBuilder polygonBuilder = ShapeBuilder.newPolygon();
+		
 		for (double[] lngLat : coordinates) {
-			filterBuilder.addPoint(lngLat[1], lngLat[0]);
+			geoPolygonFilterBuilder.addPoint(lngLat[1], lngLat[0]);
+			polygonBuilder.point(lngLat[0], lngLat[1]);
 		}
-		queryBuilder = QueryBuilders.filteredQuery(queryBuilder, filterBuilder);
+		
+		GeoShapeFilterBuilder geoShapeFilterBuilder = FilterBuilders.geoShapeFilter("prefLocation.shape", polygonBuilder, ShapeRelation.INTERSECTS);
+		
+		queryBuilder = QueryBuilders.filteredQuery(queryBuilder, FilterBuilders.orFilter(geoPolygonFilterBuilder, geoShapeFilterBuilder));
 		return this;
 	};
 
