@@ -79,7 +79,7 @@ opts = OptionParser.new do |opts|
   	options.template = open(t).read
   end
 
-  opts.on("-T", "--temp-id ROW_NUMBER", "Use values in row ROW_NUMBER as temporary IDs.\n                                     Temporary IDs can be referenced in the template to with \"\#{id[_[ROW_NUMBER]]}\" in order to insert the generated gazetter IDs.\n                                     Note: In order for this mechanism to work referenced places have to occur before being referred to.\n                                     When no value is given the line number is used as the temporary ID.") do |t|
+  opts.on("-T", "--temp-id ROW_NUMBER", "Use values in row ROW_NUMBER as temporary IDs.\n                                     Temporary IDs can be referenced in the template with \"\#{id(_[ROW_NUMBER])}\" in order to insert the generated gazetter IDs.\n                                     Note: In order for this mechanism to work referenced places have to occur before being referred to.\n                                     When no value is given the line number is used as the temporary ID.") do |t|
   	options.temp_id = t.to_i
   end
 
@@ -94,7 +94,7 @@ opts = OptionParser.new do |opts|
   end
 
   options.replace = false
-  opts.on("-r", "--[no-]replace", "Replace existing data\n                                     when merging new data will have priority over existing data\n                                     when merging is switchted existing places with the same id will be replaced") do |r|
+  opts.on("-r", "--[no-]replace", "Replace existing data\n                                     when merging new data will have priority over existing data\n                                     when merging is switchted on existing places with the same id will be replaced") do |r|
     options.replace = r
   end
 
@@ -172,6 +172,7 @@ CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
   # create place object by applying template
   _ = row
   _.map! { |val| val.to_s } # convert nils to empty strings
+  _.map! { |val| val.strip } # remove leading and trailing whitespace
   eval_str = "\"#{options.template.gsub(/\"/){|m|"\\"+m}}\""
   begin
   	place = JSON.parse(eval(eval_str), :symbolize_names => true)
@@ -185,9 +186,16 @@ CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
   place.delete(:gazId) if place[:gazId].to_s.empty?
   place[:prefName].delete(:language) if place[:prefName][:language].to_s.empty?
   place[:prefName].delete(:ancient) if !place[:prefName][:ancient]
-  place[:prefName][:title] = "-Untitled-" if place[:prefName][:title].to_s.empty?
+  if place[:prefName][:title].to_s.empty?
+    if place[:names] && place[:names].size > 0
+      place[:prefName] = place[:names][0]
+      place[:names].shift
+    else
+      place[:prefName][:title] = "-Untitled-" 
+    end
+  end
   if place[:names] 
-    place[:names].delete_if { |id| id[:title].to_s.empty? }
+    place[:names].delete_if { |name| name[:title].to_s.empty? }
   end
   place.delete(:types) if place[:types].empty?
   place.delete(:prefLocation) if place[:prefLocation] and place[:prefLocation][:coordinates] == [0, 0]
