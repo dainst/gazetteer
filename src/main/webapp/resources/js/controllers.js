@@ -923,12 +923,13 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 	
 	$scope.getParent = function(place, listIndex) {		
 		var parentId = getIdFromUri(place.parent);
-		var parent = null;
-		parent = Place.get({id:parentId}, function(result) {
+		Place.get({id:parentId}, function(result) {
+			$scope.parents[listIndex] = result;
 			if (result.parent)
 				$scope.getParent(result, listIndex + 1);
-		});		
-		$scope.parents[listIndex] = parent;
+			else
+				$scope.parents.reverse();
+		});
 	};
 
 	$scope.prevChildren = function() {
