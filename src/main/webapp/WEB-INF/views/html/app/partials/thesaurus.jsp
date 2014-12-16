@@ -3,10 +3,10 @@
 
 <script type="text/ng-template" id="thesaurus-item.html">
 	<span>
-		<i class="icon-circle-arrow-right" ng-show="!place.isOpen" ng-click="open(place)"></i>
-		<i class="icon-circle-arrow-down" ng-show="place.isOpen && place.children" ng-click="close(place)"></i>
-		<i class="icon-circle-arrow-right icon-spin" ng-show="place.isOpen && !place.children"></i>
-		<i class="icon-circle" ng-show="place.isOpen && place.children.length == 0"></i>
+		<i class="icon-circle-arrow-right" style="color: #5572a1; cursor: pointer;" ng-show="!place.isOpen" ng-click="open(place)"></i>
+		<i class="icon-circle-arrow-down" style="color: #5572a1; cursor: pointer;" ng-show="place.isOpen && place.children" ng-click="close(place)"></i>
+		<i class="icon-circle-arrow-right icon-spin" style="color: #5572a1; cursor: pointer;" ng-show="place.isOpen && !place.children"></i>
+		<i class="icon-circle" style="cursor: default;" ng-show="place.isOpen && place.children.length == 0"></i>
 		<span ng-mouseover="showMarker(place)" ng-mouseout="hideMarker()">
 			<span gaz-place-title place="place"></span>
 		</span>
