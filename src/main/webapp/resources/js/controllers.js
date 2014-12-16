@@ -1,6 +1,5 @@
 'use strict';
 
-
 function AppCtrl($scope, $location, $rootScope, Place) {
 	
 	$scope.q = null;
@@ -593,9 +592,9 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 			for (var i=0; i < $scope.places.length; i++) {
 				$rootScope.loading++;				
 				if ($scope.places[i]) {		
-					if ($scope.places[i].parent && !$scope.parents[$scope.places[i].parent]) {
-						var parentId = getIdFromUri($scope.places[i].parent);					
-						$scope.parents[$scope.places[i].parent] = Place.get({id:parentId});
+					if ($scope.places[i].parent) {
+						$scope.parents[$scope.places[i].gazId] = [];
+						$scope.getParent($scope.places[i], $scope.places[i]);
 					}
 				}
 				$rootScope.loading--;
@@ -606,6 +605,16 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 			$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
 			$rootScope.loading--;
 		});
+	};
+	
+	$scope.getParent = function(place, originalPlace) {
+		if (place.parent) {
+			var parentId = getIdFromUri(place.parent);					
+			Place.get({id:parentId}, function(result) {
+				$scope.parents[originalPlace.gazId].push(result);
+				$scope.getParent(result, originalPlace);
+			});
+		}
 	};
 	
 	$scope.setFacet = function(facetName, term) {

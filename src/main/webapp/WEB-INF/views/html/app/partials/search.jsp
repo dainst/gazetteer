@@ -213,7 +213,7 @@
 			<td>{{place.gazId}}</td>
 			<td>
 				<div gaz-place-title place="place"></div>
-				<small class="muted">{{parents[place.parent].prefName.title}}</small>
+				<small class="muted"><span ng-repeat="parent in parents[place.gazId]">{{parent.prefName.title}}<span ng-show="$index < parents[place.gazId].length - 1">, </span></span></small>
 				<i class="icon-map-marker" ng-show="place.prefLocation"/>
 			</td>
 			<td><span ng-show="place.types && place.types.length > 0" gaz-translate="'place.types.' + place.types[0]"></span></td>
