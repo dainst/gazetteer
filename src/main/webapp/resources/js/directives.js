@@ -503,7 +503,7 @@ directives.directive('gazShapeEditor', function($document, PolygonValidator) {
 	};
 });
 
-directives.directive('gazMap', function($location) {
+directives.directive('gazMap', function($location, Place) {
 	
 	var blueIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png";
 	var defaultIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/red-dot.png";
@@ -536,6 +536,7 @@ directives.directive('gazMap', function($location) {
 				zoom: $scope.zoom,
 				mapTypeId: google.maps.MapTypeId.TERRAIN
 			};
+			$scope.mapLocationUpdateId = 0;
 			
 			$attrs.$observe('height', function(height) {
 				$element[0].style.height = height + "px";
@@ -550,7 +551,7 @@ directives.directive('gazMap', function($location) {
 			
 			$scope.markerClick = function(id) {
 				$location.path("/show/" + id);
-			};
+			}; 
 			
 			$scope.markerOver = function(id) {
 				$scope.highlight = id;
@@ -573,81 +574,117 @@ directives.directive('gazMap', function($location) {
 				}
 			});
 			
-			// add markers/shapes for locations and auto zoom and center map
 			$scope.$watch("places", function() {
-				$scope.markerMap = {};
-				for (var i in $scope.markers)
-					$scope.markers[i].setMap(null);
-				
-				for (var i in $scope.shapes)
-					$scope.shapes[i].setMap(null);
-				
-				if ($scope.places.length == 0) return;
-				
-				var bounds = new google.maps.LatLngBounds();
-				var ll = new google.maps.LatLng("0","0");
-				var shape = null;
-				var numLocations = 0;
-				for (var i in $scope.places) {	
-					var place = $scope.places[i];		
-					var title = "";
-					if (place.prefName) title = place.prefName.title;
-					if (place.prefLocation) {
-						if (place.prefLocation.coordinates) {
-							if (angular.isNumber(place.prefLocation.coordinates[0]) && angular.isNumber(place.prefLocation.coordinates[1])) {
-								ll = new google.maps.LatLng(place.prefLocation.coordinates[1], place.prefLocation.coordinates[0]);
-								$scope.markers[i] = new google.maps.Marker({
-									position: ll,
-									title: title,
-									map: $scope.map,
-									icon: defaultIcon,
-									shadow: defaultShadow
-								});
-								$scope.markerMap[place.gazId] = $scope.markers[i];
-								bounds.extend(ll);
-								numLocations++;
-							}
-						}
-						if (place.prefLocation.shape) {
-							var shapeCoordinates = [];
-							var counter = 0;
-							
-							for (var j = 0; j < place.prefLocation.shape.length; j++) {
-								for (var k = 0; k < place.prefLocation.shape[j].length; k++) {
-									var shapePolygonCoordinates = [];
-									for (var l = 0; l < place.prefLocation.shape[j][k].length; l++)
-										shapePolygonCoordinates[l] = new google.maps.LatLng(place.prefLocation.shape[j][k][l][1], place.prefLocation.shape[j][k][l][0]);
-									shapeCoordinates[counter] = shapePolygonCoordinates;
-									counter++;
+				$scope.mapLocationUpdateId += 1;
+				$scope.updatedMapLocations = 0;
+				for (var i in $scope.places) {
+					$scope.updateMapLocation($scope.places[i], $scope.places[i], $scope.mapLocationUpdateId);
+				}
+			});
+
+			// add markers/shapes for locations and auto zoom and center map
+			$scope.$watch("updatedMapLocations", function() {
+				if ($scope.updatedMapLocations == $scope.places.length) {
+					$scope.markerMap = {};
+					for (var i in $scope.markers)
+						$scope.markers[i].setMap(null);
+					
+					for (var i in $scope.shapes)
+						$scope.shapes[i].setMap(null);
+					
+					if ($scope.places.length == 0) return;
+					
+					var bounds = new google.maps.LatLngBounds();
+					var ll = new google.maps.LatLng("0","0");
+					var shape = null;
+					var numLocations = 0;
+					for (var i in $scope.places) {	
+						var place = $scope.places[i];		
+						var title = "";
+						if (place.prefName) title = place.prefName.title;
+
+						if (place.mapLocation) {
+							if (place.mapLocation.coordinates) {
+								if (angular.isNumber(place.mapLocation.coordinates[0]) && angular.isNumber(place.mapLocation.coordinates[1])) {
+									ll = new google.maps.LatLng(place.mapLocation.coordinates[1], place.mapLocation.coordinates[0]);
+									$scope.markers[i] = new google.maps.Marker({
+										position: ll,
+										title: place.mapName,
+										map: $scope.map,
+										icon: defaultIcon,
+										shadow: defaultShadow
+									});
+									$scope.markerMap[place.gazId] = $scope.markers[i];
+									bounds.extend(ll);
+									numLocations++;
 								}
 							}
-					
-							$scope.shapes[i] = new google.maps.Polygon({
-								paths: shapeCoordinates,
-								strokeColor: "#000000",
-								strokeOpacity: 0.7,
-								strokeWeight: 1.5,
-								fillColor: "#000000",
-							   	fillOpacity: 0.25
-							});
-							$scope.shapes[i].setMap($scope.map);
-							
-							shape = $scope.shapes[i];
-							bounds.extend(shape.getBounds().getSouthWest());
-							bounds.extend(shape.getBounds().getNorthEast());
+							if (place.mapLocation.shape) {
+								var shapeCoordinates = [];
+								var counter = 0;
+								
+								for (var j = 0; j < place.mapLocation.shape.length; j++) {
+									for (var k = 0; k < place.mapLocation.shape[j].length; k++) {
+										var shapePolygonCoordinates = [];
+										for (var l = 0; l < place.mapLocation.shape[j][k].length; l++)
+											shapePolygonCoordinates[l] = new google.maps.LatLng(place.mapLocation.shape[j][k][l][1], place.mapLocation.shape[j][k][l][0]);
+										shapeCoordinates[counter] = shapePolygonCoordinates;
+										counter++;
+									}
+								}
+						
+								$scope.shapes[i] = new google.maps.Polygon({
+									paths: shapeCoordinates,
+									strokeColor: "#000000",
+									strokeOpacity: 0.7,
+									strokeWeight: 1.5,
+									fillColor: "#000000",
+								   	fillOpacity: 0.25,
+								});
+								$scope.shapes[i].setMap($scope.map);
+								
+								shape = $scope.shapes[i];
+								bounds.extend(shape.getBounds().getSouthWest());
+								bounds.extend(shape.getBounds().getNorthEast());
+							}
 						}
 					}
-				}
-				
-				if (shape != null || numLocations > 1)
-					$scope.map.fitBounds(bounds);
-				else if (numLocations > 0)
-					$scope.map.setCenter(ll);
-				else {
-					$scope.map.setZoom(parseInt($scope.zoom));
-					$scope.map.setCenter(new google.maps.LatLng("0","0"));
+					
+					if (shape != null || numLocations > 1)
+						$scope.map.fitBounds(bounds);
+					else if (numLocations > 0)
+						$scope.map.setCenter(ll);
+					else {
+						$scope.map.setZoom(parseInt($scope.zoom));
+						$scope.map.setCenter(new google.maps.LatLng("0","0"));
+					}
+					
+					$scope.updatedMapLocations = 0;
 				}				
 			});
+				
+			$scope.updateMapLocation = function(place, originalPlace, id) {
+				if (id != $scope.mapLocationUpdateId)
+					return;
+				
+				if (!place.prefLocation || !((place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0) || place.prefLocation.shape)) {
+					if (place.parent && place.parent != "") {
+						Place.get({id: getIdFromUri(place.parent)}, function(result) {
+							$scope.updateMapLocation(result, originalPlace, id);
+						}, function(error) {
+							$scope.updatedMapLocations += 1;
+						});
+					} else
+						$scope.updatedMapLocations += 1;
+				} else {
+					originalPlace.mapLocation = place.prefLocation;
+					if (place.prefName)
+						originalPlace.mapName = place.prefName.title;
+					else if (originalPlace.prefName)
+						originalPlace.mapName = originalPlace.prefName.title;
+					$scope.updatedMapLocations += 1;
+				}
+			};
 			
 			google.maps.Polygon.prototype.getBounds = function() {
 			    var bounds = new google.maps.LatLngBounds();

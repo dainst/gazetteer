@@ -1315,10 +1315,8 @@ function ThesaurusCtrl($scope, $rootScope, $location, Place, messages, $route) {
 	};
 	
 	$scope.showMarker = function(place) {
-		if (place.prefLocation) {
-			$rootScope.activePlaces = [ place ];
-			$rootScope.zoom = 6;
-		}
+		$rootScope.activePlaces = [ place ];
+		$rootScope.zoom = 6;
 	};
 	
 	$scope.hideMarker = function() {
