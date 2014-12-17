@@ -737,9 +737,8 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 		$scope.filters.noPolygonFilter = false;
 		
 		if ($scope.search.fq) {
-			if ($scope.search.fq.indexOf("_exists_:prefLocation.coordinates") > -1) {
+			if ($scope.search.fq.indexOf("_exists_:prefLocation.coordinates") > -1)
 				$scope.filters.coordinates = true;
-			}
 			else if ($scope.search.fq.indexOf("_missing_:prefLocation.coordinates") > -1)
 				$scope.filters.noCoordinates = true;
 			if ($scope.search.fq.indexOf("_exists_:prefLocation.shape") > -1)
