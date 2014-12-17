@@ -303,7 +303,12 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages, PolygonVali
 	$scope.provenance = [];
 	$scope.ids = { value: "", context: ""};
 	$scope.fuzzy = false;
-	$scope.hasCoordinates = false;
+	$scope.filters = {
+			coordinatesFilter : false,
+			noCoordinatesFilter : false,
+			polygonFilter : false,
+			noPolygonFilter : false
+	};
 	$scope.geoSearchPolygon = new google.maps.Polygon({
 		strokeColor: "#FF0000",
 		strokeOpacity: 0.8,
@@ -472,11 +477,21 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages, PolygonVali
 			});
 		}
 		
-		// hasCoordinates
-		if ($scope.hasCoordinates) {
-			queries.push({
-				query_string: { query: "_exists_:prefLocation.coordinates" }
-			});
+		// filters
+		var filterQuery = "";
+		if ($scope.filters.coordinates)
+			filterQuery += "_exists_:prefLocation.coordinates";
+		else if ($scope.filters.noCoordinates)
+			filterQuery += "_missing_:prefLocation.coordinates";
+		if ($scope.filters.polygon) {
+			if (filterQuery != "")
+				filterQuery += " AND ";
+			filterQuery += "_exists_:prefLocation.shape";
+		}
+		else if ($scope.filters.noPolygon) {
+			if (filterQuery != "")
+				filterQuery += " AND ";
+			filterQuery += "_missing_:prefLocation.shape";
 		}
 		
 		var query = { "bool": { "must": queries } };
@@ -489,7 +504,7 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages, PolygonVali
 			}
 		}
 		
-		$location.path('/search').search({q:angular.toJson(query), polygonFilterCoordinates: geoSearchCoordinates, type: "extended"});
+		$location.path('/search').search({q:angular.toJson(query), polygonFilterCoordinates: geoSearchCoordinates, fq: filterQuery, type: "extended"});
 		
 	};
 	
@@ -506,6 +521,13 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 	$rootScope.viewClass = "span7";
 	$rootScope.isFocused = true;
 	
+	$scope.filters = {
+			coordinates : false,
+			noCoordinates : false,
+			polygon : false,
+			noPolygon : false
+	};
+	
 	setSearchFromLocation();
 	
 	$scope.places = [];
@@ -513,12 +535,6 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 	$scope.total = 0;
 	$scope.zoom = 2;
 	$scope.facets = null;
-	$scope.filters = {
-			coordinatesFilter : false,
-			noCoordinatesFilter : false,
-			polygonFilter : false,
-			noPolygonFilter : false
-	};
 		
 	// search while zooming
 	$scope.$watch(function() { return $scope.bbox.join(","); }, function() {
@@ -714,8 +730,24 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 		if ($location.search().bbox) $scope.search.bbox = $location.search().bbox;
 		if ($location.search().polygonFilterCoordinates) $scope.search.polygonFilterCoordinates = $location.search().polygonFilterCoordinates;
 		if ($location.search().showInReview) $scope.search.showInReview = $location.search().showInReview;
-	}
-
+		
+		$scope.filters.coordinatesFilter = false;
+		$scope.filters.noCoordinatesFilter = false;
+		$scope.filters.polygonFilter = false;
+		$scope.filters.noPolygonFilter = false;
+		
+		if ($scope.search.fq) {
+			if ($scope.search.fq.indexOf("_exists_:prefLocation.coordinates") > -1) {
+				$scope.filters.coordinates = true;
+			}
+			else if ($scope.search.fq.indexOf("_missing_:prefLocation.coordinates") > -1)
+				$scope.filters.noCoordinates = true;
+			if ($scope.search.fq.indexOf("_exists_:prefLocation.shape") > -1)
+				$scope.filters.polygon = true;
+			else if ($scope.search.fq.indexOf("_missing_:prefLocation.shape") > -1)
+				$scope.filters.noPolygon = true;
+		}
+	};
 }
 
 function CreateCtrl($scope, $rootScope, $routeParams, $location, Place, messages) {
