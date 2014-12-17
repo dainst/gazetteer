@@ -282,7 +282,7 @@ function HomeCtrl($scope, $location, $rootScope, Place) {
 	};
 }
 
-function ExtendedSearchCtrl($scope, $rootScope, $location, messages, PolygonValidator) {
+function ExtendedSearchCtrl($scope, $rootScope, $location, messages, PolygonValidator, GeoSearch) {
 	
 	$rootScope.pageTitle = messages["ui.extendedSearch"] + " | iDAI.gazetteer";
 	$rootScope.title = messages["ui.extendedSearch"];
@@ -309,62 +309,11 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages, PolygonVali
 			polygonFilter : false,
 			noPolygonFilter : false
 	};
-	$scope.geoSearchPolygon = new google.maps.Polygon({
-		strokeColor: "#FF0000",
-		strokeOpacity: 0.8,
-		strokeWeight: 2,
-		fillColor: "#FF0000",
-		fillOpacity: 0.35,
-		draggable: true,
-		editable: true
-	});
-	
-	google.maps.event.addListener($rootScope.map, "click", function(event) {
-		
-		var scale = Math.pow(2, $rootScope.map.getZoom());
-		var clickPosition = $rootScope.map.getProjection().fromLatLngToPoint(event.latLng);	
-		var northWestPosition = $rootScope.map.getProjection().fromLatLngToPoint(
-				new google.maps.LatLng($rootScope.map.getBounds().getNorthEast().lat(), $rootScope.map.getBounds().getSouthWest().lng()));
-		var clickPositionX = Math.floor((clickPosition.x - northWestPosition.x) * scale);
-		var clickPositionY = Math.floor((clickPosition.y - northWestPosition.y) * scale);		
-		
-		var polygonCoordinates = [ $rootScope.map.getProjection().fromPointToLatLng(new google.maps.Point((clickPositionX - 50) / scale + northWestPosition.x, (clickPositionY - 50) / scale + northWestPosition.y)), 
-		                           $rootScope.map.getProjection().fromPointToLatLng(new google.maps.Point((clickPositionX + 50) / scale + northWestPosition.x, (clickPositionY - 50) / scale + northWestPosition.y)),
-								   $rootScope.map.getProjection().fromPointToLatLng(new google.maps.Point((clickPositionX + 50) / scale + northWestPosition.x, (clickPositionY + 50) / scale + northWestPosition.y)),
-								   $rootScope.map.getProjection().fromPointToLatLng(new google.maps.Point((clickPositionX - 50) / scale + northWestPosition.x, (clickPositionY + 50) / scale + northWestPosition.y)) 
-								 ];
-		
-		$scope.geoSearchPolygon.setPath(polygonCoordinates);		
-		$scope.geoSearchPolygon.setMap($rootScope.map);
-		
-		google.maps.event.addListener($scope.geoSearchPolygon.getPaths().getAt(0), "insert_at", function(index) {
-			if (PolygonValidator.checkForPathIntersection(this, this))
-				this.removeAt(index);
-		});
-		
-		google.maps.event.addListener($scope.geoSearchPolygon.getPaths().getAt(0), "set_at", function(index, oldLatLng) {
-			if (PolygonValidator.checkForPathIntersection(this, this))
-				this.setAt(index, oldLatLng);
-		});
-		
-		$rootScope.map.setOptions({ disableDoubleClickZoom: true });
-	});
-	
-	google.maps.event.addListener($rootScope.map, "rightclick", function(event) {
-		if ($scope.geoSearchPolygon.getMap() == null)
-			$rootScope.map.setOptions({ disableDoubleClickZoom: false });
-		else {
-			$scope.geoSearchPolygon.setPath([]);
-			$scope.geoSearchPolygon.setMap(null);
-		}
-	});
 
+	GeoSearch.activate($rootScope.map);
+	
 	$scope.$on("$destroy", function() {
-		$scope.geoSearchPolygon.setPath([]);
-		$scope.geoSearchPolygon.setMap(null);		
-		google.maps.event.clearListeners($rootScope.map, "click");
-		google.maps.event.clearListeners($rootScope.map, "rightclick");
-		$rootScope.map.setOptions({ disableDoubleClickZoom: false });
+		GeoSearch.deactivate();
     });
 	
 	$scope.submit = function() {
@@ -497,10 +446,10 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages, PolygonVali
 		var query = { "bool": { "must": queries } };
 
 		var geoSearchCoordinates = [];
-		if ($scope.geoSearchPolygon.getMap() != null) {
-			for (var i = 0; i < $scope.geoSearchPolygon.getPath().getLength(); i++) {
-				geoSearchCoordinates[i * 2] = $scope.geoSearchPolygon.getPath().getAt(i).lng();
-				geoSearchCoordinates[i * 2 + 1] = $scope.geoSearchPolygon.getPath().getAt(i).lat();
+		if (GeoSearch.polygon.getMap() != null) {
+			for (var i = 0; i < GeoSearch.polygon.getPath().getLength(); i++) {
+				geoSearchCoordinates[i * 2] = GeoSearch.polygon.getPath().getAt(i).lng();
+				geoSearchCoordinates[i * 2 + 1] = GeoSearch.polygon.getPath().getAt(i).lat();
 			}
 		}
 		

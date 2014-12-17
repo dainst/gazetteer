@@ -101,3 +101,74 @@ services.factory('PolygonValidator', function() {
 		}
 	};
 });
+
+services.factory('GeoSearch', function(PolygonValidator) {
+	
+	var polygon = new google.maps.Polygon({
+		strokeColor: "#FF0000",
+		strokeOpacity: 0.8,
+		strokeWeight: 2,
+		fillColor: "#FF0000",
+		fillOpacity: 0.35,
+		draggable: true,
+		editable: true
+	});
+	
+	var map = null;
+	
+	return {
+		activate: function(targetMap) {
+			map = targetMap;
+			
+			google.maps.event.addListener(map, "click", function(event) {
+				
+				var scale = Math.pow(2, map.getZoom());
+				var clickPosition = map.getProjection().fromLatLngToPoint(event.latLng);	
+				var northWestPosition = map.getProjection().fromLatLngToPoint(
+						new google.maps.LatLng(map.getBounds().getNorthEast().lat(), map.getBounds().getSouthWest().lng()));
+				var clickPositionX = Math.floor((clickPosition.x - northWestPosition.x) * scale);
+				var clickPositionY = Math.floor((clickPosition.y - northWestPosition.y) * scale);		
+				
+				var polygonCoordinates = [ map.getProjection().fromPointToLatLng(new google.maps.Point((clickPositionX - 50) / scale + northWestPosition.x, (clickPositionY - 50) / scale + northWestPosition.y)), 
+				                           map.getProjection().fromPointToLatLng(new google.maps.Point((clickPositionX + 50) / scale + northWestPosition.x, (clickPositionY - 50) / scale + northWestPosition.y)),
+										   map.getProjection().fromPointToLatLng(new google.maps.Point((clickPositionX + 50) / scale + northWestPosition.x, (clickPositionY + 50) / scale + northWestPosition.y)),
+										   map.getProjection().fromPointToLatLng(new google.maps.Point((clickPositionX - 50) / scale + northWestPosition.x, (clickPositionY + 50) / scale + northWestPosition.y)) 
+										 ];
+				
+				polygon.setPath(polygonCoordinates);		
+				polygon.setMap(map);
+				
+				google.maps.event.addListener(polygon.getPaths().getAt(0), "insert_at", function(index) {
+					if (PolygonValidator.checkForPathIntersection(this, this))
+						this.removeAt(index);
+				});
+				
+				google.maps.event.addListener(polygon.getPaths().getAt(0), "set_at", function(index, oldLatLng) {
+					if (PolygonValidator.checkForPathIntersection(this, this))
+						this.setAt(index, oldLatLng);
+				});
+				
+				map.setOptions({ disableDoubleClickZoom: true });
+			});
+			
+			google.maps.event.addListener(map, "rightclick", function(event) {
+				if (polygon.getMap() == null)
+					map.setOptions({ disableDoubleClickZoom: false });
+				else {
+					polygon.setPath([]);
+					polygon.setMap(null);
+				}
+			});
+		},
+		
+		deactivate: function() {
+			polygon.setPath([]);
+			polygon.setMap(null);		
+			google.maps.event.clearListeners(map, "click");
+			google.maps.event.clearListeners(map, "rightclick");
+			map.setOptions({ disableDoubleClickZoom: false });
+		},
+		
+		polygon: polygon
+	};
+});
