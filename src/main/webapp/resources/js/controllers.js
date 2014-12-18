@@ -1,6 +1,6 @@
 'use strict';
 
-function AppCtrl($scope, $location, $rootScope, Place) {
+function AppCtrl($scope, $location, $rootScope, Place, GeoSearch) {
 	
 	$scope.q = null;
 	$scope.type = "";
@@ -39,6 +39,13 @@ function AppCtrl($scope, $location, $rootScope, Place) {
 			$scope.mapContainerStyle = {};
 		else
 			$scope.mapContainerStyle = { 'position': 'absolute', 'left': '-10000px' };
+	});
+	
+	$scope.$watch("geoSearch", function() {
+		if ($rootScope.geoSearch)
+			GeoSearch.activate($rootScope.map);
+		else
+			GeoSearch.deactivate();
 	});
 		
 	$scope.updateSuggestionsStyle = function() {
@@ -144,6 +151,8 @@ function HomeCtrl($scope, $location, $rootScope, Place) {
 	$rootScope.title = "";
 	$rootScope.subtitle = "";
 	$rootScope.isFocused = false;
+	$rootScope.geoSearch = false;
+	
 	$scope.homeSearchSuggestions = [];
 	$scope.selectedSuggestionIndex = -1;
 	
@@ -293,6 +302,9 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages, PolygonVali
 	$rootScope.viewClass = "span7";
 	$rootScope.activePlaces = [];	
 	$rootScope.isFocused = false;
+	$rootScope.geoSearch = true;
+	
+	GeoSearch.setCreateMode(true);
 	
 	$scope.meta = null;
 	$scope.type = "";
@@ -310,12 +322,6 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages, PolygonVali
 			noPolygonFilter : false
 	};
 
-	GeoSearch.activate($rootScope.map);
-	
-	$scope.$on("$destroy", function() {
-		GeoSearch.deactivate();
-    });
-	
 	$scope.submit = function() {
 		
 		var queries = [];		
@@ -446,10 +452,10 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages, PolygonVali
 		var query = { "bool": { "must": queries } };
 
 		var geoSearchCoordinates = [];
-		if (GeoSearch.polygon.getMap() != null) {
-			for (var i = 0; i < GeoSearch.polygon.getPath().getLength(); i++) {
-				geoSearchCoordinates[i * 2] = GeoSearch.polygon.getPath().getAt(i).lng();
-				geoSearchCoordinates[i * 2 + 1] = GeoSearch.polygon.getPath().getAt(i).lat();
+		if (GeoSearch.getPolygon() != null && GeoSearch.getPolygon().getMap() != null) {
+			for (var i = 0; i < GeoSearch.getPolygon().getPath().getLength(); i++) {
+				geoSearchCoordinates[i * 2] = GeoSearch.getPolygon().getPath().getAt(i).lng();
+				geoSearchCoordinates[i * 2 + 1] = GeoSearch.getPolygon().getPath().getAt(i).lat();
 			}
 		}
 		
@@ -459,7 +465,7 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages, PolygonVali
 	
 }
 
-function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages) {
+function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearch, messages) {
 	
 	$rootScope.pageTitle = messages["ui.search.results"] + " | iDAI.gazetteer";
 	$rootScope.title = messages["ui.search.results"];
@@ -469,6 +475,7 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 	$rootScope.showNavbarSearch = true;
 	$rootScope.viewClass = "span7";
 	$rootScope.isFocused = true;
+	$rootScope.geoSearch = true;
 	
 	$scope.filters = {
 			coordinates : false,
@@ -484,6 +491,25 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 	$scope.total = 0;
 	$scope.zoom = 2;
 	$scope.facets = null;
+	
+	GeoSearch.setCreateMode(false);
+	
+	if (GeoSearch.getPolygon() != null) {
+		google.maps.event.addListener(GeoSearch.getPolygon().getPaths().getAt(0), 'insert_at', function() {
+			$scope.submit();
+		});
+	
+		google.maps.event.addListener(GeoSearch.getPolygon().getPaths().getAt(0), 'set_at', function() {
+			$scope.submit();
+		});
+	}
+	
+	$scope.$on("$destroy", function() {
+		if (GeoSearch.getPolygon() != null) {
+			google.maps.event.clearListeners(GeoSearch.getPolygon().getPaths().getAt(0), "insert_at");
+			google.maps.event.clearListeners(GeoSearch.getPolygon().getPaths().getAt(0), "set_at");
+		}
+	});
 		
 	// search while zooming
 	$scope.$watch(function() { return $scope.bbox.join(","); }, function() {
@@ -547,6 +573,7 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 		$rootScope.loading++;
 		
 		$scope.updateFilters();
+		$scope.updatePolygonFilterCoordinates();
 		
 		Place.query($scope.search, function(result) {
 			$scope.parents = {};
@@ -652,6 +679,18 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 			$scope.search.fq = filterQuery;
 	};
 	
+	$scope.updatePolygonFilterCoordinates = function() {
+		var polygonFilterCoordinates = [];
+		if (GeoSearch.getPolygon().getMap() != null) {
+			for (var i = 0; i < GeoSearch.getPolygon().getPath().getLength(); i++) {
+				polygonFilterCoordinates[i * 2] = GeoSearch.getPolygon().getPath().getAt(i).lng();
+				polygonFilterCoordinates[i * 2 + 1] = GeoSearch.getPolygon().getPath().getAt(i).lat();
+			}
+		}
+		
+		$scope.search.polygonFilterCoordinates = polygonFilterCoordinates;
+	};
+	
 	// needed to keep $scope.search and $location.search() in sync
 	// because reloadOnSearch is turned off for this controller
 	$scope.$watch(
@@ -710,6 +749,7 @@ function CreateCtrl($scope, $rootScope, $routeParams, $location, Place, messages
 	$rootScope.viewClass = "span7";
 	$rootScope.activePlaces = [];
 	$rootScope.isFocused = true;
+	$rootScope.geoSearch = false;
 	
 	$scope.addPlaceType = function(placeType) {
 		var pos = $scope.getListPos($scope.place.types, placeType);
@@ -791,6 +831,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 	$rootScope.showNavbarSearch = true;
 	$rootScope.viewClass = "span7";
 	$rootScope.isFocused = true;
+	$rootScope.geoSearch = false;
 	
 	$rootScope.pageTitle = "iDAI.gazetteer";
 	$rootScope.title = "";
@@ -1272,6 +1313,7 @@ function ThesaurusCtrl($scope, $rootScope, $location, Place, messages, $route) {
 	$rootScope.viewClass = "span7";
 	$rootScope.activePlaces = [];
 	$rootScope.isFocused = true;
+	$rootScope.geoSearch = false;
 	
 	$rootScope.loading++;
 	Place.query({
