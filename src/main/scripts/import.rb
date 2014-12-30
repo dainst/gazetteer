@@ -161,6 +161,11 @@ CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
     next
   end
 
+  if row[0] && row[0].start_with?('#')
+    puts "skipping comment row #{row_no}" if options.verbose
+    next
+  end
+
   id_present = false
 
   if options.temp_id
