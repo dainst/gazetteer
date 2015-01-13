@@ -495,10 +495,12 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 	
 	if (GeoSearch.getPolygon() != null) {
 		google.maps.event.addListener(GeoSearch.getPolygon().getPaths().getAt(0), 'insert_at', function() {
+			$scope.search.offset = 0;
 			$scope.submit();
 		});
 	
 		google.maps.event.addListener(GeoSearch.getPolygon().getPaths().getAt(0), 'set_at', function() {
+			$scope.search.offset = 0;
 			$scope.submit();
 		});
 	}
