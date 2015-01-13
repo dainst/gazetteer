@@ -475,7 +475,6 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 	$rootScope.showNavbarSearch = true;
 	$rootScope.viewClass = "span7";
 	$rootScope.isFocused = true;
-	$rootScope.geoSearch = true;
 	
 	$scope.filters = {
 			coordinates : false,
@@ -681,7 +680,7 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 	
 	$scope.updatePolygonFilterCoordinates = function() {
 		var polygonFilterCoordinates = [];
-		if (GeoSearch.getPolygon().getMap() != null) {
+		if (GeoSearch.getPolygon() != null && GeoSearch.getPolygon().getMap() != null) {
 			for (var i = 0; i < GeoSearch.getPolygon().getPath().getLength(); i++) {
 				polygonFilterCoordinates[i * 2] = GeoSearch.getPolygon().getPath().getAt(i).lng();
 				polygonFilterCoordinates[i * 2 + 1] = GeoSearch.getPolygon().getPath().getAt(i).lat();
@@ -734,6 +733,11 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 			else if ($scope.search.fq.indexOf("_missing_:prefLocation.shape") > -1)
 				$scope.filters.noPolygon = true;
 		}
+		
+		if ($scope.search.polygonFilterCoordinates)
+			$rootScope.geoSearch = true;
+		else
+			$rootScope.geoSearch = false;
 	};
 }
 
