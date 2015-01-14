@@ -149,7 +149,6 @@ public class SearchController {
 		}
 		
 		if (polygonFilterCoordinates != null && polygonFilterCoordinates.length > 0) {
-			
 			double[][] polygon = new double[polygonFilterCoordinates.length / 2][];
 			
 			for (int i = 0; i < polygonFilterCoordinates.length / 2; i++) {

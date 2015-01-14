@@ -575,7 +575,6 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 		
 		$scope.updateFilters();
 		$scope.updatePolygonFilterCoordinates();
-		
 		Place.query($scope.search, function(result) {
 			$scope.parents = {};
 			$scope.places = result.result;
@@ -583,7 +582,7 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 
 			$rootScope.loading--;
 			for (var i=0; i < $scope.places.length; i++) {
-				$rootScope.loading++;				
+				$rootScope.loading++;
 				if ($scope.places[i]) {		
 					if ($scope.places[i].parent) {
 						$scope.parents[$scope.places[i].gazId] = [];
@@ -738,8 +737,10 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 		
 		if ($scope.search.polygonFilterCoordinates)
 			$rootScope.geoSearch = true;
-		else
+		else {
 			$rootScope.geoSearch = false;
+			GeoSearch.deactivate();
+		}
 	};
 }
 
