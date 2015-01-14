@@ -603,8 +603,10 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 		if (place.parent) {
 			var parentId = getIdFromUri(place.parent);					
 			Place.get({id:parentId}, function(result) {
-				$scope.parents[originalPlace.gazId].push(result);
-				$scope.getParent(result, originalPlace);
+				if ($scope.parents[originalPlace.gazId]) {
+					$scope.parents[originalPlace.gazId].push(result);
+					$scope.getParent(result, originalPlace);
+				}
 			});
 		}
 	};
