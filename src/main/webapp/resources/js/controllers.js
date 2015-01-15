@@ -490,6 +490,7 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 	$scope.total = 0;
 	$scope.zoom = 2;
 	$scope.facets = null;
+	$scope.facetOffsets = {};
 	
 	GeoSearch.setCreateMode(false);
 	
@@ -559,6 +560,17 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 		}
 	};
 	
+	$scope.prevFacetEntries = function(facetName) {
+		$scope.facetOffsets[facetName] -= 5;
+		if ($scope.facetOffsets[facetName] < 0)
+			$scope.facetOffsets[facetName] = 0;
+	};
+	
+	$scope.nextFacetEntries = function(facetName) {
+		if ($scope.facetOffsets[facetName] < $scope.facets[facetName].length - 5)
+			$scope.facetOffsets[facetName] += 5;
+	};
+	
 	$scope.orderBy = function(sort) {
 		if ($scope.search.sort == sort) {
 			$scope.search.order = ($scope.search.order == "asc") ? "desc" : "asc";
@@ -579,9 +591,12 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 			$scope.parents = {};
 			$scope.places = result.result;
 			$scope.facets = result.facets;
+			for (var i in $scope.facets) {
+				$scope.facetOffsets[i] = 0;
+			}
 
 			$rootScope.loading--;
-			for (var i=0; i < $scope.places.length; i++) {
+			for (var i = 0; i < $scope.places.length; i++) {
 				$rootScope.loading++;
 				if ($scope.places[i]) {		
 					if ($scope.places[i].parent) {

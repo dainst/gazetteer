@@ -76,41 +76,35 @@
 			<tbody>
 				<tr>
 					<td ng-repeat="(facetName,facet) in facets" style="border: 0; vertical-align:top; padding:2px 8px;">
-						<table>
+						<table style="table-layout: fixed; width: 100%;">
 							<tr>
 								<td style="vertical-align:top;" ng-show="facet.length > 0">
-									<ul class="unstyled" style="margin:0;">
-										<li ng-repeat="entry in facet | orderBy:'count':true | limitTo:5">
+									<div style="text-align: center;">
+										<i ng-show="facetOffsets[facetName] > 0" class="icon-caret-up" style="color: #5572a1; cursor: pointer;" ng-click="prevFacetEntries(facetName)"></i>
+										<i ng-hide="facetOffsets[facetName] > 0" class="icon-caret-up" style="cursor: default;" ng-click="prevFacetEntries(facetName)"></i>
+									</div>
+									<div style="height: 105px; overflow: hidden;">
+									<div style="margin:0px; height: auto; display:inline-block; white-space: nowrap; transform: translateY(-{{facetOffsets[facetName] * 21}}px);
+										-webkit-transform: translateY(-{{facetOffsets[facetName] * 21}}px); transition: 0.5s ease-in-out; -webkit-transition: 0.5s ease-in-out;">
+										<div ng-repeat="entry in facet | orderBy:'count':true" style="transition: 0.5s linear; -webkit-transition: 0.5s linear;">
 											<small>
-												<i class="icon-angle-right"></i>
+												<i class="icon-angle-right" style="margin-top: 0px; margin-right: 5px;"></i>
 												<a ng-click="setFacet(facetName, entry.term)" href="">
-													<span ng-show="entry.label.length < 13">
+													<span ng-show="entry.label.length < 30 || entry.label.length - 30 <= 3">
 														{{entry.label}}
 													</span>
-													<abbr title="{{entry.label}}" ng-show="entry.label.length >= 13">
-														{{entry.label.substring(0, 12)}}...
+													<abbr title="{{entry.label}}" ng-show="entry.label.length >= 30 && entry.label.length - 30 > 3">
+														{{entry.label.substring(0, 28)}}...
 													</abbr>
 												</a>&nbsp;<em class="muted">{{entry.count}}</em>
 											</small>
-										</li>
-									</ul>
-								</td>
-								<td ng-show="facet.length > 5">
-									<ul class="unstyled" style="margin:0; padding-left:5px;">
-										<li ng-repeat="entry in facet.slice(5) | orderBy:'count':true">
-											<small>
-												<i class="icon-angle-right"></i>
-												<a ng-click="setFacet(facetName, entry.term)" href="">
-													<span ng-show="entry.label.length < 15">
-														{{entry.label}}
-													</span>
-													<abbr title="{{entry.label}}" ng-show="entry.label.length >= 15">
-														{{entry.label.substring(0, 14)}}...
-													</abbr>
-												</a>&nbsp;<em class="muted">{{entry.count}}</em>
-											</small>
-										</li>
-									</ul>
+										</div>
+									</div>
+									</div>
+									<div style="text-align: center;">
+										<i ng-show="facetOffsets[facetName] < facet.length - 5" class="icon-caret-down" style="color: #5572a1; cursor: pointer;" ng-click="nextFacetEntries(facetName)"></i>
+										<i ng-hide="facetOffsets[facetName] < facet.length - 5" class="icon-caret-down" style="cursor: default;" ng-click="nextFacetEntries(facetName)"></i>
+									</div>									
 								</td>
 							</tr>
 						</table>

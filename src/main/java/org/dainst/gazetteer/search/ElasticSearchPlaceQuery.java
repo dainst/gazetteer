@@ -112,7 +112,7 @@ public class ElasticSearchPlaceQuery {
 	}
 	
 	public ElasticSearchPlaceQuery addFacet(String field) {
-		requestBuilder.addFacet(FacetBuilders.termsFacet(field).field(field));
+		requestBuilder.addFacet(FacetBuilders.termsFacet(field).field(field).size(50));
 		return this;
 	}
 	
