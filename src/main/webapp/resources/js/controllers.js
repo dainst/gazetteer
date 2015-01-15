@@ -873,7 +873,9 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 				$scope.location.publicSite = false;
 			if (result.parent) {
 				$rootScope.loading++;
-				$scope.parent = Place.get({id:result.parent});
+				Place.get({id:getIdFromUri(result.parent)}, function(result) {
+					$scope.parent = result;
+				});
 				$scope.getParent(result, 0);
 				$rootScope.loading--;
 			}
