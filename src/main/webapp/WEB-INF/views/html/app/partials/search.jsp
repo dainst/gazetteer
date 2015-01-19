@@ -81,7 +81,7 @@
 								<td style="vertical-align:top;" ng-show="facet.length > 0">
 									<div ng-show="facet.length > 5" style="text-align: center;">
 										<i ng-show="facetOffsets[facetName] > 0" class="icon-caret-up" style="color: #5572a1; cursor: pointer;" ng-click="prevFacetEntries(facetName)"></i>
-										<i ng-hide="facetOffsets[facetName] > 0" class="icon-caret-up" style="cursor: default;" ng-click="prevFacetEntries(facetName)"></i>
+										<i ng-hide="facetOffsets[facetName] > 0" class="icon-caret-up muted" style="cursor: default;" ng-click="prevFacetEntries(facetName)"></i>
 									</div>
 									<div style="height: {{facet.length > 5 ? 105 : facet.length * 21}}px; overflow: hidden;">
 										<div style="margin:0px; height: auto; display:inline-block; white-space: nowrap; transform: translateY(-{{facetOffsets[facetName] * 21}}px);
@@ -103,7 +103,7 @@
 									</div>
 									<div ng-show="facet.length > 5" style="text-align: center;">
 										<i ng-show="facetOffsets[facetName] < facet.length - 5" class="icon-caret-down" style="color: #5572a1; cursor: pointer;" ng-click="nextFacetEntries(facetName)"></i>
-										<i ng-hide="facetOffsets[facetName] < facet.length - 5" class="icon-caret-down" style="cursor: default;" ng-click="nextFacetEntries(facetName)"></i>
+										<i ng-hide="facetOffsets[facetName] < facet.length - 5" class="icon-caret-down muted" style="cursor: default;" ng-click="nextFacetEntries(facetName)"></i>
 									</div>									
 								</td>
 							</tr>
