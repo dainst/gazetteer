@@ -5,13 +5,15 @@ import java.math.BigDecimal;
 import org.dainst.gazetteer.domain.Location;
 import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.User;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 public class ProtectLocationsService {
 
-	private static int decimalPlaces = 3;
-	
-	public static void protectLocations(User user, Place place) {
+	@Value("${protectionDecimalPlaces}")
+	private int decimalPlaces;
+
+	public void protectLocations(User user, Place place) {
 		
 		if (user == null || !user.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER"))) {			
 			

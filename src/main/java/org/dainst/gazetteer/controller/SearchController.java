@@ -56,6 +56,9 @@ public class SearchController {
 	private JsonPlaceDeserializer jsonPlaceDeserializer;
 	
 	@Autowired
+	private ProtectLocationsService protectLocationsService;
+	
+	@Autowired
 	private Client client;
 	
 	@Value("${baseUri}")
@@ -172,7 +175,7 @@ public class SearchController {
 		Map<String,List<String[]>> facets = processFacets(query, locale);
 		
 		for (Place place : places)
-			ProtectLocationsService.protectLocations(user, place);
+			protectLocationsService.protectLocations(user, place);
 		
 		ModelAndView mav = new ModelAndView("place/list");
 		mav.addObject("places", places);
@@ -243,7 +246,7 @@ public class SearchController {
 		Map<String,List<String[]>> facets = processFacets(query, locale);
 		
 		for (Place place : places)
-			ProtectLocationsService.protectLocations(user, place);
+			protectLocationsService.protectLocations(user, place);
 		
 		ModelAndView mav = new ModelAndView("place/list");
 		mav.addObject("places", places);
@@ -316,7 +319,7 @@ public class SearchController {
 		List<Place> places = placesForList(result);
 		
 		for (Place place : places)
-			ProtectLocationsService.protectLocations(user, place);
+			protectLocationsService.protectLocations(user, place);
 		
 		ModelAndView mav = new ModelAndView("place/list");
 		mav.addObject("places", places);
@@ -459,7 +462,7 @@ public class SearchController {
 			user = (User) principal;
 		
 		for (Place place : places)
-			ProtectLocationsService.protectLocations(user, place);
+			protectLocationsService.protectLocations(user, place);
 		
 		ModelAndView mav = new ModelAndView("place/list");
 		mav.addObject("places", places);

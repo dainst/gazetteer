@@ -93,6 +93,8 @@
 	</bean>
 	
 	<bean id="mailService" class="org.dainst.gazetteer.helpers.MailService" />
+	
+	<bean id="protectLocationsService" class="org.dainst.gazetteer.helpers.ProtectLocationsService" />
 
 	<context:component-scan base-package="org.dainst.gazetteer" />
 	

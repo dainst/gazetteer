@@ -56,6 +56,9 @@ public class DocumentController {
 	private JsonPlaceDeserializer jsonPlaceDeserializer;
 	
 	@Autowired
+	private ProtectLocationsService protectLocationsService;
+	
+	@Autowired
 	private IdGenerator idGenerator;
 	
 	@Autowired
@@ -143,7 +146,7 @@ public class DocumentController {
 			Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			if (principal instanceof User)
 				user = (User) principal;
-			ProtectLocationsService.protectLocations(user, place);
+			protectLocationsService.protectLocations(user, place);
 			
 			mav = new ModelAndView("place/get");
 			if (layout != null) {
