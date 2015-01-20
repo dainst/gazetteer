@@ -259,7 +259,8 @@ directives.directive('gazShapeEditor', function($document, PolygonValidator) {
 			$scope.mapOptions = {
 				center: new google.maps.LatLng(0, 0),
 				zoom: 10,
-				mapTypeId: google.maps.MapTypeId.TERRAIN
+				mapTypeId: google.maps.MapTypeId.TERRAIN,
+				scaleControl: true
 			};
 	
 			$scope.showOverlay = false;
@@ -534,7 +535,8 @@ directives.directive('gazMap', function($location, Place) {
 			$scope.mapOptions = {
 				center: new google.maps.LatLng(0, 0),
 				zoom: $scope.zoom,
-				mapTypeId: google.maps.MapTypeId.TERRAIN
+				mapTypeId: google.maps.MapTypeId.TERRAIN,
+				scaleControl: true
 			};
 			$scope.mapLocationUpdateId = 0;
 			
