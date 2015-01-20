@@ -44,7 +44,7 @@
 					code="ui.extendedSearch.parent" text="ui.extendedSearch.parent" />
 			</label>
 			<div class="controls">
-				<div gaz-place-picker place="parent"></div>
+				<div gaz-place-picker place="parent" id="parent.gazId"></div>
 			</div>
 		</div>
 		
