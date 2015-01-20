@@ -236,7 +236,7 @@
 									<option value="${language.key}">${language.value}</option>
 								</c:forEach>
 							</select>
-							<div class="btn btn-primary plus" ng-click="addComment()" ng-disabled="!comment.text || !comment.language">
+							<div class="btn btn-primary plus" ng-click="addComment()" ng-disabled="!comment.text">
 								<i class="icon-plus icon-white"></i>
 							</div>
 							<div ng-hide="!place.comments" style="margin-top: 1em">

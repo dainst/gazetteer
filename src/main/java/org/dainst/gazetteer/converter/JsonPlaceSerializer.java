@@ -218,7 +218,8 @@ public class JsonPlaceSerializer {
 			for (Comment comment : place.getComments()) {
 				ObjectNode commentNode = mapper.createObjectNode();
 				commentNode.put("text", comment.getText());
-				commentNode.put("language", comment.getLanguage());
+				if (comment.getLanguage() != null && !comment.getLanguage().isEmpty())
+					commentNode.put("language", comment.getLanguage());
 				commentsNode.add(commentNode);
 			}
 			placeNode.put("comments", commentsNode);

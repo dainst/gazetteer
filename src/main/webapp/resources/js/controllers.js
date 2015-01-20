@@ -1092,7 +1092,8 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 	};
 	
 	$scope.addComment = function() {
-		if (!$scope.comment.text || !$scope.comment.language) return;
+		if (!$scope.comment.text)
+			return;
 		if ($scope.place.comments == undefined)
 			$scope.place.comments = [];
 		$scope.place.comments.push($scope.comment);
