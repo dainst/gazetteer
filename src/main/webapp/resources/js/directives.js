@@ -93,7 +93,7 @@ directives.directive('gazPlacePicker', function($document) {
 			$scope.search = {
 				offset: 0,
 				limit: 30,
-				fuzzy: true,
+				type: "prefix",
 				q: "" 
 			};
 			
