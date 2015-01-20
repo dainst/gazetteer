@@ -590,40 +590,18 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 		Place.query($scope.search, function(result) {
 			$scope.parents = {};
 			$scope.places = result.result;
+			$scope.parents = result.parents;
 			$scope.facets = result.facets;
 			for (var i in $scope.facets) {
 				$scope.facetOffsets[i] = 0;
 			}
-
 			$rootScope.loading--;
-			for (var i = 0; i < $scope.places.length; i++) {
-				$rootScope.loading++;
-				if ($scope.places[i]) {		
-					if ($scope.places[i].parent) {
-						$scope.parents[$scope.places[i].gazId] = [];
-						$scope.getParent($scope.places[i], $scope.places[i]);
-					}
-				}
-				$rootScope.loading--;
-			}
 			if ($scope.total != result.total)
 				$scope.total = result.total;
 		}, function() {
 			$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
 			$rootScope.loading--;
 		});
-	};
-	
-	$scope.getParent = function(place, originalPlace) {
-		if (place.parent) {
-			var parentId = getIdFromUri(place.parent);					
-			Place.get({id:parentId}, function(result) {
-				if ($scope.parents[originalPlace.gazId]) {
-					$scope.parents[originalPlace.gazId].push(result);
-					$scope.getParent(result, originalPlace);
-				}
-			});
-		}
 	};
 	
 	$scope.setFacet = function(facetName, term) {

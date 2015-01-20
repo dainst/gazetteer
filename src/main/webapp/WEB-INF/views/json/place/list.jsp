@@ -69,6 +69,29 @@ if (facets != null) {
 	sb.append("}");
 }
 
+Map<String, List<Place>> parents = (Map<String, List<Place>>) request.getAttribute("parents");
+i = 0;
+if (parents != null) {
+	sb.append(", \"parents\": {");
+	for (Map.Entry<String, List<Place>> parentList : parents.entrySet()) {
+		if (parentList.getValue().size() == 0) {
+			continue;
+		}
+		sb.append("\"").append(parentList.getKey()).append("\": [");
+		int j = 0;
+		for (Place parent : parentList.getValue()) {
+			String serializedParent = serializer.serialize(parent);
+			sb.append(serializedParent);
+			if (++j < parentList.getValue().size()) sb.append(",");
+		}
+		sb.append("]");
+		if (++i < parents.size()) sb.append(",");
+	}
+	if (sb.charAt(sb.length()-1) == ',')
+		sb.deleteCharAt(sb.length()-1);
+	sb.append("}");
+}
+
 sb.append("}");
 
 %>
