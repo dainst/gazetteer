@@ -11,6 +11,7 @@
 response.setHeader("Content-Type", "application/json; charset=utf-8"); 
 
 List<Place> places = (List<Place>) request.getAttribute("places");
+Map<String, List<Place>> parents = (Map<String, List<Place>>) request.getAttribute("parents");
 String baseUri = (String) request.getAttribute("baseUri");
 Long hits = (Long) request.getAttribute("hits");
 
@@ -23,7 +24,10 @@ int numberOfPlaces = 0;
 List<String> accessGrantedPlaces = new ArrayList<String>();
 List<String> accessDeniedPlaces = new ArrayList<String>();
 for (Place place : places) {
-	String serializedPlace = serializer.serialize(place);
+	List<Place> placeParents = null;
+	if (parents != null)
+		placeParents = parents.get(place.getId());
+	String serializedPlace = serializer.serialize(place, placeParents);
 	if (serializedPlace != null) {
 		if (serializedPlace.indexOf("\"accessDenied\":true") > 0)		
 			accessDeniedPlaces.add(serializedPlace);
@@ -63,29 +67,6 @@ if (facets != null) {
 		}
 		sb.append("]");
 		if(++i < facets.size()) sb.append(",");
-	}
-	if (sb.charAt(sb.length()-1) == ',')
-		sb.deleteCharAt(sb.length()-1);
-	sb.append("}");
-}
-
-Map<String, List<Place>> parents = (Map<String, List<Place>>) request.getAttribute("parents");
-if (parents != null) {
-	i = 0;
-	sb.append(", \"parents\": {");
-	for (Map.Entry<String, List<Place>> parentList : parents.entrySet()) {
-		if (parentList.getValue().size() == 0) {
-			continue;
-		}
-		sb.append("\"").append(parentList.getKey()).append("\": [");
-		int j = 0;
-		for (Place parent : parentList.getValue()) {
-			String serializedParent = serializer.serialize(parent);
-			sb.append(serializedParent);
-			if (++j < parentList.getValue().size()) sb.append(",");
-		}
-		sb.append("]");
-		if (++i < parents.size()) sb.append(",");
 	}
 	if (sb.charAt(sb.length()-1) == ',')
 		sb.deleteCharAt(sb.length()-1);

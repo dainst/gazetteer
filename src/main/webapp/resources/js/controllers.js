@@ -486,7 +486,6 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 	setSearchFromLocation();
 	
 	$scope.places = [];
-	$scope.parents = {};
 	$scope.total = 0;
 	$scope.zoom = 2;
 	$scope.facets = null;
@@ -589,7 +588,6 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 		$scope.updatePolygonFilterCoordinates();
 		Place.query($scope.search, function(result) {
 			$scope.places = result.result;
-			$scope.parents = result.parents;
 			$scope.facets = result.facets;
 			for (var i in $scope.facets) {
 				$scope.facetOffsets[i] = 0;
@@ -704,7 +702,7 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 			offset: ($location.search().offset) ? parseInt($location.search().offset) : 0,
 			limit: ($location.search().limit) ? parseInt($location.search().limit) : 10,
 			q: ($location.search().q) ? ($location.search().q) : "",
-			createParentsMap: true
+			createParentLists: true
 		};
 		if ($location.search().fq) $scope.search.fq = $location.search().fq;
 		if ($location.search().type) $scope.search.type = $location.search().type;
@@ -1327,6 +1325,9 @@ function ThesaurusCtrl($scope, $rootScope, $location, Place, messages, $route) {
 			id: place.gazId
 		}, function(result) {
 			place.children = result.result;
+			for (var i in place.children) {
+				place.children[i].parentPlace = place;
+			}
 		}, function() {
 			$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
 			$rootScope.loading--;
@@ -1339,11 +1340,21 @@ function ThesaurusCtrl($scope, $rootScope, $location, Place, messages, $route) {
 	};
 	
 	$scope.showMarker = function(place) {
-		$rootScope.activePlaces = [ place ];
+		if (getMarkerPlace(place) != null)
+			$rootScope.activePlaces = [getMarkerPlace(place)];
 		$rootScope.zoom = 6;
 	};
 	
 	$scope.hideMarker = function() {
 		$rootScope.activePlaces = [];
 	};
+	
+	var getMarkerPlace = function(place) {
+		if (place.prefLocation
+				&& ((place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0) || place.preflocation.shape))
+			return place
+		else if (place.parentPlace)
+			return getMarkerPlace(place.parentPlace);
+		return null;
+	}
 }

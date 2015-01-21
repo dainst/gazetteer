@@ -87,7 +87,7 @@ public class SearchController {
 			@RequestParam(required=false) double[] bbox,
 			@RequestParam(required=false) double[] polygonFilterCoordinates,
 			@RequestParam(required=false) boolean showHiddenPlaces,
-			@RequestParam(required=false) boolean createParentsMap,
+			@RequestParam(required=false) boolean createParentLists,
 			HttpServletRequest request,
 			HttpServletResponse response) {
 		
@@ -180,7 +180,7 @@ public class SearchController {
 		for (Place place : places) {
 			protectLocationsService.protectLocations(user, place);
 			
-			if (createParentsMap) {
+			if (createParentLists) {
 				List<Place> placeParents = new ArrayList<Place>();
 				createParentsList(place, placeParents);
 			
@@ -194,7 +194,7 @@ public class SearchController {
 		
 		ModelAndView mav = new ModelAndView("place/list");
 		mav.addObject("places", places);
-		if (createParentsMap) mav.addObject("parents", parents);
+		if (createParentLists) mav.addObject("parents", parents);
 		mav.addObject("facets", facets);
 		mav.addObject("baseUri", baseUri);
 		mav.addObject("language", locale.getISO3Language());

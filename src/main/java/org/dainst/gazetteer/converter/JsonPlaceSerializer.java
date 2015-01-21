@@ -44,6 +44,10 @@ public class JsonPlaceSerializer {
 		return serialize(place, null, null, null, null);
 	}
 	
+	public String serialize(Place place, List<Place> parents) {
+		return serialize(place, null, null, null, parents);
+	}
+	
 	public String serialize(Place place, UserRepository userDao, PlaceChangeRecordRepository changeRecordDao, HttpServletRequest request,
 			List<Place> parents) {
 		
