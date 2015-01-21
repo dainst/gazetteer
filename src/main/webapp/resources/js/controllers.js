@@ -68,23 +68,25 @@ function AppCtrl($scope, $location, $rootScope, Place, GeoSearch) {
 		$scope.searchSuggestions = [];
 		$scope.selectedSuggestionIndex = -1;
 		
-		Place.suggestions({ field: "prefName.title.suggest", text: $scope.q }, function(result) {
-			$scope.searchSuggestions = result.suggestions;
-			
-			Place.suggestions({ field: "names.title.suggest", text: $scope.q }, function(result) {
-				for (var newSuggestion in result.suggestions) {
-					var sameAsPrefName = false;
-					for (var prefNameSuggestion in $scope.searchSuggestions) {
-						if ($scope.searchSuggestions[prefNameSuggestion].trim() == result.suggestions[newSuggestion].trim()) {
-							sameAsPrefName = true;
-							break;
+		if ($scope.q && $scope.q.length > 0) {
+			Place.suggestions({ field: "prefName.title.suggest", text: $scope.q }, function(result) {
+				$scope.searchSuggestions = result.suggestions;
+
+				Place.suggestions({ field: "names.title.suggest", text: $scope.q }, function(result) {
+					for (var newSuggestion in result.suggestions) {
+						var sameAsPrefName = false;
+						for (var prefNameSuggestion in $scope.searchSuggestions) {
+							if ($scope.searchSuggestions[prefNameSuggestion].trim() == result.suggestions[newSuggestion].trim()) {
+								sameAsPrefName = true;
+								break;
+							}
 						}
-					} 
-					if (!sameAsPrefName && $scope.searchSuggestions.length < 7)
-						$scope.searchSuggestions.push(result.suggestions[newSuggestion]);
-				}
+						if (!sameAsPrefName && $scope.searchSuggestions.length < 7)
+							$scope.searchSuggestions.push(result.suggestions[newSuggestion]);
+					}
+				});
 			});
-		});
+		}
 	};
 	
 	$scope.selectPreviousSuggestion = function() {
@@ -238,23 +240,25 @@ function HomeCtrl($scope, $location, $rootScope, Place) {
 	$scope.updateSuggestions = function() {
 		$scope.homeSearchSuggestions = [];
 		
-		Place.suggestions({ field: "prefName.title.suggest", text: $scope.searchFieldInput }, function(result) {
-			$scope.homeSearchSuggestions = result.suggestions;
-			
-			Place.suggestions({ field: "names.title.suggest", text: $scope.searchFieldInput }, function(result) {
-				for (var newSuggestion in result.suggestions) {
-					var sameAsPrefName = false;
-					for (var prefNameSuggestion in $scope.homeSearchSuggestions) {
-						if ($scope.homeSearchSuggestions[prefNameSuggestion].trim() == result.suggestions[newSuggestion].trim()) {
-							sameAsPrefName = true;
-							break;
-						}
-					} 
-					if (!sameAsPrefName && $scope.homeSearchSuggestions.length < 7)
-						$scope.homeSearchSuggestions.push(result.suggestions[newSuggestion]);
-				}
+		if ($scope.searchFieldInput && $scope.searchFieldInput.length > 0) {
+			Place.suggestions({ field: "prefName.title.suggest", text: $scope.searchFieldInput }, function(result) {
+				$scope.homeSearchSuggestions = result.suggestions;
+
+				Place.suggestions({ field: "names.title.suggest", text: $scope.searchFieldInput }, function(result) {
+					for (var newSuggestion in result.suggestions) {
+						var sameAsPrefName = false;
+						for (var prefNameSuggestion in $scope.homeSearchSuggestions) {
+							if ($scope.homeSearchSuggestions[prefNameSuggestion].trim() == result.suggestions[newSuggestion].trim()) {
+								sameAsPrefName = true;
+								break;
+							}
+						} 
+						if (!sameAsPrefName && $scope.homeSearchSuggestions.length < 7)
+							$scope.homeSearchSuggestions.push(result.suggestions[newSuggestion]);
+					}
+				});
 			});
-		});
+		}
 	};
 	
 	$scope.selectPreviousSuggestion = function() {
