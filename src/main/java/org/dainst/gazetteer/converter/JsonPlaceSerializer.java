@@ -41,12 +41,13 @@ public class JsonPlaceSerializer {
 	}
 	
 	public String serialize(Place place) {
-		return serialize(place, null, null, null);
+		return serialize(place, null, null, null, null);
 	}
 	
-	public String serialize(Place place, UserRepository userDao, PlaceChangeRecordRepository changeRecordDao, HttpServletRequest request) {
+	public String serialize(Place place, UserRepository userDao, PlaceChangeRecordRepository changeRecordDao, HttpServletRequest request,
+			List<Place> parents) {
 		
-		ObjectNode placeNode = createJsonNodes(place, userDao, changeRecordDao, request);
+		ObjectNode placeNode = createJsonNodes(place, userDao, changeRecordDao, request, parents);
 		
 		try {
 			return mapper.writeValueAsString(placeNode);
@@ -59,7 +60,7 @@ public class JsonPlaceSerializer {
 	public String serializeGeoJson(Place place, UserRepository userDao, PlaceChangeRecordRepository changeRecordDao, HttpServletRequest request) {
 		
 		ObjectNode geoJsonPlaceNode = createGeoJsonNodes(place);		
-		ObjectNode placeNode = createJsonNodes(place, userDao, changeRecordDao, request);
+		ObjectNode placeNode = createJsonNodes(place, userDao, changeRecordDao, request, null);
 		geoJsonPlaceNode.put("properties", placeNode);
 		
 		try {
@@ -70,7 +71,8 @@ public class JsonPlaceSerializer {
 		}
 	}
 		
-	private ObjectNode createJsonNodes(Place place, UserRepository userDao, PlaceChangeRecordRepository changeRecordDao, HttpServletRequest request) { 
+	private ObjectNode createJsonNodes(Place place, UserRepository userDao, PlaceChangeRecordRepository changeRecordDao, HttpServletRequest request,
+			List<Place> parents) { 
 		
 		if (place == null) return null;
 		
@@ -304,6 +306,18 @@ public class JsonPlaceSerializer {
 				
 				placeNode.put("changeHistory", changeHistoryNode);
 			}
+		}
+		
+		// parents list
+		if (parents != null) {
+			ArrayNode parentsNode = mapper.createArrayNode();
+			
+			for (Place parent : parents) {
+				ObjectNode parentNode = createJsonNodes(parent, userDao, changeRecordDao, request, null);
+				parentsNode.add(parentNode);
+			}
+			
+			placeNode.put("parents", parentsNode);
 		}
 				
 		return placeNode;

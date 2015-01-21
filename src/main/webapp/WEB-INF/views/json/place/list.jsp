@@ -70,8 +70,8 @@ if (facets != null) {
 }
 
 Map<String, List<Place>> parents = (Map<String, List<Place>>) request.getAttribute("parents");
-i = 0;
 if (parents != null) {
+	i = 0;
 	sb.append(", \"parents\": {");
 	for (Map.Entry<String, List<Place>> parentList : parents.entrySet()) {
 		if (parentList.getValue().size() == 0) {

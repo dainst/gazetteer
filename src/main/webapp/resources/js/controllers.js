@@ -839,14 +839,14 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 	$rootScope.title = "";
 	$rootScope.subtitle = "";
 	
-	$scope.parents = [];
 	$scope.namesDisplayed = 4;
 	$scope.prefLocationCoordinates = [];
 
 	if ($routeParams.id) {
 		$rootScope.loading++;
 		$scope.place = Place.get({
-			id: $routeParams.id
+			id: $routeParams.id,
+			createParentsList: true
 		}, function(result) {
 			if (result.deleted) {
 				$rootScope.addAlert(messages["ui.place.deleted"], null, "error");
@@ -869,7 +869,6 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 				Place.get({id:getIdFromUri(result.parent)}, function(result) {
 					$scope.parent = result;
 				});
-				$scope.getParent(result, 0);
 				$rootScope.loading--;
 			}
 			$rootScope.loading++;
@@ -953,17 +952,6 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 			$scope.namesDisplayed = 10000;
 		else
 			$scope.namesDisplayed = 4;
-	};
-	
-	$scope.getParent = function(place, listIndex) {
-		var parentId = getIdFromUri(place.parent);
-		Place.get({id:parentId}, function(result) {
-			$scope.parents[listIndex] = result;
-			if (result.parent)
-				$scope.getParent(result, listIndex + 1);
-			else
-				$scope.parents.reverse();
-		});
 	};
 
 	$scope.prevChildren = function() {

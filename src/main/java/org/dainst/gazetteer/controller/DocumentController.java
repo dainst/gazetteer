@@ -1,5 +1,6 @@
 package org.dainst.gazetteer.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -78,6 +79,7 @@ public class DocumentController {
 			@RequestParam(required=false) String q,
 			@RequestParam(required=false) String fuzzy,
 			@RequestParam(required=false, defaultValue="map,table") String view,
+			@RequestParam(required=false) boolean createParentsList,
 			@RequestHeader("User-Agent") String userAgent,
 			@RequestHeader("Accept") String accept,
 			HttpServletRequest request) {
@@ -129,8 +131,6 @@ public class DocumentController {
 			
 		} else {
 			
-			//List<Place> children = placeDao.findByParent(place.getId());
-			
 			logger.debug("findByParent: {}", System.currentTimeMillis() - time);
 			time = System.currentTimeMillis();
 			
@@ -139,23 +139,28 @@ public class DocumentController {
 			logger.debug("findByIdIn: {}", System.currentTimeMillis() - time);
 			time = System.currentTimeMillis();
 			
-			//Place parent = null;
-			//if (place.getParent() != null) parent = placeDao.findOne(place.getParent());
-			
 			User user = null;
 			Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			if (principal instanceof User)
 				user = (User) principal;
 			protectLocationsService.protectLocations(user, place);
 			
+			List<Place> parents = new ArrayList<Place>();
+			if (createParentsList) {
+				createParentsList(place, parents);
+				
+				for (Place parent : parents) {
+					protectLocationsService.protectLocations(user, parent);
+				}
+			}
+			
 			mav = new ModelAndView("place/get");
 			if (layout != null) {
 				mav.setViewName("place/"+layout);
 			}
 			mav.addObject("place", place);
-			//mav.addObject("children", children);
 			mav.addObject("relatedPlaces", relatedPlaces);
-			//mav.addObject("parent", parent);
+			if (createParentsList) mav.addObject("parents", parents);
 			mav.addObject("baseUri", baseUri);
 			mav.addObject("language", locale.getISO3Language());
 			mav.addObject("limit", limit);
@@ -333,4 +338,14 @@ public class DocumentController {
 		else
 			return true;
 	}
+	
+	private void createParentsList(Place place, List<Place> parents) {
+		if (place.getParent() != null && !place.getParent().isEmpty()) {
+			Place parent = placeDao.findOne(place.getParent());
+			if (parent != null) {
+				parents.add(parent);
+				createParentsList(parent, parents);
+			}
+		}
+	}	
 }

@@ -30,4 +30,12 @@ angular.module('gazetteer.filters', []).
       return function(text) {
           return $sce.trustAsHtml(text);
       };
-  }]);
+  }]).
+  filter('reverse', function() {
+	  return function(items) {
+		  if (!items || items.length == 0)
+			  return items;
+		  else
+			  return items.slice().reverse();
+	  }
+  });
