@@ -87,6 +87,7 @@ public class SearchController {
 			@RequestParam(required=false) double[] bbox,
 			@RequestParam(required=false) double[] polygonFilterCoordinates,
 			@RequestParam(required=false) boolean showHiddenPlaces,
+			@RequestParam(required=false) boolean createParentsMap,
 			HttpServletRequest request,
 			HttpServletResponse response) {
 		
@@ -179,19 +180,21 @@ public class SearchController {
 		for (Place place : places) {
 			protectLocationsService.protectLocations(user, place);
 			
-			List<Place> placeParents = new ArrayList<Place>();
-			createParentList(place, placeParents);
+			if (createParentsMap) {
+				List<Place> placeParents = new ArrayList<Place>();
+				createParentsList(place, placeParents);
 			
-			for (Place parent : placeParents) {
-				protectLocationsService.protectLocations(user, parent);
-			}
-			
-			parents.put(place.getId(), placeParents);
+				for (Place parent : placeParents) {
+					protectLocationsService.protectLocations(user, parent);
+				}
+				
+				parents.put(place.getId(), placeParents);
+			}			
 		}
 		
 		ModelAndView mav = new ModelAndView("place/list");
 		mav.addObject("places", places);
-		mav.addObject("parents", parents);
+		if (createParentsMap) mav.addObject("parents", parents);
 		mav.addObject("facets", facets);
 		mav.addObject("baseUri", baseUri);
 		mav.addObject("language", locale.getISO3Language());
@@ -488,12 +491,12 @@ public class SearchController {
 		return mav;
 	}
 	
-	private void createParentList(Place place, List<Place> parents) {
+	private void createParentsList(Place place, List<Place> parents) {
 		if (place.getParent() != null && !place.getParent().isEmpty()) {
 			Place parent = placeDao.findOne(place.getParent());
 			if (parent != null) {
 				parents.add(parent);
-				createParentList(parent, parents);
+				createParentsList(parent, parents);
 			}
 		}
 	}		

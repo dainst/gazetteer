@@ -588,7 +588,6 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 		$scope.updateFilters();
 		$scope.updatePolygonFilterCoordinates();
 		Place.query($scope.search, function(result) {
-			$scope.parents = {};
 			$scope.places = result.result;
 			$scope.parents = result.parents;
 			$scope.facets = result.facets;
@@ -704,7 +703,8 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 		$scope.search = {
 			offset: ($location.search().offset) ? parseInt($location.search().offset) : 0,
 			limit: ($location.search().limit) ? parseInt($location.search().limit) : 10,
-			q: ($location.search().q) ? ($location.search().q) : ""
+			q: ($location.search().q) ? ($location.search().q) : "",
+			createParentsMap: true
 		};
 		if ($location.search().fq) $scope.search.fq = $location.search().fq;
 		if ($location.search().type) $scope.search.type = $location.search().type;
@@ -955,7 +955,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 			$scope.namesDisplayed = 4;
 	};
 	
-	$scope.getParent = function(place, listIndex) {		
+	$scope.getParent = function(place, listIndex) {
 		var parentId = getIdFromUri(place.parent);
 		Place.get({id:parentId}, function(result) {
 			$scope.parents[listIndex] = result;
