@@ -11,7 +11,7 @@
 			</a>
 		</li>
 		<li class="dropdown pull-right">
-			<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+			<a class="dropdown-toggle" data-toggle="dropdown" href="">
 				<i class="icon-file"></i> <b class="caret"></b>
 			</a>
 			<ul class="dropdown-menu">
