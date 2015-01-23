@@ -609,14 +609,15 @@ directives.directive('gazMap', function($location, Place) {
 							if (markerLocation.coordinates) {
 								if (angular.isNumber(markerLocation.coordinates[0]) && angular.isNumber(markerLocation.coordinates[1])) {
 									ll = new google.maps.LatLng(markerLocation.coordinates[1], markerLocation.coordinates[0]);
-									$scope.markers[i] = new google.maps.Marker({
+									var marker = new google.maps.Marker({
 										position: ll,
 										title: markerLocationInfo.name,
 										map: $scope.map,
 										icon: defaultIcon,
 										shadow: defaultShadow
 									});
-									$scope.markerMap[place.gazId] = $scope.markers[i];
+									$scope.markers.push(marker);
+									$scope.markerMap[place.gazId] = marker;
 									bounds.extend(ll);
 									numLocations++;
 								}
