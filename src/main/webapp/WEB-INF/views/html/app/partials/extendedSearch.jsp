@@ -164,7 +164,7 @@
 		
 		<div class="control-group">
 			<div class="controls">
-				<button type="reset" class="btn">
+				<button type="button" class="btn" ng-click="reset()">
 					<s:message code="ui.reset" text="ui.reset" />
 					<i class="icon-remove-sign"></i>
 				</button>

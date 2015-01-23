@@ -310,21 +310,25 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages, PolygonVali
 	
 	GeoSearch.setCreateMode(true);
 	
-	$scope.meta = null;
-	$scope.type = "";
-	$scope.names = { title: "", language: "" };
-	$scope.parent = null;
-	$scope.type = "";
-	$scope.tags = [];
-	$scope.provenance = [];
-	$scope.ids = { value: "", context: ""};
-	$scope.fuzzy = false;
-	$scope.filters = {
-			coordinatesFilter : false,
-			noCoordinatesFilter : false,
-			polygonFilter : false,
-			noPolygonFilter : false
+	$scope.reset = function() {
+		$scope.meta = null;
+		$scope.type = "";
+		$scope.names = { title: "", language: "" };
+		$scope.parent = null;
+		$scope.type = "";
+		$scope.tags = [];
+		$scope.provenance = [];
+		$scope.ids = { value: "", context: ""};
+		$scope.fuzzy = false;
+		$scope.filters = {
+				coordinatesFilter : false,
+				noCoordinatesFilter : false,
+				polygonFilter : false,
+				noPolygonFilter : false
+		};
 	};
+	
+	$scope.reset();
 
 	$scope.submit = function() {
 		
@@ -466,7 +470,6 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages, PolygonVali
 		$location.path('/search').search({q:angular.toJson(query), polygonFilterCoordinates: geoSearchCoordinates, fq: filterQuery, type: "extended"});
 		
 	};
-	
 }
 
 function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearch, messages) {
