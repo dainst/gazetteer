@@ -112,7 +112,7 @@
 				</tr>
 			</tbody>
 		</table>
-		<table class="table table-condensed" style="width: auto; margin-bottom: 0;">
+		<table class="table table-condensed" style="width: auto; margin-bottom: 0px;">
 			<thead>
 				<tr>
 					<th><span gaz-translate="'ui.search.filter'"></span></th>
@@ -217,3 +217,20 @@
 		</tr>
 	</tbody>
 </table>
+
+<ul class="nav nav-pills pull-right" style="display:inline-block; margin-bottom: 0px; margin-top: -20px;">
+	<li ng-class="{disabled:(page() == 1)}" ng-click="prevPage()" style="cursor:pointer">
+		<a>&larr; <s:message code="ui.previous" /></a>
+	</li>
+	<li class="divider-vertical"></li>
+	<li class="disabled">
+		<a>
+			<s:message code="ui.page" text="Seite" />
+			{{page()}} / {{totalPages()}}
+		</a>
+	</li>
+	<li class="divider-vertical"></li>
+	<li ng-class="{disabled:(page() == totalPages())}" ng-click="nextPage()" style="cursor:pointer">
+		<a><s:message code="ui.next" text="Vor"/> &rarr;</a>
+	</li>
+</ul>
