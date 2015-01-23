@@ -636,7 +636,7 @@ directives.directive('gazMap', function($location, Place) {
 									}
 								}
 	
-								$scope.shapes[i] = new google.maps.Polygon({
+								shape = new google.maps.Polygon({
 									paths: shapeCoordinates,
 									strokeColor: "#000000",
 									strokeOpacity: 0.7,
@@ -644,9 +644,9 @@ directives.directive('gazMap', function($location, Place) {
 									fillColor: "#000000",
 									fillOpacity: 0.25,
 								});
-								$scope.shapes[i].setMap($scope.map);
+								shape.setMap($scope.map);
+								$scope.shapes.push(shape);
 	
-								shape = $scope.shapes[i];
 								bounds.extend(shape.getBounds().getSouthWest());
 								bounds.extend(shape.getBounds().getNorthEast());
 							}
