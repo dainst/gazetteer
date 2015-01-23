@@ -6,12 +6,12 @@
 
 <ul class="nav nav-tabs">
 	<li class="active">
-		<a ng-click="getCandidatesByName()" data-toggle="tab">
+		<a ng-click="getCandidatesByName()" style="cursor: pointer;" data-toggle="tab">
 			<s:message code="ui.place.placesWithSimilarNames" text="ui.place.placesWithSimilarNames"/>
 		</a>
 	</li>
 	<li ng-show="place.prefLocation != null">
-		<a ng-click="getCandidatesByLocation()" data-toggle="tab">
+		<a ng-click="getCandidatesByLocation()" style="cursor: pointer;" data-toggle="tab">
 			<s:message code="ui.place.placesWithSimilarLocation" text="ui.place.placesWithSimilarLocation"/>
 		</a>
 	</li>
