@@ -1355,10 +1355,10 @@ function ThesaurusCtrl($scope, $rootScope, $location, Place, messages, $route) {
 	
 	var getMarkerPlace = function(place) {
 		if (place.prefLocation
-				&& ((place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0) || place.preflocation.shape))
-			return place
+				&& ((place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0) || place.prefLocation.shape))
+			return place;
 		else if (place.parentPlace)
 			return getMarkerPlace(place.parentPlace);
 		return null;
-	}
+	};
 }
