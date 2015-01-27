@@ -1,6 +1,6 @@
 'use strict';
 
-function AppCtrl($scope, $location, $rootScope, Place, GeoSearch) {
+function AppCtrl($scope, $location, $rootScope, Place, GeoSearch, EscapingService) {
 	
 	$scope.q = null;
 	$scope.type = "";
@@ -119,7 +119,7 @@ function AppCtrl($scope, $location, $rootScope, Place, GeoSearch) {
 			$scope.q = $scope.searchSuggestions[$scope.selectedSuggestionIndex];
 		
 		$scope.zoom = 2;
-		$location.path('/search').search({q:$scope.q, type: $scope.type});
+		$location.path('/search').search({q: EscapingService.escape($scope.q), type: $scope.type});
 		$scope.q = null;
 	};
 	
@@ -142,7 +142,7 @@ function AppCtrl($scope, $location, $rootScope, Place, GeoSearch) {
 	
 }
 
-function HomeCtrl($scope, $location, $rootScope, Place) {
+function HomeCtrl($scope, $location, $rootScope, Place, EscapingService) {
 	$scope.q = null;
 	$scope.type = "";
 	$rootScope.showMap = false;
@@ -290,7 +290,7 @@ function HomeCtrl($scope, $location, $rootScope, Place) {
 			$scope.searchFieldInput = $scope.homeSearchSuggestions[$scope.selectedSuggestionIndex];
 		
 		$scope.zoom = 2;
-		$location.path('/search').search({q:$scope.searchFieldInput, type: $scope.type});
+		$location.path('/search').search({q: EscapingService.escape($scope.searchFieldInput), type: $scope.type});
 		$scope.searchFieldInput = null;
 	};
 }
@@ -1188,7 +1188,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 	$scope.$watch("allRelatedPlaces.length", $scope.updateRelatedPlaces());
 }
 
-function MergeCtrl($scope, $rootScope, $routeParams, $location, Place, messages) {
+function MergeCtrl($scope, $rootScope, $routeParams, $location, Place, EscapingService, messages) {
 	
 	if ($routeParams.id) {
 		$rootScope.loading++;
@@ -1207,9 +1207,9 @@ function MergeCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 	}
 	
 	$scope.getCandidatesByName = function() {
-		var query = "(\"" + $scope.place.prefName.title + "\"~0.5";
+		var query = "(\"" + EscapingService.escape($scope.place.prefName.title) + "\"~0.5";
 		for(var i in $scope.place.names) {
-			query += " OR \"" + $scope.place.names[i].title + "\"~0.5";
+			query += " OR \"" + EscapingService.escape($scope.place.names[i].title) + "\"~0.5";
 		}
 		query += ") AND NOT _id:" + $scope.place.gazId;
 		$rootScope.loading++;

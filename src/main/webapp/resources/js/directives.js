@@ -724,7 +724,7 @@ directives.directive('focusMe', function($timeout, $parse) {
 directives.directive('onBackspace', function () {
     return function (scope, element, attrs) {
         element.bind("keydown keypress", function (event) {
-            if(event.which === 8) {
+            if(event.keyCode === 8) {
                 scope.$apply(function (){
                     scope.$eval(attrs.onBackspace);
                 });
@@ -738,7 +738,7 @@ directives.directive('onBackspace', function () {
 directives.directive('onEnter', function () {
     return function (scope, element, attrs) {
         element.bind("keydown keypress", function (event) {
-            if(event.which === 13) {
+            if(event.keyCode === 13) {
                 scope.$apply(function () {
                     scope.$eval(attrs.onEnter);
                 });
@@ -752,7 +752,7 @@ directives.directive('onEnter', function () {
 directives.directive('onArrowUp', function () {
     return function (scope, element, attrs) {
         element.bind("keydown keypress", function (event) {
-            if(event.which === 38) {
+            if(event.keyCode === 38) {
                 scope.$apply(function () {
                     scope.$eval(attrs.onArrowUp);
                 });
@@ -766,7 +766,7 @@ directives.directive('onArrowUp', function () {
 directives.directive('onArrowDown', function () {
     return function (scope, element, attrs) {
         element.bind("keydown keypress", function (event) {
-            if(event.which === 40) {
+            if(event.keyCode === 40) {
                 scope.$apply(function () {
                     scope.$eval(attrs.onArrowDown);
                 });

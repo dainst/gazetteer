@@ -218,7 +218,7 @@
 	</tbody>
 </table>
 
-<ul class="nav nav-pills pull-right" style="display:inline-block; margin-bottom: 0px; margin-top: -20px;">
+<ul class="nav nav-pills pull-right" style="display:inline-block; margin-bottom: 0px; margin-top: -15px;">
 	<li ng-class="{disabled:(page() == 1)}" ng-click="prevPage()" style="cursor:pointer">
 		<a>&larr; <s:message code="ui.previous" /></a>
 	</li>

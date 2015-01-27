@@ -196,3 +196,14 @@ services.factory('GeoSearch', function(PolygonValidator) {
 		}
 	};
 });
+
+services.factory('EscapingService', function() {
+	return {
+		escape: function(text) {
+			if (!text)
+				return null;
+
+			return text.replace(/[\\\/\(\)\{\}\[\]\"\'\&\+\~\-\^]/g, "\\$&");
+		}
+	};
+});
