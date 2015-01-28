@@ -82,8 +82,10 @@ public class JsonPlaceSerializer {
 		
 		ObjectNode placeNode = mapper.createObjectNode();
 		logger.debug("serializing: {}", place);
-		placeNode.put("@id", baseUri + "place/" + place.getId());
-		placeNode.put("gazId", place.getId());				
+		if (place.getId() != null) {
+			placeNode.put("@id", baseUri + "place/" + place.getId());
+			placeNode.put("gazId", place.getId());
+		}
 		
 		if (place.isDeleted()) {
 			placeNode.put("deleted", true);			
