@@ -178,7 +178,7 @@ CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
   _ = row
   _.map! { |val| val.to_s } # convert nils to empty strings
   _.map! { |val| val.strip } # remove leading and trailing whitespace
-  eval_str = "\"#{options.template.gsub(/\"/){|m|"\\"+m}}\""
+  eval_str = "\"#{options.template.gsub(/\"/){|m|"\\"+m}.gsub(/'/,"\"")}\""
   begin
   	place = JSON.parse(eval(eval_str), :symbolize_names => true)
   rescue Exception => e
