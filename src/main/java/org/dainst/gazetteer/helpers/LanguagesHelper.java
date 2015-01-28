@@ -1,7 +1,9 @@
 package org.dainst.gazetteer.helpers;
 
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -46,7 +48,7 @@ public class LanguagesHelper {
 			for (String language : languages) {
 				map.put(language, getLocaleForISO3Language(language).getDisplayLanguage(locale));
 			}
-			map = sortHashMapByValues(map);
+			map = sortHashMapByValues(map, locale);
 			localizedLanguagesMap.put(locale, map);
 			return map;
 		}
@@ -60,10 +62,15 @@ public class LanguagesHelper {
 		this.languages = languages;
 	}
 	
-	private LinkedHashMap<String,String> sortHashMapByValues(HashMap<String,String> passedMap) {
+	private LinkedHashMap<String,String> sortHashMapByValues(HashMap<String,String> passedMap, final Locale locale) {
 		List<String> mapKeys = new ArrayList<String>(passedMap.keySet());
 		List<String> mapValues = new ArrayList<String>(passedMap.values());
-		Collections.sort(mapValues);
+		Collections.sort(mapValues, new Comparator<String>() {
+		    Comparator<Object> collator = Collator.getInstance(locale);
+		    public int compare(String str1, String str2) {
+		        return collator.compare(str1, str2);
+		    }
+		});
 		Collections.sort(mapKeys);
 
 		LinkedHashMap<String,String> sortedMap = new LinkedHashMap<String,String>();
