@@ -98,6 +98,11 @@ opts = OptionParser.new do |opts|
     options.replace = r
   end
 
+  options.updatedCSV = false
+  opts.on("-C", "--updated-csv FILE", "Create an updated version of the CSV input file which includes newly generated Gazetteer IDs") do |f|
+    options.updateCSV = f
+  end
+
   options.verbose = false
   opts.on("-v", "--[no-]verbose", "Run verbosely") do |v|
     options.verbose = v
@@ -158,6 +163,14 @@ CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
   
   if options.headers and !parsed_headers
     parsed_headers = true
+    # write GazID header to updated CSV file
+    if options.updateCSV
+      updatedRow = row.dup
+      updatedRow << "GazID"
+      CSV.open(options.updateCSV, "ab") do |csv|
+        csv << updatedRow
+      end
+    end
     next
   end
 
@@ -287,6 +300,15 @@ CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
     	place[:gazId] = $ids[temp_id.to_s]
     end
     puts JSON.pretty_generate(place) if options.verbose
+  end
+
+  # write updated CSV file
+  if options.updateCSV
+    updatedRow = row.dup
+    updatedRow << $ids[temp_id.to_s]
+    CSV.open(options.updateCSV, "ab") do |csv|
+      csv << updatedRow
+    end
   end
 
 end
