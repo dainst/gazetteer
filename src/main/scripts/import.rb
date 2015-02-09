@@ -6,6 +6,7 @@ require 'json'
 require 'csv'
 require 'pp'
 require 'highline/import'
+require 'net/http'
 
 
 # Standard parameter values
@@ -103,6 +104,11 @@ opts = OptionParser.new do |opts|
     options.updateCSV = f
   end
 
+  options.geonames = false
+  opts.on("-g" "--geonames-ids COUNTRY_CODE", "Import Geonames IDs if they match the place name title and the given country code") do |g|
+    options.geonames = g
+  end
+
   options.verbose = false
   opts.on("-v", "--[no-]verbose", "Run verbosely") do |v|
     options.verbose = v
@@ -166,7 +172,10 @@ CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
     # write GazID header to updated CSV file
     if options.updateCSV
       updatedRow = row.dup
-      updatedRow << "GazID"
+      updatedRow << "Gazetteer ID"
+      if options.geonames
+        updatedRow << "Geonames ID"
+      end
       CSV.open(options.updateCSV, "ab") do |csv|
         csv << updatedRow
       end
@@ -199,6 +208,57 @@ CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
   	next
   end
 
+  #shape
+  if place[:prefLocation][:shapeString]
+    if place[:prefLocation][:shapeString] == ""
+      place[:prefLocation].delete(:shapeString)
+    else
+      multipolygon = Array.new
+      multipolygon[0] = Array.new
+
+      tempString = place[:prefLocation][:shapeString]
+      tempString = tempString.gsub("POLYGON((", "")
+      tempString = tempString.gsub("))", "")
+      points = tempString.split(',')
+      pointsArray = Array.new
+      for point in points do
+        pointArray = point.split(' ')
+        floatArray = Array.new
+        for coordinate in pointArray do
+          floatCoordinate = coordinate.to_f
+          floatArray << floatCoordinate
+        end
+        pointsArray << floatArray
+      end
+      multipolygon[0][0] = pointsArray
+
+      place[:prefLocation].delete(:shapeString)
+      place[:prefLocation][:shape] = multipolygon
+    end
+  end
+
+  # get geonames id
+  if options.geonames && place[:prefName][:title] && place[:types][0] != "administrative-unit"
+    uri = URI.parse("http://arachne.uni-koeln.de")
+    http = Net::HTTP.new(uri.host, 8080)
+    searchName = place[:prefName][:title].gsub(" ", "%20")
+    http_response = http.get('/solrGeonames35/select/?q=name:"' + searchName + '"%20%2Bcountry_code:' + options.geonames + '&version=2.2&start=0&rows=10&indent=on&wt=ruby')
+    response = eval(http_response.body)
+    if response['response']['docs'].size == 0
+      puts "no geonames id found for place " + place[:prefName][:title]
+    elsif response['response']['docs'].size > 1
+      puts "more than one geonames id found for place " + place[:prefName][:title]
+    else
+      geonamesId = response['response']['docs'][0]['id']
+      if geonamesId
+        identifier = Hash.new
+        identifier[:value] = geonamesId.to_s.gsub("geonames-", "")
+        identifier[:context] = "geonames"
+        place[:identifiers] << identifier
+      end
+    end
+  end
+
   # postprocess to delete empty fields and add provenance
   place[:provenance] = [options.provenance]
   place.delete(:gazId) if place[:gazId].to_s.empty?
@@ -216,7 +276,8 @@ CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
     place[:names].delete_if { |name| name[:title].to_s.empty? }
   end
   place.delete(:types) if place[:types].empty?
-  place.delete(:prefLocation) if place[:prefLocation] and place[:prefLocation][:coordinates] == [0, 0]
+  place[:prefLocation].delete(:coordinates) if place[:prefLocation][:coordinates] == [0, 0]
+  place.delete(:prefLocation) if place[:prefLocation] && !place[:prefLocation][:coordinates] && !place[:prefLocation][:shape]
   if place[:identifiers] 
     place[:identifiers].delete_if { |id| id[:value].to_s.empty? || id[:value] == "0" }
   end
@@ -306,6 +367,11 @@ CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
   if options.updateCSV
     updatedRow = row.dup
     updatedRow << $ids[temp_id.to_s]
+    if place[:identifiers].size > 0 && place[:identifiers][0][:context] == "geonames"
+      updatedRow << place[:identifiers][0][:value]
+    elsif place[:identifiers].size > 1 && place[:identifiers][1][:context] == "geonames"
+      updatedRow << place[:identifiers][1][:value]
+    end
     CSV.open(options.updateCSV, "ab") do |csv|
       csv << updatedRow
     end
