@@ -11,7 +11,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
+import org.springframework.context.NoSuchMessageException;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -19,6 +22,10 @@ public class LanguagesHelper {
 	
 	@Value("${languages}")
 	private String[] languages;
+	
+	@Autowired
+	MessageSource messageSource;
+
 	
 	private Map<String, Locale> localeMap;
 	private Map<Locale, Map<String, String>> localizedLanguagesMap = new HashMap<Locale, Map<String, String>>();
@@ -46,7 +53,16 @@ public class LanguagesHelper {
 		} else {
 			HashMap<String, String> map = new HashMap<String,String>();
 			for (String language : languages) {
-				map.put(language, getLocaleForISO3Language(language).getDisplayLanguage(locale));
+				String displayLanguage = getLocaleForISO3Language(language).getDisplayLanguage(locale);
+				if (displayLanguage != language)
+					map.put(language, getLocaleForISO3Language(language).getDisplayLanguage(locale));
+				else {
+					try {
+						map.put(language, messageSource.getMessage("languages." + language, null, locale));
+					} catch (NoSuchMessageException e) {
+						map.put(language, messageSource.getMessage("languages." + language, null, Locale.GERMAN));
+					}
+				}
 			}
 			map = sortHashMapByValues(map, locale);
 			localizedLanguagesMap.put(locale, map);

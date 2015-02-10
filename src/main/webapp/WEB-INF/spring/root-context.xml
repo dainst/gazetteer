@@ -10,7 +10,7 @@
 		<property name="basenames">
 			<list>
 				<value>messages</value>
-				<value>languages_iso_mapping</value>
+				<value>languages</value>
 			</list>
 		</property>
 	</bean>
