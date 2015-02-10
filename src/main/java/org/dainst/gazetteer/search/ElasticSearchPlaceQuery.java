@@ -6,6 +6,8 @@ import org.elasticsearch.client.Client;
 import org.elasticsearch.common.geo.ShapeRelation;
 import org.elasticsearch.common.geo.builders.PolygonBuilder;
 import org.elasticsearch.common.geo.builders.ShapeBuilder;
+import org.elasticsearch.common.xcontent.XContent;
+import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.index.query.FilterBuilders;
 import org.elasticsearch.index.query.GeoBoundingBoxFilterBuilder;
 import org.elasticsearch.index.query.GeoDistanceFilterBuilder;
@@ -22,7 +24,6 @@ import org.elasticsearch.search.facet.Facets;
 import org.elasticsearch.search.sort.GeoDistanceSortBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,8 +82,8 @@ public class ElasticSearchPlaceQuery {
 	public ElasticSearchPlaceQuery prefixSearch(String query) {
 		query = query.toLowerCase();
 		queryBuilder = QueryBuilders.boolQuery()
-				.should(QueryBuilders.prefixQuery("prefName.title.raw", query))
-				.should(QueryBuilders.prefixQuery("names.title.raw", query));
+				.should(QueryBuilders.termQuery("prefName.title.autocomplete", query))
+				.should(QueryBuilders.termQuery("names.title.autocomplete", query));
 		return this;
 	}
 	

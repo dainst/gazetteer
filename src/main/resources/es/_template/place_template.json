@@ -14,8 +14,21 @@
                 "collation" : {
                     "tokenizer" : "keyword",
                     "filter" : ["collation_filter"]
-                }
+                },
+                "autocomplete": {
+          			"type": "custom",
+          			"tokenizer": "ngramTokenizer",
+          			"filter" :["lowercase"]
+          		} 
             },
+            "tokenizer" : {
+            	"ngramTokenizer" : {
+                	"type" : "edgeNGram",
+                    "min_gram" : "2",
+                    "max_gram" : "50",
+                    "token_chars": []
+				}
+			},
             "filter" : {
                 "collation_filter" : {
                     "type" : "icu_collation",
@@ -55,12 +68,16 @@
 									"type": "string",
 									"analyzer": "raw"
 								},
-	                    		"sort" : {
+	                    		"sort": {
 									"type": "string",
 									"analyzer": "collation"
 								},
-								"suggest" : {
+								"suggest": {
 									"type": "completion"
+								},
+								"autocomplete": {
+									"type": "string",
+									"analyzer": "autocomplete"									 
 								}
 							}   
 						}
@@ -96,6 +113,10 @@
 								},
 								"suggest" : {
 									"type": "completion"
+								},
+								"autocomplete": {
+									"type": "string",
+									"analyzer": "autocomplete"									 
 								}
 							}
 	                    }
