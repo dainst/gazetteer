@@ -89,6 +89,7 @@ public class SearchController {
 			@RequestParam(required=false) boolean showHiddenPlaces,
 			@RequestParam(required=false) boolean createParentLists,
 			@RequestParam(required=false) boolean noPolygons,
+			@RequestParam(required=false) String queryId,
 			HttpServletRequest request,
 			HttpServletResponse response) {
 		
@@ -201,6 +202,7 @@ public class SearchController {
 		mav.addObject("offset", offset);
 		mav.addObject("hits", query.getHits());
 		mav.addObject("includePolygons", !noPolygons);
+		mav.addObject("queryId", queryId);
 		mav.addObject("placeDao", placeDao);
 		mav.addObject("view", view);
 		mav.addObject("q", q);

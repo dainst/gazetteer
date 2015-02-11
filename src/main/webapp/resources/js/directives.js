@@ -90,6 +90,8 @@ directives.directive('gazPlacePicker', function($document) {
 		templateUrl: 'partials/placePicker.html',
 		controller: function($scope, $element, Place) {
 			
+			$scope.queryId = 0;
+			
 			$scope.search = {
 				offset: 0,
 				limit: 30,
@@ -116,16 +118,15 @@ directives.directive('gazPlacePicker', function($document) {
 			};
 			
 			$scope.pickFirst = function() {
-				Place.query($scope.search, function(result) {
-					$scope.places = result.result;
-				});
-				
-				$scope.selectPlace($scope.places[0]);				
+				$scope.selectPlace($scope.places[0]);		
 			};
 			
 			$scope.$watch("search.q", function() {
+				$scope.queryId++;
+				$scope.search.queryId = $scope.queryId;
 				Place.query($scope.search, function(result) {
-					$scope.places = result.result;
+					if ($scope.queryId == result.queryId)
+						$scope.places = result.result;
 				});
 			});
 			

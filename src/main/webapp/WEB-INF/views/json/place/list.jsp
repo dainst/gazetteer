@@ -14,6 +14,7 @@ List<Place> places = (List<Place>) request.getAttribute("places");
 Map<String, List<Place>> parents = (Map<String, List<Place>>) request.getAttribute("parents");
 String baseUri = (String) request.getAttribute("baseUri");
 Long hits = (Long) request.getAttribute("hits");
+String queryId = (String) request.getAttribute("queryId");
 Boolean includePolygons = (Boolean) request.getAttribute("includePolygons");
 if (includePolygons == null) includePolygons = true;
 
@@ -74,6 +75,9 @@ if (facets != null) {
 		sb.deleteCharAt(sb.length()-1);
 	sb.append("}");
 }
+
+if (queryId != null)
+	sb.append(", \"queryId\": \"" + queryId + "\"");
 
 sb.append("}");
 
