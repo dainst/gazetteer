@@ -192,14 +192,15 @@ directives.directive('gazTagField', function($document) {
 			};
 			
 			$scope.updateSuggestions = function() {
-				Place.suggestions({ field: $scope.fieldname + ".suggest", text: $scope.inputText }, function(result) {
-					$scope.suggestions = [];
-					
-					for (var i = 0; i < result.suggestions.length; i++) {
-						if (!$scope.searchInList(result.suggestions[i]))
-							$scope.suggestions.push(result.suggestions[i]);
-					}
-				});
+				$scope.suggestions = [];
+				if ($scope.inputText.length > 0) {
+					Place.suggestions({ field: $scope.fieldname + ".suggest", text: $scope.inputText }, function(result) {
+						for (var i = 0; i < result.suggestions.length; i++) {
+							if (!$scope.searchInList(result.suggestions[i]))
+								$scope.suggestions.push(result.suggestions[i]);
+						}
+					});
+				}
 			};
 			
 			$scope.chooseSuggestion = function() {
