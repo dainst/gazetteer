@@ -94,7 +94,8 @@ directives.directive('gazPlacePicker', function($document) {
 				offset: 0,
 				limit: 30,
 				type: "prefix",
-				q: "" 
+				q: "",
+				noPolygons: true
 			};
 			
 			$scope.showOverlay = false;

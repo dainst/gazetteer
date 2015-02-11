@@ -88,6 +88,7 @@ public class SearchController {
 			@RequestParam(required=false) double[] polygonFilterCoordinates,
 			@RequestParam(required=false) boolean showHiddenPlaces,
 			@RequestParam(required=false) boolean createParentLists,
+			@RequestParam(required=false) boolean noPolygons,
 			HttpServletRequest request,
 			HttpServletResponse response) {
 		
@@ -199,6 +200,7 @@ public class SearchController {
 		mav.addObject("limit", limit);
 		mav.addObject("offset", offset);
 		mav.addObject("hits", query.getHits());
+		mav.addObject("includePolygons", !noPolygons);
 		mav.addObject("placeDao", placeDao);
 		mav.addObject("view", view);
 		mav.addObject("q", q);

@@ -13,9 +13,11 @@ List<Place> parents = (List<Place>) request.getAttribute("parents");
 String baseUri = (String) request.getAttribute("baseUri");
 UserRepository userDao = (UserRepository) request.getAttribute("userDao");
 PlaceChangeRecordRepository changeRecordDao = (PlaceChangeRecordRepository) request.getAttribute("changeRecordDao");
+Boolean includePolygons = (Boolean) request.getAttribute("includePolygons");
+if (includePolygons == null) includePolygons = true;
 
 JsonPlaceSerializer serializer = new JsonPlaceSerializer(baseUri);
 
 %>
 
-<%= serializer.serialize(place, userDao, changeRecordDao, request, parents) %>
+<%= serializer.serialize(place, userDao, changeRecordDao, request, parents, includePolygons) %>

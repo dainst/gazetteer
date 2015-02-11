@@ -41,17 +41,17 @@ public class JsonPlaceSerializer {
 	}
 	
 	public String serialize(Place place) {
-		return serialize(place, null, null, null, null);
+		return serialize(place, null, null, null, null, true);
 	}
 	
-	public String serialize(Place place, List<Place> parents) {
-		return serialize(place, null, null, null, parents);
+	public String serialize(Place place, List<Place> parents, boolean includePolygons) {
+		return serialize(place, null, null, null, parents, includePolygons);
 	}
 	
 	public String serialize(Place place, UserRepository userDao, PlaceChangeRecordRepository changeRecordDao, HttpServletRequest request,
-			List<Place> parents) {
+			List<Place> parents, boolean includePolygons) {
 		
-		ObjectNode placeNode = createJsonNodes(place, userDao, changeRecordDao, request, parents);
+		ObjectNode placeNode = createJsonNodes(place, userDao, changeRecordDao, request, parents, includePolygons);
 		
 		try {
 			return mapper.writeValueAsString(placeNode);
@@ -64,7 +64,7 @@ public class JsonPlaceSerializer {
 	public String serializeGeoJson(Place place, UserRepository userDao, PlaceChangeRecordRepository changeRecordDao, HttpServletRequest request) {
 		
 		ObjectNode geoJsonPlaceNode = createGeoJsonNodes(place);		
-		ObjectNode placeNode = createJsonNodes(place, userDao, changeRecordDao, request, null);
+		ObjectNode placeNode = createJsonNodes(place, userDao, changeRecordDao, request, null, true);
 		geoJsonPlaceNode.put("properties", placeNode);
 		
 		try {
@@ -76,7 +76,7 @@ public class JsonPlaceSerializer {
 	}
 		
 	private ObjectNode createJsonNodes(Place place, UserRepository userDao, PlaceChangeRecordRepository changeRecordDao, HttpServletRequest request,
-			List<Place> parents) { 
+			List<Place> parents, boolean includePolygons) { 
 		
 		if (place == null) return null;
 		
@@ -161,7 +161,7 @@ public class JsonPlaceSerializer {
 				coordinatesNode.add(place.getPrefLocation().getLat());
 				locationNode.put("coordinates", coordinatesNode);
 			}
-			if (place.getPrefLocation().getShape() != null) {
+			if (place.getPrefLocation().getShape() != null && includePolygons) {
 				ArrayNode shapeNode = createPolygonCoordinatesNode(place.getPrefLocation().getShape().getCoordinates());
 				locationNode.put("shape", shapeNode);
 			}
@@ -183,7 +183,7 @@ public class JsonPlaceSerializer {
 					coordinatesNode.add(location.getLat());
 					locationNode.put("coordinates", coordinatesNode);
 				}
-				if (location.getShape() != null) {
+				if (location.getShape() != null && includePolygons) {
 					ArrayNode shapeNode = createPolygonCoordinatesNode(location.getShape().getCoordinates());
 					locationNode.put("shape", shapeNode);
 				}
@@ -319,7 +319,7 @@ public class JsonPlaceSerializer {
 			ArrayNode parentsNode = mapper.createArrayNode();
 			
 			for (Place parent : parents) {
-				ObjectNode parentNode = createJsonNodes(parent, userDao, changeRecordDao, request, null);
+				ObjectNode parentNode = createJsonNodes(parent, userDao, changeRecordDao, request, null, includePolygons);
 				parentsNode.add(parentNode);
 			}
 			
