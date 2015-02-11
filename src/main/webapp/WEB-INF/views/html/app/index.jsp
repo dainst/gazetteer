@@ -147,7 +147,10 @@
 								var="titleSimpleSearch" />
 							<input type="text" class="search-query" name="searchField" ng-model="q"	placeholder="${titleSimpleSearch}" 
 								on-arrow-up="selectPreviousSuggestion()" on-arrow-down="selectNextSuggestion()" on-blur="lostFocus()" autocomplete="off" focus-me="isFocused"> <i class="icon-search"></i>
-						</form>						
+						</form>
+						<div style="margin-top:8px; float: right;" ng-show="loading > 0">
+							<i class="icon-spinner icon-spin icon-large" style="color:white"></i>
+						</div> 						
 					</div>
 				</div>
 			</div>
