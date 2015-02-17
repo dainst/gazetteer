@@ -497,7 +497,7 @@ public class SearchController {
 	
 	private void createParentsList(Place place, List<Place> parents) {
 		if (place.getParent() != null && !place.getParent().isEmpty()) {
-			Place parent = placeDao.findOne(place.getParent());
+			Place parent = placeDao.findWithoutPolygon(place.getParent());
 			if (parent != null) {
 				parents.add(parent);
 				createParentsList(parent, parents);

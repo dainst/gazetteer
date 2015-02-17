@@ -595,66 +595,55 @@ directives.directive('gazMap', function($location, Place) {
 				var ll = new google.maps.LatLng("0","0");
 				var shape = null;
 				var numLocations = 0;
-				var markerLocationIds = [];
 				for (var i in $scope.places) {
 					var place = $scope.places[i];
 					var title = "";
 					if (place.prefName) title = place.prefName.title;
-					var markerLocationInfo = getMarkerLocation(place);
 
-					if (markerLocationInfo) {
-						var alreadyDisplayed = false;
-						for (var i in markerLocationIds) {
-							if (markerLocationIds[i] == markerLocationInfo.placeId)
-								alreadyDisplayed = true;
-						}
-						if (!alreadyDisplayed) {
-							markerLocationIds.push(markerLocationInfo.placeId);
-							var markerLocation = markerLocationInfo.location;							
-							if (markerLocation.coordinates) {
-								if (angular.isNumber(markerLocation.coordinates[0]) && angular.isNumber(markerLocation.coordinates[1])) {
-									ll = new google.maps.LatLng(markerLocation.coordinates[1], markerLocation.coordinates[0]);
-									var marker = new google.maps.Marker({
-										position: ll,
-										title: markerLocationInfo.name,
-										map: $scope.map,
-										icon: defaultIcon,
-										shadow: defaultShadow
-									});
-									$scope.markers.push(marker);
-									$scope.markerMap[place.gazId] = marker;
-									bounds.extend(ll);
-									numLocations++;
-								}
-							}
-							if (markerLocation.shape) {
-								var shapeCoordinates = [];
-								var counter = 0;
-	
-								for (var j = 0; j < markerLocation.shape.length; j++) {
-									for (var k = 0; k < markerLocation.shape[j].length; k++) {
-										var shapePolygonCoordinates = [];
-										for (var l = 0; l < markerLocation.shape[j][k].length; l++)
-											shapePolygonCoordinates[l] = new google.maps.LatLng(markerLocation.shape[j][k][l][1], markerLocation.shape[j][k][l][0]);
-										shapeCoordinates[counter] = shapePolygonCoordinates;
-										counter++;
-									}
-								}
-	
-								shape = new google.maps.Polygon({
-									paths: shapeCoordinates,
-									strokeColor: "#000000",
-									strokeOpacity: 0.7,
-									strokeWeight: 1.5,
-									fillColor: "#000000",
-									fillOpacity: 0.25,
+					if (place.prefLocation) {
+						if (place.prefLocation.coordinates) {
+							if (angular.isNumber(place.prefLocation.coordinates[0]) && angular.isNumber(place.prefLocation.coordinates[1])) {
+								ll = new google.maps.LatLng(place.prefLocation.coordinates[1], place.prefLocation.coordinates[0]);
+								var marker = new google.maps.Marker({
+									position: ll,
+									title: place.prefName.title,
+									map: $scope.map,
+									icon: defaultIcon,
+									shadow: defaultShadow
 								});
-								shape.setMap($scope.map);
-								$scope.shapes.push(shape);
-	
-								bounds.extend(shape.getBounds().getSouthWest());
-								bounds.extend(shape.getBounds().getNorthEast());
+								$scope.markers.push(marker);
+								$scope.markerMap[place.gazId] = marker;
+								bounds.extend(ll);
+								numLocations++;
 							}
+						}
+						if (place.prefLocation.shape) {
+							var shapeCoordinates = [];
+							var counter = 0;
+
+							for (var j = 0; j < place.prefLocation.shape.length; j++) {
+								for (var k = 0; k < place.prefLocation.shape[j].length; k++) {
+									var shapePolygonCoordinates = [];
+									for (var l = 0; l < place.prefLocation.shape[j][k].length; l++)
+										shapePolygonCoordinates[l] = new google.maps.LatLng(place.prefLocation.shape[j][k][l][1], place.prefLocation.shape[j][k][l][0]);
+									shapeCoordinates[counter] = shapePolygonCoordinates;
+									counter++;
+								}
+							}
+
+							shape = new google.maps.Polygon({
+								paths: shapeCoordinates,
+								strokeColor: "#000000",
+								strokeOpacity: 0.7,
+								strokeWeight: 1.5,
+								fillColor: "#000000",
+								fillOpacity: 0.25,
+							});
+							shape.setMap($scope.map);
+							$scope.shapes.push(shape);
+
+							bounds.extend(shape.getBounds().getSouthWest());
+							bounds.extend(shape.getBounds().getNorthEast());
 						}
 					}
 				}
@@ -680,32 +669,6 @@ directives.directive('gazMap', function($location, Place) {
 			        }
 			    }
 			    return bounds;
-			};
-			
-			var getMarkerLocation = function(place) {
-				var markerPlace = null;
-				
-				if (place.prefLocation &&
-						((place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0) || place.prefLocation.shape)) {
-					markerPlace = place;
-				}
-				else if (place.parents) {
-					for (var i = 0; i < place.parents.length; i++) {
-						if (place.parents[i].prefLocation && (place.parents[i].prefLocation.coordinates || place.parents[i].prefLocation.shape)) {
-							markerPlace = place.parents[i];
-							break;
-						}
-					}
-				}
-				
-				if (markerPlace) {
-					var placeName = "";
-					if (markerPlace.prefName)
-						placeName = markerPlace.prefName.title;
-					return { name: placeName, location: markerPlace.prefLocation, placeId: markerPlace.gazId };
-				}
-				
-				return null;
 			};
 		}
 	};
