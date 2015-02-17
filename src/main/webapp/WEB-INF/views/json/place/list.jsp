@@ -15,8 +15,6 @@ Map<String, List<Place>> parents = (Map<String, List<Place>>) request.getAttribu
 String baseUri = (String) request.getAttribute("baseUri");
 Long hits = (Long) request.getAttribute("hits");
 String queryId = (String) request.getAttribute("queryId");
-Boolean includePolygons = (Boolean) request.getAttribute("includePolygons");
-if (includePolygons == null) includePolygons = true;
 
 JsonPlaceSerializer serializer = new JsonPlaceSerializer(baseUri);
 
@@ -30,7 +28,7 @@ for (Place place : places) {
 	List<Place> placeParents = null;
 	if (parents != null)
 		placeParents = parents.get(place.getId());
-	String serializedPlace = serializer.serialize(place, placeParents, includePolygons);
+	String serializedPlace = serializer.serialize(place, placeParents);
 	if (serializedPlace != null) {
 		if (serializedPlace.indexOf("\"accessDenied\":true") > 0)		
 			accessDeniedPlaces.add(serializedPlace);

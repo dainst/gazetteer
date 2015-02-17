@@ -171,7 +171,7 @@ public class SearchController {
 		logger.debug("Result: {}", Arrays.toString(result));
 		
 		// get places for the result ids from db
-		List<Place> places = placesForList(result);
+		List<Place> places = placesForList(result, !noPolygons);
 		logger.debug("Places: {}", places);
 		Map<String,List<String[]>> facets = processFacets(query, locale);
 		
@@ -201,7 +201,6 @@ public class SearchController {
 		mav.addObject("limit", limit);
 		mav.addObject("offset", offset);
 		mav.addObject("hits", query.getHits());
-		mav.addObject("includePolygons", !noPolygons);
 		mav.addObject("queryId", queryId);
 		mav.addObject("placeDao", placeDao);
 		mav.addObject("view", view);
@@ -260,7 +259,7 @@ public class SearchController {
 		// get ids from elastic search
 		String[] result = query.execute();
 		
-		List<Place> places = placesForList(result);
+		List<Place> places = placesForList(result, true);
 		Map<String,List<String[]>> facets = processFacets(query, locale);
 		
 		for (Place place : places)
@@ -334,7 +333,7 @@ public class SearchController {
 		
 		logger.debug("Querying index returned: " + result.length + " places");
 		
-		List<Place> places = placesForList(result);
+		List<Place> places = placesForList(result, true);
 		
 		for (Place place : places)
 			protectLocationsService.protectLocations(user, place);
@@ -371,7 +370,7 @@ public class SearchController {
 	@ResponseBody
 	public Map<String, List<String>> getHeatmapCoordinates() {
 		
-		List<Place> places = placeDao.findByPrefLocationIsNotNullAndChildrenGreaterThan(
+		List<Place> places = placeDao.findHeatmapPlaces(
 				0, new PageRequest(0, 5000, new Sort(Direction.DESC, "children")));
 		
 		List<String> heatmapCoordinates = new ArrayList<String>();
@@ -388,10 +387,13 @@ public class SearchController {
 	}
 	
 	// get places for the result ids from db
-	private List<Place> placesForList(String[] result) {
+	private List<Place> placesForList(String[] result, boolean includePolygons) {
 		List<Place> places = new ArrayList<Place>();
 		for (int i = 0; i < result.length; i++) {
-			places.add(placeDao.findOne(result[i]));
+			if (includePolygons)
+				places.add(placeDao.findOne(result[i]));
+			else
+				places.add(placeDao.findWithoutPolygon(result[i]));
 		}
 		return places;
 	}
@@ -468,7 +470,7 @@ public class SearchController {
 		query.limit(1000);
 		String[] result = query.execute();
 		
-		List<Place> places = placesForList(result);
+		List<Place> places = placesForList(result, true);
 		logger.debug("Places: {}", places);
 		
 		RequestContext requestContext = new RequestContext(request);

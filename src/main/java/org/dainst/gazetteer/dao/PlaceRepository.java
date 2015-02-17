@@ -8,12 +8,16 @@ import org.dainst.gazetteer.domain.Place;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 public interface PlaceRepository extends PagingAndSortingRepository<Place, String> {
 
 	public Place getByLinksObjectAndLinksPredicate(String object, String predicate);
 	
+	@Query(value="{ '_id': ?0 }", fields="{ 'prefLocation.shape': 0 }")
+	public Place findWithoutPolygon(String id);
+
 	public List<Place> findByPrefNameTitle(String name);
 	
 	public List<Place> findByNamesTitle(String name);
@@ -64,12 +68,12 @@ public interface PlaceRepository extends PagingAndSortingRepository<Place, Strin
 	
 	public List<Place> findByIdsContext(String context);
 
-	public List<Place> findByPrefLocationIsNotNullAndChildrenGreaterThan(
-			int i, PageRequest pageRequest);
-
 	public List<Place> findByProvenanceNotAndIdsContext(String string,
 			String string2);
 	
 	public List<Place> findByRecordGroupId(String recordGroupId);
-
+	
+	@Query(value="{ 'children': { $gt: ?0 }, 'prefLocation': { $exists: true } }", fields="{ 'prefLocation.shape': 0 }")
+	public List<Place> findHeatmapPlaces(
+			int i, PageRequest pageRequest);
 }
