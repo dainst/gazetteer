@@ -179,10 +179,10 @@ public class SearchController {
 		
 		for (Place place : places) {
 			protectLocationsService.protectLocations(user, place);
-			
+
 			if (createParentLists) {
 				List<Place> placeParents = new ArrayList<Place>();
-				createParentsList(place, placeParents);
+				createParentsList(place, placeParents, false);
 			
 				for (Place parent : placeParents) {
 					protectLocationsService.protectLocations(user, parent);
@@ -194,7 +194,7 @@ public class SearchController {
 		
 		ModelAndView mav = new ModelAndView("place/list");
 		mav.addObject("places", places);
-		if (createParentLists) mav.addObject("parents", parents);
+		if (parents.size() > 0) mav.addObject("parents", parents);
 		mav.addObject("facets", facets);
 		mav.addObject("baseUri", baseUri);
 		mav.addObject("language", locale.getISO3Language());
@@ -495,12 +495,16 @@ public class SearchController {
 		return mav;
 	}
 	
-	private void createParentsList(Place place, List<Place> parents) {
+	private void createParentsList(Place place, List<Place> parents, boolean includePolygons) {
 		if (place.getParent() != null && !place.getParent().isEmpty()) {
-			Place parent = placeDao.findWithoutPolygon(place.getParent());
+			Place parent = null;
+			if (includePolygons)
+				parent = placeDao.findOne(place.getParent());
+			else
+				parent = placeDao.findWithoutPolygon(place.getParent());
 			if (parent != null) {
 				parents.add(parent);
-				createParentsList(parent, parents);
+				createParentsList(parent, parents, includePolygons);
 			}
 		}
 	}		

@@ -601,7 +601,7 @@ directives.directive('gazMap', function($location, Place) {
 					if (place.prefName) title = place.prefName.title;
 
 					if (place.prefLocation) {
-						if (place.prefLocation.coordinates) {
+						if (place.prefLocation.coordinates && place.mapType == "standard") {
 							if (angular.isNumber(place.prefLocation.coordinates[0]) && angular.isNumber(place.prefLocation.coordinates[1])) {
 								ll = new google.maps.LatLng(place.prefLocation.coordinates[1], place.prefLocation.coordinates[0]);
 								var marker = new google.maps.Marker({
@@ -630,14 +630,20 @@ directives.directive('gazMap', function($location, Place) {
 									counter++;
 								}
 							}
+							var fillOpacity = 0.35;
+							var strokeOpacity = 0.7;
+							if (place.mapType == "parent") {
+								fillOpacity = 0.15;
+								strokeOpacity = 0.25;
+							}
 
 							shape = new google.maps.Polygon({
 								paths: shapeCoordinates,
 								strokeColor: "#000000",
-								strokeOpacity: 0.7,
-								strokeWeight: 1.5,
+								strokeOpacity: strokeOpacity,
+								strokeWeight: 1,
 								fillColor: "#000000",
-								fillOpacity: 0.25,
+								fillOpacity: fillOpacity,
 							});
 							shape.setMap($scope.map);
 							$scope.shapes.push(shape);

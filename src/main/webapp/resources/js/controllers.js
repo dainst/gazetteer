@@ -532,6 +532,8 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 	});
 	
 	$scope.$watch("places", function() {
+		for (var i in $scope.places)
+			$scope.places[i].mapType = "standard";
 		$rootScope.activePlaces = $scope.places;
 	});
 	
@@ -904,12 +906,12 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 				$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
 				$rootScope.loading--;
 			});
-			$rootScope.activePlaces = [ result ];
+			$scope.place.mapType = "standard";
 			$rootScope.loading--;
 		}, function() {
 			$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
 			$rootScope.loading--;
-		});		
+		});
 	} else {
 		$scope.place = { prefLocation: { publicSite: true } };
 		$scope.newPlace = true;
@@ -937,13 +939,13 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 	// show live changes of location coordinates
 	$scope.$watch("place.prefLocation.coordinates", function() {
 		if ($scope.place && $scope.place.prefLocation)
-			$rootScope.activePlaces = [$scope.place];
+			$scope.updateMap();
 	});
 	
 	// show live changes of location shape
 	$scope.$watch("place.prefLocation.shape", function() {
 		if ($scope.place && $scope.place.prefLocation)
-			$rootScope.activePlaces = [$scope.place];
+			$scope.updateMap();
 	});
 	
 	// show live changes of id
@@ -951,6 +953,22 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 		if ($scope.place && $scope.place["@id"])
 			$rootScope.subtitle = $scope.place["@id"] + '<a data-toggle="modal" href="#copyUriModal"><i class="icon-share" style="font-size:0.7em"></i></a>';
 	});
+
+	$scope.updateMap = function() {
+		if (!$scope.place)
+			return;
+
+		if (!$scope.place.prefLocation || !$scope.place.prefLocation.shape) {
+			for (var i in $scope.place.parents) {
+				if ($scope.place.parents[i].prefLocation && $scope.place.parents[i].prefLocation.shape) {
+					$scope.place.parents[i].mapType = "parent";
+					$rootScope.activePlaces = [ $scope.place, $scope.place.parents[i] ];
+					break;
+				}
+			}
+		} else if ($scope.place.prefLocation)
+			$rootScope.activePlaces = [ $scope.place ];
+	};
 	
 	$scope.changeNumberOfDisplayedNames = function() {
 		if ($scope.namesDisplayed == 4)
@@ -1254,8 +1272,12 @@ function MergeCtrl($scope, $rootScope, $routeParams, $location, Place, EscapingS
 	
 	$scope.$watch("candidatePlaces", function() {
 		var activePlaces = [];
-		if ($scope.candidatePlaces)
+		if ($scope.candidatePlaces) {
+			for (var i in $scope.candidatePlaces)
+				$scope.candidatePlaces[i].mapType = "standard";
 			activePlaces = activePlaces.concat($scope.candidatePlaces);
+		}
+		$scope.place.mapType = "standard";
 		activePlaces.push($scope.place);
 		$rootScope.activePlaces = activePlaces;
 	});
@@ -1347,8 +1369,17 @@ function ThesaurusCtrl($scope, $rootScope, $location, Place, messages, $route) {
 	};
 	
 	$scope.showMarker = function(place) {
-		if (getMarkerPlace(place) != null)
-			$rootScope.activePlaces = [getMarkerPlace(place)];
+		place.mapType = "standard";
+		if (place.prefLocation && place.prefLocation.shape)
+			$rootScope.activePlaces = [place];
+		else {
+			var polygonPlace = getPolygonPlace(place);
+			if (polygonPlace != null) {
+				polygonPlace.mapType = "parent";
+				$rootScope.activePlaces = [place, polygonPlace];
+			} else
+				$rootScope.activePlaces = [place];
+		}
 		$rootScope.zoom = 6;
 	};
 	
@@ -1356,12 +1387,11 @@ function ThesaurusCtrl($scope, $rootScope, $location, Place, messages, $route) {
 		$rootScope.activePlaces = [];
 	};
 	
-	var getMarkerPlace = function(place) {
-		if (place.prefLocation
-				&& ((place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0) || place.prefLocation.shape))
+	var getPolygonPlace = function(place, isParent) {
+		if (place.prefLocation && place.prefLocation.shape)
 			return place;
 		else if (place.parentPlace)
-			return getMarkerPlace(place.parentPlace);
+			return getPolygonPlace(place.parentPlace, true);
 		return null;
 	};
 }
