@@ -37,5 +37,5 @@ angular.module('gazetteer.filters', []).
 			  return items;
 		  else
 			  return items.slice().reverse();
-	  }
+	  };
   });

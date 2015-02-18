@@ -18,6 +18,7 @@ function AppCtrl($scope, $location, $rootScope, Place, GeoSearch, EscapingServic
 	
 	$rootScope.bbox = [];
 	$rootScope.zoom = 2;
+	$rootScope.mapMode = "standard";
 	$scope.highlight = null;
 	
 	$scope.searchSuggestions = [];
@@ -307,6 +308,7 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages, PolygonVali
 	$rootScope.activePlaces = [];	
 	$rootScope.isFocused = false;
 	$rootScope.geoSearch = true;
+	$rootScope.mapMode = "standard";
 	
 	GeoSearch.setCreateMode(true);
 	
@@ -482,6 +484,7 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 	$rootScope.showNavbarSearch = true;
 	$rootScope.viewClass = "span7";
 	$rootScope.isFocused = true;
+	$rootScope.mapMode = "standard";
 	
 	$scope.filters = {
 			coordinates : false,
@@ -759,6 +762,7 @@ function CreateCtrl($scope, $rootScope, $routeParams, $location, Place, messages
 	$rootScope.activePlaces = [];
 	$rootScope.isFocused = true;
 	$rootScope.geoSearch = false;
+	$rootScope.mapMode = "standard";
 	
 	$scope.addPlaceType = function(placeType) {
 		var pos = $scope.getListPos($scope.place.types, placeType);
@@ -841,6 +845,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 	$rootScope.viewClass = "span7";
 	$rootScope.isFocused = true;
 	$rootScope.geoSearch = false;
+	$rootScope.mapMode = "singlePlace";
 	
 	$rootScope.pageTitle = "iDAI.gazetteer";
 	$rootScope.title = "";
@@ -1338,6 +1343,7 @@ function ThesaurusCtrl($scope, $rootScope, $location, Place, messages, $route) {
 	$rootScope.activePlaces = [];
 	$rootScope.isFocused = true;
 	$rootScope.geoSearch = false;
+	$rootScope.mapMode = "standard";
 	
 	$rootScope.loading++;
 	Place.query({

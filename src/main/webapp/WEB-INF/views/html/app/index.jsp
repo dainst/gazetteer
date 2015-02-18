@@ -196,7 +196,7 @@
 		<div class="row-fluid">
 			<div class="span5" id="map-well-wrapper" ng-style="mapContainerStyle">
 				<div class="well" style="width: 430px;" id="map-well">
-					<div gaz-map map="$root.map" places="activePlaces" height="500" zoom="zoom" bbox="bbox" highlight="highlight"></div>
+					<div gaz-map map="$root.map" places="activePlaces" height="500" zoom="zoom" bbox="bbox" highlight="highlight" mode="mapMode"></div>
 				</div>
 			</div>
 			

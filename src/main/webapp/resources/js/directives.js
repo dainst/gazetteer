@@ -528,7 +528,8 @@ directives.directive('gazMap', function($location, Place) {
 			bbox: "=",
 			highlight: "=",
 			map: "=",
-			height: "@"
+			height: "@",
+			mode: "="
 		},
 		templateUrl: 'partials/map.html',
 		controller: function($scope, $attrs, $element) {
@@ -645,25 +646,7 @@ directives.directive('gazMap', function($location, Place) {
 							fillOpacity = 0.15;
 							strokeOpacity = 0.25;
 						}
-						if (place.prefLocation.shape) {
-							var shapeCoordinates = convertShapeCoordinates(place.prefLocation.shape);
-	
-							shape = new google.maps.Polygon({
-								paths: shapeCoordinates,
-								strokeColor: "#000000",
-								strokeOpacity: strokeOpacity,
-								strokeWeight: 1,
-								fillColor: "#000000",
-								fillOpacity: fillOpacity
-							});
-							shape.setMap($scope.map);
-							$scope.shapes.push(shape);
-							$scope.shapeMap[place.gazId + "#p"] = shape;
-
-							bounds.extend(shape.getBounds().getSouthWest());
-							bounds.extend(shape.getBounds().getNorthEast());
-						}
-						if (place.locations != null && place.locations.length > 0) {
+						if ($scope.mode == "singlePlace" && place.locations != null && place.locations.length > 0) {
 							for (var i in place.locations) {
 								if (place.locations[i].shape) {
 									var shapeCoordinates = convertShapeCoordinates(place.locations[i].shape);
@@ -683,7 +666,25 @@ directives.directive('gazMap', function($location, Place) {
 									bounds.extend(shape.getBounds().getSouthWest());
 									bounds.extend(shape.getBounds().getNorthEast());
 								}
-							}							
+							}
+						}
+						if (place.prefLocation.shape) {
+							var shapeCoordinates = convertShapeCoordinates(place.prefLocation.shape);
+	
+							shape = new google.maps.Polygon({
+								paths: shapeCoordinates,
+								strokeColor: "#000000",
+								strokeOpacity: strokeOpacity,
+								strokeWeight: 1,
+								fillColor: "#000000",
+								fillOpacity: fillOpacity
+							});
+							shape.setMap($scope.map);
+							$scope.shapes.push(shape);
+							$scope.shapeMap[place.gazId + "#p"] = shape;
+
+							bounds.extend(shape.getBounds().getSouthWest());
+							bounds.extend(shape.getBounds().getNorthEast());
 						}
 					}
 				}
