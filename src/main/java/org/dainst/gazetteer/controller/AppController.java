@@ -3,6 +3,7 @@ package org.dainst.gazetteer.controller;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -64,7 +65,9 @@ public class AppController {
 			String[] split = URLDecoder.decode(fragment, "UTF-8").split("/");
 			return "forward:/doc/" + split[2] + ".html";
 		}
-		
+
+		Arrays.sort(idTypes, String.CASE_INSENSITIVE_ORDER);
+
 		model.addAttribute("baseUri",baseUri);
 		Locale locale = new RequestContext(request).getLocale();
 		model.addAttribute("language", locale.getLanguage());
