@@ -959,14 +959,18 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 			return;
 
 		if (!$scope.place.prefLocation || !$scope.place.prefLocation.shape) {
+			var foundPolygon = false;
 			for (var i in $scope.place.parents) {
 				if ($scope.place.parents[i].prefLocation && $scope.place.parents[i].prefLocation.shape) {
 					$scope.place.parents[i].mapType = "parent";
 					$rootScope.activePlaces = [ $scope.place, $scope.place.parents[i] ];
+					foundPolygon = true;
 					break;
 				}
 			}
-		} else if ($scope.place.prefLocation)
+			if (!foundPolygon)
+				$rootScope.activePlaces = [ $scope.place ];
+		} else
 			$rootScope.activePlaces = [ $scope.place ];
 	};
 	

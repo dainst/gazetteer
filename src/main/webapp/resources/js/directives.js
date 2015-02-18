@@ -643,7 +643,7 @@ directives.directive('gazMap', function($location, Place) {
 								strokeOpacity: strokeOpacity,
 								strokeWeight: 1,
 								fillColor: "#000000",
-								fillOpacity: fillOpacity,
+								fillOpacity: fillOpacity
 							});
 							shape.setMap($scope.map);
 							$scope.shapes.push(shape);
