@@ -22,30 +22,6 @@
 				<li><a ng-href="../search.json?q={{search.q}}&limit=1000&type={{search.type}}" target="_blank">JSON</a></li>
 			</ul>
 		</li>
-		<!-- <li class="dropdown">
-			<a ng-href="#" class="dropdown-toggle" data-toggle="dropdown">
-				<s:message code="ui.search.views" text="ui.search.views" />
-				<b class="caret"></b>
-			</a>
-			<ul class="dropdown-menu">
-				<li>
-				    <a ng-href="">
-						<i class="icon-globe"></i> <i class="icon-list"></i>
-						<s:message code="ui.search.view.mapAndTable" text="ui.search.view.mapAndTable" />
-					</a>
-				</li>
-				<li>
-					<a ng-href="">
-						<i class="icon-globe"></i> <s:message code="ui.search.view.map" />
-					</a>
-				</li>
-				<li>
-					<a ng-href="">
-						<i class="icon-list"></i> <s:message code="ui.search.view.table" />
-					</a>
-				</li>
-			</ul>
-		</li> -->
 	</ul>
 	<ul class="nav nav-pills pull-right" style="display:inline-block; margin-bottom: 0;">
 		<li ng-class="{disabled:(page() == 1)}" ng-click="prevPage()" style="cursor:pointer">
@@ -65,7 +41,7 @@
 	</ul>
 
 	<div class="well" style="padding:10px; margin-bottom: 10px;" ng-show="facets">
-		<table class="table" style="width: auto; margin-bottom:0;">
+		<table class="table" style="margin-bottom:0;">
 			<thead>
 				<tr>
 					<th ng-repeat="(facetName,facet) in facets" style="padding:2px 8px;">
@@ -75,13 +51,16 @@
 			</thead>
 			<tbody>
 				<tr>
-					<td ng-repeat="(facetName,facet) in facets" style="border: 0; vertical-align:top; padding:2px 8px;">
+					<td ng-repeat="(facetName,facet) in facets" style="border: 0; vertical-align:top; padding:0 8px;">
 						<table style="table-layout: fixed; width: 100%;">
 							<tr>
-								<td style="vertical-align:top;" ng-show="facet.length > 0">
-									<div ng-show="facet.length > 5" style="text-align: center;">
-										<i ng-show="facetOffsets[facetName] > 0" class="icon-caret-up" style="color: #5572a1; cursor: pointer;" ng-click="prevFacetEntries(facetName)"></i>
-										<i ng-hide="facetOffsets[facetName] > 0" class="icon-caret-up muted" style="cursor: default;" ng-click="prevFacetEntries(facetName)"></i>
+								<td style="vertical-align:top; padding:0;" ng-show="facet.length > 0">
+									<div ng-show="facet.length > 5" style="text-align: center;">										
+										<a ng-class="{disabled: facetOffsets[facetName] <= 0}"
+												ng-click="prevFacetEntries(facetName)"
+												class="btn btn-default btn-mini btn-block btn-facet-scroll">
+											<i class="icon-caret-up"></i>
+										</a>
 									</div>
 									<div style="height: {{facet.length > 5 ? 105 : facet.length * 21}}px; overflow: hidden;">
 										<div style="margin:0px; height: auto; display:inline-block; white-space: nowrap; transform: translateY(-{{facetOffsets[facetName] * 21}}px);
@@ -101,9 +80,12 @@
 											</div>
 										</div>
 									</div>
-									<div ng-show="facet.length > 5" style="text-align: center;">
-										<i ng-show="facetOffsets[facetName] < facet.length - 5" class="icon-caret-down" style="color: #5572a1; cursor: pointer;" ng-click="nextFacetEntries(facetName)"></i>
-										<i ng-hide="facetOffsets[facetName] < facet.length - 5" class="icon-caret-down muted" style="cursor: default;" ng-click="nextFacetEntries(facetName)"></i>
+									<div ng-show="facet.length > 5" style="text-align: center;">						
+										<a ng-class="{disabled: facetOffsets[facetName] > facet.length -5}"
+												ng-click="nextFacetEntries(facetName)"
+												class="btn btn-default btn-mini btn-block btn-facet-scroll">
+											<i class="icon-caret-down"></i>
+										</a>
 									</div>									
 								</td>
 							</tr>
@@ -112,7 +94,7 @@
 				</tr>
 			</tbody>
 		</table>
-		<table class="table table-condensed" style="width: auto; margin-bottom: 0px;">
+		<table class="table table-condensed" style="margin-bottom: 0px;">
 			<thead>
 				<tr>
 					<th><span gaz-translate="'ui.search.filter'"></span></th>

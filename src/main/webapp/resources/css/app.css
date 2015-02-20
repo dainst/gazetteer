@@ -129,3 +129,11 @@ footer {
 .suggestion.selected {
 	background-color: rgb(178,211,252);
 }
+
+.btn-facet-scroll, .btn-facet-scroll.disabled {
+	background-color: transparent;
+}
+
+.btn.disabled [class^="icon-"] {
+	cursor: initial;
+}
