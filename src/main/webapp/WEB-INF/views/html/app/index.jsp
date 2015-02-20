@@ -32,22 +32,6 @@
 </head>
 <body class="ng-cloak">
 	<style type="text/css">
-		.suggestion {
-			display: block;
-			border: 1px solid #CCC;
-			width: auto;
-			height: 20px;
-			margin-top: -6px;
-			margin-bottom: 5px;
-			padding: 4px;
-			background-color: #ffffff;
-			z-index: 2000;
-			cursor: pointer;
-		}
-		.selected {
-			background-color: #6786ad;
-			color: #ffffff;
-		}
 		.hiddenMapContainer {
 			position: absolute;
 			left: -10000px;
@@ -155,7 +139,7 @@
 				</div>
 			</div>
 		</div>
-		<div name="suggestionsContainer" ng-style="suggestionsStyle">
+		<div name="suggestionsContainer" ng-style="suggestionsStyle" class="suggestion-menu" ng-show="searchSuggestions">
 			<div ng-repeat="suggestion in searchSuggestions">
 				<div class="suggestion" ng-mousedown="submit()" ng-hide="selectedSuggestionIndex == $index" ng-mouseover="setSelectedSuggestionIndex($index)"><span ng-show="suggestion.length < 31">{{suggestion}}</span><span ng-hide="suggestion.length < 31">{{suggestion.substring(0,30)}}...</span></div>
 				<div class="suggestion selected" ng-mousedown="submit()" ng-show="selectedSuggestionIndex == $index"><span ng-show="suggestion.length < 31">{{suggestion}}</span><span ng-hide="suggestion.length < 31">{{suggestion.substring(0,30)}}...</span></div>

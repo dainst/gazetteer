@@ -42,7 +42,7 @@
 	</form>
 </div>
 	
-<div ng-style="suggestionsStyle">
+<div ng-style="suggestionsStyle" class="suggestion-menu" ng-show="homeSearchSuggestions">
 	<div ng-repeat="suggestion in homeSearchSuggestions">
 		<div class="suggestion" ng-mousedown="submit()" ng-hide="selectedSuggestionIndex == $index" ng-mouseover="setSelectedSuggestionIndex($index)">{{suggestion}}</div>
 		<div class="suggestion selected" ng-mousedown="submit()" ng-show="selectedSuggestionIndex == $index">{{suggestion}}</div>

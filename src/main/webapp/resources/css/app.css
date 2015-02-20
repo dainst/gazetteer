@@ -36,7 +36,10 @@ footer {
 .navbar-search .icon-search {
 	position: relative;
 	left: -30px;
-	top: 2px;
+}
+
+.navbar-search input.search-query {
+	line-height: normal;
 }
 
 .alerts {
@@ -113,4 +116,24 @@ footer {
 
 .gaz-container:after {
 	clear: both;
+}
+
+.suggestion-menu {
+	position: absolute;
+	border: 1px solid #CCC;
+	background-color: #ffffff;
+	z-index: 2000;
+    box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+}
+
+.suggestion {
+	display: block;
+	width: auto;
+	height: 20px;
+	padding: 4px;
+	cursor: pointer;
+}
+
+.suggestion.selected {
+	background-color: rgb(178,211,252);
 }

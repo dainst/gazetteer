@@ -55,14 +55,14 @@ function AppCtrl($scope, $location, $rootScope, Place, GeoSearch, EscapingServic
 			scrollTopPos = document.body.scrollTop;		
 		var textFieldPosTop = document.getElementsByName("searchField")[0].getBoundingClientRect().bottom + scrollTopPos;
 		var textFieldPosLeft = document.getElementsByName("searchField")[0].getBoundingClientRect().left;
-		var textFieldPosWidth = document.getElementsByName("searchField")[0].getBoundingClientRect().right - textFieldPosLeft;
+		var textFieldPosWidth = document.getElementsByName("searchField")[0].getBoundingClientRect().right - textFieldPosLeft - 2;
 		
-		$scope.suggestionsStyle = { 'margin-top': '5px',
-				  'position': 'absolute',
-				  'top': textFieldPosTop + 'px',
-				  'left': textFieldPosLeft + 'px',
-				  'width': textFieldPosWidth + 'px',
-				  'z-index': '200000' };
+		$scope.suggestionsStyle = {
+			top: textFieldPosTop + 'px',
+			left: textFieldPosLeft + 'px',
+			width: textFieldPosWidth + 'px'
+		};
+		
 	};
 	
 	$scope.updateSuggestions = function() {
@@ -228,14 +228,13 @@ function HomeCtrl($scope, $location, $rootScope, Place, EscapingService) {
 		if (scrollTopPos == 0)
 			scrollTopPos = document.body.scrollTop;
 		var textFieldPosLeft = document.getElementsByName("homeSearchField")[0].getBoundingClientRect().left;
-		var textFieldPosWidth = document.getElementsByName("homeSearchField")[0].getBoundingClientRect().right - textFieldPosLeft;
+		var textFieldPosWidth = document.getElementsByName("homeSearchField")[0].getBoundingClientRect().right - textFieldPosLeft - 2;
 		var textFieldPosTop = document.getElementsByName("homeSearchField")[0].getBoundingClientRect().bottom + scrollTopPos;
-		$scope.suggestionsStyle = { 'margin-top': '5px',
-								  'position': 'absolute',
-								  'top': textFieldPosTop + 'px',
-								  'left': textFieldPosLeft + 'px',
-								  'width': textFieldPosWidth + 'px',
-								  'z-index': '2000' };
+		$scope.suggestionsStyle = {
+			top: textFieldPosTop + 'px',
+			left: textFieldPosLeft + 'px',
+			width: textFieldPosWidth + 'px'
+		};
 	});
 	
 	$scope.updateSuggestions = function() {
