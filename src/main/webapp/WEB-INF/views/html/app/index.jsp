@@ -11,7 +11,7 @@
 <title ng-bind="pageTitle">iDAI.gazetteer</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" href="resources/ico/favicon.ico">
+<link rel="icon" href="../resources/ico/favicon.ico" type="image/x-icon">
 <link rel="apple-touch-icon" sizes="144x144" href="../resources/ico/apple-touch-icon-144.png">
 <link rel="apple-touch-icon" sizes="114x114" href="../resources/ico/apple-touch-icon-114.png">
 <link rel="apple-touch-icon" sizes="72x72" href="../resources/ico/apple-touch-icon-72.png">
