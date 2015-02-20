@@ -446,7 +446,7 @@ directives.directive('gazShapeEditor', function($document, PolygonValidator) {
 						}
 						var firstLngLat = pathCoordinates[0];
 						var lastLngLat = pathCoordinates[pathCoordinates.length - 1];
-						if (firstLngLat[0] != lastLngLat[1] || firstLngLat[1] != lastLngLat[1])
+						if (firstLngLat[0] != lastLngLat[0] || firstLngLat[1] != lastLngLat[1])
 							pathCoordinates.push(firstLngLat);
 						polygonCoordinates[pathCounter] = pathCoordinates;
 						pathCounter++;
