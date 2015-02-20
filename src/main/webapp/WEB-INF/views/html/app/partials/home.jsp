@@ -30,23 +30,24 @@
 	</h1>
 	<form class="form-search simpleSearchForm" ng-submit="submit()" style="margin:0;">
 		<div class="well" style="display:inline-block; text-align:left;">
-			<div class="input-append">
-				<s:message code="ui.search.simpleSearch" text="ui.search.simpleSearch"
-						var="titleSimpleSearch" />
-				<input class="search-query input-xxlarge" name="homeSearchField" ng-model="searchFieldInput" placeholder="${titleSimpleSearch}" 
-						on-arrow-up="selectPreviousSuggestion()" on-arrow-down="selectNextSuggestion()" on-blur="lostFocus()"
-						type="text" autocomplete="off" focus-me="true">
-				<button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
+			<div style="position:relative;">
+				<div class="input-append">
+					<s:message code="ui.search.simpleSearch" text="ui.search.simpleSearch"
+							var="titleSimpleSearch" />
+					<input class="search-query input-xxlarge" name="homeSearchField" ng-model="searchFieldInput" placeholder="${titleSimpleSearch}" 
+							on-arrow-up="selectPreviousSuggestion()" on-arrow-down="selectNextSuggestion()" on-blur="lostFocus()"
+							type="text" autocomplete="off" focus-me="true">
+					<button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
+				</div>		
+				<div class="suggestion-menu" ng-show="homeSearchSuggestions">
+					<div ng-repeat="suggestion in homeSearchSuggestions">
+						<div class="suggestion" ng-mousedown="submit()" ng-hide="selectedSuggestionIndex == $index" ng-mouseover="setSelectedSuggestionIndex($index)">{{suggestion}}</div>
+						<div class="suggestion selected" ng-mousedown="submit()" ng-show="selectedSuggestionIndex == $index">{{suggestion}}</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</form>
-</div>
-	
-<div ng-style="suggestionsStyle" class="suggestion-menu" ng-show="homeSearchSuggestions">
-	<div ng-repeat="suggestion in homeSearchSuggestions">
-		<div class="suggestion" ng-mousedown="submit()" ng-hide="selectedSuggestionIndex == $index" ng-mouseover="setSelectedSuggestionIndex($index)">{{suggestion}}</div>
-		<div class="suggestion selected" ng-mousedown="submit()" ng-show="selectedSuggestionIndex == $index">{{suggestion}}</div>
-	</div>
 </div>
 		
 <div class="row-fluid" style="margin-top:-220px">

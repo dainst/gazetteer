@@ -55,8 +55,8 @@
 						<table style="table-layout: fixed; width: 100%;">
 							<tr>
 								<td style="vertical-align:top; padding:0;" ng-show="facet.length > 0">
-									<div ng-show="facet.length > 5" style="text-align: center;">										
-										<a ng-class="{disabled: facetOffsets[facetName] <= 0}"
+									<div style="text-align: center;">										
+										<a ng-class="{disabled: facet.length <= 5 || facetOffsets[facetName] <= 0}"
 												ng-click="prevFacetEntries(facetName)"
 												class="btn btn-default btn-mini btn-block btn-facet-scroll">
 											<i class="icon-caret-up"></i>
@@ -80,8 +80,8 @@
 											</div>
 										</div>
 									</div>
-									<div ng-show="facet.length > 5" style="text-align: center;">						
-										<a ng-class="{disabled: facetOffsets[facetName] > facet.length -5}"
+									<div style="text-align: center;">						
+										<a ng-class="{disabled: facet.length <= 5 || facetOffsets[facetName] > facet.length -5}"
 												ng-click="nextFacetEntries(facetName)"
 												class="btn btn-default btn-mini btn-block btn-facet-scroll">
 											<i class="icon-caret-down"></i>

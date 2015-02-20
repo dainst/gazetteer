@@ -34,8 +34,9 @@ footer {
 }
 
 .navbar-search .icon-search {
-	position: relative;
-	left: -30px;
+	position: absolute;
+	top: 6px;
+	left: 182px;
 }
 
 .navbar-search input.search-query {
@@ -116,6 +117,9 @@ footer {
 	background-color: #ffffff;
 	z-index: 2000;
     box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+    margin: 0;
+    width: 100%;
+    box-sizing:border-box;
 }
 
 .suggestion {
@@ -130,10 +134,15 @@ footer {
 	background-color: rgb(178,211,252);
 }
 
+.input-append .btn {
+	border: 1px solid #5479b5;
+}
+
 .btn-facet-scroll, .btn-facet-scroll.disabled {
 	background-color: transparent;
 }
 
-.btn.disabled [class^="icon-"] {
+.btn-facet-scroll.disabled [class^="icon-"] {
 	cursor: initial;
+	color: transparent;
 }

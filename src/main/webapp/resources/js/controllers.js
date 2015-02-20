@@ -27,12 +27,7 @@ function AppCtrl($scope, $location, $rootScope, Place, GeoSearch, EscapingServic
 	$scope.scrollPosition = 0;
 	
 	$scope.$watch("q", function() {				
-		$scope.updateSuggestions();
-		$scope.updateSuggestionsStyle();	
-	});
-	
-	$scope.$watch("scrollPosition", function() {
-		$scope.updateSuggestionsStyle();
+		$scope.updateSuggestions();	
 	});
 	
 	$scope.$watch("showMap", function() {
@@ -48,22 +43,6 @@ function AppCtrl($scope, $location, $rootScope, Place, GeoSearch, EscapingServic
 		else
 			GeoSearch.deactivate();
 	});
-		
-	$scope.updateSuggestionsStyle = function() {
-		var scrollTopPos = document.documentElement.scrollTop;
-		if (scrollTopPos == 0)
-			scrollTopPos = document.body.scrollTop;		
-		var textFieldPosTop = document.getElementsByName("searchField")[0].getBoundingClientRect().bottom + scrollTopPos;
-		var textFieldPosLeft = document.getElementsByName("searchField")[0].getBoundingClientRect().left;
-		var textFieldPosWidth = document.getElementsByName("searchField")[0].getBoundingClientRect().right - textFieldPosLeft - 2;
-		
-		$scope.suggestionsStyle = {
-			top: textFieldPosTop + 'px',
-			left: textFieldPosLeft + 'px',
-			width: textFieldPosWidth + 'px'
-		};
-		
-	};
 	
 	$scope.updateSuggestions = function() {
 		$scope.searchSuggestions = [];
@@ -224,17 +203,6 @@ function HomeCtrl($scope, $location, $rootScope, Place, EscapingService) {
 	$scope.$watch("searchFieldInput", function() {
 		$scope.updateSuggestions();		
 		$scope.selectedSuggestionIndex = -1;
-		var scrollTopPos = document.documentElement.scrollTop;
-		if (scrollTopPos == 0)
-			scrollTopPos = document.body.scrollTop;
-		var textFieldPosLeft = document.getElementsByName("homeSearchField")[0].getBoundingClientRect().left;
-		var textFieldPosWidth = document.getElementsByName("homeSearchField")[0].getBoundingClientRect().right - textFieldPosLeft - 2;
-		var textFieldPosTop = document.getElementsByName("homeSearchField")[0].getBoundingClientRect().bottom + scrollTopPos;
-		$scope.suggestionsStyle = {
-			top: textFieldPosTop + 'px',
-			left: textFieldPosLeft + 'px',
-			width: textFieldPosWidth + 'px'
-		};
 	});
 	
 	$scope.updateSuggestions = function() {
@@ -292,6 +260,7 @@ function HomeCtrl($scope, $location, $rootScope, Place, EscapingService) {
 		$scope.zoom = 2;
 		$location.path('/search').search({q: EscapingService.escape($scope.searchFieldInput), type: $scope.type});
 		$scope.searchFieldInput = null;
+		$window.location.reload(); // force reload in order to avoid map quirks
 	};
 }
 

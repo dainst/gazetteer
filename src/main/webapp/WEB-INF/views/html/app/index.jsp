@@ -98,7 +98,7 @@
 				<div id="archaeo-fixed-menu-logo"></div>
 				<h3 class="pull-left">
 					<small>Deutsches Archäologisches Institut</small> <br>
-					<a href="../" style="color:inherit">iDAI.gazetteer</a>
+					<a href="#!/home" style="color:inherit">iDAI.gazetteer</a>
 				</h3>
 			</div>
 			<div class="affix-menu-wrapper">
@@ -132,20 +132,25 @@
 							<form novalidate class="navbar-search pull-left" ng-show="showNavbarSearch" ng-submit="submit()">
 								<s:message code="ui.search.simpleSearch" text="ui.search.simpleSearch"
 									var="titleSimpleSearch" />
-								<input type="text" class="search-query" name="searchField" ng-model="q"	placeholder="${titleSimpleSearch}" 
-									on-arrow-up="selectPreviousSuggestion()" on-arrow-down="selectNextSuggestion()" on-blur="lostFocus()" autocomplete="off" focus-me="isFocused"> <i class="icon-search"></i>
+								
+								<div style="width:206px; position:relative;">
+									<input type="text" class="search-query input-block-level" name="searchField" ng-model="q"	placeholder="${titleSimpleSearch}" 
+										on-arrow-up="selectPreviousSuggestion()" on-arrow-down="selectNextSuggestion()" on-blur="lostFocus()" autocomplete="off" focus-me="isFocused"> <i class="icon-search"></i>
+										
+									<div name="suggestionsContainer" class="suggestion-menu" ng-show="searchSuggestions">
+										<div ng-repeat="suggestion in searchSuggestions">
+											<div class="suggestion" ng-mousedown="submit()" ng-hide="selectedSuggestionIndex == $index" ng-mouseover="setSelectedSuggestionIndex($index)"><span ng-show="suggestion.length < 31">{{suggestion}}</span><span ng-hide="suggestion.length < 31">{{suggestion.substring(0,30)}}...</span></div>
+											<div class="suggestion selected" ng-mousedown="submit()" ng-show="selectedSuggestionIndex == $index"><span ng-show="suggestion.length < 31">{{suggestion}}</span><span ng-hide="suggestion.length < 31">{{suggestion.substring(0,30)}}...</span></div>
+										</div>
+									</div>
+								</div>
+								
 							</form>
 							<div style="margin-top:8px; float: right;" ng-show="loading > 0">
 								<i class="icon-spinner icon-spin icon-large" style="color:white"></i>
 							</div> 						
 						</div>
 					</div>
-				</div>
-			</div>
-			<div name="suggestionsContainer" ng-style="suggestionsStyle" class="suggestion-menu" ng-show="searchSuggestions">
-				<div ng-repeat="suggestion in searchSuggestions">
-					<div class="suggestion" ng-mousedown="submit()" ng-hide="selectedSuggestionIndex == $index" ng-mouseover="setSelectedSuggestionIndex($index)"><span ng-show="suggestion.length < 31">{{suggestion}}</span><span ng-hide="suggestion.length < 31">{{suggestion.substring(0,30)}}...</span></div>
-					<div class="suggestion selected" ng-mousedown="submit()" ng-show="selectedSuggestionIndex == $index"><span ng-show="suggestion.length < 31">{{suggestion}}</span><span ng-hide="suggestion.length < 31">{{suggestion.substring(0,30)}}...</span></div>
 				</div>
 			</div>
 		</div>
