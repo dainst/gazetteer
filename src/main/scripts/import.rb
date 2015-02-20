@@ -44,8 +44,8 @@ opts = OptionParser.new do |opts|
   
   opts.banner = "Usage: example.rb [options] [file ...]"
 
-  opts.on("-P", "--provenance TAG", "Add TAG to provenance field (mandatory)") do |p|
-    options.provenance = p
+  opts.on("-P", "--provenance TAGS", "Add comma separated TAGS to provenance field (mandatory)") do |p|
+    options.provenance = p.split ","
   end
 
   opts.on("-u", "--username USERNAME", "Gazetteer user name") do |u|
@@ -260,7 +260,7 @@ CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
   end
 
   # postprocess to delete empty fields and add provenance
-  place[:provenance] = [options.provenance]
+  place[:provenance] = options.provenance
   place.delete(:gazId) if place[:gazId].to_s.empty?
   place[:prefName].delete(:language) if place[:prefName][:language].to_s.empty?
   place[:prefName].delete(:ancient) if !place[:prefName][:ancient]
