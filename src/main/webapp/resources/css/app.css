@@ -94,17 +94,9 @@ footer {
 	margin-bottom: 8px !important;
 }
 
-.gaz-container,
-.navbar-static-top .gaz-container,
-.navbar-fixed-top .gaz-container,
-.navbar-fixed-bottom .gaz-container {
-	width: 1250px;
-}
-
 .gaz-container {
 	margin-right: auto;
 	margin-left: auto;
-	*zoom: 1;
 }
 
 .gaz-container:before,
