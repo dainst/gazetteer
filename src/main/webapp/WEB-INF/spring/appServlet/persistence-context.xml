@@ -15,7 +15,7 @@
 
 	<mongo:repositories base-package="org.dainst.gazetteer.dao" />
 
-	<mongo:mongo host="localhost" port="27017" />
+	<mongo:mongo id="mongo" replica-set="localhost:27017" />
 
 	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
 		<constructor-arg ref="mongo" />
