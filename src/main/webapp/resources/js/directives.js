@@ -333,7 +333,7 @@ directives.directive('gazShapeEditor', function($document, PolygonValidator) {
 								strokeWeight: 1.5,
 								fillColor: "#000000",
 								fillOpacity: 0.25,
-								editable: true,
+								editable: true
 							});
 							
 							$scope.gmapsShapes[i].setMap($scope.map);
@@ -657,11 +657,13 @@ directives.directive('gazMap', function($location, Place) {
 										strokeOpacity: strokeOpacity,
 										strokeWeight: 1,
 										fillColor: "#99CCFF",
-										fillOpacity: fillOpacity
+										fillOpacity: fillOpacity,
+										placeId: place.gazId
 									});
 									shape.setMap($scope.map);
 									$scope.shapes.push(shape);
 									$scope.shapeMap[place.gazId + "#" + i] = shape;
+									addPolygonListener(shape);
 
 									bounds.extend(shape.getBounds().getSouthWest());
 									bounds.extend(shape.getBounds().getNorthEast());
@@ -677,11 +679,13 @@ directives.directive('gazMap', function($location, Place) {
 								strokeOpacity: strokeOpacity,
 								strokeWeight: 1,
 								fillColor: "#000000",
-								fillOpacity: fillOpacity
+								fillOpacity: fillOpacity,
+								placeId: place.gazId
 							});
 							shape.setMap($scope.map);
 							$scope.shapes.push(shape);
 							$scope.shapeMap[place.gazId + "#p"] = shape;
+							addPolygonListener(shape);
 
 							bounds.extend(shape.getBounds().getSouthWest());
 							bounds.extend(shape.getBounds().getNorthEast());
@@ -710,6 +714,13 @@ directives.directive('gazMap', function($location, Place) {
 			        }
 			    }
 			    return bounds;
+			};
+			
+			var addPolygonListener = function(polygon) {
+				google.maps.event.addListener(polygon, 'click', function (event) {
+					$location.path("/show/" + polygon.placeId);
+					$scope.$apply();
+				});
 			};
 			
 			var convertShapeCoordinates = function(shape) {
