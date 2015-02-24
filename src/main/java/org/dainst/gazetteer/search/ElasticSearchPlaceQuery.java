@@ -80,8 +80,8 @@ public class ElasticSearchPlaceQuery {
 	public ElasticSearchPlaceQuery prefixSearch(String query) {
 		query = query.toLowerCase();
 		queryBuilder = QueryBuilders.boolQuery()
-				.must(QueryBuilders.termQuery("prefName.title.autocomplete", query));
-				//.should(QueryBuilders.termQuery("names.title.autocomplete", query));
+				.should(QueryBuilders.termQuery("prefName.title.autocomplete", query))
+				.should(QueryBuilders.termQuery("names.title.autocomplete", query));
 		return this;
 	}
 	
