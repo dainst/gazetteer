@@ -2,32 +2,6 @@
 <%@ page contentType="text/html; charset=utf-8" session="false"%>
 
 <span>
-	<style type="text/css">
-		.shape-editor-field {
-			background-colour: #fff;
-			border-radius: 0 0 0 0;
-			border: 1px solid #CCC;
-			height: 20px;
-			padding: 4px 6px;
-			font-size: 14px;
-			line-height: 20px;
-			width: 206px;
-			display: inline-block;
-			overflow: hidden;
-		}
-		.shape-editor-btn {
-			margin-left: -3px;
-			border-radius: 0 0 0 0;
-			border-top: 1px solid #cccccc;
-			border-bottom: 1px solid #cccccc;
-			border-right: 1px solid #cccccc;
-			vertical-align: top;
-			text-align: center;
-			display: inline-block;
-			padding: 4px 9px 4px 10px;
-		}
-	</style>
-	
 	<span>
 		<div class="shape-editor-field">
 			<em ng-show="shape"><s:message code="ui.shapeEditor.editPolygon" text="ui.shapeEditor.editPolygon" /></em>
