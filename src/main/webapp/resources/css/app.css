@@ -181,6 +181,30 @@ footer {
 	left: 210px;
 }
 
+.tag-field {
+	background-color: #fcfcfc;
+	border-radius: 0 0 0 0;
+	border: 1px solid #CCC;
+	height: 23px;
+	padding	: 0px 4px 6px 4px;
+	font-size: 14px;
+	line-height: 20px;
+	display: inline-block;
+	overflow: hidden;
+	white-space: nowrap;
+}
+
+.tag-field .input {
+  		border-width: 0px !important;
+  		border: none !important;
+  		white-space: nowrap;
+  		width: 100%;
+}
+
+.tag-field .remove-icon-mouseover {
+	color: #d9e8ef;
+}
+
 .shape-editor-field {
 	background-colour: #fff;
 	border-radius: 0 0 0 0;

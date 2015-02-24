@@ -167,9 +167,8 @@ directives.directive('gazTagField', function($document) {
 			
 			$scope.removeTag = function(tagToRemove) {
 				for (var i = 0; i < $scope.tags.length; i++) {
-					if ($scope.tags[i] == tagToRemove) {
+					if ($scope.tags[i] == tagToRemove)
 						$scope.tags.splice(i, 1);
-					}
 				}
 			};
 			
