@@ -33,7 +33,7 @@ function AppCtrl($scope, $location, $rootScope, Place, GeoSearch, EscapingServic
 	$scope.$watch("showMap", function() {
 		if ($rootScope.showMap) {
 			$scope.mapContainerStyle = {};
-			google.maps.event.trigger($rootScope.map, 'resize');
+			window.setTimeout(function() { google.maps.event.trigger($rootScope.map, 'resize'); }, 20);
 		}
 		else
 			$scope.mapContainerStyle = { 'position': 'absolute', 'left': '-10000px' };
