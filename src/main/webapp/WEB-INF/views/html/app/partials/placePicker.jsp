@@ -2,29 +2,6 @@
 <%@ page contentType="text/html; charset=utf-8" session="false"%>
 
 <span>
-
-	<style type="text/css">
-		.place-picker-field {
-			background-color: #fcfcfc;
-			border-radius: 0 0 0 0;
-			border: 1px solid #CCC;
-			height: 23px;
-			padding: 4px 6px;
-			font-size: 14px;
-			line-height: 20px;
-			width: 220px;
-			display: inline-block;
-			overflow: hidden;
-		}
-		.place-picker-btn {
-			margin-left: -1px;
-			border-radius: 0 0 0 0;
-			border: 1px solid #cccccc;
-			vertical-align: top;
-			height: 33px;
-		}
-	</style>
-	
 	<span>
 	
 		<div class="place-picker-field">
@@ -42,7 +19,7 @@
 		<div class='modal-header'>
 			<button type='button' class='close' data-dismiss='modal' ng-click="closeOverlay()">×</button>
 			<h3><s:message code="ui.picker.pickAPlace" text="ui.picker.pickAPlace"/></h3>
-			<form class="navbar-search" style="position:static; float:none;" ng-submit="pickFirst()" autocomplete="off">
+			<form class="place-picker-search" ng-submit="pickFirst()" autocomplete="off">
  				<input type="text" class="search-query" placeholder="Filter" ng-model="search.q" autocomplete="off" focus-me="showOverlay">
  				<i class="icon-search icon-white"></i>
 			</form>

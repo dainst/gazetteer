@@ -146,3 +146,37 @@ footer {
 	cursor: initial;
 	color: transparent;
 }
+
+.place-picker-field {
+	background-color: #fcfcfc;
+	border-radius: 0 0 0 0;
+	border: 1px solid #CCC;
+	height: 23px;
+	padding: 4px 6px;
+	font-size: 14px;
+	line-height: 20px;
+	width: 220px;
+	display: inline-block;
+	overflow: hidden;
+}
+
+.place-picker-btn {
+	margin-left: -1px;
+	border-radius: 0 0 0 0;
+	border: 1px solid #cccccc;
+	vertical-align: top;
+	height: 33px;
+}
+
+.place-picker-search {
+  position: relative;
+  float: none;
+  margin-top: 5px;
+  margin-bottom: 0;
+}
+
+.place-picker-search .icon-search {
+	position: absolute;
+	top: 8px;
+	left: 210px;
+}
