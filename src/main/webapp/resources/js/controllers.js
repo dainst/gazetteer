@@ -140,51 +140,50 @@ function HomeCtrl($scope, $location, $rootScope, Place, EscapingService) {
 	
 	var map_canvas = document.getElementById('home_map_canvas');
 	
+	$scope.homeMap = new google.maps.Map(map_canvas, {
+		center: new google.maps.LatLng(20,0),
+		zoom: 2,
+		disableDefaultUI: true,
+		mapTypeId: google.maps.MapTypeId.ROADMAP,
+		zoomControlOptions: {
+			style: google.maps.ZoomControlStyle.SMALL
+		},
+		styles: [
+        	{
+       	    "featureType": "administrative",
+       	    "stylers": [
+       	      { "visibility": "off" }
+       	    ]
+       	  },{
+       	    "featureType": "landscape",
+       	    "stylers": [
+       	      { "visibility": "simplified" },
+       	      { "saturation": -100 },
+       	      { "lightness": -31 }
+       	    ]
+       	  },{
+       	    "featureType": "water",
+       	    "stylers": [
+       	      { "saturation": -100 },
+       	      { "lightness": 32 }
+       	    ]
+       	  },{
+       	    "featureType": "road",
+       	    "stylers": [
+       	      { "visibility": "off" }
+       	    ]
+       	  },{
+       	    "featureType": "poi",
+       	    "stylers": [
+       	      { "visibility": "off" }
+       	    ]
+       	  },{
+       	    "elementType": "labels"  }
+       	]
+	});
+	
 	Place.heatmapCoordinates({}, function(result) {
 		var coordinates = result.coordinates;
-		
-		$scope.homeMap = new google.maps.Map(map_canvas, {
-			center: new google.maps.LatLng(20,0),
-			zoom: 2,
-			disableDefaultUI: true,
-			mapTypeId: google.maps.MapTypeId.ROADMAP,
-			zoomControlOptions: {
-				style: google.maps.ZoomControlStyle.SMALL
-			},
-			styles: [
-	        	{
-	       	    "featureType": "administrative",
-	       	    "stylers": [
-	       	      { "visibility": "off" }
-	       	    ]
-	       	  },{
-	       	    "featureType": "landscape",
-	       	    "stylers": [
-	       	      { "visibility": "simplified" },
-	       	      { "saturation": -100 },
-	       	      { "lightness": -31 }
-	       	    ]
-	       	  },{
-	       	    "featureType": "water",
-	       	    "stylers": [
-	       	      { "saturation": -100 },
-	       	      { "lightness": 32 }
-	       	    ]
-	       	  },{
-	       	    "featureType": "road",
-	       	    "stylers": [
-	       	      { "visibility": "off" }
-	       	    ]
-	       	  },{
-	       	    "featureType": "poi",
-	       	    "stylers": [
-	       	      { "visibility": "off" }
-	       	    ]
-	       	  },{
-	       	    "elementType": "labels"  }
-	       	]
-		});
-
 		var heatmapData = [];
 		for (var i = 0; i < coordinates.length - 1; i+= 2) {
 			heatmapData.push(new google.maps.LatLng(coordinates[i], coordinates[i+1]));		
