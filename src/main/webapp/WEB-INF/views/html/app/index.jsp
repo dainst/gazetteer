@@ -31,12 +31,6 @@
 <script src="../resources/js/lib/angular/ui-bootstrap-custom-0.4.0.min.js"></script>
 </head>
 <body class="ng-cloak">
-	<style type="text/css">
-		.hiddenMapContainer {
-			position: absolute;
-			left: -10000px;
-		}
-	</style>
 
 	<div scroll-position="scrollPosition"></div>
 	
@@ -185,7 +179,7 @@
 				</h2>
 			</div>
 			
-			<div class="row-fluid">
+			<div class="row-fluid" style="position:relative;">
 				<div class="span5" id="map-well-wrapper" ng-style="mapContainerStyle">
 					<div class="well" id="map-well">
 						<div gaz-map map="$root.map" places="activePlaces" height="500" zoom="zoom" bbox="bbox" highlight="highlight" mode="mapMode"></div>
