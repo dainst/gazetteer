@@ -22,6 +22,7 @@
 			<form class="place-picker-search" ng-submit="pickFirst()" autocomplete="off">
  				<input type="text" class="search-query" placeholder="Filter" ng-model="search.q" autocomplete="off" focus-me="showOverlay">
  				<i class="icon-search icon-white"></i>
+ 				<i class="icon-spinner icon-spin icon-large" style="color: #5572a1; margin-left: 7px; cursor: default;" ng-show="loading"></i>
 			</form>
 		</div>
  		<div class="modal-body">

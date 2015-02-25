@@ -83,7 +83,7 @@ directives.directive('gazPlaceTitle', function() {
 	};
 });
 
-directives.directive('gazPlacePicker', function($document) {
+directives.directive('gazPlacePicker', function($document, $timeout) {
 	return {
 		replace: true,
 		scope: { place: '=', id: '=' },
@@ -124,9 +124,17 @@ directives.directive('gazPlacePicker', function($document) {
 			$scope.$watch("search.q", function() {
 				$scope.queryId++;
 				$scope.search.queryId = $scope.queryId;
+				$scope.querySubmitted = true;
+				$timeout(function() {
+			          if ($scope.querySubmitted)
+			        	  $scope.loading = true;
+				}, 500);
 				Place.query($scope.search, function(result) {
-					if ($scope.queryId == result.queryId)
+					if ($scope.queryId == result.queryId) {
 						$scope.places = result.result;
+						$scope.querySubmitted = false;
+						$scope.loading = false;
+					}
 				});
 			});
 			
