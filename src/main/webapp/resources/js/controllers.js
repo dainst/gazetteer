@@ -261,7 +261,6 @@ function HomeCtrl($scope, $location, $rootScope, Place, EscapingService) {
 		$scope.zoom = 2;
 		$location.path('/search').search({q: EscapingService.escape($scope.searchFieldInput), type: $scope.type});
 		$scope.searchFieldInput = null;
-		$window.location.reload(); // force reload in order to avoid map quirks
 	};
 }
 
