@@ -141,8 +141,8 @@
 								
 							</form>
 							<div style="margin-top:8px; margin-left: 10px; float: right;" ng-show="loading > 0">
-								<i class="icon-spinner icon-spin icon-large" style="color:white"></i>
-							</div> 						
+								<i class="icon-spinner icon-spin icon-large" style="color:white; cursor: default;"></i>
+							</div>
 						</div>
 					</div>
 				</div>

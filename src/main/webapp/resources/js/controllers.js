@@ -142,6 +142,7 @@ function HomeCtrl($scope, $location, $rootScope, Place, EscapingService) {
 	
 	var map_canvas = document.getElementById('home_map_canvas');
 	
+	$rootScope.loading++;
 	Place.heatmapCoordinates({}, function(result) {
 		$scope.homeMap = new google.maps.Map(map_canvas, {
 			center: new google.maps.LatLng(20,0),
@@ -199,6 +200,7 @@ function HomeCtrl($scope, $location, $rootScope, Place, EscapingService) {
 			gradient: ['transparent', '#5283d2', '#ffffff']
 	   	});
 		heatmap.setMap($scope.homeMap);
+		$rootScope.loading--;
 	});
 	
 	$scope.$watch("searchFieldInput", function() {
