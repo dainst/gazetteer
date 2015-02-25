@@ -10,7 +10,7 @@
 			<s:message code="ui.place.placesWithSimilarNames" text="ui.place.placesWithSimilarNames"/>
 		</a>
 	</li>
-	<li ng-show="place.prefLocation != null">
+	<li ng-show="place.prefLocation.coordinates != null">
 		<a ng-click="getCandidatesByLocation()" style="cursor: pointer;" data-toggle="tab">
 			<s:message code="ui.place.placesWithSimilarLocation" text="ui.place.placesWithSimilarLocation"/>
 		</a>
