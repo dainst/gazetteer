@@ -614,6 +614,7 @@ directives.directive('gazMap', function($location, Place) {
 						$scope.highlightedMarkerType = "prefLocation";
 					$scope.lastZIndex = $scope.highlightedMarker.getZIndex();
 					$scope.highlightedMarker.setZIndex(1000);
+					$scope.map.setCenter($scope.highlightedMarker.position);
 				}
 			});
 
