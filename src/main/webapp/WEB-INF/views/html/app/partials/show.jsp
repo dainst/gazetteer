@@ -141,7 +141,8 @@
 	<span ng-hide="!place.prefLocation || !((place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0) || place.prefLocation.shape)">
 		<dt><s:message code="domain.place.locations" text="domain.place.locations" /></dt>
 		<dd>
-			<span ng-show="place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0"><em><s:message code="domain.location.latitude" text="domain.location.latitude" />: </em>{{place.prefLocation.coordinates[1]}},
+			<span ng-show="place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0" ng-show="location.coordinates" ng-mouseover="setHighlight(place.gazId)" ng-mouseout="setHighlight(null)" style="text-decoration:none; border-bottom: 1px dotted black; cursor: pointer;">
+				<em><s:message code="domain.location.latitude" text="domain.location.latitude" />: </em>{{place.prefLocation.coordinates[1]}},
 				<em><s:message code="domain.location.longitude" text="domain.location.longitude" />: </em>{{place.prefLocation.coordinates[0]}}</span><span ng-show="place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0 && place.prefLocation.altitude">,</span>
 				<span ng-show="place.prefLocation.altitude"><em><s:message code="domain.location.altitude" text="domain.location.altitude" />: </em>{{place.prefLocation.altitude}} m</span>
 				<span ng-show="place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0 && !place.prefLocation.publicSite">
@@ -167,7 +168,7 @@
 			<dd>
 				<ul>
 					<li ng-repeat="location in place.locations">
-						<span ng-show="location.coordinates">
+						<span ng-show="location.coordinates" ng-mouseover="setHighlight(place.gazId + '+' + $index)" ng-mouseout="setHighlight(null)" style="text-decoration:none; border-bottom: 1px dotted black; cursor: pointer;">
 							<em><s:message code="domain.location.latitude" text="domain.location.latitude" />: </em>{{location.coordinates[1]}},&nbsp;
 							<em><s:message code="domain.location.longitude" text="domain.location.longitude" />: </em>{{location.coordinates[0]}}</span><span ng-show="location.coordinates && location.altitude">,&nbsp;</span>
 						<span ng-show="location.altitude"><em><s:message code="domain.location.altitude" text="domain.location.altitude" />: </em>{{location.altitude}} m</span><span ng-show="(location.coordinates || location.altitude) && location.shape">,</span>

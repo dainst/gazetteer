@@ -598,13 +598,20 @@ directives.directive('gazMap', function($location, Place) {
 				}
 				
 				if ($scope.highlightedMarker != null) {
-					$scope.highlightedMarker.setIcon(defaultIcon);
+					if ($scope.highlightedMarkerType == "prefLocation")
+						$scope.highlightedMarker.setIcon(defaultIcon);
+					else
+						$scope.highlightedMarker.setIcon(alternativeIcon);
 					$scope.highlightedMarker.setZIndex($scope.lastZIndex);
 				}
 				
 				if ($scope.highlight != null && $scope.markerMap[$scope.highlight]) {
 					$scope.markerMap[$scope.highlight].setIcon(blueIcon);
 					$scope.highlightedMarker = $scope.markerMap[$scope.highlight];
+					if ($scope.highlight.indexOf('+') > 0)
+						$scope.highlightedMarkerType = "alternative";
+					else
+						$scope.highlightedMarkerType = "prefLocation";
 					$scope.lastZIndex = $scope.highlightedMarker.getZIndex();
 					$scope.highlightedMarker.setZIndex(1000);
 				}
@@ -667,7 +674,7 @@ directives.directive('gazMap', function($location, Place) {
 											shadow: defaultShadow
 										});
 										$scope.markers.push(marker);
-										$scope.markerMap[place.gazId + "#" + i] = marker;
+										$scope.markerMap[place.gazId + "+" + i] = marker;
 										bounds.extend(ll);
 										numLocations++;
 									}
