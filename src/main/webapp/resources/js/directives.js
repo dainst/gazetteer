@@ -520,6 +520,7 @@ directives.directive('gazMap', function($location, Place) {
 	
 	var blueIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png";
 	var defaultIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/red-dot.png";
+	var alternativeIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/ltblue-dot.png";
 	var defaultShadow = new google.maps.MarkerImage(
 		'//maps.gstatic.com/intl/en_us/mapfiles/markers/marker_sprite.png',
 		new google.maps.Size(37,34),
@@ -594,7 +595,7 @@ directives.directive('gazMap', function($location, Place) {
 					bounds.extend($scope.highlightedShape.getBounds().getSouthWest());
 					bounds.extend($scope.highlightedShape.getBounds().getNorthEast());
 					$scope.map.fitBounds(bounds);
-				}				 
+				}
 				
 				if ($scope.highlightedMarker != null) {
 					$scope.highlightedMarker.setIcon(defaultIcon);
@@ -655,6 +656,22 @@ directives.directive('gazMap', function($location, Place) {
 						}
 						if ($scope.mode == "singlePlace" && place.locations != null && place.locations.length > 0) {
 							for (var i in place.locations) {
+								if (place.locations[i].coordinates && place.mapType == "standard") {
+									if (angular.isNumber(place.locations[i].coordinates[0]) && angular.isNumber(place.locations[i].coordinates[1])) {
+										ll = new google.maps.LatLng(place.locations[i].coordinates[1], place.locations[i].coordinates[0]);
+										var marker = new google.maps.Marker({
+											position: ll,
+											title: place.prefName.title,
+											map: $scope.map,
+											icon: alternativeIcon,
+											shadow: defaultShadow
+										});
+										$scope.markers.push(marker);
+										$scope.markerMap[place.gazId + "#" + i] = marker;
+										bounds.extend(ll);
+										numLocations++;
+									}
+								}
 								if (place.locations[i].shape) {
 									var shapeCoordinates = convertShapeCoordinates(place.locations[i].shape);
 
