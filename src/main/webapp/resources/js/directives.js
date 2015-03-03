@@ -567,6 +567,8 @@ directives.directive('gazMap', function($location, Place) {
 			});
 			
 			$scope.markerClick = function(id) {
+				if (id.indexOf('+') > 0)
+					id = id.substring(0, id.indexOf('+'));
 				$location.path("/show/" + id);
 			}; 
 			
@@ -605,16 +607,24 @@ directives.directive('gazMap', function($location, Place) {
 					$scope.highlightedMarker.setZIndex($scope.lastZIndex);
 				}
 				
-				if ($scope.highlight != null && $scope.markerMap[$scope.highlight]) {
-					$scope.markerMap[$scope.highlight].setIcon(blueIcon);
-					$scope.highlightedMarker = $scope.markerMap[$scope.highlight];
-					if ($scope.highlight.indexOf('+') > 0)
-						$scope.highlightedMarkerType = "alternative";
-					else
-						$scope.highlightedMarkerType = "prefLocation";
-					$scope.lastZIndex = $scope.highlightedMarker.getZIndex();
-					$scope.highlightedMarker.setZIndex(1000);
-					$scope.map.setCenter($scope.highlightedMarker.position);
+				if ($scope.highlight != null) {
+					var center = false;
+					if ($scope.highlight.indexOf('*') == $scope.highlight.length - 1) {
+						$scope.highlight = $scope.highlight.substring(0, $scope.highlight.length - 1);
+						center = true;
+					}
+					if ($scope.markerMap[$scope.highlight]) {
+						$scope.markerMap[$scope.highlight].setIcon(blueIcon);
+						$scope.highlightedMarker = $scope.markerMap[$scope.highlight];
+						if ($scope.highlight.indexOf('+') > 0)
+							$scope.highlightedMarkerType = "alternative";
+						else
+							$scope.highlightedMarkerType = "prefLocation";
+						$scope.lastZIndex = $scope.highlightedMarker.getZIndex();
+						$scope.highlightedMarker.setZIndex(1000);
+						if (center)
+							$scope.map.setCenter($scope.highlightedMarker.position);
+					}
 				}
 			});
 
