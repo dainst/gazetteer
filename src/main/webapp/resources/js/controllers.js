@@ -506,7 +506,7 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 	
 	$scope.$watch("places", function() {
 		for (var i in $scope.places)
-			$scope.places[i].mapType = "standard";
+			$scope.places[i].mapType = "searchResults";
 		$rootScope.activePlaces = $scope.places;
 	});
 	
@@ -570,6 +570,13 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 		$scope.updatePolygonFilterCoordinates();
 		Place.query($scope.search, function(result) {
 			$scope.places = result.result;
+			var markers = 0;
+			for (var i in $scope.places) {
+				if ($scope.places[i].prefLocation) {
+					markers++;
+					$scope.places[i].markerNumber = markers;
+				}
+			}
 			$scope.facets = result.facets;
 			for (var i in $scope.facets) {
 				$scope.facetOffsets[i] = 0;

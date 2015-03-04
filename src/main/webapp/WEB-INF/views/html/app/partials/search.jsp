@@ -184,13 +184,13 @@
 		</tr>
 	</thead>
 	<tbody>
-		<tr ng-repeat="place in places" ng-click="$location.path('show/'+place.gazId)" ng-mouseover="setHighlight(place.gazId)" ng-mouseout="setHighlight(null)" ng-class="{info: place.gazId==highlight}">
-			<td></td>
+		<tr ng-repeat="place in places" ng-click="$location.path('show/'+place.gazId)" ng-mouseover="setHighlight(place.gazId + '*')" ng-mouseout="setHighlight(null)" ng-class="{info: place.gazId==highlight}">
+			<td><span style="white-space: nowrap; cursor: default;"><span ng-show="place.prefLocation" class="icon-map-marker"
+				style="color: #FD7567; text-shadow: 1px 1px 1px #000000; margin-right: 5px;"></span>{{place.markerNumber}}</span></td>
 			<td>{{place.gazId}}</td>
 			<td>
 				<div gaz-place-title place="place"></div>
 				<small class="muted"><span ng-repeat="parent in place.parents">{{parent.prefName.title}}<span ng-show="$index < place.parents.length - 1">, </span></span></small>
-				<i class="icon-map-marker" ng-show="place.prefLocation"/>
 			</td>
 			<td><span ng-show="place.types && place.types.length > 0" gaz-translate="'place.types.' + place.types[0]"></span></td>
 			<td style="text-align:center;">
