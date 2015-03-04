@@ -520,6 +520,8 @@ directives.directive('gazMap', function($location, Place) {
 	
 	var blueIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png";
 	var defaultIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/red-dot.png";
+	var blueParentIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/blue.png";
+	var parentIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/red.png";
 	var alternativeIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/ltblue-dot.png";
 	var defaultShadow = new google.maps.MarkerImage(
 		'//maps.gstatic.com/intl/en_us/mapfiles/markers/marker_sprite.png',
@@ -602,6 +604,8 @@ directives.directive('gazMap', function($location, Place) {
 				if ($scope.highlightedMarker != null) {
 					if ($scope.highlightedMarkerType == "prefLocation")
 						$scope.highlightedMarker.setIcon(defaultIcon);
+					else if ($scope.highlightedMarkerType == "parent")
+						$scope.highlightedMarker.setIcon(parentIcon);
 					else
 						$scope.highlightedMarker.setIcon(alternativeIcon);
 					$scope.highlightedMarker.setZIndex($scope.lastZIndex);
@@ -614,12 +618,19 @@ directives.directive('gazMap', function($location, Place) {
 						center = true;
 					}
 					if ($scope.markerMap[$scope.highlight]) {
-						$scope.markerMap[$scope.highlight].setIcon(blueIcon);
 						$scope.highlightedMarker = $scope.markerMap[$scope.highlight];
-						if ($scope.highlight.indexOf('+') > 0)
+						if ($scope.highlight.indexOf('+') > 0) {
 							$scope.highlightedMarkerType = "alternative";
-						else
+							$scope.markerMap[$scope.highlight].setIcon(blueIcon);
+						}
+						else if ($scope.highlightedMarker.getIcon() == parentIcon) {
+							$scope.highlightedMarkerType = "parent";
+							$scope.markerMap[$scope.highlight].setIcon(blueParentIcon);
+						}
+						else {
 							$scope.highlightedMarkerType = "prefLocation";
+							$scope.markerMap[$scope.highlight].setIcon(blueIcon);
+						}
 						$scope.lastZIndex = $scope.highlightedMarker.getZIndex();
 						$scope.highlightedMarker.setZIndex(1000);
 						if (center)
@@ -650,14 +661,18 @@ directives.directive('gazMap', function($location, Place) {
 					if (place.prefName) title = place.prefName.title;
 
 					if (place.prefLocation) {
-						if (place.prefLocation.coordinates && place.mapType == "standard") {
+						if (place.prefLocation.coordinates && place.mapType != "polygonParent") {
+							var icon = defaultIcon;
+							if (place.mapType == "markerParent" || place.mapType == "parent")
+								icon = parentIcon;
+
 							if (angular.isNumber(place.prefLocation.coordinates[0]) && angular.isNumber(place.prefLocation.coordinates[1])) {
 								ll = new google.maps.LatLng(place.prefLocation.coordinates[1], place.prefLocation.coordinates[0]);
 								var marker = new google.maps.Marker({
 									position: ll,
 									title: place.prefName.title,
 									map: $scope.map,
-									icon: defaultIcon,
+									icon: icon,
 									shadow: defaultShadow
 								});
 								$scope.markers.push(marker);
@@ -668,7 +683,7 @@ directives.directive('gazMap', function($location, Place) {
 						}
 						var fillOpacity = 0.35;
 						var strokeOpacity = 0.7;
-						if (place.mapType == "parent") {
+						if (place.mapType == "polygonParent" || place.mapType == "parent") {
 							fillOpacity = 0.15;
 							strokeOpacity = 0.25;
 						}
