@@ -141,24 +141,27 @@
 	<span ng-hide="!place.prefLocation || !((place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0) || place.prefLocation.shape)">
 		<dt><s:message code="domain.place.locations" text="domain.place.locations" /></dt>
 		<dd>
-			<span ng-show="place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0" ng-show="location.coordinates" ng-mouseover="setHighlight(place.gazId + '*')" ng-mouseout="setHighlight(null)" style="text-decoration:none; border-bottom: 1px dotted black; cursor: pointer;">
-				<em><s:message code="domain.location.latitude" text="domain.location.latitude" />: </em>{{place.prefLocation.coordinates[1]}},
-				<em><s:message code="domain.location.longitude" text="domain.location.longitude" />: </em>{{place.prefLocation.coordinates[0]}}</span><span ng-show="place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0 && place.prefLocation.altitude">,</span>
-				<span ng-show="place.prefLocation.altitude"><em><s:message code="domain.location.altitude" text="domain.location.altitude" />: </em>{{place.prefLocation.altitude}} m</span>
-				<span ng-show="place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0 && !place.prefLocation.publicSite">
-					<sec:authorize access="hasRole('ROLE_USER')">
-						(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />:</em>
+			<span ng-show="place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0" ng-show="location.coordinates" ng-mouseover="setHighlight(place.gazId + '*')" ng-mouseout="setHighlight(null)">
+				<span class="icon-map-marker" style="margin-right: 5px; cursor: default; color: #FD7567; text-shadow: 1px 1px 1px #000000;"></span>
+				<span style="text-decoration:none; border-bottom: 1px dotted black; cursor: pointer;">
+					<em><s:message code="domain.location.latitude" text="domain.location.latitude" />: </em>{{place.prefLocation.coordinates[1]}},
+					<em><s:message code="domain.location.longitude" text="domain.location.longitude" />: </em>{{place.prefLocation.coordinates[0]}}</span><span ng-show="place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0 && place.prefLocation.altitude">,</span>
+					<span ng-show="place.prefLocation.altitude"><em><s:message code="domain.location.altitude" text="domain.location.altitude" />: </em>{{place.prefLocation.altitude}} m</span>
+					<span ng-show="place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0 && !place.prefLocation.publicSite">
+						<sec:authorize access="hasRole('ROLE_USER')">
+							(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />:</em>
+							<span gaz-translate="'location.confidence.'+place.prefLocation.confidence"></span>)
+						</sec:authorize>
+						<sec:authorize access="!hasRole('ROLE_USER')">
+							(<span><s:message code="domain.location.rounded" text="domain.location.rounded" /> <i class="icon-info-sign" style="color: #5572a1;" gaz-tooltip="'ui.place.protected-site-info'"></i></span>)
+						</sec:authorize>
+					</span>
+					<span ng-hide="!place.prefLocation.publicSite">
+						(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />: </em>
 						<span gaz-translate="'location.confidence.'+place.prefLocation.confidence"></span>)
-					</sec:authorize>
-					<sec:authorize access="!hasRole('ROLE_USER')">
-						(<span><s:message code="domain.location.rounded" text="domain.location.rounded" /> <i class="icon-info-sign" style="color: #5572a1;" gaz-tooltip="'ui.place.protected-site-info'"></i></span>)
-					</sec:authorize>
+					</span>
+					<br ng-show="(place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0) || place.prefLocation.altitude"/>
 				</span>
-				<span ng-hide="!place.prefLocation.publicSite">
-					(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />: </em>
-					<span gaz-translate="'location.confidence.'+place.prefLocation.confidence"></span>)
-				</span>
-				<br ng-show="(place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0) || place.prefLocation.altitude"/>
 			</span>
 			<em ng-show="place.prefLocation.shape" ng-mouseover="setHighlight(place.gazId + '#p')" ng-mouseout="setHighlight(null)" style="text-decoration:none; border-bottom: 1px dotted black; cursor: pointer;"><s:message code="domain.location.polygonSpecified" text="domain.location.polygonSpecified" /></em>
 		</dd>
@@ -166,8 +169,9 @@
 			<br />
 			<dt><s:message code="domain.place.otherLocations" text="domain.place.otherLocations" /></dt>
 			<dd>
-				<ul>
+				<ul style="list-style: none;">
 					<li ng-repeat="location in place.locations">
+						<span style="margin-right: 5px; cursor: default;"><span class="icon-map-marker" style="color: #FFA9A1; text-shadow: 1px 1px 1px #000000;"></span>{{$index + 1}}</span>
 						<span ng-show="location.coordinates" ng-mouseover="setHighlight(place.gazId + '+' + $index + '*')" ng-mouseout="setHighlight(null)" style="text-decoration:none; border-bottom: 1px dotted black; cursor: pointer;">
 							<em><s:message code="domain.location.latitude" text="domain.location.latitude" />: </em>{{location.coordinates[1]}},&nbsp;
 							<em><s:message code="domain.location.longitude" text="domain.location.longitude" />: </em>{{location.coordinates[0]}}</span><span ng-show="location.coordinates && location.altitude">,&nbsp;</span>

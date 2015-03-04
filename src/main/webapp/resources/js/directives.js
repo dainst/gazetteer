@@ -522,13 +522,6 @@ directives.directive('gazMap', function($location, Place) {
 	var defaultIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/red-dot.png";
 	var blueParentIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/blue.png";
 	var parentIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/red.png";
-	var alternativeIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/ltblue-dot.png";
-	var defaultShadow = new google.maps.MarkerImage(
-		'//maps.gstatic.com/intl/en_us/mapfiles/markers/marker_sprite.png',
-		new google.maps.Size(37,34),
-		new google.maps.Point(20, 0),
-		new google.maps.Point(10, 34)
-	);
 	
 	return {
 		replace: true,
@@ -607,7 +600,7 @@ directives.directive('gazMap', function($location, Place) {
 					else if ($scope.highlightedMarkerType == "parent")
 						$scope.highlightedMarker.setIcon(parentIcon);
 					else
-						$scope.highlightedMarker.setIcon(alternativeIcon);
+						$scope.highlightedMarker.setIcon(getNumberedMarkerIcon($scope.highlightedMarkerNumber, "FFA9A1"));
 					$scope.highlightedMarker.setZIndex($scope.lastZIndex);
 				}
 				
@@ -620,8 +613,10 @@ directives.directive('gazMap', function($location, Place) {
 					if ($scope.markerMap[$scope.highlight]) {
 						$scope.highlightedMarker = $scope.markerMap[$scope.highlight];
 						if ($scope.highlight.indexOf('+') > 0) {
+							var number = parseInt($scope.highlight.substring($scope.highlight.indexOf('+') + 1)) + 1;
 							$scope.highlightedMarkerType = "alternative";
-							$scope.markerMap[$scope.highlight].setIcon(blueIcon);
+							$scope.highlightedMarkerNumber = number;
+							$scope.markerMap[$scope.highlight].setIcon(getNumberedMarkerIcon(number, "6991FD"));
 						}
 						else if ($scope.highlightedMarker.getIcon() == parentIcon) {
 							$scope.highlightedMarkerType = "parent";
@@ -672,8 +667,7 @@ directives.directive('gazMap', function($location, Place) {
 									position: ll,
 									title: place.prefName.title,
 									map: $scope.map,
-									icon: icon,
-									shadow: defaultShadow
+									icon: icon
 								});
 								$scope.markers.push(marker);
 								$scope.markerMap[place.gazId] = marker;
@@ -696,8 +690,7 @@ directives.directive('gazMap', function($location, Place) {
 											position: ll,
 											title: place.prefName.title,
 											map: $scope.map,
-											icon: alternativeIcon,
-											shadow: defaultShadow
+											icon: getNumberedMarkerIcon(parseInt(i) + 1, "FFA9A1") 
 										});
 										$scope.markers.push(marker);
 										$scope.markerMap[place.gazId + "+" + i] = marker;
@@ -795,6 +788,10 @@ directives.directive('gazMap', function($location, Place) {
 				}
 				
 				return shapeCoordinates;
+			};
+			
+			var getNumberedMarkerIcon = function(number, color) {
+				return "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=" + number + "|" + color + "|000100";
 			};
 		}
 	};
