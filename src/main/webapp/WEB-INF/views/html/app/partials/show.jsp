@@ -211,7 +211,9 @@
 	<span ng-hide="!place.recordGroupId || place.recordGroupId.length == 0">
 		<dt><s:message code="domain.place.recordGroup" text="domain.place.recordGroup" /></dt>
 		<c:forEach var="recordGroup" items="${recordGroups}">
-			<dd ng-show="'${recordGroup.id}' == place.recordGroupId">${recordGroup.name}</dd>
+			<dd ng-show="'${recordGroup.id}' == place.recordGroupId">
+				<a href="#!/search?q=recordGroupId:${recordGroup.id}">${recordGroup.name}</a>
+			</dd>
 		</c:forEach>
 		<br/>
 	</span>
