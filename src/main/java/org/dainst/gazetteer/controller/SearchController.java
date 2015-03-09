@@ -376,7 +376,8 @@ public class SearchController {
 		List<String> heatmapCoordinates = new ArrayList<String>();
 		
 		for (Place place : places) {
-			if (place.getPrefLocation().getCoordinates().length > 0) {
+			if (place.getPrefLocation() != null && place.getPrefLocation().getCoordinates() != null
+					&& place.getPrefLocation().getCoordinates().length > 0) {
 				heatmapCoordinates.add(String.valueOf(place.getPrefLocation().getLat()));
 				heatmapCoordinates.add(String.valueOf(place.getPrefLocation().getLng()));
 			}
