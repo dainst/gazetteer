@@ -152,7 +152,6 @@ directives.directive('gazTagField', function($document) {
 			$scope.inputText = "";
 			$scope.suggestions = [];
 			$scope.selectedSuggestionIndex = 0;
-			$scope.textFieldPos = document.getElementsByName("tagTextField")[parseInt($scope.number)].getBoundingClientRect().left;
 			
 			$scope.$watch("inputText", function() {
 				if ($scope.inputText.slice(-1) == "," || $scope.inputText.slice(-1) == ";")
@@ -161,6 +160,8 @@ directives.directive('gazTagField', function($document) {
 				$scope.updateSuggestions();
 				$scope.selectedSuggestionIndex = 0;
 				$scope.textFieldPos = document.getElementsByName("tagTextField")[parseInt($scope.number)].getBoundingClientRect().left;
+				$scope.viewElementPos = document.getElementsByName("container")[0].getBoundingClientRect().left;
+				$scope.textFieldPos -= $scope.viewElementPos;
 			});
 			
 			$scope.addTag = function() {

@@ -149,7 +149,7 @@
 			</div>
 		</div>
 		
-		<div class="gaz-container">
+		<div class="gaz-container" name="container">
 		
 			<c:if test="${successMessage eq 'register'}">
 				<div class="alert alert-success">

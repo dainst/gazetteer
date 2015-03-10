@@ -195,10 +195,10 @@ footer {
 }
 
 .tag-field .input {
-  		border-width: 0px !important;
-  		border: none !important;
-  		white-space: nowrap;
-  		width: 100%;
+  	border-width: 0px !important;
+  	border: none !important;
+  	white-space: nowrap;
+  	width: 100%;
 }
 
 .tag-field .remove-icon-mouseover {
