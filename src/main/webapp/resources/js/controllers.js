@@ -1042,6 +1042,11 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 		});
 	};
 	
+	$scope.publish = function() {
+		$scope.place.recordGroupId = "";
+		$scope.save();
+	};
+	
 	$scope.save = function() {
 		$rootScope.loading++;
 		if($scope.place.prefLocation && !$scope.place.prefLocation.coordinates && !$scope.place.prefLocation.shape)

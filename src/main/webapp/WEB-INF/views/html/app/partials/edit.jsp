@@ -489,6 +489,7 @@
 		
 	    <div class="form-actions">
            	<button ng-click="save()" class="save btn btn-primary"><s:message code="ui.save" text="ui.save"/></button>
+           	<button href="#publishModal" class="btn btn-success" data-toggle="modal" ng-show="place.recordGroupId"><s:message code="ui.publish" text="ui.publish"/></button>
            	<a class="btn" href="javascript:history.back()"><s:message code="ui.cancel" text="ui.cancel"/></a>
            	<button href="#deleteModal" class="btn btn-danger" data-toggle="modal"><s:message code="ui.delete" text="ui.delete"/></button>
 			<div class="modal hide fade" id="deleteModal">
@@ -553,6 +554,22 @@
 						<a href="#" class="btn" data-dismiss="modal" aria-hidden="true"><s:message code="ui.ok" text="ui.ok"/></a>
 					</div>
 				</span>
+			</div>
+			<div class="modal hide fade" id="publishModal">
+				<div class="modal-header">
+					<h3><s:message code="ui.publish.warning.header" text="ui.publish.warning.header"/>?</h3>
+				</div>
+				<div class="modal-body">
+					<c:forEach var="recordGroup" items="${recordGroups}">
+						<span ng-show="'${recordGroup.id}' == place.recordGroupId">
+							<p><s:message code="ui.publish.warning.body" text="ui.publish.warning.body" arguments="${recordGroup.name}"/></p>
+						</span>
+					</c:forEach>
+				</div>
+				<div class="modal-footer">
+					<a href="#" class="btn" data-dismiss="modal" aria-hidden="true"><s:message code="ui.cancel" text="ui.cancel"/></a>
+					<a ng-click="publish()" data-dismiss="modal" class="btn btn-primary"><s:message code="ui.ok" text="ui.ok"/></a>
+				</div>
 			</div>
 	</div>
        	

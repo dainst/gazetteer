@@ -323,8 +323,13 @@ public class JsonPlaceDeserializer {
 			place.setProvenance(provenance);
 			
 			// update record group
-			if (objectNode.get("recordGroupId") != null)
-				place.setRecordGroupId(objectNode.get("recordGroupId").asText());
+			if (objectNode.get("recordGroupId") != null) {
+				String recordGroupId = objectNode.get("recordGroupId").asText();
+				if (recordGroupId.length() > 0)
+					place.setRecordGroupId(recordGroupId);
+				else
+					place.setRecordGroupId(null);
+			}
 			
 			// update identifier objects			
 			Set<Identifier> identifiers = new HashSet<Identifier>();
