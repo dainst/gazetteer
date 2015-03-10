@@ -196,6 +196,9 @@ CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
   	temp_id = row_no
   end
 
+  # normalize field values
+  row.map! { |s| s.unicode_normalize if s }
+
   # create place object by applying template
   _ = row
   _.map! { |val| val.to_s } # convert nils to empty strings
@@ -275,7 +278,7 @@ CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
   if place[:names] 
     place[:names].delete_if { |name| name[:title].to_s.empty? }
   end
-  place.delete(:types) if place[:types].empty?
+  place.delete(:types) if place[:types] && place[:types].empty?
   place[:prefLocation].delete(:coordinates) if place[:prefLocation][:coordinates] == [0, 0]
   place.delete(:prefLocation) if place[:prefLocation] && !place[:prefLocation][:coordinates] && !place[:prefLocation][:shape]
   if place[:identifiers] 
