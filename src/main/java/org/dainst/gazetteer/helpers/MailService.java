@@ -18,14 +18,20 @@ public class MailService {
 	@Value("${smtpPort}")
 	private String smtpPort;
 	
+	@Value("${mailUsername}")
+	private String mailUsername;
+	
+	@Value("${mailPassword}")
+	private String mailPassword;
+	
 	
 	public void sendMail(String recipientMail, String subject, String content) throws MessagingException {
 		
 		Properties properties = new Properties();
 		properties.setProperty("mail.smtp.host", smtpHost);
-		properties.setProperty("mail.smtp.auth", "false");
+		properties.setProperty("mail.smtp.auth", "true");
 		properties.setProperty("mail.smtp.port", smtpPort);
-		Session session = Session.getDefaultInstance(properties);
+		Session session = Session.getInstance(properties);
 		
 		MimeMessage message = new MimeMessage(session);
 		message.setFrom(new InternetAddress(senderMail));
@@ -33,7 +39,13 @@ public class MailService {
 		message.setSubject(subject);
 		message.setContent(content, "text/html; charset=utf-8");
 		
-		Transport.send(message);
+	    Transport transport = session.getTransport("smtp");
+	    try {
+	        transport.connect(mailUsername, mailPassword);
+	        transport.sendMessage(message, message.getAllRecipients());
+	    } finally {
+	    	transport.close();
+	    }
 	}
 
 	public String getSenderMail() {
