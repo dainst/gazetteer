@@ -522,7 +522,7 @@ directives.directive('gazMap', function($location, Place) {
 	var blueIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png";
 	var defaultIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/red-dot.png";
 	var blueParentIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/blue.png";
-	var parentIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/red.png";
+	var parentIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/pink.png";
 	
 	return {
 		replace: true,
@@ -679,6 +679,10 @@ directives.directive('gazMap', function($location, Place) {
 									icon: icon,
 									number: place.markerNumber
 								});
+								if (place.mapType == "markerParent" || place.mapType == "parent")
+									marker.setZIndex(1);
+								else
+									marker.setZIndex(2);
 								$scope.markers.push(marker);
 								$scope.markerMap[place.gazId] = marker;
 								bounds.extend(ll);
@@ -730,7 +734,7 @@ directives.directive('gazMap', function($location, Place) {
 								}
 							}
 						}
-						if (place.prefLocation.shape) {
+						if (place.prefLocation.shape && (place.mapType != "markerParent")) {
 							var shapeCoordinates = convertShapeCoordinates(place.prefLocation.shape);
 	
 							shape = new google.maps.Polygon({
