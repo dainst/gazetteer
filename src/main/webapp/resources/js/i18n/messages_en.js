@@ -49,6 +49,7 @@ messages.factory('messages', function(){
 		"ui.change-history.change-type.unknown": "Unknown",
 		"place.name.ancient": "Ancient",
 		"place.name.transliterated": "Transliterated",
+		"place.types.no-type": "<No type>",
 		"place.types.archaeological-site": "Archaeological site",
 		"place.types.archaeological-area": "Archaeological area",
 		"place.types.continent": "Continent",

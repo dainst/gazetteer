@@ -56,6 +56,7 @@
 			<div class="controls">
 				<select ng-model="type" style="width: 284px;">
 					<option value=""></option>
+					<option value="noType" gaz-translate="'place.types.no-type'"></option>
 					<c:forEach var="placeType" items="${placeTypes}">
 						<option value="${placeType}" gaz-translate="'place.types.' + '${placeType}'"></option>
 					</c:forEach>

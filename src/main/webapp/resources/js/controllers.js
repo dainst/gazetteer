@@ -369,7 +369,7 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages, PolygonVali
 		}
 		
 		// type
-		if ($scope.type !== "") {
+		if ($scope.type !== "" && $scope.type != "noType") {
 			queries.push({ match: { "types": $scope.type } });
 		}
 		
@@ -428,6 +428,8 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages, PolygonVali
 				filterQuery += " AND ";
 			filterQuery += "_missing_:prefLocation.shape";
 		}
+		if ($scope.type == "noType")
+			filterQuery += "_missing_:types";
 		
 		var query = { "bool": { "must": queries } };
 
