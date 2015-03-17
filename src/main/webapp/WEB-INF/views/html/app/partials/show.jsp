@@ -93,7 +93,12 @@
 	<span ng-hide="!place.parents || place.parents.length == 0" ng-cloak>
 		<dt><s:message code="domain.place.parent" text="domain.place.parent" /></dt>
 		<dd ng-repeat="parent in place.parents | reverse">
-			<div style="margin-left: {{$index * 16}}px;"><i ng-show="$index != 0" class="icon-circle-arrow-right" style="cursor: default;"></i><div gaz-place-title place="parent"></div></div>
+			<div style="margin-left: {{$index * 16}}px;"><i ng-show="$index != 0" class="icon-circle-arrow-right" style="cursor: default;"></i>
+			<span class="icon-map-marker" ng-show="parent.prefLocation && parent.prefLocation.coordinates && parent.prefLocation.coordinates.length > 0" 
+					style="margin-left: 3px; margin-right: 5px; cursor: default; color: #E661AC; text-shadow: 1px 1px 1px #000000;"></span>
+				<div gaz-place-title place="parent" ng-hide="parent.prefLocation && parent.prefLocation.coordinates && parent.prefLocation.coordinates.length > 0"></div>
+				<div gaz-place-title place="parent" ng-mouseover="setHighlight(parent.gazId + '*')" ng-mouseout="setHighlight(null)" ng-show="parent.prefLocation && parent.prefLocation.coordinates && parent.prefLocation.coordinates.length > 0"></div>
+			</div>
 		</dd>
 		<br/>
 	</span>
