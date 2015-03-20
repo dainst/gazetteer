@@ -32,7 +32,8 @@
             "filter" : {
                 "collation_filter" : {
                     "type" : "icu_collation",
-                    "language" : "de"
+                    "language" : "de",
+                    "numeric" : true
                 },
                 "lowercase" : {
                 	"type" : "lowercase"
