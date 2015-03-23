@@ -523,6 +523,7 @@ directives.directive('gazMap', function($location, Place) {
 	var defaultIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/red-dot.png";
 	var blueParentIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/blue.png";
 	var parentIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/pink.png";
+	var childIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/green-dot.png";
 	
 	return {
 		replace: true,
@@ -669,6 +670,8 @@ directives.directive('gazMap', function($location, Place) {
 								icon = getNumberedMarkerIcon(parseInt(place.markerNumber), "FD7567");
 							else if (place.mapType == "markerParent" || place.mapType == "parent")
 								icon = parentIcon;
+							else if (place.mapType == "markerChild")
+								icon = childIcon;
 
 							if (angular.isNumber(place.prefLocation.coordinates[0]) && angular.isNumber(place.prefLocation.coordinates[1])) {
 								ll = new google.maps.LatLng(place.prefLocation.coordinates[1], place.prefLocation.coordinates[0]);
