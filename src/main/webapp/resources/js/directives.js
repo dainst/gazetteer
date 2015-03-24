@@ -145,13 +145,23 @@ directives.directive('gazPlacePicker', function($document, $timeout) {
 directives.directive('gazTagField', function($document) {
 	return {
 		replace: true,
-		scope: { tags: '=', fieldwidth: '@', fieldname: '@', number: '='},
+		scope: { tags: '=', fieldwidth: '@', fieldname: '@', number: '=', deactivated: '='},
 		templateUrl: 'partials/tagField.html',
 		controller: function($scope, $element, Place) {
 			
 			$scope.inputText = "";
 			$scope.suggestions = [];
 			$scope.selectedSuggestionIndex = 0;
+			$scope.backgroundColor = "#fcfcfc";
+			
+			$scope.$watch("deactivated", function() {
+				if ($scope.deactivated) {
+					$scope.backgroundColor = "#e6e6e6";
+					$scope.tags = [];
+				}
+				else
+					$scope.backgroundColor = "#fcfcfc";
+			}),
 			
 			$scope.$watch("inputText", function() {
 				if ($scope.inputText.slice(-1) == "," || $scope.inputText.slice(-1) == ";")

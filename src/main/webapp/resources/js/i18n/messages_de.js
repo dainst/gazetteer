@@ -20,6 +20,8 @@ messages.factory('messages', function(){
 		"ui.search.filter.no-coordinates": "Ohne Koordinaten",
 		"ui.search.filter.polygon": "Mit Polygon",
 		"ui.search.filter.no-polygon": "Ohne Polygon",
+		"ui.search.filter.no-tags": "Ohne Tags",
+		"ui.search.filter.no-provenance": "Ohne Provenienzangabe",
 		"ui.place.names.more": "mehr",
 		"ui.place.names.less": "weniger",
 		"ui.place.children.search": "Orte in Suche anzeigen",

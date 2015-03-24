@@ -427,6 +427,16 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages, PolygonVali
 				filterQuery += " AND ";
 			filterQuery += "_missing_:prefLocation.shape";
 		}
+		if ($scope.filters.noTags) {
+			if (filterQuery != "")
+				filterQuery += " AND ";
+			filterQuery += "_missing_:tags";
+		}
+		if ($scope.filters.noProvenance) {
+			if (filterQuery != "")
+				filterQuery += " AND ";
+			filterQuery += "_missing_:provenance";
+		}		
 		if ($scope.type == "noType")
 			filterQuery += "_missing_:types";
 		

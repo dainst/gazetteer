@@ -69,16 +69,24 @@
 					code="ui.extendedSearch.tags" text="ui.extendedSearch.tags" />
 			</label>
 			<div class="controls">
-				<div gaz-tag-field tags="tags" fieldname="tags" fieldwidth="274px" number="0"></div>
+				<div gaz-tag-field tags="tags" fieldname="tags" fieldwidth="274px" number="0" deactivated="filters.noTags"></div>
+				<label class="checkbox inline" style="margin-top: -30px;">
+					<input type="checkbox" ng-model="filters.noTags" />
+					<span gaz-translate="'ui.search.filter.no-tags'"></span>
+				</label>
 			</div>
 		</div>
-		
+
 		<div class="control-group">
 			<label class="control-label"> <s:message
 					code="ui.extendedSearch.provenance" text="ui.extendedSearch.provenance" />
 			</label>
 			<div class="controls">
-				<div gaz-tag-field tags="provenance" fieldname="provenance" fieldwidth="274px" number="1"></div>
+				<div gaz-tag-field tags="provenance" fieldname="provenance" fieldwidth="274px" number="1" deactivated="filters.noProvenance"></div>
+				<label class="checkbox inline" style="margin-top: -30px;">
+					<input type="checkbox" ng-model="filters.noProvenance" />
+					<span gaz-translate="'ui.search.filter.no-provenance'"></span>
+				</label>
 			</div>
 		</div>
 		
