@@ -121,7 +121,6 @@ function AppCtrl($scope, $location, $rootScope, Place, GeoSearch, EscapingServic
 	$scope.setHighlight = function(id) {
 		$scope.highlight = id;
 	};
-	
 }
 
 function HomeCtrl($scope, $location, $rootScope, Place, EscapingService) {
@@ -1209,14 +1208,29 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 		var decodedURI = decodeURI(uri); 
 		return decodedURI.replace("%2C", ",");
 	};
-	
+
 	$scope.setCopyCoordinates = function(coordinates) {
 		$scope.copyCoordinates = coordinates;
+	};
+	
+	$scope.showChildMarker = function(child) {
+		child.mapType = "markerChild";
+		var places = [child].concat($rootScope.activePlaces);
+		$rootScope.activePlaces = places;
+	};
+	
+	$scope.hideChildMarker = function(child) {
+		var places = $rootScope.activePlaces.slice();
+		var index = places.indexOf(child);
+		if (index > -1) {
+			places.splice(index, 1);
+			$rootScope.activePlaces = places;
+		}
 	};
 
 	// update relatedPlaces attribute of place when relatedPlaces in scope changes
 	$scope.$watch("allRelatedPlaces.length", $scope.updateRelatedPlaces());
-}
+};
 
 function MergeCtrl($scope, $rootScope, $routeParams, $location, Place, EscapingService, messages) {
 	
