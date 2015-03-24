@@ -10,16 +10,29 @@
 <div class="modal hide" id="copyUriModal">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal">×</button>
-		<h3><s:message code="ui.copyToClipboardHeading"/></h3>
+		<h3><s:message code="ui.copyUriToClipboardHeading"/></h3>
 	</div>
 	<div class="modal-body">
 		<label>${copyMsg}</label>
 		<input class="input-xxlarge" style="width:97%" type="text" value="${baseUri}place/{{place.gazId}}" id="copyUriInput"></input>
 	</div>
 </div>
+<div class="modal hide" id="copyCoordinatesModal">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal">×</button>
+		<h3><s:message code="ui.copyCoordinatesToClipboardHeading"/></h3>
+	</div>
+	<div class="modal-body">
+		<label>${copyMsg}</label>
+		<input class="input-xxlarge" style="width:97%" type="text" value="{{copyCoordinates[1]}},{{copyCoordinates[0]}}" id="copyCoordinatesInput"></input>
+	</div>
+</div>
 <script type="text/javascript">
 	$("#copyUriModal").on("shown",function() {
 		$("#copyUriInput").focus().select();
+	});
+	$("#copyCoordinatesModal").on("shown",function() {
+		$("#copyCoordinatesInput").focus().select();
 	});
 </script>
 
@@ -150,7 +163,9 @@
 				<span class="icon-map-marker" style="margin-right: 5px; cursor: default; color: #FD7567; text-shadow: 1px 1px 1px #000000;"></span>
 				<span style="text-decoration:none; border-bottom: 1px dotted black; cursor: pointer;">
 					<em><s:message code="domain.location.latitude" text="domain.location.latitude" />: </em>{{place.prefLocation.coordinates[1]}},
-					<em><s:message code="domain.location.longitude" text="domain.location.longitude" />: </em>{{place.prefLocation.coordinates[0]}}</span><span ng-show="place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0 && place.prefLocation.altitude">,</span>
+					<em><s:message code="domain.location.longitude" text="domain.location.longitude" />: </em>{{place.prefLocation.coordinates[0]}}</span>
+					<a data-toggle="modal" href="#copyCoordinatesModal" ng-click="setCopyCoordinates(place.prefLocation.coordinates)"><i class="icon-share" style="font-size:0.7em"></i></a>
+					<span ng-show="place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0 && place.prefLocation.altitude">,</span>
 					<span ng-show="place.prefLocation.altitude"><em><s:message code="domain.location.altitude" text="domain.location.altitude" />: </em>{{place.prefLocation.altitude}} m</span>
 					<span ng-show="place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0 && !place.prefLocation.publicSite">
 						<sec:authorize access="hasRole('ROLE_USER')">
@@ -174,12 +189,12 @@
 			<br />
 			<dt><s:message code="domain.place.otherLocations" text="domain.place.otherLocations" /></dt>
 			<dd>
-				<ul style="list-style: none;">
-					<li ng-repeat="location in place.locations">
-						<span style="margin-right: 5px; cursor: default;"><span class="icon-map-marker" style="color: #FFA9A1; text-shadow: 1px 1px 1px #000000;"></span>{{$index + 1}}</span>
-						<span ng-show="location.coordinates" ng-mouseover="setHighlight(place.gazId + '+' + $index + '*')" ng-mouseout="setHighlight(null)" style="text-decoration:none; border-bottom: 1px dotted black; cursor: pointer;">
+					<div ng-repeat="location in place.locations">
+						<span style="cursor: default;"><span class="icon-map-marker" style="color: #FFA9A1; text-shadow: 1px 1px 1px #000000; margin-right: 3px;"></span>{{$index + 1}}</span>
+						<span ng-show="location.coordinates" ng-mouseover="setHighlight(place.gazId + '+' + $index + '*')" ng-mouseout="setHighlight(null)" style="text-decoration:none; border-bottom: 1px dotted black; cursor: pointer; margin-left: 3px;">
 							<em><s:message code="domain.location.latitude" text="domain.location.latitude" />: </em>{{location.coordinates[1]}},&nbsp;
-							<em><s:message code="domain.location.longitude" text="domain.location.longitude" />: </em>{{location.coordinates[0]}}</span><span ng-show="location.coordinates && location.altitude">,&nbsp;</span>
+							<em><s:message code="domain.location.longitude" text="domain.location.longitude" />: </em>{{location.coordinates[0]}}</span>
+							<a data-toggle="modal" href="#copyCoordinatesModal" ng-click="setCopyCoordinates(location.coordinates)"><i class="icon-share" style="font-size:0.7em"></i></a><span ng-show="location.coordinates && location.altitude">,&nbsp;</span>
 						<span ng-show="location.altitude"><em><s:message code="domain.location.altitude" text="domain.location.altitude" />: </em>{{location.altitude}} m</span><span ng-show="(location.coordinates || location.altitude) && location.shape">,</span>
 						<em ng-show="location.shape" ng-mouseover="setHighlight(place.gazId + '#' + $index)" ng-mouseout="setHighlight(null)" style="text-decoration:none; border-bottom: 1px dotted black; cursor: pointer;"><s:message code="domain.location.polygonSpecified" text="domain.location.polygonSpecified" /></em>
 						<span ng-show="!location.publicSite">
@@ -195,8 +210,7 @@
 							(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />:</em>
 							<span gaz-translate="'location.confidence.'+location.confidence"></span>)
 						</span>
-					</li>
-				</ul>
+					</div>
 			</dd>
 		</span>
 		<br />

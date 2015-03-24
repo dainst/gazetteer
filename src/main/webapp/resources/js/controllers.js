@@ -935,7 +935,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 	// show live changes of id
 	$scope.$watch("place.gazId", function() {
 		if ($scope.place && $scope.place["@id"])
-			$rootScope.subtitle = $scope.place["@id"] + '<a data-toggle="modal" href="#copyUriModal"><i class="icon-share" style="font-size:0.7em"></i></a>';
+			$rootScope.subtitle = $scope.place["@id"] + ' <a data-toggle="modal" href="#copyUriModal"><i class="icon-share" style="font-size:0.7em"></i></a>';
 	});
 
 	$scope.updateMap = function() {
@@ -1208,6 +1208,10 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 	$scope.decodeUri = function(uri) {
 		var decodedURI = decodeURI(uri); 
 		return decodedURI.replace("%2C", ",");
+	};
+	
+	$scope.setCopyCoordinates = function(coordinates) {
+		$scope.copyCoordinates = coordinates;
 	};
 
 	// update relatedPlaces attribute of place when relatedPlaces in scope changes
