@@ -10,15 +10,9 @@
 	xmlns:gaz_id="http://gazetteer.dainst.org/types/id#">
 	
 	<edm:Place rdf:about="${baseUri}place/${place.id}">
-		<c:if test="${place.prefName.language != null}">
-			<s:message code="languages.isoMapping.${place.prefName.language}" var="prefLanguage"/>
-		</c:if>
-		<skos:prefLabel xml:lang="${prefLanguage}">${place.prefName.title}</skos:prefLabel>
+		<skos:prefLabel xml:lang="${langHelper.getLocaleForISO3Language(place.prefName.language).language}">${place.prefName.title}</skos:prefLabel>
 		<c:forEach var="name" items="${place.names}">
-			<c:if test="${name.language != null}">
-				<s:message code="languages.isoMapping.${name.language}" var="placeLanguage"/>
-			</c:if>
-			<skos:altLabel xml:lang="${placeLanguage}">${name.title}</skos:altLabel>
+			<skos:altLabel xml:lang="${langHelper.getLocaleForISO3Language(name.language).language}">${name.title}</skos:altLabel>
 		</c:forEach>
 		<c:if test="${place.prefLocation != null}">
 			<wgs84_pos:lat>${place.prefLocation.lat}</wgs84_pos:lat>
