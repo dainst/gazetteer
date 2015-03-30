@@ -172,7 +172,8 @@ public class DocumentController {
 			mav.addObject("changeRecordDao", changeRecordDao);
 			mav.addObject("placeDao", placeDao);
 			mav.addObject("googleMapsApiKey", googleMapsApiKey);
-			mav.addObject("languages", langHelper.getLocalizedLanguages(locale));			
+			mav.addObject("languages", langHelper.getLocalizedLanguages(locale));
+			mav.addObject("langHelper", langHelper);
 		}
 		
 		return mav;

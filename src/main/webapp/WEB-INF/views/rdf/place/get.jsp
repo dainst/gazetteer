@@ -10,15 +10,23 @@
 	xmlns:gaz_id="http://gazetteer.dainst.org/types/id#">
 	
 	<edm:Place rdf:about="${baseUri}place/${place.id}">
-		<c:if test="${place.prefName.language != null}">
-			<s:message code="languages.isoMapping.${place.prefName.language}" var="prefLanguage"/>
-		</c:if>
-		<skos:prefLabel xml:lang="${prefLanguage}">${place.prefName.title}</skos:prefLabel>
+		<c:choose>
+			<c:when test="${place.prefName.language != null}">
+				<skos:prefLabel xml:lang="${langHelper.getLocaleForISO3Language(prefLanguage).getLanguage()}">${place.prefName.title}</skos:prefLabel>
+			</c:when>
+			<c:otherwise>
+				<skos:prefLabel>${place.prefName.title}</skos:prefLabel>
+			</c:otherwise>
+		</c:choose>
 		<c:forEach var="name" items="${place.names}">
-			<c:if test="${name.language != null}">
-				<s:message code="languages.isoMapping.${name.language}" var="placeLanguage"/>
-			</c:if>
-			<skos:altLabel xml:lang="${placeLanguage}">${name.title}</skos:altLabel>
+			<c:choose>
+				<c:when test="${name.language != null}">
+					<skos:prefLabel xml:lang="${langHelper.getLocaleForISO3Language(name.language).getLanguage()}">${name.title}</skos:prefLabel>
+				</c:when>
+				<c:otherwise>
+					<skos:altLabel>${name.title}</skos:altLabel>
+				</c:otherwise>
+			</c:choose>
 		</c:forEach>
 		<c:if test="${place.prefLocation != null}">
 			<wgs84_pos:lat>${place.prefLocation.lat}</wgs84_pos:lat>
