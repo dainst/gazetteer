@@ -345,7 +345,7 @@
 						</c:when>
 						<c:otherwise>
 							<li style="cursor:pointer">
-								<a href="userManagement?page=${page - 1}&sort=${lastSorting}&isDescending=${isDescending}">&larr; <s:message code="ui.previous" /></a>
+								<a href="userManagement?${recordGroupParameter}page=${page - 1}&sort=${lastSorting}&isDescending=${isDescending}">&larr; <s:message code="ui.previous" /></a>
 							</li>
 						</c:otherwise>
 					</c:choose>
@@ -363,7 +363,7 @@
 						</c:when>
 						<c:otherwise>
 							<li style="cursor:pointer">
-								<a href="userManagement?page=${page + 1}&sort=${lastSorting}&isDescending=${isDescending}"><s:message code="ui.next" text="Vor"/> &rarr;</a>
+								<a href="userManagement?${recordGroupParameter}page=${page + 1}&sort=${lastSorting}&isDescending=${isDescending}"><s:message code="ui.next" text="Vor"/> &rarr;</a>
 							</li>
 						</c:otherwise>
 					</c:choose>
