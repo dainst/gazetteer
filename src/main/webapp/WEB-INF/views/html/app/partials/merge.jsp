@@ -4,6 +4,24 @@
 
 <div gaz-place-nav active-tab="merge" place="place"></div>
 
+<s:message code="ui.copyToClipboard" var="copyMsg"/>
+
+<div class="modal hide" id="copyUriModal">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal">×</button>
+		<h3><s:message code="ui.copyUriToClipboardHeading"/></h3>
+	</div>
+	<div class="modal-body">
+		<label>${copyMsg}</label>
+		<input class="input-xxlarge" style="width:97%" type="text" value="${baseUri}place/{{place.gazId}}" id="copyUriInput"></input>
+	</div>
+</div>
+<script type="text/javascript">
+	$("#copyUriModal").on("shown",function() {
+		$("#copyUriInput").focus().select();
+	});
+</script>
+
 <ul class="nav nav-tabs">
 	<li class="active">
 		<a ng-click="getCandidatesByName()" style="cursor: pointer;" data-toggle="tab">
