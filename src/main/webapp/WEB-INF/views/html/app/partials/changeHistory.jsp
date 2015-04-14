@@ -8,7 +8,7 @@
 <div class="modal hide" id="copyUriModal">
 	<div class="modal-header">
 		<button type="button" class="close" data-dismiss="modal">×</button>
-		<h3><s:message code="ui.copyToClipboardHeading"/></h3>
+		<h3><s:message code="ui.copyUriToClipboardHeading"/></h3>
 	</div>
 	<div class="modal-body">
 		<label>${copyMsg}</label>
