@@ -10,9 +10,23 @@
 	xmlns:gaz_id="http://gazetteer.dainst.org/types/id#">
 	
 	<edm:Place rdf:about="${baseUri}place/${place.id}">
-		<skos:prefLabel xml:lang="${langHelper.getLocaleForISO3Language(place.prefName.language).language}">${place.prefName.title}</skos:prefLabel>
+		<c:choose>
+			<c:when test="${place.prefName.language != null}">
+				<skos:prefLabel xml:lang="${langHelper.getLocaleForISO3Language(prefLanguage).getLanguage()}">${place.prefName.title}</skos:prefLabel>
+			</c:when>
+			<c:otherwise>
+				<skos:prefLabel>${place.prefName.title}</skos:prefLabel>
+			</c:otherwise>
+		</c:choose>
 		<c:forEach var="name" items="${place.names}">
-			<skos:altLabel xml:lang="${langHelper.getLocaleForISO3Language(name.language).language}">${name.title}</skos:altLabel>
+			<c:choose>
+				<c:when test="${name.language != null}">
+					<skos:prefLabel xml:lang="${langHelper.getLocaleForISO3Language(name.language).getLanguage()}">${name.title}</skos:prefLabel>
+				</c:when>
+				<c:otherwise>
+					<skos:altLabel>${name.title}</skos:altLabel>
+				</c:otherwise>
+			</c:choose>
 		</c:forEach>
 		<c:if test="${place.prefLocation != null}">
 			<wgs84_pos:lat>${place.prefLocation.lat}</wgs84_pos:lat>

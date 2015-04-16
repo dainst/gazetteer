@@ -278,11 +278,17 @@ CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
   if place[:names] 
     place[:names].delete_if { |name| name[:title].to_s.empty? }
   end
+  if place[:types] 
+    place[:types].delete_if { |type| type.to_s.empty? }
+  end
   place.delete(:types) if place[:types] && place[:types].empty?
   place[:prefLocation].delete(:coordinates) if place[:prefLocation] && place[:prefLocation][:coordinates] == [0, 0]
   place.delete(:prefLocation) if place[:prefLocation] && !place[:prefLocation][:coordinates] && !place[:prefLocation][:shape]
   if place[:identifiers] 
     place[:identifiers].delete_if { |id| id[:value].to_s.empty? || id[:value] == "0" }
+  end  
+  if place[:tags] 
+    place[:tags].delete_if { |tag| tag.to_s.empty? }
   end
   if place[:comments]
     place[:comments].delete_if { |comment| comment[:text].to_s.empty? }

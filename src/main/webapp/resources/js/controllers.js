@@ -437,8 +437,11 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages, PolygonVali
 				filterQuery += " AND ";
 			filterQuery += "_missing_:provenance";
 		}		
-		if ($scope.type == "noType")
+		if ($scope.type == "noType") {
+			if (filterQuery != "")
+				filterQuery += " AND ";
 			filterQuery += "_missing_:types";
+		}
 		
 		var query = { "bool": { "must": queries } };
 
