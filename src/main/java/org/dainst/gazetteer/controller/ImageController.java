@@ -5,7 +5,7 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
-import java.net.URL;
+import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
@@ -22,12 +22,27 @@ public class ImageController {
 	private Font fontBig = new Font(Font.SANS_SERIF, Font.PLAIN, 12);
 	private Font fontMedium = new Font(Font.SANS_SERIF, Font.PLAIN, 11);
 	private Font fontSmall = new Font(Font.SANS_SERIF, Font.PLAIN, 8);
+	private ClassLoader classloader = Thread.currentThread().getContextClassLoader();
 	
 	@ResponseBody
-	@RequestMapping(value = "/markerImage/{number}", method = RequestMethod.GET, produces = MediaType.IMAGE_PNG_VALUE)
-	public byte[] numberedMarkerImage(@PathVariable int number) throws Exception {
+	@RequestMapping(value = "/markerImage/{color}/{number}", method = RequestMethod.GET, produces = MediaType.IMAGE_PNG_VALUE)
+	public byte[] numberedMarkerImage(@PathVariable String color, @PathVariable int number) throws Exception {
+		String fileName;
+		switch (color) {
+		case "blue":
+			fileName = "marker_blue.png";
+			break;
+		case "lightRed":
+			fileName = "marker_light_red.png";
+			break;
+		default:
+			fileName = "marker_red.png";
+			break;
+		}
+
+		InputStream inputStream = classloader.getResourceAsStream("images/" + fileName);
 		BufferedImage image = null;
-		image = ImageIO.read(new URL("http://www.google.com/intl/en_us/mapfiles/ms/micons/red.png"));
+		image = ImageIO.read(inputStream);
 		
 		if (image != null) {			
 			if (number < 1000) {

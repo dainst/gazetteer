@@ -614,9 +614,9 @@ directives.directive('gazMap', function($location, Place) {
 					else if ($scope.highlightedMarkerType == "parent")
 						$scope.highlightedMarker.setIcon(parentIcon);
 					else if ($scope.highlightedMarkerType == "searchResult")
-						$scope.highlightedMarker.setIcon(getNumberedMarkerIcon($scope.highlightedMarker.number, "FD7567"));
+						$scope.highlightedMarker.setIcon(getNumberedMarkerIcon($scope.highlightedMarker.number, "red"));
 					else
-						$scope.highlightedMarker.setIcon(getNumberedMarkerIcon($scope.highlightedMarker.number, "FFA9A1"));
+						$scope.highlightedMarker.setIcon(getNumberedMarkerIcon($scope.highlightedMarker.number, "lightRed"));
 					$scope.highlightedMarker.setZIndex($scope.lastZIndex);
 				}
 				
@@ -632,7 +632,7 @@ directives.directive('gazMap', function($location, Place) {
 							var number = parseInt($scope.highlight.substring($scope.highlight.indexOf('+') + 1)) + 1;
 							$scope.highlightedMarkerType = "alternative";
 							$scope.highlightedMarker.number = number;
-							$scope.markerMap[$scope.highlight].setIcon(getNumberedMarkerIcon(number, "6991FD"));
+							$scope.markerMap[$scope.highlight].setIcon(getNumberedMarkerIcon(number, "blue"));
 						}
 						else if ($scope.highlightedMarker.getIcon() == parentIcon) {
 							$scope.highlightedMarkerType = "parent";
@@ -640,7 +640,7 @@ directives.directive('gazMap', function($location, Place) {
 						}
 						else if ($scope.highlightedMarker.number) {
 							$scope.highlightedMarkerType = "searchResult";
-							$scope.highlightedMarker.setIcon(getNumberedMarkerIcon($scope.highlightedMarker.number, "6991FD"));
+							$scope.highlightedMarker.setIcon(getNumberedMarkerIcon($scope.highlightedMarker.number, "blue"));
 						}
 						else {
 							$scope.highlightedMarkerType = "prefLocation";
@@ -679,7 +679,7 @@ directives.directive('gazMap', function($location, Place) {
 						if (place.prefLocation.coordinates && place.mapType != "polygonParent") {
 							var icon = defaultIcon;
 							if (place.mapType == "searchResults")
-								icon = getNumberedMarkerIcon(parseInt(place.markerNumber), "FD7567");
+								icon = getNumberedMarkerIcon(parseInt(place.markerNumber), "red");
 							else if (place.mapType == "markerParent" || place.mapType == "parent")
 								icon = parentIcon;
 							else if (place.mapType == "markerChild")
@@ -719,7 +719,7 @@ directives.directive('gazMap', function($location, Place) {
 											position: ll,
 											title: place.prefName.title,
 											map: $scope.map,
-											icon: getNumberedMarkerIcon(parseInt(i) + 1, "FFA9A1") 
+											icon: getNumberedMarkerIcon(parseInt(i) + 1, "lightRed")
 										});
 										$scope.markers.push(marker);
 										$scope.markerMap[place.gazId + "+" + i] = marker;
@@ -820,7 +820,7 @@ directives.directive('gazMap', function($location, Place) {
 			};
 			
 			var getNumberedMarkerIcon = function(number, color) {
-				return baseUri + "markerImage/" + number;
+				return baseUri + "markerImage/" + color + "/" + number;
 			};
 		}
 	};
