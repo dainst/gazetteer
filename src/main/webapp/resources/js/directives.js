@@ -535,6 +535,8 @@ directives.directive('gazMap', function($location, Place) {
 	var parentIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/pink.png";
 	var childIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/green-dot.png";
 	
+	var baseUri = $location.absUrl().substring(0, $location.absUrl().indexOf("app"));
+	
 	return {
 		replace: true,
 		scope: {
@@ -818,7 +820,7 @@ directives.directive('gazMap', function($location, Place) {
 			};
 			
 			var getNumberedMarkerIcon = function(number, color) {
-				return "http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=" + number + "|" + color + "|000100";
+				return baseUri + "markerImage/" + number;
 			};
 		}
 	};
