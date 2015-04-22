@@ -2,7 +2,8 @@ package org.dainst.gazetteer.controller;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -48,7 +49,11 @@ public class ImageController {
 			if (number < 1000) {
 				int xPos, yPos;
 				Font font;
-				if (number < 10) {
+				if (number == 4) {
+					xPos = 11;
+					yPos = 14;
+					font = fontBig;
+				} else if (number < 10) {
 					xPos = 12;
 					yPos = 14;
 					font = fontBig;
@@ -62,7 +67,8 @@ public class ImageController {
 					font = fontSmall;
 				}
 			
-				Graphics graphics = image.getGraphics();
+				Graphics2D graphics = (Graphics2D) image.getGraphics();
+				graphics.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON );
 				graphics.setFont(font);
 				graphics.setColor(Color.BLACK);
 				graphics.drawString(String.valueOf(number), xPos, yPos);
