@@ -46,14 +46,10 @@ public class ImageController {
 		image = ImageIO.read(inputStream);
 		
 		if (image != null) {			
-			if (number < 1000) {
+			if (number >= 0 && number < 1000) {
 				int xPos, yPos;
 				Font font;
-				if (number == 4) {
-					xPos = 11;
-					yPos = 14;
-					font = fontBig;
-				} else if (number < 10) {
+				if (number < 10) {
 					xPos = 12;
 					yPos = 14;
 					font = fontBig;
