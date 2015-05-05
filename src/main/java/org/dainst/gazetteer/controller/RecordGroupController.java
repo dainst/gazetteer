@@ -38,7 +38,7 @@ public class RecordGroupController {
 		
 		if (deleteRecordGroupId != null && !deleteRecordGroupId.isEmpty()) {
 			RecordGroup recordGroup = recordGroupDao.findOne(deleteRecordGroupId);			
-			List<Place> assignedPlaces = placeDao.findByRecordGroupId(deleteRecordGroupId);		
+			List<Place> assignedPlaces = placeDao.findByRecordGroupIdAndDeletedIsFalse(deleteRecordGroupId);		
 			if (assignedPlaces.size() == 0) {
 				List<User> members = userDao.findByRecordGroupIds(deleteRecordGroupId);
 				for (User member : members) {
@@ -56,7 +56,7 @@ public class RecordGroupController {
 		Map<String, Integer> recordGroupPlaces = new HashMap<String, Integer>();
 		for (RecordGroup recordGroup : recordGroups) {
 			List<User> members = userDao.findByRecordGroupIds(recordGroup.getId());
-			List<Place> assignedPlaces = placeDao.findByRecordGroupId(recordGroup.getId());
+			List<Place> assignedPlaces = placeDao.findByRecordGroupIdAndDeletedIsFalse(recordGroup.getId());
 
 			recordGroupMembers.put(recordGroup.getId(), members.size());
 			recordGroupPlaces.put(recordGroup.getId(), assignedPlaces.size());

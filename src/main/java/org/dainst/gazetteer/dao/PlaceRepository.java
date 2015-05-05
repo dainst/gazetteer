@@ -71,7 +71,7 @@ public interface PlaceRepository extends PagingAndSortingRepository<Place, Strin
 	public List<Place> findByProvenanceNotAndIdsContext(String string,
 			String string2);
 	
-	public List<Place> findByRecordGroupId(String recordGroupId);
+	public List<Place> findByRecordGroupIdAndDeletedIsFalse(String recordGroupId);
 	
 	@Query(value="{ 'children': { $gt: ?0 }, 'prefLocation.coordinates': { $exists: true } }", fields="{ 'prefLocation.shape': 0 }")
 	public List<Place> findHeatmapPlaces(
