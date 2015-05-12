@@ -119,7 +119,7 @@ public class AdminController {
 	@ResponseBody
 	public String importGeonames() {
 		
-		List<Place> places = placeDao.findByProvenanceNotAndIdsContext("geonames","geonames");
+		List<Place> places = placeDao.findByProvenanceNotAndIdsContextAndDeletedIsFalse("geonames","geonames");
 		
 		logger.debug("found {} places with geonames-id and no location", places.size());
 		
@@ -138,7 +138,12 @@ public class AdminController {
 		
 		int count = 0;
 		for (Place place : places) {
-			ObjectNode node = api.queryParam("q", String.format("seriennummer:%s", place.getIdentifier("geonames")))
+			String geonamesId = place.getIdentifier("geonames");
+			if (!geonamesId.matches("\\d*")) {
+				logger.warn("invalid geonames identifier \"" + geonamesId + "\" for place with id " + place.getId());
+				continue;
+			}
+			ObjectNode node = api.queryParam("q", String.format("seriennummer:%s", geonamesId))
 					.get(ObjectNode.class);
 			if (node.get("response").get("numFound").asInt() > 0) {
 				logger.debug("found {} candidates.", node.get("response").get("numFound"));

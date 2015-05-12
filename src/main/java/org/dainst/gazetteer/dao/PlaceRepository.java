@@ -68,7 +68,7 @@ public interface PlaceRepository extends PagingAndSortingRepository<Place, Strin
 	
 	public List<Place> findByIdsContext(String context);
 
-	public List<Place> findByProvenanceNotAndIdsContext(String string,
+	public List<Place> findByProvenanceNotAndIdsContextAndDeletedIsFalse(String string,
 			String string2);
 	
 	public List<Place> findByRecordGroupIdAndDeletedIsFalse(String recordGroupId);
