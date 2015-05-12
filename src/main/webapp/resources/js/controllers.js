@@ -1201,6 +1201,14 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 		   return false;
 	};
 	
+	$scope.getZenonSearchQuery = function() {
+		var zenonIds = $scope.getIdsByContext("zenon-thesaurus");
+		for (var i in zenonIds) {
+			zenonIds[i] = "%22" + zenonIds[i] + "%22";
+		}		
+		return zenonIds.join(" OR ");
+	};
+	
 	$scope.getIdsByContext = function(context) {
 		var result = [];
 		var ids = $scope.place.identifiers;

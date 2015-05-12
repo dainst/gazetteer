@@ -248,7 +248,7 @@
 			</a>
 		</dd>
 		<dd ng-show="getIdsByContext('zenon-thesaurus') != false">
-			<a ng-href="http://zenon.dainst.org/Search/Results?lookfor=%22{{getIdsByContext('zenon-thesaurus').join(' OR ')}}%22&type=Thesaurus" target="_blank">
+			<a ng-href="http://zenon.dainst.org/Search/Results?lookfor={{getZenonSearchQuery()}}&type=Thesaurus" target="_blank">
 				<s:message code="ui.link.zenon" text="ui.link.zenon"/>
 				<i class="icon-external-link"></i>
 			</a>
