@@ -33,8 +33,8 @@ public class ImageController {
 		case "blue":
 			fileName = "marker_blue.png";
 			break;
-		case "lightRed":
-			fileName = "marker_light_red.png";
+		case "lightred":
+			fileName = "marker_lightred.png";
 			break;
 		default:
 			fileName = "marker_red.png";

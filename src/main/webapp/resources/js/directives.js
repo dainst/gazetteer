@@ -616,7 +616,7 @@ directives.directive('gazMap', function($location, Place) {
 					else if ($scope.highlightedMarkerType == "searchResult")
 						$scope.highlightedMarker.setIcon(getNumberedMarkerIcon($scope.highlightedMarker.number, "red"));
 					else
-						$scope.highlightedMarker.setIcon(getNumberedMarkerIcon($scope.highlightedMarker.number, "lightRed"));
+						$scope.highlightedMarker.setIcon(getNumberedMarkerIcon($scope.highlightedMarker.number, "lightred"));
 					$scope.highlightedMarker.setZIndex($scope.lastZIndex);
 				}
 				
@@ -719,7 +719,7 @@ directives.directive('gazMap', function($location, Place) {
 											position: ll,
 											title: place.prefName.title,
 											map: $scope.map,
-											icon: getNumberedMarkerIcon(parseInt(i) + 1, "lightRed")
+											icon: getNumberedMarkerIcon(parseInt(i) + 1, "lightred")
 										});
 										$scope.markers.push(marker);
 										$scope.markerMap[place.gazId + "+" + i] = marker;
