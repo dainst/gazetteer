@@ -1,5 +1,6 @@
 package org.dainst.gazetteer.domain;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -68,6 +69,8 @@ public class Place {
 	
 	@Indexed
 	private String recordGroupId;
+	
+	private Date lastChangeDate;
 	
 	
 	public String getId() {
@@ -304,6 +307,14 @@ public class Place {
 
 	public void setRecordGroupId(String recordGroupId) {
 		this.recordGroupId = recordGroupId;
+	}
+
+	public Date getLastChangeDate() {
+		return lastChangeDate;
+	}
+
+	public void setLastChangeDate(Date lastChangeDate) {
+		this.lastChangeDate = lastChangeDate;
 	}
 
 	@Override

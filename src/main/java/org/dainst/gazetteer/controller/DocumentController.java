@@ -185,13 +185,14 @@ public class DocumentController {
 			HttpServletResponse response) throws Exception {
 		
 		place.setId(idGenerator.generate(place));
+		place.setLastChangeDate(new Date());
+		
 		Place existingPlace = placeDao.findOne(place.getId());
-		if (existingPlace == null) {
-			placeDao.save(place);
-		} else {
+		
+		if (existingPlace == null)
+			place = placeDao.save(place);
+		else
 			throw new IllegalStateException("Could not create place! Generated ID already exists: " + place.getId());
-		}
-		place = placeDao.save(place);
 		
 		changeRecordDao.save(createChangeRecord(place, "create"));
 		
@@ -238,6 +239,8 @@ public class DocumentController {
 			mav.addObject("result", result);
 			return mav;
 		}
+		
+		place.setLastChangeDate(new Date());
 		
 		if (placeDao.exists(place.getId()))
 			changeRecordDao.save(createChangeRecord(place, "edit"));
@@ -290,6 +293,7 @@ public class DocumentController {
 			response.setStatus(409);
 		} else {			
 			place.setDeleted(true);
+			place.setLastChangeDate(new Date());
 			placeDao.save(place);
 		
 			changeRecordDao.save(createChangeRecord(place, "delete"));
@@ -324,7 +328,7 @@ public class DocumentController {
 		changeRecord.setUserId(user.getId());
 		changeRecord.setPlaceId(place.getId());
 		changeRecord.setChangeType(changeType);
-		changeRecord.setChangeDate(new Date());
+		changeRecord.setChangeDate(place.getLastChangeDate());
 		
 		return changeRecord;
 	}
