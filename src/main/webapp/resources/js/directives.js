@@ -670,11 +670,12 @@ directives.directive('gazMap', function($location, Place) {
 				var ll = new google.maps.LatLng("0","0");
 				var shape = null;
 				var numLocations = 0;
+				var childMarkerLocations = [];
 				for (var i in $scope.places) {
 					var place = $scope.places[i];
 					var title = "";
 					if (place.prefName) title = place.prefName.title;
-
+					
 					if (place.prefLocation) {
 						if (place.prefLocation.coordinates && place.mapType != "polygonParent") {
 							var icon = defaultIcon;
@@ -687,6 +688,15 @@ directives.directive('gazMap', function($location, Place) {
 
 							if (angular.isNumber(place.prefLocation.coordinates[0]) && angular.isNumber(place.prefLocation.coordinates[1])) {
 								ll = new google.maps.LatLng(place.prefLocation.coordinates[1], place.prefLocation.coordinates[0]);
+								
+								if (place.mapType == "markerChildInvisible") {
+									childMarkerLocations.push(ll);
+									continue;
+								}
+								
+								if (place.mapType == "standard")
+									childMarkerLocations.push(ll);
+								
 								var marker = new google.maps.Marker({
 									position: ll,
 									title: place.prefName.title,
@@ -696,8 +706,10 @@ directives.directive('gazMap', function($location, Place) {
 								});
 								if (place.mapType == "markerParent" || place.mapType == "parent")
 									marker.setZIndex(1);
-								else if (place.mapType == "markerChild")
+								else if (place.mapType == "markerChild") {
 									marker.setZIndex(1000);
+									childMarkerLocations.push(ll);
+								}
 								else
 									marker.setZIndex(2);
 								$scope.markers.push(marker);
@@ -771,6 +783,13 @@ directives.directive('gazMap', function($location, Place) {
 							bounds.extend(shape.getBounds().getSouthWest());
 							bounds.extend(shape.getBounds().getNorthEast());
 						}
+					}
+				}
+				
+				if (childMarkerLocations.length > 1) {
+					bounds = new google.maps.LatLngBounds();
+					for (var i in childMarkerLocations) {
+						bounds.extend(childMarkerLocations[i]);
 					}
 				}
 

@@ -826,7 +826,7 @@ function CreateCtrl($scope, $rootScope, $routeParams, $location, Place, messages
 }
 
 
-function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages) {
+function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, Place, messages) {
 	
 	$scope.location = { confidence: 0, publicSite: true };
 	$scope.link = { predicate: "owl:sameAs" };
@@ -1234,19 +1234,37 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, Place, messages)
 		$scope.copyCoordinates = coordinates;
 	};
 	
-	$scope.showChildMarker = function(child) {
-		child.mapType = "markerChild";
-		var places = [child].concat($rootScope.activePlaces);
+	var removeChildrenFromMap = function() {
+		var places = $rootScope.activePlaces.slice();		
+		for (var i in $scope.children) {
+			var index = places.indexOf($scope.children[i]);
+			if (index > -1)
+				places.splice(index, 1);
+		}
 		$rootScope.activePlaces = places;
 	};
 	
-	$scope.hideChildMarker = function(child) {
-		var places = $rootScope.activePlaces.slice();
-		var index = places.indexOf(child);
-		if (index > -1) {
-			places.splice(index, 1);
-			$rootScope.activePlaces = places;
+	$scope.showChildMarker = function(child) {
+		removeChildrenFromMap();
+		var places = $rootScope.activePlaces;
+		if ($scope.activeTimeout) {
+			$timeout.cancel($scope.activeTimeout);
+			$scope.activeTimeout = null;
 		}
+		for (var i in $scope.children) {
+			if ($scope.children[i] != child)
+				$scope.children[i].mapType = "markerChildInvisible";
+			else
+				$scope.children[i].mapType = "markerChild";
+			if (places.indexOf($scope.children[i]) == -1)
+				places = places.concat($scope.children[i]);
+		}
+		
+		$rootScope.activePlaces = places;
+	};
+	
+	$scope.hideChildMarker = function() {
+		$scope.activeTimeout = $timeout(removeChildrenFromMap, 200);		
 	};
 
 	// update relatedPlaces attribute of place when relatedPlaces in scope changes
