@@ -763,7 +763,7 @@ directives.directive('gazMap', function($location, Place) {
 								}
 							}
 						}
-						if (place.prefLocation.shape && (place.mapType != "markerParent")) {
+						if (place.prefLocation.shape && place.mapType != "markerParent" && place.mapType != "markerChildInvisible") {
 							var shapeCoordinates = convertShapeCoordinates(place.prefLocation.shape);
 	
 							shape = new google.maps.Polygon({

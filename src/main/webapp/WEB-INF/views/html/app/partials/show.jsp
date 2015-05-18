@@ -131,7 +131,8 @@
 				<li ng-repeat="child in children">
 					<span class="icon-map-marker" ng-show="child.prefLocation && child.prefLocation.coordinates && child.prefLocation.coordinates.length > 0"
 						style="margin-left: 3px; margin-right: 5px; cursor: default; color: #00E64D; text-shadow: 1px 1px 1px #000000;"></span>
-					<div gaz-place-title place="child" ng-mouseover="showChildMarker(child)" ng-mouseout="hideChildMarker()"></div>
+					<div ng-if="child.prefLocation && child.prefLocation.coordinates && child.prefLocation.coordinates.length > 0" gaz-place-title place="child" ng-mouseover="showChildMarker(child)" ng-mouseout="hideChildMarker()"></div>
+					<div ng-if="!child.prefLocation || !child.prefLocation.coordinates || child.prefLocation.coordinates.length == 0" gaz-place-title place="child"></div>
 				</li>
 			</ul>
 		</dd>
