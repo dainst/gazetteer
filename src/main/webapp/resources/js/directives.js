@@ -696,6 +696,8 @@ directives.directive('gazMap', function($location, Place) {
 								});
 								if (place.mapType == "markerParent" || place.mapType == "parent")
 									marker.setZIndex(1);
+								else if (place.mapType == "markerChild")
+									marker.setZIndex(1000);
 								else
 									marker.setZIndex(2);
 								$scope.markers.push(marker);
