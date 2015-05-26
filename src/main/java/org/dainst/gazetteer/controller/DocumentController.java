@@ -290,6 +290,12 @@ public class DocumentController {
 		Place place = placeDao.findOne(placeId);
 		
 		if (children.size() > 0 || relatedPlaces.size() > 0 || !checkPlaceAccess(place)) {
+			if (children.size() > 0)
+				logger.debug("cannot delete place " + placeId + ": has " + children.size() + " children!");
+			if (relatedPlaces.size() > 0)
+				logger.debug("cannot delete place " + placeId + ": has " + relatedPlaces.size() + " related places!");
+			if (!checkPlaceAccess(place))
+				logger.debug("cannot delete place " + placeId + ": no place access!");
 			response.setStatus(409);
 		} else {			
 			place.setDeleted(true);
@@ -297,6 +303,8 @@ public class DocumentController {
 			placeDao.save(place);
 		
 			changeRecordDao.save(createChangeRecord(place, "delete"));
+			
+			logger.debug("successfully deleted place " + placeId);
 		
 			response.setStatus(204);
 		}
