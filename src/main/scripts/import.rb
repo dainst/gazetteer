@@ -105,7 +105,7 @@ opts = OptionParser.new do |opts|
   end
 
   options.geonames = false
-  opts.on("-g" "--geonames-ids COUNTRY_CODE", "Import Geonames IDs if they match the place name title and the given country code") do |g|
+  opts.on("-g", "--geonames-ids", "Import Geonames IDs if they match the place name title") do |g|
     options.geonames = g
   end
 
@@ -150,6 +150,12 @@ def id(temp_id)
 	end
 end
 
+# country codes map
+$country_codes = {};
+
+# geonames ids map for administrative units
+$administrative_units_geonames_ids = {}
+
 # main program
 
 gaz = RestClient::Resource.new(options.uri, :user => options.user, :password => options.password)
@@ -176,7 +182,7 @@ CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
       if options.geonames
         updatedRow << "Geonames ID"
       end
-      CSV.open(options.updateCSV, "ab") do |csv|
+      CSV.open(options.updateCSV, "ab", {:col_sep => options.separator}) do |csv|
         csv << updatedRow
       end
     end
@@ -240,19 +246,113 @@ CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
     end
   end
 
+  # get country code and geonames id of administrative unit (if geonames option is active)
+  if options.geonames
+    country_code = ""
+    administrative_unit_geonames_id = ""
+    # check if the place already has a country code and/or is an administrative unit
+    for identifier in place[:identifiers] do
+      if identifier[:context] == "ISO 3166-1 alpha-2"
+        country_code = identifier[:value]
+      end
+    end
+    if place[:types].include? "administrative-unit"
+      for identifier in place[:identifiers] do
+        if identifier[:context] == "geonames"
+          administrative_unit_geonames_id = identifier[:value]
+        end
+      end
+    end
+    if country_code != ""
+      $country_codes[temp_id.to_s] = country_code
+    else
+      # check if a previously imported parent place has a country code
+      parent_temp_id = $ids.find{ |key, value| value == place[:parent][place[:parent].rindex('/')+1..-1] }
+      if parent_temp_id && parent_temp_id.is_a?(Array) && $country_codes.key?(parent_temp_id[0].to_s)
+        country_code = $country_codes[parent_temp_id[0].to_s]
+        $country_codes[temp_id.to_s] = country_code
+        if administrative_unit_geonames_id == "" && $administrative_units_geonames_ids.key?(parent_temp_id[0].to_s)
+          administrative_unit_geonames_id = $administrative_units_geonames_ids[parent_temp_id[0].to_s]
+        end
+      else
+        # get country code from gazetteer
+        if place[:parent]
+          parent_id = place[:parent].to_s
+        else
+          raise "Can't find country code for place with temp id #{temp_id.to_s}!"
+        end
+        loop do
+          parent_id = parent_id[parent_id.rindex('/')+1..-1]
+          response = gaz["doc/#{parent_id}"].get(:content_type => :json, :accept => :json)
+          parent_place = JSON.parse(response.body, :symbolize_names => true)
+          geonames_id = ""
+          for identifier in parent_place[:identifiers] do
+            if identifier[:context] == "ISO 3166-1 alpha-2"
+              country_code = identifier[:value]
+              $country_codes[temp_id.to_s] = country_code
+            end
+            if identifier[:context] == "geonames"
+              geonames_id = identifier[:value]
+            end
+          end
+          if administrative_unit_geonames_id == "" && parent_place[:types].include?("administrative-unit") && geonames_id != ""
+            administrative_unit_geonames_id = geonames_id
+          end
+          break if country_code != ""
+          if parent_place[:parent]
+            parent_id = parent_place[:parent].to_s
+          else
+            raise "Can't find country code for place with temp id #{temp_id.to_s}!"
+          end
+        end
+        $country_codes[temp_id.to_s] = country_code
+      end
+    end
+    $administrative_units_geonames_ids[temp_id.to_s] = administrative_unit_geonames_id
+  end
+
   # get geonames id
-  if options.geonames && place[:prefName][:title] && place[:types][0] != "administrative-unit"
+  if options.geonames && place[:prefName][:title] && !place[:types].include?("administrative-unit")
     uri = URI.parse("http://arachne.uni-koeln.de")
     http = Net::HTTP.new(uri.host, 8080)
+
+    # get administrative unit
+    if $administrative_units_geonames_ids.key?(temp_id.to_s)
+      http_response = http.get('/solrGeonames35/select/?q=id:geonames-' + $administrative_units_geonames_ids[temp_id.to_s] + '&version=2.2&start=0&rows=500&indent=on&wt=ruby')
+      response = eval(http_response.body)
+      admin1 = response['response']['docs'][0]['admin1_code']
+      admin2 = response['response']['docs'][0]['admin2_code']
+      admin3 = response['response']['docs'][0]['admin3_code']
+      admin4 = response['response']['docs'][0]['admin4_code']
+    end
+
     searchName = place[:prefName][:title].gsub(" ", "%20")
-    http_response = http.get('/solrGeonames35/select/?q=name:"' + searchName + '"%20%2Bcountry_code:' + options.geonames + '&version=2.2&start=0&rows=10&indent=on&wt=ruby')
+    if place[:types].include? "populated-place"
+      featureClass = '%20AND%20feature_class:P'
+    else
+      featureClass = ''
+    end
+    http_response = http.get('/solrGeonames35/select/?q=%28name:"' + searchName + '"%20OR%20alternatenames:"' + searchName + '"%29%20AND%20country_code:' + country_code + featureClass + '&version=2.2&start=0&rows=500&indent=on&wt=ruby')
     response = eval(http_response.body)
     if response['response']['docs'].size == 0
       puts "no geonames id found for place " + place[:prefName][:title]
-    elsif response['response']['docs'].size > 1
-      puts "more than one geonames id found for place " + place[:prefName][:title]
     else
-      geonamesId = response['response']['docs'][0]['id']
+      geonames_document = nil
+      for doc in response['response']['docs'] do
+        if doc['admin1_code'] == admin1 && doc['admin2_code'] == admin2 && doc['admin3_code'] == admin3 && doc['admin4_code'] == admin4
+          if geonames_document != nil
+            multiple = true
+          else
+            geonames_document = doc
+          end
+        end
+      end
+    end
+
+    puts "more than one geonames id found for place " + place[:prefName][:title] if multiple
+
+    if geonames_document != nil && !multiple
+      geonamesId = geonames_document['id']
       if geonamesId
         identifier = Hash.new
         identifier[:value] = geonamesId.to_s.gsub("geonames-", "")
@@ -381,7 +481,7 @@ CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
     elsif place[:identifiers].size > 1 && place[:identifiers][1][:context] == "geonames"
       updatedRow << place[:identifiers][1][:value]
     end
-    CSV.open(options.updateCSV, "ab") do |csv|
+    CSV.open(options.updateCSV, "ab", {:col_sep => options.separator}) do |csv|
       csv << updatedRow
     end
   end
