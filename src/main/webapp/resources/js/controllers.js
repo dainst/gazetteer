@@ -118,8 +118,11 @@ function AppCtrl($scope, $location, $rootScope, Place, GeoSearch, EscapingServic
 		$rootScope.alerts = [];
 	});
 	
-	$scope.setHighlight = function(id) {
-		$scope.highlight = id;
+	$scope.setHighlight = function(id, type, index) {
+		if (id == null)
+			$scope.highlight = null;
+		else
+			$scope.highlight = { id: id, type: type, index: index };
 	};
 }
 
@@ -956,6 +959,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, Place,
 
 		var polygonPlace = null;
 		var markerPlaces = [];
+		var parentsWithCoordinates = [];
 		for (var i in $scope.place.parents) {
 			if ((!$scope.place.prefLocation || !$scope.place.prefLocation.shape) && $scope.place.parents[i].prefLocation
 					&& $scope.place.parents[i].prefLocation.shape && !polygonPlace)
@@ -963,8 +967,12 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, Place,
 			if ($scope.place.parents[i].prefLocation && $scope.place.parents[i].prefLocation.coordinates
 					&& $scope.place.parents[i].prefLocation.coordinates.length > 0) {
 				$scope.place.parents[i].mapType = "markerParent";
+				parentsWithCoordinates.push($scope.place.parents[i]);
 				markerPlaces.push($scope.place.parents[i]);
 			}
+		}
+		for (var i in parentsWithCoordinates) {
+			parentsWithCoordinates[i].markerNumber = parentsWithCoordinates.length - i; 
 		}
 		if (!polygonPlace && markerPlaces.length == 0)
 			$rootScope.activePlaces = [ $scope.place ];

@@ -531,9 +531,8 @@ directives.directive('gazMap', function($location, Place) {
 	
 	var blueIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png";
 	var defaultIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/red-dot.png";
-	var blueParentIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/blue.png";
 	var parentIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/pink.png";
-	var childIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/green-dot.png";
+	var childIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/green-dot.png";	
 	
 	var baseUri = $location.absUrl().substring(0, $location.absUrl().indexOf("app"));
 	
@@ -597,8 +596,8 @@ directives.directive('gazMap', function($location, Place) {
 					$scope.highlightedShape = null;
 				}
 				
-				if ($scope.highlight != null && $scope.highlight.indexOf('#') > 0 && $scope.shapeMap[$scope.highlight]) {
-					$scope.highlightedShape = $scope.shapeMap[$scope.highlight];
+				if ($scope.highlight != null && $scope.highlight.type == "prefLocationPolygon" && $scope.shapeMap[$scope.highlight.id]) {
+					$scope.highlightedShape = $scope.shapeMap[$scope.highlight.id];
 					var fillOpacity = $scope.highlightedShape.get("fillOpacity") * 2;
 					var strokeOpacity = $scope.highlightedShape.get("strokeOpacity") * 2;
 					$scope.highlightedShape.setOptions({ fillOpacity: fillOpacity, strokeOpacity: strokeOpacity });
@@ -612,7 +611,7 @@ directives.directive('gazMap', function($location, Place) {
 					if ($scope.highlightedMarkerType == "prefLocation")
 						$scope.highlightedMarker.setIcon(defaultIcon);
 					else if ($scope.highlightedMarkerType == "parent")
-						$scope.highlightedMarker.setIcon(parentIcon);
+						$scope.highlightedMarker.setIcon(getNumberedMarkerIcon($scope.highlightedMarker.number, "pink"));
 					else if ($scope.highlightedMarkerType == "searchResult")
 						$scope.highlightedMarker.setIcon(getNumberedMarkerIcon($scope.highlightedMarker.number, "red"));
 					else
@@ -622,29 +621,32 @@ directives.directive('gazMap', function($location, Place) {
 				
 				if ($scope.highlight != null) {
 					var center = false;
-					if ($scope.highlight.indexOf('*') == $scope.highlight.length - 1) {
-						$scope.highlight = $scope.highlight.substring(0, $scope.highlight.length - 1);
+					if ($scope.highlight.type == "prefLocation")
 						center = true;
-					}
-					if ($scope.markerMap[$scope.highlight]) {
-						$scope.highlightedMarker = $scope.markerMap[$scope.highlight];
-						if ($scope.highlight.indexOf('+') > 0) {
-							var number = parseInt($scope.highlight.substring($scope.highlight.indexOf('+') + 1)) + 1;
+					var id = $scope.highlight.id;
+					if ($scope.highlight.type == "alternativeLocation")
+						id += "+" + $scope.highlight.index;
+					else if ($scope.highlight.type == "parentLocation" || $scope.highlight.type == "searchResult")
+						id += "*" + $scope.highlight.index;
+					if ($scope.markerMap[id]) {
+						$scope.highlightedMarker = $scope.markerMap[id];
+						if ($scope.highlight.type == "alternativeLocation") {
 							$scope.highlightedMarkerType = "alternative";
-							$scope.highlightedMarker.number = number;
-							$scope.markerMap[$scope.highlight].setIcon(getNumberedMarkerIcon(number, "blue"));
+							$scope.highlightedMarker.number = $scope.highlight.index + 1;
+							$scope.markerMap[id].setIcon(getNumberedMarkerIcon($scope.highlight.index + 1, "blue"));
 						}
-						else if ($scope.highlightedMarker.getIcon() == parentIcon) {
+						else if ($scope.highlight.type == "parentLocation") {
 							$scope.highlightedMarkerType = "parent";
-							$scope.markerMap[$scope.highlight].setIcon(blueParentIcon);
+							$scope.highlightedMarker.number = $scope.highlight.index;
+							$scope.markerMap[id].setIcon(getNumberedMarkerIcon($scope.highlight.index, "blue"));
 						}
-						else if ($scope.highlightedMarker.number) {
+						else if ($scope.highlight.type == "searchResult") {
 							$scope.highlightedMarkerType = "searchResult";
-							$scope.highlightedMarker.setIcon(getNumberedMarkerIcon($scope.highlightedMarker.number, "blue"));
+							$scope.highlightedMarker.setIcon(getNumberedMarkerIcon($scope.highlight.index, "blue"));
 						}
 						else {
 							$scope.highlightedMarkerType = "prefLocation";
-							$scope.markerMap[$scope.highlight].setIcon(blueIcon);
+							$scope.markerMap[id].setIcon(blueIcon);
 						}
 						$scope.lastZIndex = $scope.highlightedMarker.getZIndex();
 						$scope.highlightedMarker.setZIndex(1000);
@@ -681,8 +683,12 @@ directives.directive('gazMap', function($location, Place) {
 							var icon = defaultIcon;
 							if (place.mapType == "searchResults")
 								icon = getNumberedMarkerIcon(parseInt(place.markerNumber), "red");
-							else if (place.mapType == "markerParent" || place.mapType == "parent")
-								icon = parentIcon;
+							else if (place.mapType == "markerParent" || place.mapType == "parent") {
+								if (place.markerNumber)
+									icon = getNumberedMarkerIcon(parseInt(place.markerNumber), "pink");
+								else
+									icon = parentIcon;
+							}
 							else if (place.mapType == "markerChild")
 								icon = childIcon;
 
@@ -713,7 +719,10 @@ directives.directive('gazMap', function($location, Place) {
 								else
 									marker.setZIndex(2);
 								$scope.markers.push(marker);
-								$scope.markerMap[place.gazId] = marker;
+								if ((place.mapType == "markerParent" || place.mapType == "parent" && place.markerNumber) || place.mapType == "searchResults")
+									$scope.markerMap[place.gazId + "*" + place.markerNumber] = marker;
+								else
+									$scope.markerMap[place.gazId] = marker;
 								bounds.extend(ll);
 								numLocations++;
 							}

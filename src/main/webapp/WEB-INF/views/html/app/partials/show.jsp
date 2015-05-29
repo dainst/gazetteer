@@ -107,10 +107,10 @@
 		<dt><s:message code="domain.place.parent" text="domain.place.parent" /></dt>
 		<dd ng-repeat="parent in place.parents | reverse">
 			<div style="margin-left: {{$index * 16}}px;"><i ng-show="$index != 0" class="icon-circle-arrow-right" style="cursor: default;"></i>
-			<span class="icon-map-marker" ng-show="parent.prefLocation && parent.prefLocation.coordinates && parent.prefLocation.coordinates.length > 0" 
-					style="margin-left: 3px; margin-right: 5px; cursor: default; color: #E661AC; text-shadow: 1px 1px 1px #000000;"></span>
+			<span><span class="icon-map-marker" ng-show="parent.prefLocation && parent.prefLocation.coordinates && parent.prefLocation.coordinates.length > 0" 
+					style="margin-left: 3px; margin-right: 5px; cursor: default; color: #E661AC; text-shadow: 1px 1px 1px #000000;"></span>{{parent.markerNumber}}</span>
 				<div gaz-place-title place="parent" ng-hide="parent.prefLocation && parent.prefLocation.coordinates && parent.prefLocation.coordinates.length > 0"></div>
-				<div gaz-place-title place="parent" ng-mouseover="setHighlight(parent.gazId + '*')" ng-mouseout="setHighlight(null)" ng-show="parent.prefLocation && parent.prefLocation.coordinates && parent.prefLocation.coordinates.length > 0"></div>
+				<div gaz-place-title place="parent" ng-mouseover="setHighlight(parent.gazId, 'parentLocation', parent.markerNumber)" ng-mouseout="setHighlight(null, null, null)" ng-show="parent.prefLocation && parent.prefLocation.coordinates && parent.prefLocation.coordinates.length > 0"></div>
 			</div>
 		</dd>
 		<br/>
@@ -162,7 +162,7 @@
 	<span ng-hide="!place.prefLocation || !((place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0) || place.prefLocation.shape)">
 		<dt><s:message code="domain.place.locations" text="domain.place.locations" /></dt>
 		<dd>
-			<span ng-show="place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0" ng-show="location.coordinates" ng-mouseover="setHighlight(place.gazId + '*')" ng-mouseout="setHighlight(null)">
+			<span ng-show="place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0" ng-show="location.coordinates" ng-mouseover="setHighlight(place.gazId, 'prefLocation', 0)" ng-mouseout="setHighlight(null, null, null)">
 				<span class="icon-map-marker" style="margin-right: 5px; cursor: default; color: #FD7567; text-shadow: 1px 1px 1px #000000;"></span>
 				<span style="text-decoration:none; border-bottom: 1px dotted black; cursor: pointer;">
 					<em><s:message code="domain.location.latitude" text="domain.location.latitude" />: </em>{{place.prefLocation.coordinates[1]}},
@@ -186,7 +186,7 @@
 					<br ng-show="(place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0) || place.prefLocation.altitude"/>
 				</span>
 			</span>
-			<em ng-show="place.prefLocation.shape" ng-mouseover="setHighlight(place.gazId + '#p')" ng-mouseout="setHighlight(null)" style="text-decoration:none; border-bottom: 1px dotted black; cursor: pointer;"><s:message code="domain.location.polygonSpecified" text="domain.location.polygonSpecified" /></em>
+			<em ng-show="place.prefLocation.shape" ng-mouseover="setHighlight(place.gazId, 'prefLocationPolygon', 0)" ng-mouseout="setHighlight(null, null, null)" style="text-decoration:none; border-bottom: 1px dotted black; cursor: pointer;"><s:message code="domain.location.polygonSpecified" text="domain.location.polygonSpecified" /></em>
 		</dd>
 		<span ng-hide="!place.locations">
 			<br />
@@ -194,12 +194,12 @@
 			<dd>
 					<div ng-repeat="location in place.locations">
 						<span style="cursor: default;"><span class="icon-map-marker" style="color: #FFA9A1; text-shadow: 1px 1px 1px #000000; margin-right: 3px;"></span>{{$index + 1}}</span>
-						<span ng-show="location.coordinates" ng-mouseover="setHighlight(place.gazId + '+' + $index + '*')" ng-mouseout="setHighlight(null)" style="text-decoration:none; border-bottom: 1px dotted black; cursor: pointer; margin-left: 3px;">
+						<span ng-show="location.coordinates" ng-mouseover="setHighlight(place.gazId, 'alternativeLocation', $index)" ng-mouseout="setHighlight(null, null, null)" style="text-decoration:none; border-bottom: 1px dotted black; cursor: pointer; margin-left: 3px;">
 							<em><s:message code="domain.location.latitude" text="domain.location.latitude" />: </em>{{location.coordinates[1]}},&nbsp;
 							<em><s:message code="domain.location.longitude" text="domain.location.longitude" />: </em>{{location.coordinates[0]}}</span>
 							<a data-toggle="modal" href="#copyCoordinatesModal" ng-click="setCopyCoordinates(location.coordinates)"><i class="icon-share" style="font-size:0.7em"></i></a><span ng-show="location.coordinates && location.altitude">,&nbsp;</span>
 						<span ng-show="location.altitude"><em><s:message code="domain.location.altitude" text="domain.location.altitude" />: </em>{{location.altitude}} m</span><span ng-show="(location.coordinates || location.altitude) && location.shape">,</span>
-						<em ng-show="location.shape" ng-mouseover="setHighlight(place.gazId + '#' + $index)" ng-mouseout="setHighlight(null)" style="text-decoration:none; border-bottom: 1px dotted black; cursor: pointer;"><s:message code="domain.location.polygonSpecified" text="domain.location.polygonSpecified" /></em>
+						<em ng-show="location.shape" ng-mouseover="setHighlight(place.gazId, 'alternativeLocation', $index)" ng-mouseout="setHighlight(null, null, null)" style="text-decoration:none; border-bottom: 1px dotted black; cursor: pointer;"><s:message code="domain.location.polygonSpecified" text="domain.location.polygonSpecified" /></em>
 						<span ng-show="!location.publicSite">
 							<sec:authorize access="hasRole('ROLE_USER')">
 								(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />:</em>
