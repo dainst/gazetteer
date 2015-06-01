@@ -647,29 +647,34 @@ directives.directive('gazMap', function($location, Place) {
 					else if ($scope.highlight.type == "parentLocation" || $scope.highlight.type == "searchResult")
 						id += "*" + $scope.highlight.index;
 					if ($scope.markerMap[id]) {
-						$scope.highlightedMarker = $scope.markerMap[id];
 						if ($scope.highlight.type == "alternativeLocation") {
+							$scope.highlightedMarker = $scope.markerMap[id];
 							$scope.highlightedMarkerType = "alternative";
 							$scope.highlightedMarker.number = $scope.highlight.index + 1;
 							$scope.markerMap[id].setIcon(getNumberedMarkerIcon($scope.highlight.index + 1, "blue"));
 						}
 						else if ($scope.highlight.type == "parentLocation") {
+							$scope.highlightedMarker = $scope.markerMap[id];
 							$scope.highlightedMarkerType = "parent";
 							$scope.highlightedMarker.number = $scope.highlight.index;
 							$scope.markerMap[id].setIcon(getNumberedMarkerIcon($scope.highlight.index, "blue"));
 						}
 						else if ($scope.highlight.type == "searchResult") {
+							$scope.highlightedMarker = $scope.markerMap[id];
 							$scope.highlightedMarkerType = "searchResult";
 							$scope.highlightedMarker.setIcon(getNumberedMarkerIcon($scope.highlight.index, "blue"));
 						}
-						else {
+						else if ($scope.highlight.type == "prefLocation") {
+							$scope.highlightedMarker = $scope.markerMap[id];
 							$scope.highlightedMarkerType = "prefLocation";
 							$scope.markerMap[id].setIcon(blueIcon);
 						}
-						$scope.lastZIndex = $scope.highlightedMarker.getZIndex();
-						$scope.highlightedMarker.setZIndex(1000);
-						if ($scope.highlight.type == "prefLocation" || $scope.highlight.type == "alternativeLocation")
-							$scope.map.setCenter($scope.highlightedMarker.position);
+						if ($scope.highlightedMarker) {
+							$scope.lastZIndex = $scope.highlightedMarker.getZIndex();
+							$scope.highlightedMarker.setZIndex(1000);
+							if ($scope.highlight.type == "prefLocation" || $scope.highlight.type == "alternativeLocation")
+								$scope.map.setCenter($scope.highlightedMarker.position);
+						}
 					}
 				}
 			});
