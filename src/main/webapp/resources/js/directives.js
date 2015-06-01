@@ -612,15 +612,20 @@ directives.directive('gazMap', function($location, Place) {
 					$scope.highlightedShape = null;
 				}
 				
-				if ($scope.highlight != null && $scope.highlight.type == "prefLocationPolygon" && $scope.shapeMap[$scope.highlight.id]) {
-					$scope.highlightedShape = $scope.shapeMap[$scope.highlight.id];
-					var fillOpacity = $scope.highlightedShape.get("fillOpacity") * 2;
-					var strokeOpacity = $scope.highlightedShape.get("strokeOpacity") * 2;
-					$scope.highlightedShape.setOptions({ fillOpacity: fillOpacity, strokeOpacity: strokeOpacity });
-					var bounds = new google.maps.LatLngBounds();
-					bounds.extend($scope.highlightedShape.getBounds().getSouthWest());
-					bounds.extend($scope.highlightedShape.getBounds().getNorthEast());
-					$scope.map.fitBounds(bounds);
+				if ($scope.highlight != null && $scope.highlight.type == "polygon") {
+					var id = $scope.highlight.id;
+					if ($scope.highlight.index > -1)
+						id += "#" + $scope.highlight.index;					
+					if ($scope.shapeMap[id]) {
+						$scope.highlightedShape = $scope.shapeMap[id];
+						var fillOpacity = $scope.highlightedShape.get("fillOpacity") * 2;
+						var strokeOpacity = $scope.highlightedShape.get("strokeOpacity") * 2;
+						$scope.highlightedShape.setOptions({ fillOpacity: fillOpacity, strokeOpacity: strokeOpacity });
+						var bounds = new google.maps.LatLngBounds();
+						bounds.extend($scope.highlightedShape.getBounds().getSouthWest());
+						bounds.extend($scope.highlightedShape.getBounds().getNorthEast());
+						$scope.map.fitBounds(bounds);
+					}	
 				}
 				
 				if ($scope.highlightedMarker != null) {
@@ -637,7 +642,7 @@ directives.directive('gazMap', function($location, Place) {
 				
 				if ($scope.highlight != null) {
 					var center = false;
-					if ($scope.highlight.type == "prefLocation")
+					if ($scope.highlight.type == "prefLocation" || $scope.highlight.type == "alternativeLocation")
 						center = true;
 					var id = $scope.highlight.id;
 					if ($scope.highlight.type == "alternativeLocation")
@@ -805,7 +810,7 @@ directives.directive('gazMap', function($location, Place) {
 							});
 							shape.setMap($scope.map);
 							$scope.shapes.push(shape);
-							$scope.shapeMap[place.gazId + "#p"] = shape;
+							$scope.shapeMap[place.gazId] = shape;
 							addPolygonListener(shape);
 
 							bounds.extend(shape.getBounds().getSouthWest());
