@@ -641,9 +641,6 @@ directives.directive('gazMap', function($location, Place) {
 				}
 				
 				if ($scope.highlight != null) {
-					var center = false;
-					if ($scope.highlight.type == "prefLocation" || $scope.highlight.type == "alternativeLocation")
-						center = true;
 					var id = $scope.highlight.id;
 					if ($scope.highlight.type == "alternativeLocation")
 						id += "+" + $scope.highlight.index;
@@ -671,7 +668,7 @@ directives.directive('gazMap', function($location, Place) {
 						}
 						$scope.lastZIndex = $scope.highlightedMarker.getZIndex();
 						$scope.highlightedMarker.setZIndex(1000);
-						if (center)
+						if ($scope.highlight.type == "prefLocation" || $scope.highlight.type == "alternativeLocation")
 							$scope.map.setCenter($scope.highlightedMarker.position);
 					}
 				}
