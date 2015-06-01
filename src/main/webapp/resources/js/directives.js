@@ -597,7 +597,7 @@ directives.directive('gazMap', function($location, Place) {
 					number--;
 				} else
 					type = "prefLocation";
-				$scope.highlight = { id: id, type: type, index: number };
+				$scope.highlight = { id: id, type: type, index: number, noCenter: true };
 			};
 			
 			$scope.markerOut = function() {
@@ -672,7 +672,7 @@ directives.directive('gazMap', function($location, Place) {
 						if ($scope.highlightedMarker) {
 							$scope.lastZIndex = $scope.highlightedMarker.getZIndex();
 							$scope.highlightedMarker.setZIndex(1000);
-							if ($scope.highlight.type == "prefLocation" || $scope.highlight.type == "alternativeLocation")
+							if (($scope.highlight.type == "prefLocation" || $scope.highlight.type == "alternativeLocation") && !$scope.highlight.noCenter)
 								$scope.map.setCenter($scope.highlightedMarker.position);
 						}
 					}
