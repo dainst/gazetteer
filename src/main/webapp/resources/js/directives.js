@@ -580,11 +580,27 @@ directives.directive('gazMap', function($location, Place) {
 				$location.path("/show/" + id);
 			}; 
 			
-			$scope.markerOver = function(id) {
-				$scope.highlight = id;
+			$scope.markerOver = function(id, marker) {
+				var index;
+				var type;
+				var number = marker.number;
+				if ((index = id.indexOf("*")) > -1) {
+					id = id.substring(0, index);
+					if (marker.mapType == "parent" || marker.mapType == "markerParent")
+						type = "parentLocation";
+					else
+						type = "searchResult";
+				}
+				else if ((index = id.indexOf("+")) > -1) {
+					id = id.substring(0, index);
+					type = "alternativeLocation";
+					number--;
+				} else
+					type = "prefLocation";
+				$scope.highlight = { id: id, type: type, index: number };
 			};
 			
-			$scope.markerOut = function(id) {
+			$scope.markerOut = function() {
 				$scope.highlight = null;
 			};
 			
@@ -708,7 +724,8 @@ directives.directive('gazMap', function($location, Place) {
 									title: place.prefName.title,
 									map: $scope.map,
 									icon: icon,
-									number: place.markerNumber
+									number: place.markerNumber,
+									mapType: place.mapType
 								});
 								if (place.mapType == "markerParent" || place.mapType == "parent")
 									marker.setZIndex(1);
@@ -742,7 +759,9 @@ directives.directive('gazMap', function($location, Place) {
 											position: ll,
 											title: place.prefName.title,
 											map: $scope.map,
-											icon: getNumberedMarkerIcon(parseInt(i) + 1, "lightred")
+											icon: getNumberedMarkerIcon(parseInt(i) + 1, "lightred"),
+											number: parseInt(i) + 1,
+											mapType: place.mapType
 										});
 										$scope.markers.push(marker);
 										$scope.markerMap[place.gazId + "+" + i] = marker;
