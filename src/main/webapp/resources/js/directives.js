@@ -577,6 +577,8 @@ directives.directive('gazMap', function($location, Place) {
 			$scope.markerClick = function(id) {
 				if (id.indexOf('+') > 0)
 					id = id.substring(0, id.indexOf('+'));
+				else if (id.indexOf('*') > 0)
+					id = id.substring(0, id.indexOf('*'));
 				$location.path("/show/" + id);
 			}; 
 			
