@@ -182,7 +182,7 @@
 			<div class="row-fluid" style="position:relative;">
 				<div class="span5" id="map-well-wrapper" ng-style="mapContainerStyle">
 					<div class="well" id="map-well">
-						<div gaz-map map="$root.map" places="activePlaces" height="500" zoom="zoom" bbox="bbox" highlight="highlight" mode="mapMode"></div>
+						<div gaz-map map="$root.map" places="activePlaces" height="500" zoom="zoom" bbox="bbox" highlight="highlight" mode="mapMode" ng-mouseup="setUpdateMapPropertiesTimer()"></div>
 					</div>
 				</div>
 				

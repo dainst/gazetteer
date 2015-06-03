@@ -207,3 +207,26 @@ services.factory('EscapingService', function() {
 		}
 	};
 });
+
+services.factory('MapTypeService', function() {
+	var mapTypeId = "terrain";
+	var maps = [];
+	
+	return {
+		setMapTypeId: function(newMapTypeId) {
+			mapTypeId = newMapTypeId;
+			for (var i in maps) {
+				maps[i].setMapTypeId(mapTypeId);
+			}
+		},
+		
+		getMapTypeId: function() {
+			return mapTypeId;
+		},
+		
+		addMap: function(newMap) {
+			if (newMap && maps.indexOf(newMap) == -1)
+				maps.push(newMap);
+		}
+	};
+});

@@ -1,6 +1,6 @@
 'use strict';
 
-function AppCtrl($scope, $location, $rootScope, Place, GeoSearch, EscapingService) {
+function AppCtrl($scope, $location, $rootScope, $timeout, Place, GeoSearch, EscapingService, MapTypeService) {
 	
 	$scope.q = null;
 	$scope.type = "";
@@ -19,6 +19,7 @@ function AppCtrl($scope, $location, $rootScope, Place, GeoSearch, EscapingServic
 	$rootScope.bbox = [];
 	$rootScope.zoom = 2;
 	$rootScope.mapMode = "standard";
+	
 	$scope.highlight = null;
 	
 	$scope.searchSuggestions = [];
@@ -31,6 +32,8 @@ function AppCtrl($scope, $location, $rootScope, Place, GeoSearch, EscapingServic
 	});
 	
 	$scope.$watch("showMap", function() {
+		MapTypeService.addMap($rootScope.map);
+		
 		if ($rootScope.showMap) {
 			$scope.mapContainerStyle = {};
 			window.setTimeout(function() { google.maps.event.trigger($rootScope.map, 'resize'); }, 20);
@@ -45,6 +48,14 @@ function AppCtrl($scope, $location, $rootScope, Place, GeoSearch, EscapingServic
 		else
 			GeoSearch.deactivate();
 	});
+	
+	$scope.setUpdateMapPropertiesTimer = function() {
+		$timeout($scope.updateMapProperties, 200);
+	};
+	
+	$scope.updateMapProperties = function() {
+		MapTypeService.setMapTypeId($rootScope.map.getMapTypeId());
+	};
 	
 	$scope.updateSuggestions = function() {
 		$scope.searchSuggestions = [];

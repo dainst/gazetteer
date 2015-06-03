@@ -263,13 +263,14 @@ directives.directive('gazTagField', function($document) {
 	};
 });
 
-directives.directive('gazShapeEditor', function($document, PolygonValidator) {
+directives.directive('gazShapeEditor', function($document, $timeout, PolygonValidator, MapTypeService) {
 	return {
 		replace: true,
 		scope: {
 			shape: '=',
 			pos: '=',
-			editorName: '='
+			editorName: '=',
+			mapProperties: '='
 		},
 		templateUrl: 'partials/shapeEditor.html',
 		controller: function($scope, $element) {
@@ -280,13 +281,22 @@ directives.directive('gazShapeEditor', function($document, PolygonValidator) {
 			$scope.mapOptions = {
 				center: new google.maps.LatLng(0, 0),
 				zoom: 10,
-				mapTypeId: google.maps.MapTypeId.TERRAIN,
+				mapTypeId: MapTypeService.getMapTypeId(),
 				scaleControl: true
+			};
+			
+			$scope.setUpdateMapPropertiesTimer = function() {
+				$timeout($scope.updateMapProperties, 200);
+			};
+			
+			$scope.updateMapProperties = function() {
+				MapTypeService.setMapTypeId($scope.map.getMapTypeId());
 			};
 	
 			$scope.showOverlay = false;
 			
 			$scope.openOverlay = function() {
+				$scope.mapOptions.mapTypeId = MapTypeService.getMapTypeId();
 				$scope.showOverlay = true;
 				window.setTimeout(function() { $scope.initialize(); }, 20);
 			};
@@ -364,6 +374,8 @@ directives.directive('gazShapeEditor', function($document, PolygonValidator) {
 
 						$scope.map.fitBounds(bounds);
 					}
+					
+					MapTypeService.addMap($scope.map);
 				}
 			};
 			
