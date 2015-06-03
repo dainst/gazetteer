@@ -309,6 +309,10 @@ directives.directive('gazLocationPicker', function($document, $timeout, MapTypeS
 					});
 					
 					MapTypeService.addMap($scope.map);
+					
+					google.maps.event.addListener($scope.map, "click", function(event) {
+					    $scope.marker.setPosition(new google.maps.LatLng(event.latLng.lat(), event.latLng.lng()));
+					});
 				}
 			};
 			
