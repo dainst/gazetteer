@@ -12,7 +12,7 @@
 	<div modal="showOverlay" close="closeOverlay()">
 		<div class='modal-header'>
 			<button type='button' class='close' data-dismiss='modal' ng-click="closeOverlay()">×</button>
-			<h3><s:message code="ui.shapeEditor.pickLocation" text="ui.shapeEditor.pickLocation" /></h3>
+			<h3><s:message code="ui.locationPicker.heading" text="ui.locationPicker.heading" /></h3>
 		</div>
  		<div class="modal-body gmap">
  			<div id="shape_editor_map_canvas" style="height: 400px" ui-map="map" ui-options="mapOptions" ng-mousemove="resize()" ng-mouseup="setUpdateMapPropertiesTimer()"></div>
