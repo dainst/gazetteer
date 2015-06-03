@@ -334,7 +334,7 @@
 							<s:message code="domain.location.coordinates" text="domain.location.coordinates" />
 						</label>
 						<div class="controls">
-							<div gaz-location-picker coordinates="prefLocationCoordinates"></div>
+							<div gaz-location-picker coordinates="place.prefLocation.coordinates"></div>
 							<select ng-model="place.prefLocation.confidence" class="input-medium">
 								<option value="0" gaz-translate="'location.confidence.0'">
 								<option value="4" gaz-translate="'location.confidence.4'">
@@ -357,7 +357,7 @@
 							<s:message code="domain.location.polygon" text="domain.location.polygon" />
 						</label>
 						<div class="controls">
-							<div gaz-shape-editor shape="place.prefLocation.shape" pos="place.prefLocation.coordinates" editor-name="'prefLocationShapeEditor'" map-properties="mapProperties"></div>
+							<div gaz-shape-editor shape="place.prefLocation.shape" pos="place.prefLocation.coordinates" editor-name="'prefLocationShapeEditor'"></div>
 						</div>
 					</div>
 					<div class="control-group">
@@ -403,7 +403,7 @@
 							<s:message code="domain.location.polygon" text="domain.location.polygon" />
 						</label>
 						<div class="controls">
-							<div gaz-shape-editor shape="location.shape" pos="location.coordinates" editor-name="'additionalLocationsShapeEditor'" map-properties="mapProperties"></div>
+							<div gaz-shape-editor shape="location.shape" pos="location.coordinates" editor-name="'additionalLocationsShapeEditor'"></div>
 						</div>
 					</div>
 					<div class="control-group">

@@ -22,19 +22,6 @@ directives.directive('gazTooltip', function(messages) {
 	};
 });
 
-directives.directive('gazLocationPicker', function() {	
-	return {
-		replace: true,
-		scope: { coordinates: '=' },
-		template: '<div class="input-append"><input type="text" ng-model="coordinates" ng-list class="lnglat"></input>'
-			+ '<button class="btn" type="button">'
-			+ '<i class="icon-map-marker"></i></button></div>',
-		link: function(scope, element, attrs) {
-			$(element).find('input.lnglat').locationPicker();
-		}
-	};	
-});
-
 directives.directive('gazCopyUri', function() {
 	return {
 		replace: true,
@@ -263,14 +250,98 @@ directives.directive('gazTagField', function($document) {
 	};
 });
 
+directives.directive('gazLocationPicker', function($document, $timeout, MapTypeService) {
+	return {
+		replace: true,
+		scope: {
+			coordinates: '='
+		},
+		templateUrl: 'partials/locationPicker.html',
+		controller: function($scope, $element) {
+			
+			$scope.initialized = false;
+			
+			$scope.mapOptions = {
+				center: new google.maps.LatLng(0, 0),
+				zoom: 10,
+				mapTypeId: MapTypeService.getMapTypeId(),
+				scaleControl: true
+			};
+			
+			$scope.setUpdateMapPropertiesTimer = function() {
+				$timeout($scope.updateMapProperties, 200);
+			};
+			
+			$scope.updateMapProperties = function() {
+				MapTypeService.setMapTypeId($scope.map.getMapTypeId());
+			};
+	
+			$scope.showOverlay = false;
+			
+			$scope.openOverlay = function() {
+				$scope.mapOptions.mapTypeId = MapTypeService.getMapTypeId();
+				$scope.showOverlay = true;
+				window.setTimeout(function() { $scope.initialize(); }, 20);
+			};
+			
+			$scope.closeOverlay = function() {
+				$scope.showOverlay = false;
+				$scope.initialized = false;
+			};
+			
+			$scope.initialize = function() {
+				if (!$scope.initialized) {
+					google.maps.event.trigger($scope.map, 'resize');
+					$scope.initialized = true;
+					
+					var latLng;
+					if ($scope.coordinates && $scope.coordinates.length != 0)
+						latLng = new google.maps.LatLng($scope.coordinates[1], $scope.coordinates[0]);
+					else
+						latLng = new google.maps.LatLng(0, 0);
+					
+					$scope.map.setCenter(latLng);
+					
+					$scope.marker = new google.maps.Marker({
+					    position: latLng,
+					    map: $scope.map,
+					    draggable: true
+					});
+					
+					MapTypeService.addMap($scope.map);
+				}
+			};
+			
+			$scope.saveCoordinates = function() {
+				$scope.coordinates = [+$scope.marker.getPosition().lng().toFixed(6), +$scope.marker.getPosition().lat().toFixed(6)];
+				$scope.closeOverlay();
+			};
+			
+			$scope.$watch("coordinates", function() {
+				if ($scope.coordinates)
+					$scope.coordinatesText = $scope.coordinates.reverse().join(",");
+				else
+					$scope.coordinatesText = "";
+			});
+			
+			$scope.$watch("coordinatesText", function() {
+				if (/^[0-9]+\.?[0-9]*,[0-9]+\.?[0-9]*$/.test($scope.coordinatesText)) {
+					var index = $scope.coordinatesText.indexOf(",");
+					$scope.coordinates[1] = parseFloat($scope.coordinatesText.substring(0, index));
+					$scope.coordinates[0] = parseFloat($scope.coordinatesText.substring(index + 1));
+				}
+			});
+		}
+	};
+});
+
 directives.directive('gazShapeEditor', function($document, $timeout, PolygonValidator, MapTypeService) {
 	return {
 		replace: true,
 		scope: {
 			shape: '=',
 			pos: '=',
-			editorName: '=',
-			mapProperties: '='
+			editorName: '='				
 		},
 		templateUrl: 'partials/shapeEditor.html',
 		controller: function($scope, $element) {
@@ -544,7 +615,7 @@ directives.directive('gazMap', function($location, Place) {
 	var blueIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/blue-dot.png";
 	var defaultIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/red-dot.png";
 	var parentIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/pink.png";
-	var childIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/green-dot.png";	
+	var childIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/green-dot.png";
 	
 	var baseUri = $location.absUrl().substring(0, $location.absUrl().indexOf("app"));
 	
@@ -712,8 +783,6 @@ directives.directive('gazMap', function($location, Place) {
 				var childMarkerLocations = [];
 				for (var i in $scope.places) {
 					var place = $scope.places[i];
-					var title = "";
-					if (place.prefName) title = place.prefName.title;
 					
 					if (place.prefLocation) {
 						if (place.prefLocation.coordinates && place.mapType != "polygonParent") {
