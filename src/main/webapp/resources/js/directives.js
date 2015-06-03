@@ -788,6 +788,10 @@ directives.directive('gazMap', function($location, Place) {
 				for (var i in $scope.places) {
 					var place = $scope.places[i];
 					
+					var title = "";
+					if (place.prefName && place.prefName.title)
+						title = place.prefName.title;
+					
 					if (place.prefLocation) {
 						if (place.prefLocation.coordinates && place.mapType != "polygonParent") {
 							var icon = defaultIcon;
@@ -815,7 +819,7 @@ directives.directive('gazMap', function($location, Place) {
 								
 								var marker = new google.maps.Marker({
 									position: ll,
-									title: place.prefName.title,
+									title: title,
 									map: $scope.map,
 									icon: icon,
 									number: place.markerNumber,
@@ -851,7 +855,7 @@ directives.directive('gazMap', function($location, Place) {
 										ll = new google.maps.LatLng(place.locations[i].coordinates[1], place.locations[i].coordinates[0]);
 										var marker = new google.maps.Marker({
 											position: ll,
-											title: place.prefName.title,
+											title: title,
 											map: $scope.map,
 											icon: getNumberedMarkerIcon(parseInt(i) + 1, "lightred"),
 											number: parseInt(i) + 1,
