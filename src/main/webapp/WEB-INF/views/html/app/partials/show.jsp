@@ -86,7 +86,7 @@
 		<dt><s:message code="domain.place.tags" text="domain.place.tags" /></dt>
 		<dd>
 			<span ng-repeat="tag in place.tags">
-				<a class="label label-info" href="#!/search?q=%7B%22bool%22:%7B%22must%22:%5B%7B%22query_string%22:%7B%22query%22:%22tags:{{tag}}%22%7D%7D%5D%7D%7D&type=extended">{{tag}}</a>&nbsp; 
+				<a class="label label-info" href="#!/search?q=%7B%22bool%22%3A%7B%22must%22%3A%5B%7B%22match%22%3A%7B%22tags%22%3A%22{{tag}}%22%7D%7D%5D%7D%7D&type=extended">{{tag}}</a>&nbsp; 
 			</span>
 		</dd>
 		<br/>
@@ -96,7 +96,7 @@
 		<dt><s:message code="domain.place.provenance" text="domain.place.provenance" /></dt>
 		<dd>
 			<span ng-repeat="provenanceEntry in place.provenance">
-				<a class="label label-info"  href="#!/search?q=%7B%22bool%22:%7B%22must%22:%5B%7B%22query_string%22:%7B%22query%22:%22provenance:{{provenanceEntry}}%22%7D%7D%5D%7D%7D&type=extended">{{provenanceEntry}}</a>&nbsp; 
+				<a class="label label-info"  href="#!/search?q=%7B%22bool%22%3A%7B%22must%22%3A%5B%7B%22match%22%3A%7B%22provenance%22%3A%22{{provenanceEntry}}%22%7D%7D%5D%7D%7D&type=extended">{{provenanceEntry}}</a>&nbsp; 
 			</span>
 			<i class="icon-info-sign" style="color: #5572a1; cursor: pointer;" gaz-tooltip="'ui.place.provenance-info'"></i>
 		</dd>
