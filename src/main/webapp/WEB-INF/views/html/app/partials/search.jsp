@@ -18,8 +18,8 @@
 				<i class="icon-file"></i> <b class="caret"></b>
 			</a>
 			<ul class="dropdown-menu">
-				<li><a ng-href="../search.kml?q={{search.q}}&limit=100000&type={{search.type}}" target="_blank">KML</a></li>
-				<li><a ng-href="../search.json?q={{search.q}}&limit=100000&type={{search.type}}" target="_blank">JSON</a></li>
+				<li><a ng-href="../search.kml?q={{search.q}}&limit=3000&type={{search.type}}" target="_blank">KML</a></li>
+				<li><a ng-href="../search.json?q={{search.q}}&limit=3000&type={{search.type}}" target="_blank">JSON</a></li>
 			</ul>
 		</li>
 	</ul>
