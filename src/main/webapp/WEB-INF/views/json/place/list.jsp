@@ -19,8 +19,8 @@ String queryId = (String) request.getAttribute("queryId");
 JsonPlaceSerializer serializer = new JsonPlaceSerializer(baseUri);
 
 StringBuilder sb = new StringBuilder("{");
-sb.append("\"total\": ").append(hits);
-sb.append(", \"result\": [");
+sb.append("\n\"total\": ").append(hits);
+sb.append(",\n\"result\": [");
 int numberOfPlaces = 0;
 List<String> accessGrantedPlaces = new ArrayList<String>();
 List<String> accessDeniedPlaces = new ArrayList<String>();
@@ -42,31 +42,31 @@ for (String serializedPlace : accessGrantedPlaces) {
 	sb.append(serializedPlace);
 	appendedPlaces++;
 	if (numberOfPlaces > appendedPlaces)
-		sb.append(",");
+		sb.append(",\n");
 }
 for (String serializedPlace : accessDeniedPlaces) {
 	sb.append(serializedPlace);
 	appendedPlaces++;
 	if (numberOfPlaces > appendedPlaces)
-		sb.append(",");
+		sb.append(",\n");
 }
 sb.append("]");
 
 Map<String, List<String[]>> facets = (Map<String, List<String[]>>) request.getAttribute("facets");
 int i = 0;
 if (facets != null) {
-	sb.append(", \"facets\": {");
+	sb.append(",\n\"facets\": {");
 	for (Map.Entry<String,List<String[]>> facet : facets.entrySet()) {
 		if (facet.getValue().size() == 0) {
 			continue;
 		}
-		sb.append("\"").append(facet.getKey()).append("\": [");
+		sb.append("\n  \"").append(facet.getKey()).append("\": [");
 		int j = 0;
 		for (String[] entry : facet.getValue()) {
-		    sb.append(String.format("{ \"label\": \"%s\", \"term\": \"%s\", \"count\": %s }", entry[0], entry[1], entry[2]));
+		    sb.append(String.format("\n    { \"label\": \"%s\", \"term\": \"%s\", \"count\": %s }", entry[0], entry[1], entry[2]));
 		    if(++j < facet.getValue().size()) sb.append(",");
 		}
-		sb.append("]");
+		sb.append("\n  ]");
 		if(++i < facets.size()) sb.append(",");
 	}
 	if (sb.charAt(sb.length()-1) == ',')
@@ -77,7 +77,7 @@ if (facets != null) {
 if (queryId != null)
 	sb.append(", \"queryId\": \"" + queryId + "\"");
 
-sb.append("}");
+sb.append("\n}");
 
 %>
 

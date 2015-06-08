@@ -24,6 +24,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.servlet.support.RequestContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -38,6 +39,7 @@ public class JsonPlaceSerializer {
 	public JsonPlaceSerializer(String baseUri) {
 		this.baseUri = baseUri;
 		mapper = new ObjectMapper();
+		mapper.enable(SerializationFeature.INDENT_OUTPUT);
 	}
 	
 	public String serialize(Place place) {
