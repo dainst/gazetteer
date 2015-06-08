@@ -311,6 +311,7 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages, PolygonVali
 				polygonFilter : false,
 				noPolygonFilter : false
 		};
+		GeoSearch.deletePolygon();
 	};
 	
 	$scope.reset();

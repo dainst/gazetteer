@@ -108,6 +108,11 @@ services.factory('GeoSearch', function(PolygonValidator) {
 	var map = null;
 	var createMode = true;
 	
+	var deletePolygon = function() {
+		polygon.setPath([]);
+		polygon.setMap(null);
+	};
+	
 	return {
 		activate: function(targetMap) {
 			if (map == null) {			
@@ -162,8 +167,7 @@ services.factory('GeoSearch', function(PolygonValidator) {
 					if (polygon.getMap() == null)
 						map.setOptions({ disableDoubleClickZoom: false });
 					else {
-						polygon.setPath([]);
-						polygon.setMap(null);
+						deletePolygon();
 					}
 				});
 			}
@@ -182,6 +186,11 @@ services.factory('GeoSearch', function(PolygonValidator) {
 		
 		getPolygon: function() { 
 			return polygon;
+		},
+		
+		deletePolygon: function() {
+			if (polygon)
+				deletePolygon();
 		},
 		
 		setCreateMode: function(mode) {
