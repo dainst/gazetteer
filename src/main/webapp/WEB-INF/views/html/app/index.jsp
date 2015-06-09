@@ -90,6 +90,7 @@
 					</div>
 				</sec:authorize>
 				<div id="archaeo-fixed-menu-logo"></div>
+				<div id="gaz-logo"></div>
 				<h3 class="pull-left">
 					<small>Deutsches Archäologisches Institut</small> <br>
 					<a href="#!/home" style="color:inherit">iDAI.gazetteer</a>

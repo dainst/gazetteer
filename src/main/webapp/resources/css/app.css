@@ -228,3 +228,14 @@ footer {
 	display: inline-block;
 	padding: 4px 9px 4px 10px;
 }
+
+.archaeo-fixed-menu-header #gaz-logo {
+  background-image: url('../img/iDAI_gazetteer.png');
+  background-size: 118px 116px;
+  background-repeat: no-repeat;
+  height: 116px;
+  width: 118px;
+  margin-top: 24px;
+  margin-left: 35px;
+  float: left;
+}
