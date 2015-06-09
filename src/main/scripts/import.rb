@@ -286,13 +286,15 @@ CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
           response = gaz["doc/#{parent_id}"].get(:content_type => :json, :accept => :json)
           parent_place = JSON.parse(response.body, :symbolize_names => true)
           geonames_id = ""
-          for identifier in parent_place[:identifiers] do
-            if identifier[:context] == "ISO 3166-1 alpha-2"
-              country_code = identifier[:value]
-              $country_codes[temp_id.to_s] = country_code
-            end
-            if identifier[:context] == "geonames"
-              geonames_id = identifier[:value]
+          if parent_place[:identifiers]
+            for identifier in parent_place[:identifiers] do
+              if identifier[:context] == "ISO 3166-1 alpha-2"
+                country_code = identifier[:value]
+                $country_codes[temp_id.to_s] = country_code
+              end
+              if identifier[:context] == "geonames"
+                geonames_id = identifier[:value]
+              end
             end
           end
           if administrative_unit_geonames_id == "" && parent_place[:types].include?("administrative-unit") && geonames_id != ""
