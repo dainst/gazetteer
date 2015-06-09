@@ -38,4 +38,25 @@ angular.module('gazetteer.filters', []).
 		  else
 			  return items.slice().reverse();
 	  };
+  }).
+  filter('sortAlphabetically', function() {
+	  var compareStrings = function (string1, string2) {
+		  string1 = string1.toLowerCase();
+		  string1 = string1.replace(/ä/g, "a");
+		  string1 = string1.replace(/ö/g, "o");
+		  string1 = string1.replace(/ü/g, "u");
+		  string1 = string1.replace(/ß/g, "s");
+
+		  string2 = string2.toLowerCase();
+		  string2 = string2.replace(/ä/g, "a");
+		  string2 = string2.replace(/ö/g, "o");
+		  string2 = string2.replace(/ü/g, "u");
+		  string2 = string2.replace(/ß/g, "s");
+
+		  return (string1 == string2) ? 0 : (string1 > string2 ) ? 1 : -1;
+	  }
+	  
+	  return function(items) {
+		  return items.sort(compareStrings);
+	  };
   });

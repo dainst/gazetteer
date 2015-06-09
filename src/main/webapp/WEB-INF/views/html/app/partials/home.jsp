@@ -40,7 +40,7 @@
 					<button class="btn btn-primary" type="submit"><i class="icon-search"></i></button>
 				</div>		
 				<div class="suggestion-menu" ng-show="homeSearchSuggestions">
-					<div ng-repeat="suggestion in homeSearchSuggestions">
+					<div ng-repeat="suggestion in homeSearchSuggestions | sortAlphabetically">
 						<div class="suggestion" ng-mousedown="submit()" ng-hide="selectedSuggestionIndex == $index" ng-mouseover="setSelectedSuggestionIndex($index)">{{suggestion}}</div>
 						<div class="suggestion selected" ng-mousedown="submit()" ng-show="selectedSuggestionIndex == $index">{{suggestion}}</div>
 					</div>

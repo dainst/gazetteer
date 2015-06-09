@@ -63,7 +63,7 @@ function AppCtrl($scope, $location, $rootScope, $timeout, Place, GeoSearch, Esca
 		
 		if ($scope.q && $scope.q.length > 0) {
 			Place.suggestions({ field: "prefName.title.suggest", text: $scope.q }, function(result) {
-				$scope.searchSuggestions = result.suggestions.sort();
+				$scope.searchSuggestions = result.suggestions;
 
 				Place.suggestions({ field: "names.title.suggest", text: $scope.q }, function(result) {
 					for (var newSuggestion in result.suggestions) {
@@ -77,7 +77,6 @@ function AppCtrl($scope, $location, $rootScope, $timeout, Place, GeoSearch, Esca
 						if (!sameAsPrefName && $scope.searchSuggestions.length < 7)
 							$scope.searchSuggestions.push(result.suggestions[newSuggestion]);
 					}
-					$scope.searchSuggestions.sort();
 				});
 			});
 		}
@@ -227,7 +226,7 @@ function HomeCtrl($scope, $location, $rootScope, Place, EscapingService) {
 		
 		if ($scope.searchFieldInput && $scope.searchFieldInput.length > 0) {
 			Place.suggestions({ field: "prefName.title.suggest", text: $scope.searchFieldInput }, function(result) {
-				$scope.homeSearchSuggestions = result.suggestions.sort();
+				$scope.homeSearchSuggestions = result.suggestions;
 
 				Place.suggestions({ field: "names.title.suggest", text: $scope.searchFieldInput }, function(result) {
 					for (var newSuggestion in result.suggestions) {
@@ -241,7 +240,6 @@ function HomeCtrl($scope, $location, $rootScope, Place, EscapingService) {
 						if (!sameAsPrefName && $scope.homeSearchSuggestions.length < 7)
 							$scope.homeSearchSuggestions.push(result.suggestions[newSuggestion]);
 					}
-					$scope.homeSearchSuggestions.sort();
 				});
 			});
 		}
