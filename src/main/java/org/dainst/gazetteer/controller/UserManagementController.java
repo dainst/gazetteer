@@ -152,7 +152,7 @@ public class UserManagementController {
 		else {
 			model.addAttribute("successMessage", "register");
 			model.addAttribute("version", version);
-			return "home";
+			return "redirect:app/#!/home";
 		}
 	}
 	
@@ -187,7 +187,7 @@ public class UserManagementController {
 			User userToShow = userDao.findById(showUser);
 			
 			if (userToShow == null)
-				return "home";
+				return "redirect:app/#!/home";
 			
 			users = (List<User>) userDao.findAll();
 			Collections.sort(users, new User.UsernameComparator());	
@@ -335,7 +335,7 @@ public class UserManagementController {
 		boolean userEdit = isUserEdit(username);
 		
 		if (!userEdit && !adminEdit)
-			return "home";
+			return "redirect:app/#!/home";
 		
 		User user = userDao.findByUsername(username);
 		if (user == null)
@@ -503,7 +503,7 @@ public class UserManagementController {
 		else if (r != null && !r.equals(""))
 			return "redirect:app/#!/" + r;
 		else
-			return "home";
+			return "redirect:app/#!/home";
 	}
 	
 	@RequestMapping(value="/passwordChangeRequest")
@@ -563,7 +563,7 @@ public class UserManagementController {
 		else {
 			model.addAttribute("successMessage", "passwordChangeRequest");
 			model.addAttribute("version", version);
-			return "home";
+			return "redirect:app/#!/home";
 		}
 	}
 	
@@ -574,12 +574,12 @@ public class UserManagementController {
 		User user = userDao.findById(userid);
 		
 		if (changeRequest == null || !passwordEncoder.matches(key, changeRequest.getResetKey()))
-			return "home";
+			return "redirect:app/#!/home";
 		
 		Date changeRequestDate = changeRequest.getRequestDate();
 	    if (TimeUnit.HOURS.convert(new Date().getTime() - changeRequestDate.getTime(), TimeUnit.MILLISECONDS) > 23) {
 	    	userPasswordChangeRequestDao.delete(changeRequest);
-	    	return "home";
+	    	return "redirect:app/#!/home";
 	    }
 	    
 	    model.addAttribute("user", user);
@@ -611,7 +611,7 @@ public class UserManagementController {
 		model.addAttribute("successMessage", "changePassword");
 		model.addAttribute("version", version);
 		
-		return "home";
+		return "redirect:app/#!/home";
 	}
 
 	private String returnRegisterFailure(String failureType, HttpServletRequest request, String r, ModelMap model) {
