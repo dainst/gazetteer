@@ -699,6 +699,7 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 		}
 		
 		$scope.search.polygonFilterCoordinates = polygonFilterCoordinates;
+		updatePolygonFilterCoordinatesString();
 	};
 	
 	// needed to keep $scope.search and $location.search() in sync
@@ -730,6 +731,8 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 		if ($location.search().polygonFilterCoordinates) $scope.search.polygonFilterCoordinates = $location.search().polygonFilterCoordinates;
 		if ($location.search().showInReview) $scope.search.showInReview = $location.search().showInReview;
 		
+		updatePolygonFilterCoordinatesString();
+		
 		$scope.filters.coordinatesFilter = false;
 		$scope.filters.noCoordinatesFilter = false;
 		$scope.filters.polygonFilter = false;
@@ -751,6 +754,16 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 		else {
 			$rootScope.geoSearch = false;
 			GeoSearch.deactivate();
+		}
+	};
+	
+	function updatePolygonFilterCoordinatesString() {
+		$scope.polygonFilterCoordinatesString = "";
+		if ($scope.search.polygonFilterCoordinates.length > 0) {
+			for (var i in $scope.search.polygonFilterCoordinates) {
+				$scope.polygonFilterCoordinatesString += "&polygonFilterCoordinates=";
+				$scope.polygonFilterCoordinatesString += $scope.search.polygonFilterCoordinates[i];
+			}
 		}
 	};
 }
