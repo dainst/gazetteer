@@ -759,7 +759,7 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 	
 	function updatePolygonFilterCoordinatesString() {
 		$scope.polygonFilterCoordinatesString = "";
-		if ($scope.search.polygonFilterCoordinates.length > 0) {
+		if ($scope.search.polygonFilterCoordinates && $scope.search.polygonFilterCoordinates.length > 0) {
 			for (var i in $scope.search.polygonFilterCoordinates) {
 				$scope.polygonFilterCoordinatesString += "&polygonFilterCoordinates=";
 				$scope.polygonFilterCoordinatesString += $scope.search.polygonFilterCoordinates[i];
