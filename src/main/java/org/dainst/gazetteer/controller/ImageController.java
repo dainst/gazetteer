@@ -36,8 +36,8 @@ public class ImageController {
 		case "lightred":
 			fileName = "marker_lightred.png";
 			break;
-		case "pink":
-			fileName = "marker_pink.png";
+		case "yellow":
+			fileName = "marker_yellow.png";
 			break;
 		default:
 			fileName = "marker_red.png";

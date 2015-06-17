@@ -108,7 +108,7 @@
 		<dd ng-repeat="parent in place.parents | reverse">
 			<div style="margin-left: {{$index * 16}}px;"><i ng-show="$index != 0" class="icon-circle-arrow-right" style="cursor: default;"></i>
 			<span><span class="icon-map-marker" ng-show="parent.prefLocation && parent.prefLocation.coordinates && parent.prefLocation.coordinates.length > 0" 
-					style="margin-left: 3px; margin-right: 5px; cursor: default; color: #E661AC; text-shadow: 1px 1px 1px #000000;"></span>{{parent.markerNumber}}</span>
+					style="margin-left: 3px; margin-right: 5px; cursor: default; color: #5781FC; text-shadow: 1px 1px 1px #000000;"></span>{{parent.markerNumber}}</span>
 				<div gaz-place-title place="parent" ng-hide="parent.prefLocation && parent.prefLocation.coordinates && parent.prefLocation.coordinates.length > 0"></div>
 				<div gaz-place-title place="parent" ng-mouseover="setHighlight(parent.gazId, 'parentLocation', parent.markerNumber)" ng-mouseout="setHighlight(null, null, null)" ng-show="parent.prefLocation && parent.prefLocation.coordinates && parent.prefLocation.coordinates.length > 0"></div>
 			</div>
