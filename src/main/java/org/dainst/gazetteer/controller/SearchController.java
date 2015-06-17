@@ -176,9 +176,11 @@ public class SearchController {
 		Map<String,List<String[]>> facets = processFacets(query, locale);
 		
 		Map<String, List<Place>> parents = new HashMap<String, List<Place>>();
+		Map<String, Boolean> accessMap = new HashMap<String, Boolean>();
 		
 		for (Place place : places) {
 			protectLocationsService.protectLocations(user, place);
+			accessMap.put(place.getId(), checkPlaceAccess(place));
 
 			if (createParentLists) {
 				List<Place> placeParents = new ArrayList<Place>();
@@ -195,6 +197,7 @@ public class SearchController {
 		ModelAndView mav = new ModelAndView("place/list");
 		mav.addObject("places", places);
 		if (parents.size() > 0) mav.addObject("parents", parents);
+		mav.addObject("accessMap", accessMap);
 		mav.addObject("facets", facets);
 		mav.addObject("baseUri", baseUri);
 		mav.addObject("language", locale.getISO3Language());
@@ -261,12 +264,16 @@ public class SearchController {
 		
 		List<Place> places = placesForList(result, true);
 		Map<String,List<String[]>> facets = processFacets(query, locale);
+		Map<String, Boolean> accessMap = new HashMap<String, Boolean>();
 		
-		for (Place place : places)
+		for (Place place : places) {
 			protectLocationsService.protectLocations(user, place);
+			accessMap.put(place.getId(), checkPlaceAccess(place));
+		}
 		
 		ModelAndView mav = new ModelAndView("place/list");
 		mav.addObject("places", places);
+		mav.addObject("accessMap", accessMap);
 		mav.addObject("facets", facets);
 		mav.addObject("baseUri", baseUri);
 		mav.addObject("language", locale.getISO3Language());
@@ -335,11 +342,16 @@ public class SearchController {
 		
 		List<Place> places = placesForList(result, true);
 		
-		for (Place place : places)
+		Map<String, Boolean> accessMap = new HashMap<String, Boolean>();
+		
+		for (Place place : places) {
 			protectLocationsService.protectLocations(user, place);
+			accessMap.put(place.getId(), checkPlaceAccess(place));
+		}
 		
 		ModelAndView mav = new ModelAndView("place/list");
 		mav.addObject("places", places);
+		mav.addObject("accessMap", accessMap);
 		mav.addObject("facets", facets);
 		mav.addObject("baseUri", baseUri);
 		mav.addObject("language", locale.getISO3Language());
@@ -484,11 +496,16 @@ public class SearchController {
 		if (principal instanceof User)
 			user = (User) principal;
 		
-		for (Place place : places)
+		Map<String, Boolean> accessMap = new HashMap<String, Boolean>();
+		
+		for (Place place : places) {
 			protectLocationsService.protectLocations(user, place);
+			accessMap.put(place.getId(), checkPlaceAccess(place));
+		}
 		
 		ModelAndView mav = new ModelAndView("place/list");
 		mav.addObject("places", places);
+		mav.addObject("accessMap", accessMap);
 		mav.addObject("placeDao", placeDao);
 		mav.addObject("view", view);
 		mav.addObject("baseUri", baseUri);
@@ -510,5 +527,19 @@ public class SearchController {
 				createParentsList(parent, parents, includePolygons);
 			}
 		}
-	}		
+	}
+	
+	private boolean checkPlaceAccess(Place place) {
+		User user = null;
+		
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal instanceof User)
+			user = (User) principal;
+		
+		if (place.getRecordGroupId() != null && !place.getRecordGroupId().isEmpty() && 
+				(user == null || !user.getRecordGroupIds().contains(place.getRecordGroupId())))
+			return false;
+		else
+			return true;
+	}
 }

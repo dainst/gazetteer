@@ -12,6 +12,7 @@ response.setHeader("Content-Type", "application/json; charset=utf-8");
 
 List<Place> places = (List<Place>) request.getAttribute("places");
 Map<String, List<Place>> parents = (Map<String, List<Place>>) request.getAttribute("parents");
+Map<String, Boolean> accessMap = (Map<String, Boolean>) request.getAttribute("accessMap");
 String baseUri = (String) request.getAttribute("baseUri");
 Long hits = (Long) request.getAttribute("hits");
 String queryId = (String) request.getAttribute("queryId");
@@ -28,12 +29,15 @@ for (Place place : places) {
 	List<Place> placeParents = null;
 	if (parents != null)
 		placeParents = parents.get(place.getId());
-	String serializedPlace = serializer.serialize(place, placeParents);
+	
+	boolean accessGranted = accessMap.get(place.getId());
+
+	String serializedPlace = serializer.serialize(place, placeParents, accessGranted);
 	if (serializedPlace != null) {
-		if (serializedPlace.indexOf("\"accessDenied\":true") > 0)		
-			accessDeniedPlaces.add(serializedPlace);
-		else
+		if (accessGranted)
 			accessGrantedPlaces.add(serializedPlace);
+		else
+			accessDeniedPlaces.add(serializedPlace);
 		numberOfPlaces++;
 	}	
 }

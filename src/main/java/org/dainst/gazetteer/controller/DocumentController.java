@@ -161,6 +161,7 @@ public class DocumentController {
 			mav.addObject("place", place);
 			mav.addObject("relatedPlaces", relatedPlaces);
 			if (createParentsList) mav.addObject("parents", parents);
+			mav.addObject("accessGranted", checkPlaceAccess(place));
 			mav.addObject("baseUri", baseUri);
 			mav.addObject("language", locale.getISO3Language());
 			mav.addObject("limit", limit);
@@ -342,8 +343,11 @@ public class DocumentController {
 	}
 	
 	private boolean checkPlaceAccess(Place place) {
+		User user = null;
 		
-		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal instanceof User)
+			user = (User) principal;
 		
 		if (place.getRecordGroupId() != null && !place.getRecordGroupId().isEmpty() && 
 				(user == null || !user.getRecordGroupIds().contains(place.getRecordGroupId())))

@@ -1,8 +1,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%><%@ taglib uri="http://www.springframework.org/tags" prefix="s"%><%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %><%@ page session="false" import="org.dainst.gazetteer.domain.*" %><% response.setHeader("Content-Type", "application/vnd.google-earth.kml+xml; charset=utf-8"); %><?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
 	<Folder>
-		<c:forEach var="place" items="${places}">	
-			<c:if test="${place.prefLocation != null}">	
+		<c:forEach var="place" items="${places}">
+			<c:if test="${place.prefLocation != null && accessMap[place.id] == true}">
 				<Placemark id="${baseUri}place/${place.id}">
 					<name><c:out value="${place.prefName.title}"/></name>
 					<description>

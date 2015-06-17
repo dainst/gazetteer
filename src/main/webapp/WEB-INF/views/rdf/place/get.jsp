@@ -8,37 +8,38 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:owl ="http://www.w3.org/2002/07/owl#"
 	xmlns:gaz_id="http://gazetteer.dainst.org/types/id#">
-	
-	<edm:Place rdf:about="${baseUri}place/${place.id}">
-		<c:choose>
-			<c:when test="${place.prefName.language != null}">
-				<skos:prefLabel xml:lang="${langHelper.getLocaleForISO3Language(prefLanguage).getLanguage()}">${place.prefName.title}</skos:prefLabel>
-			</c:when>
-			<c:otherwise>
-				<skos:prefLabel>${place.prefName.title}</skos:prefLabel>
-			</c:otherwise>
-		</c:choose>
-		<c:forEach var="name" items="${place.names}">
+	<c:if test="${accessGranted}">
+		<edm:Place rdf:about="${baseUri}place/${place.id}">
 			<c:choose>
-				<c:when test="${name.language != null}">
-					<skos:prefLabel xml:lang="${langHelper.getLocaleForISO3Language(name.language).getLanguage()}">${name.title}</skos:prefLabel>
+				<c:when test="${place.prefName.language != null}">
+					<skos:prefLabel xml:lang="${langHelper.getLocaleForISO3Language(prefLanguage).getLanguage()}">${place.prefName.title}</skos:prefLabel>
 				</c:when>
 				<c:otherwise>
-					<skos:altLabel>${name.title}</skos:altLabel>
+					<skos:prefLabel>${place.prefName.title}</skos:prefLabel>
 				</c:otherwise>
 			</c:choose>
-		</c:forEach>
-		<c:if test="${place.prefLocation != null}">
-			<wgs84_pos:lat>${place.prefLocation.lat}</wgs84_pos:lat>
-			<wgs84_pos:long>${place.prefLocation.lng}</wgs84_pos:long>
-		</c:if>
-		<c:forEach var="identifier" items="${place.identifiers}">
-			<dc:identifier>${identifier.context}:${identifier.value}</dc:identifier>
-		</c:forEach>
-		<c:forEach var="link" items="${place.links}">
-			<${link.predicate} rdf:resource="${link.object}"/>
-		</c:forEach>
-		<dcterms:isPartOf rdf:resource="${baseUri}place/${place.parent}" />
-	</edm:Place>
+			<c:forEach var="name" items="${place.names}">
+				<c:choose>
+					<c:when test="${name.language != null}">
+						<skos:prefLabel xml:lang="${langHelper.getLocaleForISO3Language(name.language).getLanguage()}">${name.title}</skos:prefLabel>
+					</c:when>
+					<c:otherwise>
+						<skos:altLabel>${name.title}</skos:altLabel>
+					</c:otherwise>
+				</c:choose>
+			</c:forEach>
+			<c:if test="${place.prefLocation != null}">
+				<wgs84_pos:lat>${place.prefLocation.lat}</wgs84_pos:lat>
+				<wgs84_pos:long>${place.prefLocation.lng}</wgs84_pos:long>
+			</c:if>
+			<c:forEach var="identifier" items="${place.identifiers}">
+				<dc:identifier>${identifier.context}:${identifier.value}</dc:identifier>
+			</c:forEach>
+			<c:forEach var="link" items="${place.links}">
+				<${link.predicate} rdf:resource="${link.object}"/>
+			</c:forEach>
+			<dcterms:isPartOf rdf:resource="${baseUri}place/${place.parent}" />
+		</edm:Place>
+	</c:if>
 
 </rdf:RDF>

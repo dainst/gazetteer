@@ -42,18 +42,18 @@ public class JsonPlaceSerializer {
 		mapper.enable(SerializationFeature.INDENT_OUTPUT);
 	}
 	
-	public String serialize(Place place) {
-		return serialize(place, null, null, null, null);
+	public String serialize(Place place, Boolean accessGranted) {
+		return serialize(place, null, null, null, null, accessGranted);
 	}
 	
-	public String serialize(Place place, List<Place> parents) {
-		return serialize(place, null, null, null, parents);
+	public String serialize(Place place, List<Place> parents, Boolean accessGranted) {
+		return serialize(place, null, null, null, parents, accessGranted);
 	}
 	
 	public String serialize(Place place, UserRepository userDao, PlaceChangeRecordRepository changeRecordDao, HttpServletRequest request,
-			List<Place> parents) {
+			List<Place> parents, Boolean accessGranted) {
 		
-		ObjectNode placeNode = createJsonNodes(place, userDao, changeRecordDao, request, parents);
+		ObjectNode placeNode = createJsonNodes(place, userDao, changeRecordDao, request, parents, accessGranted);
 		
 		try {
 			return mapper.writeValueAsString(placeNode);
@@ -63,10 +63,11 @@ public class JsonPlaceSerializer {
 		}
 	}
 	
-	public String serializeGeoJson(Place place, UserRepository userDao, PlaceChangeRecordRepository changeRecordDao, HttpServletRequest request) {
+	public String serializeGeoJson(Place place, UserRepository userDao, PlaceChangeRecordRepository changeRecordDao, HttpServletRequest request,
+			Boolean accessGranted) {
 		
-		ObjectNode geoJsonPlaceNode = createGeoJsonNodes(place);		
-		ObjectNode placeNode = createJsonNodes(place, userDao, changeRecordDao, request, null);
+		ObjectNode geoJsonPlaceNode = createGeoJsonNodes(place, accessGranted);		
+		ObjectNode placeNode = createJsonNodes(place, userDao, changeRecordDao, request, null, accessGranted);
 		geoJsonPlaceNode.put("properties", placeNode);
 		
 		try {
@@ -78,7 +79,7 @@ public class JsonPlaceSerializer {
 	}
 		
 	private ObjectNode createJsonNodes(Place place, UserRepository userDao, PlaceChangeRecordRepository changeRecordDao, HttpServletRequest request,
-			List<Place> parents) { 
+			List<Place> parents, Boolean accessGranted) { 
 		
 		if (place == null) return null;
 		
@@ -109,9 +110,7 @@ public class JsonPlaceSerializer {
 			placeNode.put("relatedPlaces", relatedPlacesNode);
 		}
 		
-		User user = getUser();
-		
-		if (!checkPlaceAccess(place, user)) {
+		if (!accessGranted) {
 			placeNode.put("accessDenied", true);
 			return placeNode;
 		}
@@ -259,6 +258,7 @@ public class JsonPlaceSerializer {
 		
 		// reisestipendium content		
 		logger.debug("serializing reisestipendium content?");
+		User user = getUser();
 		if (user != null && user.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_REISESTIPENDIUM"))) {
 			
 			logger.debug("serializing reisestipendium note");
@@ -321,7 +321,7 @@ public class JsonPlaceSerializer {
 			ArrayNode parentsNode = mapper.createArrayNode();
 			
 			for (Place parent : parents) {
-				ObjectNode parentNode = createJsonNodes(parent, userDao, changeRecordDao, request, null);
+				ObjectNode parentNode = createJsonNodes(parent, userDao, changeRecordDao, request, null, accessGranted);
 				parentsNode.add(parentNode);
 			}
 			
@@ -331,7 +331,7 @@ public class JsonPlaceSerializer {
 		return placeNode;
 	}
 	
-	private ObjectNode createGeoJsonNodes(Place place) {
+	private ObjectNode createGeoJsonNodes(Place place, Boolean accessGranted) {
 	
 		if (place == null) return null;		
 		
@@ -346,7 +346,7 @@ public class JsonPlaceSerializer {
 		
 		User user = getUser();
 		
-		if (!checkPlaceAccess(place, user)) {
+		if (!accessGranted) {
 			geometryCollectionNode.put("geometries", geometriesNode);
 			placeNode.put("geometry", geometryCollectionNode);
 			return placeNode;
@@ -415,15 +415,6 @@ public class JsonPlaceSerializer {
 			user = (User) principal;
 		
 		return user;
-	}
-	
-	private boolean checkPlaceAccess(Place place, User user) {
-		
-		if (place.getRecordGroupId() != null && !place.getRecordGroupId().isEmpty() && 
-				(user == null || !user.getRecordGroupIds().contains(place.getRecordGroupId())))
-			return false;
-		else
-			return true;
 	}
 
 	private ArrayNode createPolygonCoordinatesNode(double[][][][] polygonCoordinates) {
