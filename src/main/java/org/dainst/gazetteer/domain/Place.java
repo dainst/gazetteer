@@ -1,8 +1,10 @@
 package org.dainst.gazetteer.domain;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -45,7 +47,7 @@ public class Place {
 	@Indexed
 	private Set<String> relatedPlaces = new HashSet<String>();
 	
-	private Set<Comment> comments = new HashSet<Comment>();
+	private List<Comment> comments = new ArrayList<Comment>();
 	
 	private Set<String> tags = new HashSet<String>();
 	
@@ -65,7 +67,7 @@ public class Place {
 	
 	private String noteReisestipendium;
 	
-	private Set<Comment> commentsReisestipendium = new HashSet<Comment>();
+	private List<Comment> commentsReisestipendium = new ArrayList<Comment>();
 	
 	@Indexed
 	private String recordGroupId;
@@ -173,11 +175,11 @@ public class Place {
 		relatedPlaces.add(relatedPlace);
 	}
 
-	public Set<Comment> getComments() {
+	public List<Comment> getComments() {
 		return comments;
 	}
 
-	public void setComments(Set<Comment> comments) {
+	public void setComments(List<Comment> comments) {
 		this.comments = comments;
 	}
 	
@@ -293,11 +295,11 @@ public class Place {
 		this.noteReisestipendium = noteReisestipendium;
 	}
 
-	public Set<Comment> getCommentsReisestipendium() {
+	public List<Comment> getCommentsReisestipendium() {
 		return commentsReisestipendium;
 	}
 
-	public void setCommentsReisestipendium(Set<Comment> commentsReisestipendium) {
+	public void setCommentsReisestipendium(List<Comment> commentsReisestipendium) {
 		this.commentsReisestipendium = commentsReisestipendium;
 	}
 	

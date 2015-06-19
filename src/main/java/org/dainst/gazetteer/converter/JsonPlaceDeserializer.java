@@ -1,7 +1,9 @@
 package org.dainst.gazetteer.converter;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.dainst.gazetteer.dao.PlaceRepository;
@@ -289,7 +291,7 @@ public class JsonPlaceDeserializer {
 			place.setLocations(locations);
 			
 			// update comment objects			
-			Set<Comment> comments = new HashSet<Comment>();
+			List<Comment> comments = new ArrayList<Comment>();
 			JsonNode commentsNode = objectNode.get("comments");
 			if (commentsNode != null) for (JsonNode commentNode : commentsNode) {
 				Comment comment = new Comment();					
@@ -373,7 +375,7 @@ public class JsonPlaceDeserializer {
 				if (user.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_REISESTIPENDIUM"))) {
 					if (objectNode.has("noteReisestipendium"))
 						place.setNoteReisestipendium(objectNode.get("noteReisestipendium").asText());
-					Set<Comment> commentsReisestipendium = new HashSet<Comment>();
+					List<Comment> commentsReisestipendium = new ArrayList<Comment>();
 					JsonNode commentsReisestipendiumNode = objectNode.get("commentsReisestipendium");
 					if (commentsReisestipendiumNode != null) for (JsonNode commentNode : commentsReisestipendiumNode) {
 						Comment comment = new Comment();					
