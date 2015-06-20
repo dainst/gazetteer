@@ -1142,8 +1142,6 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, Place,
 			$scope.location.shape = null;
 		
 		if ((!$scope.location.coordinates || $scope.location.coordinates.length == 0) && !$scope.location.shape) return;
-		if ($scope.location.coordinates)
-			$scope.location.coordinates.reverse();
 		if ($scope.place.locations == undefined)
 			$scope.place.locations = [];
 		$scope.place.locations.push($scope.location);
