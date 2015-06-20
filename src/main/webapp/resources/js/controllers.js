@@ -885,8 +885,12 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, Place,
 				$rootScope.title = messages["ui.place.hiddenPlace"];
 				$rootScope.pageTitle = messages["ui.place.hiddenPlace"] + " | iDAI.gazetteer";
 			}
-			if (!$scope.place.prefLocation && !$scope.hasType("archaeological-site"))
-				$scope.place.prefLocation = { confidence: 0, publicSite: true, coordinates: [] };
+			if (!$scope.place.prefLocation) {
+				if ($scope.hasType("archaeological-site"))
+					$scope.place.prefLocation = { confidence: 0, publicSite: false, coordinates: [] };
+				else
+					$scope.place.prefLocation = { confidence: 0, publicSite: true, coordinates: [] };
+			} 
 			if ($scope.hasType("archaeological-site"))
 				$scope.location.publicSite = false;
 			if (result.parent) {
