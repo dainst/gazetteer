@@ -89,12 +89,14 @@
 						</ul>
 					</div>
 				</sec:authorize>
-				<div id="archaeo-fixed-menu-logo"></div>
 				<div id="gaz-logo"></div>
-				<h3 class="pull-left">
-					<small>Deutsches Archäologisches Institut</small> <br>
-					<a href="#!/home" style="color:inherit">iDAI.gazetteer</a>
-				</h3>
+				<div>
+					<h3 class="pull-left">
+						<small>Deutsches Archäologisches Institut</small> <br>
+						<a href="#!/home" style="color:inherit">iDAI.gazetteer</a>
+					</h3>
+				</div>
+				<div id="archaeo-fixed-menu-logo"></div>
 			</div>
 			<div class="affix-menu-wrapper">
 				<div id="affix-menu" style="z-index: 100000"
