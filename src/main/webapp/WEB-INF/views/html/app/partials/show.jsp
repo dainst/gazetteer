@@ -280,7 +280,7 @@
 			</div>
 			<div ng-show="link.description">
 				<a ng-href="{{link.object}}" target="_blank">{{link.description}}</a>
-				(<em>{{link.predicate}}:</em> <a ng-href="{{link.object}}" target="_blank">{{decodeUri(link.object)}}</a>)
+				<i class="icon-info-sign" style="color: #5572a1; cursor: pointer;" gaz-text-tooltip="link.predicate + ': ' + decodeUri(link.object)"></i>
 			</div>
 		</dd>
 		<br/>

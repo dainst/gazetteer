@@ -22,6 +22,16 @@ directives.directive('gazTooltip', function(messages) {
 	};
 });
 
+directives.directive('gazTextTooltip', function() {
+	return {
+		link: function(scope, element, attrs) {
+			scope.$watch(attrs.gazTextTooltip, function(messageText) {
+				$(element).tooltip({title: messageText});
+			});
+		}
+	};
+});
+
 directives.directive('gazCopyUri', function() {
 	return {
 		replace: true,
