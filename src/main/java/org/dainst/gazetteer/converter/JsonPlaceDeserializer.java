@@ -356,13 +356,18 @@ public class JsonPlaceDeserializer {
 				Link link = new Link();					
 				links.add(link);
 				JsonNode objNode = linkNode.get("object"); 
-				JsonNode predicateNode = linkNode.get("predicate");
+				JsonNode predicateNode = linkNode.get("predicate");	
+				JsonNode descriptionNode = linkNode.get("description");
 				if (objNode == null)
 					throw new HttpMessageNotReadableException("Invalid link object. Attribute \"object\" has to be set.");
 				if (predicateNode == null)
 					throw new HttpMessageNotReadableException("Invalid link object. Attribute \"predicate\" has to be set.");
 				link.setObject(objNode.asText());
 				link.setPredicate(predicateNode.asText());
+				if (descriptionNode != null && !descriptionNode.asText().equals(""))
+					link.setDescription(descriptionNode.asText());
+				else
+					link.setDescription(null);
 				logger.debug("updated link: {}", link);				
 			}
 			place.setLinks(links);

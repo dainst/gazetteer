@@ -5,6 +5,8 @@ public class Link {
 	private String object;
 	
 	private String predicate;
+	
+	private String description;
 
 	public String getObject() {
 		return object;
@@ -21,10 +23,18 @@ public class Link {
 	public void setPredicate(String predicate) {
 		this.predicate = predicate;
 	}
+	
+	public String getDescription() {
+		return description;
+	}
+	
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
 	@Override
 	public String toString() {
-		return "Link [object=" + object + ", predicate=" + predicate + "]";
+		return "Link [object=" + object + ", predicate=" + predicate + ", description=" + description + "]";
 	}
 
 	@Override
@@ -32,8 +42,8 @@ public class Link {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((object == null) ? 0 : object.hashCode());
-		result = prime * result
-				+ ((predicate == null) ? 0 : predicate.hashCode());
+		result = prime * result	+ ((predicate == null) ? 0 : predicate.hashCode());
+		result = prime * result	+ ((description == null) ? 0 : description.hashCode());
 		return result;
 	}
 
@@ -55,6 +65,11 @@ public class Link {
 			if (other.predicate != null)
 				return false;
 		} else if (!predicate.equals(other.predicate))
+			return false;
+		if (description == null) {
+			if (other.description != null)
+				return false;
+		} else if (!description.equals(other.description))
 			return false;
 		return true;
 	}

@@ -216,6 +216,8 @@ public class JsonPlaceSerializer {
 				ObjectNode linkNode = mapper.createObjectNode();
 				linkNode.put("object", link.getObject());
 				linkNode.put("predicate", link.getPredicate());
+				if (link.getDescription() != null)
+					linkNode.put("description", link.getDescription());
 				linksNode.add(linkNode);
 			}
 			placeNode.put("links", linksNode);

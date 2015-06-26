@@ -274,7 +274,14 @@
 	<span ng-hide="!place.links">
 		<dt><s:message code="domain.place.links" text="domain.place.links" /></dt>
 		<dd ng-repeat="link in place.links | orderBy:['predicate','object']">
-			<em>{{link.predicate}}:</em> <a ng-href="{{link.object}}" target="_blank">{{decodeUri(link.object)}}</a>
+			<div ng-hide="link.description">
+				<em>{{link.predicate}}:</em>
+				<a ng-href="{{link.object}}" target="_blank">{{decodeUri(link.object)}}</a>
+			</div>
+			<div ng-show="link.description">
+				<a ng-href="{{link.object}}" target="_blank">{{link.description}}</a>
+				(<em>{{link.predicate}}:</em> <a ng-href="{{link.object}}" target="_blank">{{decodeUri(link.object)}}</a>)
+			</div>
 		</dd>
 		<br/>
 	</span>

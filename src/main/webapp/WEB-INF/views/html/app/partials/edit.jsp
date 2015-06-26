@@ -298,6 +298,8 @@
 						</div>
 					</div>
 					
+					<legend><s:message code="domain.place.links" text="domain.place.links"/></legend>
+					
 					<!-- URI -->
 					<div class="control-group">
 						<label class="control-label">
@@ -313,15 +315,30 @@
 									ng-disabled="!link.object || !link.predicate">
 								<i class="icon-plus icon-white"></i>
 							</div>
-							<div type="text" ng.hide="!place.linkss">
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label">
+							<s:message code="domain.place.links.description" text="domain.place.links.description"/>
+						</label>
+						<div class="controls">
+							<input type="text" name="link-description" ng-model="link.description">
+							<div type="text" ng.hide="!place.links">
 								<div ng-repeat="link in place.links">
 									<a ng-click="place.links.splice($index,1)"><i class="icon-remove-sign"></i></a>
-									<em>{{link.predicate}}:</em> <a href="{{link.object}}" target="_blank">{{decodeUri(link.object)}}</a>
+									<span ng-hide="link.description">
+										<em>{{link.predicate}}:</em>
+										<a ng-href="{{link.object}}" target="_blank">{{decodeUri(link.object)}}</a>
+									</span>
+									<span ng-show="link.description">
+										<a ng-href="{{link.object}}" target="_blank">{{link.description}}</a>
+										(<em>{{link.predicate}}:</em> <a ng-href="{{link.object}}" target="_blank">{{decodeUri(link.object)}}</a>)
+									</span>
 								</div>
 							</div>
 						</div>
 					</div>
-					
+
 				</div>
 				
 				<div class="tab-pane" id="locations">

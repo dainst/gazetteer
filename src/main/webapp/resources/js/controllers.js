@@ -857,7 +857,7 @@ function CreateCtrl($scope, $rootScope, $routeParams, $location, Place, messages
 function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, Place, messages) {
 	
 	$scope.location = { confidence: 0, publicSite: true, coordinates: [] };
-	$scope.link = { predicate: "owl:sameAs" };
+	$scope.link = { predicate: "owl:sameAs", description: "" };
 	$rootScope.showMap = true;
 	$rootScope.showHeader = true;
 	$rootScope.showNavbarSearch = true;
@@ -1164,7 +1164,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, Place,
 		if ($scope.place.links == undefined)
 			$scope.place.links = [];
 		$scope.place.links.push($scope.link);
-		$scope.link = { predicate: "owl:sameAs" };
+		$scope.link = { predicate: "owl:sameAs", description: "" };
 	};
 	
 	$scope.addRelatedPlace = function() {
