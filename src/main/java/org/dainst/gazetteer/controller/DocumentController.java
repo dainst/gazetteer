@@ -207,6 +207,7 @@ public class DocumentController {
 		ModelAndView mav = new ModelAndView("place/get");
 		mav.addObject("place", place);
 		mav.addObject("baseUri", baseUri);
+		mav.addObject("accessGranted", checkPlaceAccess(place));
 		return mav;
 		
 	}
