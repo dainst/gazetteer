@@ -211,6 +211,37 @@ public class DocumentController {
 		return mav;
 		
 	}
+	
+	@RequestMapping(value="/duplicate", method={RequestMethod.POST, RequestMethod.PUT})
+	public ModelAndView duplicatePlace(@RequestBody Place place,
+			HttpServletResponse response) throws Exception {
+		
+		place.setId(idGenerator.generate(place));
+		place.setLastChangeDate(new Date());
+		
+		Place existingPlace = placeDao.findOne(place.getId());
+		
+		if (existingPlace == null)
+			place = placeDao.save(place);
+		else
+			throw new IllegalStateException("Could not create place! Generated ID already exists: " + place.getId());
+		
+		changeRecordDao.save(createChangeRecord(place, "duplicate"));
+		
+		logger.debug("duplicated place {}", place);
+		
+		increaseChildrenCount(place);
+		
+		response.setStatus(201);
+		response.setHeader("Location", baseUri + "place/" + place.getId());
+		
+		ModelAndView mav = new ModelAndView("place/get");
+		mav.addObject("place", place);
+		mav.addObject("baseUri", baseUri);
+		mav.addObject("accessGranted", checkPlaceAccess(place));
+		return mav;
+		
+	}
 
 	@RequestMapping(value="/doc/{placeId}", method={RequestMethod.POST, RequestMethod.PUT})
 	public ModelAndView updateOrCreatePlace(@RequestBody Place place, 

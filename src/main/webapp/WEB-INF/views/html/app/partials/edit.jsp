@@ -525,6 +525,7 @@
 	    <div class="form-actions">
            	<button ng-click="save()" class="save btn btn-primary"><s:message code="ui.save" text="ui.save"/></button>
            	<button href="#publishModal" class="btn btn-success" data-toggle="modal" ng-show="place.recordGroupId"><s:message code="ui.publish" text="ui.publish"/></button>
+           	<button href="#duplicateModal" class="btn btn-info" data-toggle="modal"><s:message code="ui.duplicate" text="ui.duplicate"/></button>
            	<a class="btn" href="javascript:history.back()"><s:message code="ui.cancel" text="ui.cancel"/></a>
            	<button href="#deleteModal" class="btn btn-danger" data-toggle="modal"><s:message code="ui.delete" text="ui.delete"/></button>
 			<div class="modal hide fade" id="deleteModal">
@@ -604,6 +605,18 @@
 				<div class="modal-footer">
 					<a href="#" class="btn" data-dismiss="modal" aria-hidden="true"><s:message code="ui.cancel" text="ui.cancel"/></a>
 					<a ng-click="publish()" data-dismiss="modal" class="btn btn-primary"><s:message code="ui.ok" text="ui.ok"/></a>
+				</div>
+			</div>
+			<div class="modal hide fade" id="duplicateModal">
+				<div class="modal-header">
+					<h3><s:message code="ui.duplicate.info.header" text="ui.duplicate.info.header"/></h3>
+				</div>
+				<div class="modal-body">
+					<s:message code="ui.duplicate.info.body" text="ui.duplicate.info.body"/>?
+				</div>
+				<div class="modal-footer">
+					<a href="#" class="btn" data-dismiss="modal" aria-hidden="true"><s:message code="ui.cancel" text="ui.cancel"/></a>
+					<a ng-click="duplicate()" data-dismiss="modal" class="btn btn-primary"><s:message code="ui.ok" text="ui.ok"/></a>
 				</div>
 			</div>
 	</div>

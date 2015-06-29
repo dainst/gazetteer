@@ -1078,20 +1078,45 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, Place,
 		$scope.save();
 	};
 	
+	$scope.duplicate = function() {
+		$rootScope.loading++;
+		$scope.prepareSave();
+		$scope.gazId = $scope.place.gazId;
+		$scope.place.gazId = undefined;
+		Place.duplicate(
+			$scope.place,
+			function(data) {
+				if (data.message == null) {
+					$scope.place = data;
+					window.scrollTo(0,0);
+					$rootScope.loading--;
+					$location.search("keepAlerts").path("show/" + $scope.place.gazId);
+					$rootScope.addAlert(messages["ui.place.duplicate.success"], null, "success");
+				} else {
+					$scope.place.gazId = $scope.gazId;
+					$scope.gazId = undefined;
+					$scope.failure = data.message;
+					$rootScope.addAlert(messages["ui.place.duplicate.failure." + $scope.failure], null, "error");
+					window.scrollTo(0,0);
+					$rootScope.loading--;
+				}
+				
+			},
+			function(result) {
+				$scope.place.gazId = $scope.gazId;
+				$scope.gazId = undefined;
+				$scope.failure = result.data.message;
+				$rootScope.addAlert(messages["ui.place.duplicate.failure"], null, "error");
+				window.scrollTo(0,0);
+				$rootScope.loading--;
+			}
+		);
+	};
+	
 	$scope.save = function() {
 		$rootScope.loading++;
-		if($scope.place.prefLocation && !$scope.place.prefLocation.coordinates && !$scope.place.prefLocation.shape)
-			$scope.place.prefLocation = undefined;
-		if($scope.comment) $scope.addComment();
-		if($scope.name) $scope.addName();
-		if($scope.location) $scope.addLocation();
-		if($scope.identifier) $scope.addIdentifier();
-		if($scope.link) $scope.addLink();
-		if($scope.relatedPlace)
-			$scope.addRelatedPlace();
-		$scope.updateRelatedPlaces();
+		$scope.prepareSave();
 
-		if($scope.commentReisestipendium) $scope.addCommentReisestipendium();
 		Place.save(
 			$scope.place,
 			function(data) {
@@ -1118,6 +1143,20 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, Place,
 				$rootScope.loading--;
 			}
 		);
+	};
+	
+	$scope.prepareSave = function() {
+		if($scope.place.prefLocation && !$scope.place.prefLocation.coordinates && !$scope.place.prefLocation.shape)
+			$scope.place.prefLocation = undefined;
+		if($scope.comment) $scope.addComment();
+		if($scope.name) $scope.addName();
+		if($scope.location) $scope.addLocation();
+		if($scope.identifier) $scope.addIdentifier();
+		if($scope.link) $scope.addLink();
+		if($scope.relatedPlace)
+			$scope.addRelatedPlace();
+		$scope.updateRelatedPlaces();
+		if($scope.commentReisestipendium) $scope.addCommentReisestipendium();
 	};
 	
 	$scope.addComment = function() {
