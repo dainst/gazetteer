@@ -838,9 +838,10 @@ directives.directive('gazMap', function($location, Place) {
 								if (place.mapType == "markerParent" || place.mapType == "parent")
 									marker.setZIndex(1);
 								else if (place.mapType == "markerChild") {
-									marker.setZIndex(1000);
+									marker.setZIndex(4);
 									childMarkerLocations.push(ll);
-								}
+								} else if (place.mapType == "standard")
+									marker.setZIndex(3);
 								else
 									marker.setZIndex(2);
 								$scope.markers.push(marker);
@@ -869,7 +870,8 @@ directives.directive('gazMap', function($location, Place) {
 											map: $scope.map,
 											icon: getNumberedMarkerIcon(parseInt(i) + 1, "lightred"),
 											number: parseInt(i) + 1,
-											mapType: place.mapType
+											mapType: place.mapType,
+											zIndex: 2
 										});
 										$scope.markers.push(marker);
 										$scope.markerMap[place.gazId + "+" + i] = marker;
