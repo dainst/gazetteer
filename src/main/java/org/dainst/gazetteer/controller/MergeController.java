@@ -121,6 +121,7 @@ public class MergeController {
 		ModelAndView mav = new ModelAndView("place/get");
 		mav.addObject("place", newPlace);
 		mav.addObject("baseUri", baseUri);
+		mav.addObject("accessGranted", checkPlaceAccess(newPlace));
 		return mav;
 		
 	}
