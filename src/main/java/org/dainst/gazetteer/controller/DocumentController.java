@@ -80,8 +80,8 @@ public class DocumentController {
 			@RequestParam(required=false) String fuzzy,
 			@RequestParam(required=false, defaultValue="map,table") String view,
 			@RequestParam(required=false) boolean createParentsList,
-			@RequestHeader("User-Agent") String userAgent,
-			@RequestHeader("Accept") String accept,
+			@RequestHeader(value="User-Agent", required=false) String userAgent,
+			@RequestHeader(value="Accept", required=false) String accept,
 			HttpServletRequest request) {
 		
 		RequestContext requestContext = new RequestContext(request);
@@ -98,13 +98,15 @@ public class DocumentController {
 		}
 		
 		// redirect browsers to app
-		logger.debug("User-Agent: {}", userAgent);
-		logger.debug("Accept: {}", accept);
-		if ( (accept.contains("text/html") && suffix.isEmpty()) || ".html".equals(suffix) && !userAgent.contains("bot")) {
-			RedirectView redirectView = new RedirectView(baseUri + "app/#!/show/" + placeId, true, true);
-			redirectView.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
-			logger.debug("Redirecting to app ...");
-			return new ModelAndView(redirectView);
+		if (userAgent != null && accept != null) {
+			logger.debug("User-Agent: {}", userAgent);
+			logger.debug("Accept: {}", accept);
+			if ( (accept.contains("text/html") && suffix.isEmpty()) || ".html".equals(suffix) && !userAgent.contains("bot")) {
+				RedirectView redirectView = new RedirectView(baseUri + "app/#!/show/" + placeId, true, true);
+				redirectView.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
+				logger.debug("Redirecting to app ...");
+				return new ModelAndView(redirectView);
+			}
 		}
 		
 		long time = System.currentTimeMillis();
