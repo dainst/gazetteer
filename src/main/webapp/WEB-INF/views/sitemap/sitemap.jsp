@@ -6,8 +6,10 @@
 		</url>
 	</c:if>
 	<c:forEach var="place" items="${places}">
-		<url>
-			<loc>${baseUri}app/#!/show/${place.id}</loc>
-		</url>
+		<c:if test="${accessMap[place.id]}">
+			<url>
+				<loc>${baseUri}app/#!/show/${place.id}</loc>
+			</url>
+		</c:if>
 	</c:forEach>
 </urlset>
