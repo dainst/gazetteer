@@ -930,8 +930,14 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, Place,
 			});
 			$scope.place.mapType = "standard";
 			$rootScope.loading--;
-		}, function() {
-			$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
+		}, function(response) {
+			if (response.status == 403) {
+				$scope.place = { gazId: $routeParams.id, accessDenied: true};
+				$rootScope.title = messages["ui.place.hiddenPlace"];
+				$rootScope.pageTitle = messages["ui.place.hiddenPlace"] + " | iDAI.gazetteer";
+			} else {
+				$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
+			}
 			$rootScope.loading--;
 		});
 	} else {

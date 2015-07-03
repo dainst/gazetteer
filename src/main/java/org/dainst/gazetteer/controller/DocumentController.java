@@ -82,7 +82,8 @@ public class DocumentController {
 			@RequestParam(required=false) boolean createParentsList,
 			@RequestHeader(value="User-Agent", required=false) String userAgent,
 			@RequestHeader(value="Accept", required=false) String accept,
-			HttpServletRequest request) {
+			HttpServletRequest request,
+			HttpServletResponse response) {
 		
 		RequestContext requestContext = new RequestContext(request);
 		Locale locale = requestContext.getLocale();
@@ -156,6 +157,10 @@ public class DocumentController {
 				}
 			}
 			
+			boolean accessGranted = checkPlaceAccess(place);
+			if (!accessGranted)
+				response.setStatus(403);
+			
 			mav = new ModelAndView("place/get");
 			if (layout != null) {
 				mav.setViewName("place/"+layout);
@@ -163,7 +168,7 @@ public class DocumentController {
 			mav.addObject("place", place);
 			mav.addObject("relatedPlaces", relatedPlaces);
 			if (createParentsList) mav.addObject("parents", parents);
-			mav.addObject("accessGranted", checkPlaceAccess(place));
+			mav.addObject("accessGranted", accessGranted);
 			mav.addObject("baseUri", baseUri);
 			mav.addObject("language", locale.getISO3Language());
 			mav.addObject("limit", limit);
