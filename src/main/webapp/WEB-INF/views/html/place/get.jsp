@@ -10,8 +10,15 @@
 <html>
 <head>
 <title>
-iDAI.gazetteer - ${place.prefName.title}
-<c:forEach var="placename" items="${place.names}"> / ${placename.title}</c:forEach>
+	<c:choose>
+		<c:when test="${accessGranted}">
+			iDAI.gazetteer - ${place.prefName.title}
+			<c:forEach var="placename" items="${place.names}"> / ${placename.title}</c:forEach>
+		</c:when>
+		<c:otherwise>
+			iDAI.gazetteer - <s:message code="domain.place.hiddenPlace" text="domain.place.hiddenPlace"/>
+		</c:otherwise>
+	</c:choose>
 </title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -78,7 +85,15 @@ iDAI.gazetteer - ${place.prefName.title}
 	<!-- Page title -->
 		<div class="page-header">
 			<h2>
-				<span itemprop="name">${place.prefName.title}</span>
+				<c:choose>
+					<c:when test="${accessGranted}">
+						<span itemprop="name">${place.prefName.title}</span>
+					</c:when>
+					<c:otherwise>
+						<s:message code="domain.place.hiddenPlace" text="domain.place.hiddenPlace"/>
+					</c:otherwise>
+				</c:choose>
+				
 				<small><a href="${baseUri}place/${place.id}" itemprop="url">${baseUri}place/${place.id}</a> <a data-toggle="modal" href="#copyUriModal"><i class="icon-share" style="font-size:0.7em"></i></a></small>
 			</h2>
 		</div>
@@ -108,159 +123,163 @@ iDAI.gazetteer - ${place.prefName.title}
 				<li><a href="${baseUri}doc/${place.id}.kml" target="_blank">KML</a></li>
 			</ul>
 			
-			<!-- names -->
-			<h2><s:message code="domain.place.names"/></h2>
-			<ul>
-				<li>
-					<em><s:message code="domain.place.prefName" text="domain.place.prefName"/>: </em>
-					${place.prefName.title}
-					<c:if test="${languages[place.prefName.language] != null}">
-						<em>(${languages[place.prefName.language]})</em>
-					</c:if>
-				</li>
-				<c:forEach var="placename" items="${place.names}">
+			<c:if test="${accessGranted}">
+		
+				<!-- names -->
+				<h2><s:message code="domain.place.names"/></h2>
+				<ul>
 					<li>
-						${placename.title}
-						<c:if test="${languages[placename.language] != null}">
-							<em>(${languages[placename.language]})</em>
+						<em><s:message code="domain.place.prefName" text="domain.place.prefName"/>: </em>
+						${place.prefName.title}
+						<c:if test="${languages[place.prefName.language] != null}">
+							<em>(${languages[place.prefName.language]})</em>
 						</c:if>
 					</li>
-				</c:forEach>
-			</ul>
-			
-			<!-- parent -->
-			<c:if test="${parent != null}">
-				<h2><s:message code="domain.place.parent" text="domain.place.parent" /></h2>
-				<p>
-					<a href="${baseUri}place/${parent.id}" itemprop="containedIn">${parent.prefName.title}
-						<c:if test="${parent.types != null && !empty(parent.types)}">
-							<em>(<s:message code="place.types.${parent.types.toArray()[0]}" text="${parent.types.toArray()[0]}"/>)</em>
-						</c:if>	
-					</a>
-				</p>
-			</c:if>
-			
-			<!-- children -->
-			<c:if test="${!empty(children)}">
-				<h2><s:message code="domain.place.children" text="domain.place.children" /></h2>
-				<p>
-					<a href="${baseUri}search.kml?q=parent:${place.id}&limit=${fn:length(children)}">
-						<s:message code="ui.numberOfPlaces" text="ui.numberOfPlaces" arguments="${fn:length(children)}" />
-					</a>
-				</p>
-			</c:if>	
-			
-			<!-- related places -->
-			<c:if test="${!empty(relatedPlaces)}">
-				<h2><s:message code="domain.place.relatedPlaces" text="domain.place.relatedPlaces" /></h2>
-				<ul>
-					<c:forEach var="relatedPlace" items="${relatedPlaces}">
+					<c:forEach var="placename" items="${place.names}">
 						<li>
-							<a href="${baseUri}place/${relatedPlace.id}">${relatedPlace.prefName.title}
-								<c:if test="${relatedPlace.types != null && !empty(relatedPlace.types)}">
-									<em>(<s:message code="place.types.${relatedPlace.types.toArray()[0]}" text="${relatedPlace.types.toArray()[0]}"/>)</em>
-								</c:if>	
-							</a>
+							${placename.title}
+							<c:if test="${languages[placename.language] != null}">
+								<em>(${languages[placename.language]})</em>
+							</c:if>
 						</li>
-					</c:forEach>
-				</ul>
-			</c:if>
-			
-			<!-- locations -->
-			<c:if test="${place.prefLocation != null}">
-				<h2><s:message code="domain.place.locations" text="domain.place.locations" /></h2>
-				<ul>
-					<li itemprop="geo" itemscope itemtype="http://schema.org/GeoCoordinates">
-						<em><s:message code="domain.location.latitude" text="domain.location.latitude" />:</em> ${place.prefLocation.lat},
-						<em><s:message code="domain.location.longitude" text="domain.location.longitude" />:</em> ${place.prefLocation.lng}
-						(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />:</em>
-						<s:message code="confidence.${place.prefLocation.confidence}" text="${place.prefLocation.confidence}"/>)
-						<meta itemprop="latitude" content="${place.prefLocation.lat}" />
-					    <meta itemprop="longitude" content="${place.prefLocation.lng}" />
-					</li>
-					<c:forEach var="location" items="${place.locations}">
-						<li>
-							<em><s:message code="domain.location.latitude" text="domain.location.latitude" />:</em> ${location.lat},
-							<em><s:message code="domain.location.longitude" text="domain.location.longitude" />:</em> ${location.lng}
-							(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />:</em>
-							<s:message code="confidence.${location.confidence}" text="${location.confidence}"/>)
-						</li>
-					</c:forEach>
-				</ul>
-			</c:if>
-			
-			<c:if test="${place.types != null && !empty(place.types)}">
-				<h2><s:message code="domain.place.type" text="domain.place.type" /></h2>
-				<ul>
-					<c:forEach var="type" items="${place.types}">
-						<li><s:message code="place.types.${type}" text="${type}"/></li>
 					</c:forEach>
 				</ul>
 				
-			</c:if>
-			
-			<c:if test="${not empty place.arachneId or not empty place.zenonId}">
-				<h2><s:message code="ui.contexts" text="ui.contexts"/></h2>
-				<ul>
-					<c:if test="${not empty place.arachneId}">
-						<li>
-							<a href="http://arachne.uni-koeln.de/arachne/index.php?view[layout]=search_result_overview&view[category]=overview&search[constraints]=FS_OrtID:%22${place.arachneId}%22" target="_blank">
-								<s:message code="ui.link.arachne" text="ui.link.arachne"/>
-								<i class="icon-external-link"></i>
-							</a>
+				<!-- parent -->
+				<c:if test="${parent != null}">
+					<h2><s:message code="domain.place.parent" text="domain.place.parent" /></h2>
+					<p>
+						<a href="${baseUri}place/${parent.id}" itemprop="containedIn">${parent.prefName.title}
+							<c:if test="${parent.types != null && !empty(parent.types)}">
+								<em>(<s:message code="place.types.${parent.types.toArray()[0]}" text="${parent.types.toArray()[0]}"/>)</em>
+							</c:if>	
+						</a>
+					</p>
+				</c:if>
+				
+				<!-- children -->
+				<c:if test="${!empty(children)}">
+					<h2><s:message code="domain.place.children" text="domain.place.children" /></h2>
+					<p>
+						<a href="${baseUri}search.kml?q=parent:${place.id}&limit=${fn:length(children)}">
+							<s:message code="ui.numberOfPlaces" text="ui.numberOfPlaces" arguments="${fn:length(children)}" />
+						</a>
+					</p>
+				</c:if>	
+				
+				<!-- related places -->
+				<c:if test="${!empty(relatedPlaces)}">
+					<h2><s:message code="domain.place.relatedPlaces" text="domain.place.relatedPlaces" /></h2>
+					<ul>
+						<c:forEach var="relatedPlace" items="${relatedPlaces}">
+							<li>
+								<a href="${baseUri}place/${relatedPlace.id}">${relatedPlace.prefName.title}
+									<c:if test="${relatedPlace.types != null && !empty(relatedPlace.types)}">
+										<em>(<s:message code="place.types.${relatedPlace.types.toArray()[0]}" text="${relatedPlace.types.toArray()[0]}"/>)</em>
+									</c:if>	
+								</a>
+							</li>
+						</c:forEach>
+					</ul>
+				</c:if>
+				
+				<!-- locations -->
+				<c:if test="${place.prefLocation != null}">
+					<h2><s:message code="domain.place.locations" text="domain.place.locations" /></h2>
+					<ul>
+						<li itemprop="geo" itemscope itemtype="http://schema.org/GeoCoordinates">
+							<em><s:message code="domain.location.latitude" text="domain.location.latitude" />:</em> ${place.prefLocation.lat},
+							<em><s:message code="domain.location.longitude" text="domain.location.longitude" />:</em> ${place.prefLocation.lng}
+							(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />:</em>
+							<s:message code="confidence.${place.prefLocation.confidence}" text="${place.prefLocation.confidence}"/>)
+							<meta itemprop="latitude" content="${place.prefLocation.lat}" />
+						    <meta itemprop="longitude" content="${place.prefLocation.lng}" />
 						</li>
-					</c:if>
-					<c:if test="${not empty place.zenonId}">
-						<li>
-							<a href="http://zenon.dainst.org/#search?q=f999_1:${place.zenonId}" target="_blank">
-								<s:message code="ui.link.zenon" text="ui.link.zenon"/>
-								<i class="icon-external-link"></i>
-							</a>
-						</li>
-					</c:if>
-				</ul>
-			</c:if>
+						<c:forEach var="location" items="${place.locations}">
+							<li>
+								<em><s:message code="domain.location.latitude" text="domain.location.latitude" />:</em> ${location.lat},
+								<em><s:message code="domain.location.longitude" text="domain.location.longitude" />:</em> ${location.lng}
+								(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />:</em>
+								<s:message code="confidence.${location.confidence}" text="${location.confidence}"/>)
+							</li>
+						</c:forEach>
+					</ul>
+				</c:if>
+				
+				<c:if test="${place.types != null && !empty(place.types)}">
+					<h2><s:message code="domain.place.type" text="domain.place.type" /></h2>
+					<ul>
+						<c:forEach var="type" items="${place.types}">
+							<li><s:message code="place.types.${type}" text="${type}"/></li>
+						</c:forEach>
+					</ul>
+					
+				</c:if>
+				
+				<c:if test="${not empty place.arachneId or not empty place.zenonId}">
+					<h2><s:message code="ui.contexts" text="ui.contexts"/></h2>
+					<ul>
+						<c:if test="${not empty place.arachneId}">
+							<li>
+								<a href="http://arachne.uni-koeln.de/arachne/index.php?view[layout]=search_result_overview&view[category]=overview&search[constraints]=FS_OrtID:%22${place.arachneId}%22" target="_blank">
+									<s:message code="ui.link.arachne" text="ui.link.arachne"/>
+									<i class="icon-external-link"></i>
+								</a>
+							</li>
+						</c:if>
+						<c:if test="${not empty place.zenonId}">
+							<li>
+								<a href="http://zenon.dainst.org/#search?q=f999_1:${place.zenonId}" target="_blank">
+									<s:message code="ui.link.zenon" text="ui.link.zenon"/>
+									<i class="icon-external-link"></i>
+								</a>
+							</li>
+						</c:if>
+					</ul>
+				</c:if>
+				
+				<c:if test="${!empty(place.identifiers)}">
+					<h2><s:message code="domain.place.identifiers" text="domain.place.identifiers" /></h2>
+					<ul>
+						<c:forEach var="identifier" items="${place.identifiers}">
+							<li>
+								<em>${identifier.context}:</em> ${identifier.value}
+							</li>
+						</c:forEach>
+					</ul>
+				</c:if>
+				
+				<c:if test="${!empty(place.links)}">
+					<h2><s:message code="domain.place.links" text="domain.place.links" /></h2>
+					<ul>
+						<c:forEach var="link" items="${place.links}">
+							<li>
+								<em>${link.predicate}:</em> <a href="${link.object}" target="_blank">${link.object}</a>
+							</li>
+						</c:forEach>
+					</ul>
+				</c:if>
+				
+				<c:if test="${!empty(place.comments)}">
+					<h2><s:message code="domain.place.comments" text="domain.place.comments" /></h2>
+					<ul>
+						<c:forEach var="comment" items="${place.comments}">
+							<li>${comment.text}</li>
+						</c:forEach>
+					</ul>
+				</c:if>
+				
+				<c:if test="${!empty(place.tags)}">
+					<h2><s:message code="domain.place.tags" text="domain.place.tags" /></h2>
+					<ul>
+						<c:forEach var="tag" items="${place.tags}">
+							<li>
+								${tag}
+							</li>
+						</c:forEach>
+					</ul>
+				</c:if>
 			
-			<c:if test="${!empty(place.identifiers)}">
-				<h2><s:message code="domain.place.identifiers" text="domain.place.identifiers" /></h2>
-				<ul>
-					<c:forEach var="identifier" items="${place.identifiers}">
-						<li>
-							<em>${identifier.context}:</em> ${identifier.value}
-						</li>
-					</c:forEach>
-				</ul>
-			</c:if>
-			
-			<c:if test="${!empty(place.links)}">
-				<h2><s:message code="domain.place.links" text="domain.place.links" /></h2>
-				<ul>
-					<c:forEach var="link" items="${place.links}">
-						<li>
-							<em>${link.predicate}:</em> <a href="${link.object}" target="_blank">${link.object}</a>
-						</li>
-					</c:forEach>
-				</ul>
-			</c:if>
-			
-			<c:if test="${!empty(place.comments)}">
-				<h2><s:message code="domain.place.comments" text="domain.place.comments" /></h2>
-				<ul>
-					<c:forEach var="comment" items="${place.comments}">
-						<li>${comment.text}</li>
-					</c:forEach>
-				</ul>
-			</c:if>
-			
-			<c:if test="${!empty(place.tags)}">
-				<h2><s:message code="domain.place.tags" text="domain.place.tags" /></h2>
-				<ul>
-					<c:forEach var="tag" items="${place.tags}">
-						<li>
-							${tag}
-						</li>
-					</c:forEach>
-				</ul>
 			</c:if>
 		
 		<!-- Footer -->
