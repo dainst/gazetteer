@@ -593,7 +593,7 @@
 			</div>
 			<div class="modal hide fade" id="publishModal">
 				<div class="modal-header">
-					<h3><s:message code="ui.publish.warning.header" text="ui.publish.warning.header"/>?</h3>
+					<h3><s:message code="ui.publish.warning.header" text="ui.publish.warning.header"/></h3>
 				</div>
 				<div class="modal-body">
 					<c:forEach var="recordGroup" items="${recordGroups}">
@@ -612,7 +612,7 @@
 					<h3><s:message code="ui.duplicate.info.header" text="ui.duplicate.info.header"/></h3>
 				</div>
 				<div class="modal-body">
-					<s:message code="ui.duplicate.info.body" text="ui.duplicate.info.body"/>?
+					<s:message code="ui.duplicate.info.body" text="ui.duplicate.info.body"/>
 				</div>
 				<div class="modal-footer">
 					<a href="#" class="btn" data-dismiss="modal" aria-hidden="true"><s:message code="ui.cancel" text="ui.cancel"/></a>
