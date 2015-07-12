@@ -315,19 +315,23 @@
 									
 											<s:message code="ui.editUser.roleReisestipendium" text="ui.editUser.roleReisestipendium" />
 										</label>
-										
-										<select name="edit_record_groups" size="${recordGroupsSize}" multiple>
-											<c:forEach var="recordGroup" items="${recordGroups}">
-												<c:choose>
-													<c:when test="${recordGroupValues[recordGroup.id]}">
-														<option value="${recordGroup.id}" selected>${recordGroup.name}</option>
-													</c:when>
-													<c:otherwise>
-														<option value="${recordGroup.id}">${recordGroup.name}</option>
-													</c:otherwise>
-												</c:choose>
-											</c:forEach>
-										</select>
+									</div>
+									<div class="control-group">
+										<label class="control-label"> <s:message code="ui.editUser.groupAdminRights" text="ui.editUser.groupAdminRights" /></label>
+										<div class="controls">	
+											<select name="edit_group_admins" size="${recordGroupsSize}" multiple>
+												<c:forEach var="recordGroup" items="${recordGroups}">
+													<c:choose>
+														<c:when test="${recordGroupValues[recordGroup.id]}">
+															<option value="${recordGroup.id}" selected>${recordGroup.name}</option>
+														</c:when>
+														<c:otherwise>
+															<option value="${recordGroup.id}">${recordGroup.name}</option>
+														</c:otherwise>
+													</c:choose>
+												</c:forEach>
+											</select>
+										</div>
 									</div>
 								</div>
 							</c:if>

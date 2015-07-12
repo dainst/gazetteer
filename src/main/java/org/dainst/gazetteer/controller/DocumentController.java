@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.dainst.gazetteer.converter.JsonPlaceDeserializer;
+import org.dainst.gazetteer.dao.GroupRoleRepository;
 import org.dainst.gazetteer.dao.PlaceChangeRecordRepository;
 import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.dao.UserRepository;
@@ -18,6 +19,7 @@ import org.dainst.gazetteer.domain.User;
 import org.dainst.gazetteer.domain.ValidationResult;
 import org.dainst.gazetteer.helpers.IdGenerator;
 import org.dainst.gazetteer.helpers.LanguagesHelper;
+import org.dainst.gazetteer.helpers.PlaceAccessService;
 import org.dainst.gazetteer.helpers.ProtectLocationsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,6 +54,9 @@ public class DocumentController {
 	
 	@Autowired
 	private PlaceChangeRecordRepository changeRecordDao;
+	
+	@Autowired
+	private GroupRoleRepository groupRoleDao;
 	
 	@Autowired
 	private JsonPlaceDeserializer jsonPlaceDeserializer;
@@ -157,8 +162,10 @@ public class DocumentController {
 				}
 			}
 			
-			boolean accessGranted = checkPlaceAccess(place);
-			if (!accessGranted)
+			PlaceAccessService placeAccessService = new PlaceAccessService(groupRoleDao);
+			
+			boolean readAccess = placeAccessService.checkPlaceAccess(place, false);
+			if (!readAccess)
 				response.setStatus(403);
 			
 			mav = new ModelAndView("place/get");
@@ -168,7 +175,8 @@ public class DocumentController {
 			mav.addObject("place", place);
 			mav.addObject("relatedPlaces", relatedPlaces);
 			if (createParentsList) mav.addObject("parents", parents);
-			mav.addObject("accessGranted", accessGranted);
+			mav.addObject("readAccess", readAccess);
+			mav.addObject("editAccess", placeAccessService.checkPlaceAccess(place, true));
 			mav.addObject("baseUri", baseUri);
 			mav.addObject("language", locale.getISO3Language());
 			mav.addObject("limit", limit);
@@ -192,6 +200,19 @@ public class DocumentController {
 	public ModelAndView createPlace(@RequestBody Place place,
 			HttpServletResponse response) throws Exception {
 		
+		PlaceAccessService placeAccessService = new PlaceAccessService(groupRoleDao);
+		
+		boolean accessGranted = placeAccessService.checkPlaceAccess(place, true);
+		if (!accessGranted) {
+			ModelAndView mav = new ModelAndView("place/validation");
+			ValidationResult result = new ValidationResult();
+			result.setSuccess(false);
+			result.setMessage("accessDeniedError");
+			response.setStatus(403);
+			mav.addObject("result", result);
+			return mav;
+		}
+		
 		place.setId(idGenerator.generate(place));
 		place.setLastChangeDate(new Date());
 		
@@ -214,7 +235,8 @@ public class DocumentController {
 		ModelAndView mav = new ModelAndView("place/get");
 		mav.addObject("place", place);
 		mav.addObject("baseUri", baseUri);
-		mav.addObject("accessGranted", checkPlaceAccess(place));
+		mav.addObject("readAccess", accessGranted);
+		mav.addObject("editAccess", accessGranted);
 		return mav;
 		
 	}
@@ -222,6 +244,19 @@ public class DocumentController {
 	@RequestMapping(value="/duplicate", method={RequestMethod.POST, RequestMethod.PUT})
 	public ModelAndView duplicatePlace(@RequestBody Place place,
 			HttpServletResponse response) throws Exception {
+		
+		PlaceAccessService placeAccessService = new PlaceAccessService(groupRoleDao);
+		
+		boolean accessGranted = placeAccessService.checkPlaceAccess(place, true);
+		if (!accessGranted) {
+			ModelAndView mav = new ModelAndView("place/validation");
+			ValidationResult result = new ValidationResult();
+			result.setSuccess(false);
+			result.setMessage("accessDeniedError");
+			response.setStatus(403);
+			mav.addObject("result", result);
+			return mav;
+		}
 		
 		place.setId(idGenerator.generate(place));
 		place.setLastChangeDate(new Date());
@@ -245,7 +280,8 @@ public class DocumentController {
 		ModelAndView mav = new ModelAndView("place/get");
 		mav.addObject("place", place);
 		mav.addObject("baseUri", baseUri);
-		mav.addObject("accessGranted", checkPlaceAccess(place));
+		mav.addObject("readAccess", accessGranted);
+		mav.addObject("editAccess", accessGranted);
 		return mav;
 		
 	}
@@ -270,7 +306,11 @@ public class DocumentController {
 			}
 		}
 		
-		if (!checkPlaceAccess(place)) {
+		PlaceAccessService placeAccessService = new PlaceAccessService(groupRoleDao);
+		
+		Place originalPlace = placeDao.findOne(place.getId());
+		
+		if (!placeAccessService.checkPlaceAccess(originalPlace, true)) {
 			ModelAndView mav = new ModelAndView("place/validation");
 			ValidationResult result = new ValidationResult();
 			result.setSuccess(false);
@@ -328,13 +368,14 @@ public class DocumentController {
 		List<Place> children = placeDao.findByParent(placeId);
 		List<Place> relatedPlaces = placeDao.findByRelatedPlaces(placeId);
 		Place place = placeDao.findOne(placeId);
+		PlaceAccessService placeAccessService = new PlaceAccessService(groupRoleDao);
 		
-		if (children.size() > 0 || relatedPlaces.size() > 0 || !checkPlaceAccess(place)) {
+		if (children.size() > 0 || relatedPlaces.size() > 0 || !placeAccessService.checkPlaceAccess(place, true)) {
 			if (children.size() > 0)
 				logger.debug("cannot delete place " + placeId + ": has " + children.size() + " children!");
 			if (relatedPlaces.size() > 0)
 				logger.debug("cannot delete place " + placeId + ": has " + relatedPlaces.size() + " related places!");
-			if (!checkPlaceAccess(place))
+			if (!placeAccessService.checkPlaceAccess(place, true))
 				logger.debug("cannot delete place " + placeId + ": no place access!");
 			response.setStatus(409);
 		} else {			
@@ -379,20 +420,6 @@ public class DocumentController {
 		changeRecord.setChangeDate(place.getLastChangeDate());
 		
 		return changeRecord;
-	}
-	
-	private boolean checkPlaceAccess(Place place) {
-		User user = null;
-		
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		if (principal instanceof User)
-			user = (User) principal;
-		
-		if (place.getRecordGroupId() != null && !place.getRecordGroupId().isEmpty() && 
-				(user == null || !user.getRecordGroupIds().contains(place.getRecordGroupId())))
-			return false;
-		else
-			return true;
 	}
 	
 	private void createParentsList(Place place, List<Place> parents) {

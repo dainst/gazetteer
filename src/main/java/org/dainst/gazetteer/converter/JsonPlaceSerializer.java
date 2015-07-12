@@ -43,17 +43,17 @@ public class JsonPlaceSerializer {
 	}
 	
 	public String serialize(Place place, Boolean accessGranted) {
-		return serialize(place, null, null, null, null, accessGranted);
+		return serialize(place, null, null, null, null, accessGranted, false);
 	}
 	
 	public String serialize(Place place, List<Place> parents, Boolean accessGranted) {
-		return serialize(place, null, null, null, parents, accessGranted);
+		return serialize(place, null, null, null, parents, accessGranted, false);
 	}
 	
 	public String serialize(Place place, UserRepository userDao, PlaceChangeRecordRepository changeRecordDao, HttpServletRequest request,
-			List<Place> parents, Boolean accessGranted) {
+			List<Place> parents, Boolean readAccess, Boolean editAccess) {
 		
-		ObjectNode placeNode = createJsonNodes(place, userDao, changeRecordDao, request, parents, accessGranted);
+		ObjectNode placeNode = createJsonNodes(place, userDao, changeRecordDao, request, parents, readAccess, editAccess);
 		
 		try {
 			return mapper.writeValueAsString(placeNode);
@@ -64,10 +64,10 @@ public class JsonPlaceSerializer {
 	}
 	
 	public String serializeGeoJson(Place place, UserRepository userDao, PlaceChangeRecordRepository changeRecordDao, HttpServletRequest request,
-			Boolean accessGranted) {
+			Boolean readAccess, Boolean editAccess) {
 		
-		ObjectNode geoJsonPlaceNode = createGeoJsonNodes(place, accessGranted);		
-		ObjectNode placeNode = createJsonNodes(place, userDao, changeRecordDao, request, null, accessGranted);
+		ObjectNode geoJsonPlaceNode = createGeoJsonNodes(place, readAccess);		
+		ObjectNode placeNode = createJsonNodes(place, userDao, changeRecordDao, request, null, readAccess, editAccess);
 		geoJsonPlaceNode.put("properties", placeNode);
 		
 		try {
@@ -79,7 +79,7 @@ public class JsonPlaceSerializer {
 	}
 		
 	private ObjectNode createJsonNodes(Place place, UserRepository userDao, PlaceChangeRecordRepository changeRecordDao, HttpServletRequest request,
-			List<Place> parents, Boolean accessGranted) { 
+			List<Place> parents, Boolean readAccess, Boolean editAccess) { 
 		
 		if (place == null) return null;
 		
@@ -110,7 +110,7 @@ public class JsonPlaceSerializer {
 			placeNode.put("relatedPlaces", relatedPlacesNode);
 		}
 		
-		if (!accessGranted) {
+		if (!readAccess) {
 			placeNode.put("accessDenied", true);
 			return placeNode;
 		}
@@ -280,6 +280,10 @@ public class JsonPlaceSerializer {
 			}
 		}
 		
+		// edit access
+		if (!editAccess)
+			placeNode.put("editAccessDenied", true);
+		
 		// change history
 		if (user != null  && user.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_EDITOR")) && userDao != null && changeRecordDao != null && request != null) {
 			logger.debug("serializing change history");
@@ -323,7 +327,7 @@ public class JsonPlaceSerializer {
 			ArrayNode parentsNode = mapper.createArrayNode();
 			
 			for (Place parent : parents) {
-				ObjectNode parentNode = createJsonNodes(parent, userDao, changeRecordDao, request, null, accessGranted);
+				ObjectNode parentNode = createJsonNodes(parent, userDao, changeRecordDao, request, null, readAccess, editAccess);
 				parentsNode.add(parentNode);
 			}
 			
@@ -345,8 +349,6 @@ public class JsonPlaceSerializer {
 		geometryCollectionNode.put("type", "GeometryCollection");
 		
 		ArrayNode geometriesNode = mapper.createArrayNode();
-		
-		User user = getUser();
 		
 		if (!accessGranted) {
 			geometryCollectionNode.put("geometries", geometriesNode);

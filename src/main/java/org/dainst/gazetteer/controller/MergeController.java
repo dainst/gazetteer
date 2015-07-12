@@ -7,6 +7,7 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.dainst.gazetteer.dao.GroupRoleRepository;
 import org.dainst.gazetteer.dao.PlaceChangeRecordRepository;
 import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.domain.Place;
@@ -14,6 +15,7 @@ import org.dainst.gazetteer.domain.PlaceChangeRecord;
 import org.dainst.gazetteer.domain.User;
 import org.dainst.gazetteer.helpers.IdGenerator;
 import org.dainst.gazetteer.helpers.Merger;
+import org.dainst.gazetteer.helpers.PlaceAccessService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,9 @@ public class MergeController {
 	private PlaceChangeRecordRepository changeRecordDao;
 	
 	@Autowired
+	private GroupRoleRepository groupRoleDao;
+	
+	@Autowired
 	private Merger merger;
 	
 	@Autowired
@@ -53,7 +58,9 @@ public class MergeController {
 		Place place1 = placeDao.findOne(id1);
 		Place place2 = placeDao.findOne(id2);
 		
-		if (!checkPlaceAccess(place1) || !checkPlaceAccess(place2))
+		PlaceAccessService placeAccessService = new PlaceAccessService(groupRoleDao);
+		
+		if (!placeAccessService.checkPlaceAccess(place1) || !placeAccessService.checkPlaceAccess(place2))
 			throw new IllegalStateException("Places may not be merged, as the user doesn't have the permission to edit both places.");
 		
 		if (!(place1.getRecordGroupId() == null && place2.getRecordGroupId() == null) && (place1.getRecordGroupId() != null && !place1.getRecordGroupId().equals(place2.getRecordGroupId())))
@@ -117,11 +124,11 @@ public class MergeController {
 		
 		response.setStatus(201);
 		response.setHeader("location", baseUri + "place/" + newPlace.getId());
-		
+				
 		ModelAndView mav = new ModelAndView("place/get");
 		mav.addObject("place", newPlace);
 		mav.addObject("baseUri", baseUri);
-		mav.addObject("accessGranted", checkPlaceAccess(newPlace));
+		mav.addObject("accessGranted", placeAccessService.checkPlaceAccess(newPlace));
 		return mav;
 		
 	}
@@ -137,16 +144,5 @@ public class MergeController {
 		changeRecord.setChangeDate(new Date());
 		
 		return changeRecord;
-	}
-	
-	private boolean checkPlaceAccess(Place place) {
-		
-		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		
-		if (place.getRecordGroupId() != null && !place.getRecordGroupId().isEmpty() && 
-				(user == null || !user.getRecordGroupIds().contains(place.getRecordGroupId())))
-			return false;
-		else
-			return true;
 	}
 }

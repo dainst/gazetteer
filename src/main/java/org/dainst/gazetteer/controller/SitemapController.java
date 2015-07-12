@@ -1,18 +1,16 @@
 package org.dainst.gazetteer.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+import org.dainst.gazetteer.dao.GroupRoleRepository;
 import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.domain.Place;
-import org.dainst.gazetteer.domain.User;
+import org.dainst.gazetteer.helpers.PlaceAccessService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,10 +20,11 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class SitemapController {
 
-	//private static final Logger LOGGER = LoggerFactory.getLogger(SitemapController.class);
-	
 	@Autowired
 	private PlaceRepository placeDao;
+	
+	@Autowired
+	private GroupRoleRepository groupRoleDao;
 	
 	@Value("${baseUri}")
 	private String baseUri;
@@ -48,8 +47,10 @@ public class SitemapController {
 		
 		Map<String, Boolean> accessMap = new HashMap<String, Boolean>();
 		
+		PlaceAccessService placeAccessService = new PlaceAccessService(groupRoleDao);
+		
 		for (Place place : places) {
-			accessMap.put(place.getId(), checkPlaceAccess(place));
+			accessMap.put(place.getId(), placeAccessService.checkPlaceAccess(place));
 		}
 		
 		mav.addObject("no", no);
@@ -57,19 +58,5 @@ public class SitemapController {
 		mav.addObject("places", places.getContent());
 		mav.addObject("accessMap", accessMap);
 		return mav;
-	}
-	
-	private boolean checkPlaceAccess(Place place) {
-		User user = null;
-		
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		if (principal instanceof User)
-			user = (User) principal;
-		
-		if (place.getRecordGroupId() != null && !place.getRecordGroupId().isEmpty() && 
-				(user == null || !user.getRecordGroupIds().contains(place.getRecordGroupId())))
-			return false;
-		else
-			return true;
 	}
 }

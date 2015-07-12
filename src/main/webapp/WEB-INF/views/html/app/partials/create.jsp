@@ -62,7 +62,7 @@
 					<div class="controls">
 						<select ng-model="place.recordGroupId" class="input-large">
 							<option value="">${recordGroupNotSpecified}</option>
-							<c:forEach var="recordGroup" items="${recordGroups}">
+							<c:forEach var="recordGroup" items="${editRecordGroups}">
 								<option value="${recordGroup.id}">${recordGroup.name}</option>
 							</c:forEach>
 						</select>

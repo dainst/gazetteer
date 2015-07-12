@@ -1,18 +1,24 @@
 package org.dainst.gazetteer.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.dainst.gazetteer.dao.GroupRoleRepository;
 import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.dao.RecordGroupRepository;
 import org.dainst.gazetteer.dao.UserRepository;
-import org.dainst.gazetteer.domain.Place;
+import org.dainst.gazetteer.domain.GroupRole;
 import org.dainst.gazetteer.domain.RecordGroup;
 import org.dainst.gazetteer.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,41 +36,58 @@ public class RecordGroupController {
 	@Autowired
 	private PlaceRepository placeDao;
 	
+	@Autowired
+	private GroupRoleRepository groupRoleDao;
+	
+	@Value("${version}")
+	private String version;
+	
 	
 	@RequestMapping(value="/recordGroupManagement")
 	public String getRecordGroupManagement(@RequestParam(required=false) String deleteRecordGroupId, ModelMap model) {
-	
-		List<RecordGroup> recordGroups = (List<RecordGroup>) recordGroupDao.findAll();
+		
+		List<RecordGroup> recordGroups = null;
+		if (isAdminEdit())
+			recordGroups = (List<RecordGroup>) recordGroupDao.findAll();
+		else {
+			recordGroups = new ArrayList<RecordGroup>();
+			User user = getUser();
+			
+			List<GroupRole> groupRoles = groupRoleDao.findByUserId(user.getId());			
+			for (GroupRole role : groupRoles) {
+				if (role.getRoleType().equals("admin")) {
+					recordGroups.add(recordGroupDao.findOne(role.getGroupId()));
+				}
+			}
+		}		
 		
 		if (deleteRecordGroupId != null && !deleteRecordGroupId.isEmpty()) {
 			RecordGroup recordGroup = recordGroupDao.findOne(deleteRecordGroupId);			
-			List<Place> assignedPlaces = placeDao.findByRecordGroupIdAndDeletedIsFalse(deleteRecordGroupId);		
-			if (assignedPlaces.size() == 0) {
-				List<User> members = userDao.findByRecordGroupIds(deleteRecordGroupId);
-				for (User member : members) {
-					member.getRecordGroupIds().remove(deleteRecordGroupId);
-					userDao.save(member);
+			long placeCount = placeDao.getCountByRecordGroupIdAndDeletedIsFalse(deleteRecordGroupId);		
+			if (placeCount == 0) {
+				List<GroupRole> groupRoles = groupRoleDao.findByGroupId(deleteRecordGroupId);
+				for (GroupRole role : groupRoles) {
+					groupRoleDao.delete(role);
 				}
 				recordGroupDao.delete(recordGroup);
 				model.addAttribute("deletedRecordGroup", recordGroup.getName());
 			}
 		}
 		
-		recordGroups = (List<RecordGroup>) recordGroupDao.findAll();
-		
-		Map<String, Integer> recordGroupMembers = new HashMap<String, Integer>();
-		Map<String, Integer> recordGroupPlaces = new HashMap<String, Integer>();
+		Map<String, Long> recordGroupMembers = new HashMap<String, Long>();
+		Map<String, Long> recordGroupPlaces = new HashMap<String, Long>();
 		for (RecordGroup recordGroup : recordGroups) {
-			List<User> members = userDao.findByRecordGroupIds(recordGroup.getId());
-			List<Place> assignedPlaces = placeDao.findByRecordGroupIdAndDeletedIsFalse(recordGroup.getId());
+			Long memberCount = groupRoleDao.getCountByGroupId(recordGroup.getId());
+			Long placeCount = placeDao.getCountByRecordGroupIdAndDeletedIsFalse(recordGroup.getId());
 
-			recordGroupMembers.put(recordGroup.getId(), members.size());
-			recordGroupPlaces.put(recordGroup.getId(), assignedPlaces.size());
+			recordGroupMembers.put(recordGroup.getId(), memberCount);
+			recordGroupPlaces.put(recordGroup.getId(), placeCount);
 		}
 		
 		model.addAttribute("recordGroups", recordGroups);
 		model.addAttribute("recordGroupMembers", recordGroupMembers);
 		model.addAttribute("recordGroupPlaces", recordGroupPlaces);
+		model.addAttribute("version", version);
 		
 		return "recordGroupManagement";
 	}
@@ -85,5 +108,69 @@ public class RecordGroupController {
 		}		
 		
 		return getRecordGroupManagement(null, model);
+	}
+	
+	@RequestMapping(value="/recordGroupUserManagement")
+	public String getRecordGroupUserManagement(@RequestParam(required=true) String groupId, ModelMap model) {
+
+		RecordGroup group = recordGroupDao.findOne(groupId);		
+		List<GroupRole> roles = groupRoleDao.findByGroupId(groupId);
+		List<User> users = new ArrayList<User>();
+		Map<String, GroupRole> roleMap = new HashMap<String, GroupRole>();
+		
+		for (GroupRole role : roles) {
+			users.add(userDao.findOne(role.getUserId()));
+			roleMap.put(role.getUserId(), role);
+		}		
+		
+		model.addAttribute("recordGroup", group);
+		model.addAttribute("users", users);
+		model.addAttribute("roles", roleMap);
+		model.addAttribute("version", version);
+		
+		return "recordGroupUserManagement";
+	}
+	
+	@RequestMapping(value="/checkRecordGroupUserForm")
+	public String checkRecordGroupUserForm(HttpServletRequest request, @RequestParam(required=true) String groupId,
+			@RequestParam(required=true) String userId, ModelMap model) {
+		
+		GroupRole editorRole = groupRoleDao.findByGroupIdAndUserId(groupId, getUser().getId());
+		if (!isAdminEdit() && (editorRole == null || !editorRole.getRoleType().equals("admin")))
+			return "redirect:app/#!/home";
+		
+		GroupRole role = groupRoleDao.findByGroupIdAndUserId(groupId, userId);
+		
+		if (role == null)
+			throw new IllegalStateException("No group role found for groupId " + groupId + " and userId " + userId);
+		
+		String roleType = request.getParameter("access");
+		role.setRoleType(roleType);
+		
+		groupRoleDao.save(role);
+		
+		return getRecordGroupUserManagement(groupId, model);
+	}
+	
+	private boolean isAdminEdit() {
+		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		for (GrantedAuthority authority : authentication.getAuthorities()) {
+			if (authority.getAuthority().equals("ROLE_ADMIN")) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	private User getUser() {
+		
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal instanceof User)
+			return (User) principal;
+		else
+			return null;
 	}
 }

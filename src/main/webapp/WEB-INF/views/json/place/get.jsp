@@ -10,7 +10,8 @@
 response.setHeader("Content-Type", "application/json; charset=utf-8");
 Place place = (Place) request.getAttribute("place");
 List<Place> parents = (List<Place>) request.getAttribute("parents");
-Boolean accessGranted = (Boolean) request.getAttribute("accessGranted");
+Boolean readAccess = (Boolean) request.getAttribute("readAccess");
+Boolean editAccess = (Boolean) request.getAttribute("editAccess");
 String baseUri = (String) request.getAttribute("baseUri");
 UserRepository userDao = (UserRepository) request.getAttribute("userDao");
 PlaceChangeRecordRepository changeRecordDao = (PlaceChangeRecordRepository) request.getAttribute("changeRecordDao");
@@ -19,4 +20,4 @@ JsonPlaceSerializer serializer = new JsonPlaceSerializer(baseUri);
 
 %>
 
-<%= serializer.serialize(place, userDao, changeRecordDao, request, parents, accessGranted) %>
+<%= serializer.serialize(place, userDao, changeRecordDao, request, parents, readAccess, editAccess) %>

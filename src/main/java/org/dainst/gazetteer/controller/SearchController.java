@@ -11,10 +11,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.dainst.gazetteer.converter.JsonPlaceDeserializer;
+import org.dainst.gazetteer.dao.GroupRoleRepository;
 import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.dao.UserRepository;
+import org.dainst.gazetteer.domain.GroupRole;
 import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.User;
+import org.dainst.gazetteer.helpers.PlaceAccessService;
 import org.dainst.gazetteer.helpers.ProtectLocationsService;
 import org.dainst.gazetteer.search.ElasticSearchPlaceQuery;
 import org.dainst.gazetteer.search.ElasticSearchSuggestionQuery;
@@ -51,6 +54,9 @@ public class SearchController {
 	
 	@Autowired
 	private UserRepository userDao;
+	
+	@Autowired
+	private GroupRoleRepository groupRoleDao;
 	
 	@Autowired
 	private JsonPlaceDeserializer jsonPlaceDeserializer;
@@ -122,16 +128,20 @@ public class SearchController {
 		
 		if (!showHiddenPlaces) {
 			String recordGroupFilter = "_missing_:recordGroupId";
-			if (user != null && user.getRecordGroupIds().size() > 0) {
-				boolean first = true;
-				recordGroupFilter += " OR recordGroupId:(";
-				for (String recordGroupId : user.getRecordGroupIds()) {
-					if (!first)
-						recordGroupFilter += " OR ";
-					recordGroupFilter += recordGroupId;
-					first = false;
+			if (user != null) {
+				List<GroupRole> groupRoles = groupRoleDao.findByUserId(user.getId());			
+				if (groupRoles.size() > 0) {
+					boolean first = true;
+					recordGroupFilter += " OR recordGroupId:(";
+					for (GroupRole groupRole : groupRoles) {
+						if (first)
+							first = false;
+						else
+							recordGroupFilter += " OR ";
+						recordGroupFilter += groupRole.getGroupId();
+					}
+					recordGroupFilter += ")";
 				}
-				recordGroupFilter += ")";
 			}
 			query.addFilter(recordGroupFilter);
 		}
@@ -177,10 +187,11 @@ public class SearchController {
 		
 		Map<String, List<Place>> parents = new HashMap<String, List<Place>>();
 		Map<String, Boolean> accessMap = new HashMap<String, Boolean>();
+		PlaceAccessService placeAccessService = new PlaceAccessService(groupRoleDao);
 		
 		for (Place place : places) {
 			protectLocationsService.protectLocations(user, place);
-			accessMap.put(place.getId(), checkPlaceAccess(place));
+			accessMap.put(place.getId(), placeAccessService.checkPlaceAccess(place));
 
 			if (createParentLists) {
 				List<Place> placeParents = new ArrayList<Place>();
@@ -238,16 +249,20 @@ public class SearchController {
 		query.addFilter("deleted:false");
 		
 		String recordGroupFilter = "_missing_:recordGroupId";
-		if (user != null && user.getRecordGroupIds().size() > 0) {
-			boolean first = true;
-			recordGroupFilter += " OR recordGroupId:(";
-			for (String recordGroupId : user.getRecordGroupIds()) {
-				if (!first)
-					recordGroupFilter += " OR ";
-				recordGroupFilter += recordGroupId;
-				first = false;
+		if (user != null) {
+			List<GroupRole> groupRoles = groupRoleDao.findByUserId(user.getId());			
+			if (groupRoles.size() > 0) {
+				boolean first = true;
+				recordGroupFilter += " OR recordGroupId:(";
+				for (GroupRole groupRole : groupRoles) {
+					if (first)
+						first = false;
+					else
+						recordGroupFilter += " OR ";
+					recordGroupFilter += groupRole.getGroupId();
+				}
+				recordGroupFilter += ")";
 			}
-			recordGroupFilter += ")";
 		}
 		query.addFilter(recordGroupFilter);
 		
@@ -265,10 +280,11 @@ public class SearchController {
 		List<Place> places = placesForList(result, true);
 		Map<String,List<String[]>> facets = processFacets(query, locale);
 		Map<String, Boolean> accessMap = new HashMap<String, Boolean>();
+		PlaceAccessService placeAccessService = new PlaceAccessService(groupRoleDao);
 		
 		for (Place place : places) {
 			protectLocationsService.protectLocations(user, place);
-			accessMap.put(place.getId(), checkPlaceAccess(place));
+			accessMap.put(place.getId(), placeAccessService.checkPlaceAccess(place));
 		}
 		
 		ModelAndView mav = new ModelAndView("place/list");
@@ -312,16 +328,20 @@ public class SearchController {
 		query.addFilter("deleted:false");
 		
 		String recordGroupFilter = "_missing_:recordGroupId";
-		if (user != null && user.getRecordGroupIds().size() > 0) {
-			boolean first = true;
-			recordGroupFilter += " OR recordGroupId:(";
-			for (String recordGroupId : user.getRecordGroupIds()) {
-				if (!first)
-					recordGroupFilter += " OR ";
-				recordGroupFilter += recordGroupId;
-				first = false;
+		if (user != null) {
+			List<GroupRole> groupRoles = groupRoleDao.findByUserId(user.getId());			
+			if (groupRoles.size() > 0) {
+				boolean first = true;
+				recordGroupFilter += " OR recordGroupId:(";
+				for (GroupRole groupRole : groupRoles) {
+					if (first)
+						first = false;
+					else
+						recordGroupFilter += " OR ";
+					recordGroupFilter += groupRole.getGroupId();
+				}
+				recordGroupFilter += ")";
 			}
-			recordGroupFilter += ")";
 		}
 		query.addFilter(recordGroupFilter);
 		
@@ -343,10 +363,11 @@ public class SearchController {
 		List<Place> places = placesForList(result, true);
 		
 		Map<String, Boolean> accessMap = new HashMap<String, Boolean>();
+		PlaceAccessService placeAccessService = new PlaceAccessService(groupRoleDao);
 		
 		for (Place place : places) {
 			protectLocationsService.protectLocations(user, place);
-			accessMap.put(place.getId(), checkPlaceAccess(place));
+			accessMap.put(place.getId(), placeAccessService.checkPlaceAccess(place));
 		}
 		
 		ModelAndView mav = new ModelAndView("place/list");
@@ -497,10 +518,11 @@ public class SearchController {
 			user = (User) principal;
 		
 		Map<String, Boolean> accessMap = new HashMap<String, Boolean>();
+		PlaceAccessService placeAccessService = new PlaceAccessService(groupRoleDao);
 		
 		for (Place place : places) {
 			protectLocationsService.protectLocations(user, place);
-			accessMap.put(place.getId(), checkPlaceAccess(place));
+			accessMap.put(place.getId(), placeAccessService.checkPlaceAccess(place));
 		}
 		
 		ModelAndView mav = new ModelAndView("place/list");
@@ -527,19 +549,5 @@ public class SearchController {
 				createParentsList(parent, parents, includePolygons);
 			}
 		}
-	}
-	
-	private boolean checkPlaceAccess(Place place) {
-		User user = null;
-		
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		if (principal instanceof User)
-			user = (User) principal;
-		
-		if (place.getRecordGroupId() != null && !place.getRecordGroupId().isEmpty() && 
-				(user == null || !user.getRecordGroupIds().contains(place.getRecordGroupId())))
-			return false;
-		else
-			return true;
 	}
 }

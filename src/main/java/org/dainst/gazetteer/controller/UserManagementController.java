@@ -15,9 +15,11 @@ import java.util.concurrent.TimeUnit;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.dainst.gazetteer.dao.GroupRoleRepository;
 import org.dainst.gazetteer.dao.RecordGroupRepository;
 import org.dainst.gazetteer.dao.UserPasswordChangeRequestRepository;
 import org.dainst.gazetteer.dao.UserRepository;
+import org.dainst.gazetteer.domain.GroupRole;
 import org.dainst.gazetteer.domain.User;
 import org.dainst.gazetteer.domain.RecordGroup;
 import org.dainst.gazetteer.domain.UserPasswordChangeRequest;
@@ -50,6 +52,9 @@ public class UserManagementController {
 	
 	@Autowired
 	private RecordGroupRepository recordGroupDao;
+	
+	@Autowired
+	private GroupRoleRepository groupRoleDao;
 	
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
@@ -168,8 +173,8 @@ public class UserManagementController {
 	@RequestMapping(value="/userManagement")
 	public String getUserManagement(@RequestParam(required=false) String sort, @RequestParam(required=false) boolean isDescending,
 									@RequestParam(required=false) Integer page, @RequestParam(required=false) String showUser,
-									@RequestParam(required=false) String showRecordGroupMembers, @RequestParam(required=false) boolean deleteUser,
-									@RequestParam(required=false) String deleteUserId, ModelMap model) {
+									@RequestParam(required=false) boolean deleteUser, @RequestParam(required=false) String deleteUserId,
+									ModelMap model) {
 		
 		if (deleteUser) {			
 			User user = userDao.findById(deleteUserId);
@@ -296,12 +301,7 @@ public class UserManagementController {
 					break;
 				}
 			}
-			
-			if (showRecordGroupMembers != null && showRecordGroupMembers != "") {
-				List<User> nonMembers = userDao.findByRecordGroupIdsNot(showRecordGroupMembers);
-				users.removeAll(nonMembers);
-			}
-		
+					
 			pages = (users.size() + usersPerPage - 1) / usersPerPage;
 		
 			if (page == null || page < 0)
@@ -322,7 +322,6 @@ public class UserManagementController {
 		model.addAttribute("users", users);		
 		model.addAttribute("isDescending", isDescending);
 		model.addAttribute("lastSorting", sort);
-		model.addAttribute("showRecordGroupMembers", showRecordGroupMembers);
 		model.addAttribute("version", version);
 		
 		return "userManagement";
@@ -344,10 +343,18 @@ public class UserManagementController {
 		List<RecordGroup> recordGroups = (List<RecordGroup>) recordGroupDao.findAll();
 		
 		if (adminEdit) {
+			
+			List<String> adminGroupIds = new ArrayList<String>();
+			
+			List<GroupRole> groupRoles = groupRoleDao.findByUserId(user.getId());			
+			for (GroupRole role : groupRoles) {
+				if (role.getRoleType().equals("admin") && adminGroupIds.indexOf(role.getGroupId()) == -1)
+					adminGroupIds.add(role.getGroupId());
+			}
 		
 			Map<String, Boolean> recordGroupValues = new HashMap<String, Boolean>();
 			for (RecordGroup recordGroup : recordGroups) {
-				if (user.getRecordGroupIds().contains(recordGroup.getId()))
+				if (adminGroupIds.contains(recordGroup.getId()))
 					recordGroupValues.put(recordGroup.getId(), true);
 				else
 					recordGroupValues.put(recordGroup.getId(), false);
@@ -414,19 +421,29 @@ public class UserManagementController {
 				authorities.add(new SimpleGrantedAuthority("ROLE_REISESTIPENDIUM"));
 			
 			List<String> selectedRecordGroupIds = new ArrayList<String>();
-			if (request.getParameterValues("edit_record_groups") != null)
-				selectedRecordGroupIds = new ArrayList<String>(Arrays.asList(request.getParameterValues("edit_record_groups")));
+			if (request.getParameterValues("edit_group_admins") != null)
+				selectedRecordGroupIds = new ArrayList<String>(Arrays.asList(request.getParameterValues("edit_group_admins")));
 			for (RecordGroup recordGroup : recordGroups) {
 				if (selectedRecordGroupIds.contains(recordGroup.getId())) {
 					recordGroupValues.put(recordGroup.getId(), true);
-					if (!user.getRecordGroupIds().contains(recordGroup.getId()))
-						user.getRecordGroupIds().add(recordGroup.getId());
+					GroupRole existingRole = groupRoleDao.findByGroupIdAndUserId(recordGroup.getId(), user.getId());
+					if (existingRole == null) {
+						GroupRole adminRole = new GroupRole();
+						adminRole.setGroupId(recordGroup.getId());
+						adminRole.setUserId(user.getId());
+						adminRole.setRoleType("admin");
+						groupRoleDao.save(adminRole);
+					} else {
+						existingRole.setRoleType("admin");
+						groupRoleDao.save(existingRole);
+					}
 				}
 				
 				if (!selectedRecordGroupIds.contains(recordGroup.getId())) {
 					recordGroupValues.put(recordGroup.getId(), false);
-					if (user.getRecordGroupIds().contains(recordGroup.getId()))
-						user.getRecordGroupIds().remove(recordGroup.getId());
+					GroupRole role = groupRoleDao.findByGroupIdAndUserId(recordGroup.getId(), user.getId());
+					if (role.getRoleType().equals("admin"))
+						groupRoleDao.delete(role.getId());
 				}
 			}
 		}
@@ -499,7 +516,7 @@ public class UserManagementController {
 		model.addAttribute("version", version);
 	
 		if (r != null && r.equals("userManagement") && adminEdit)
-			return getUserManagement(null, false, 0, null, null, false, null, model);
+			return getUserManagement(null, false, 0, null, false, null, model);
 		else if (r != null && !r.equals(""))
 			return "redirect:app/#!/" + r;
 		else

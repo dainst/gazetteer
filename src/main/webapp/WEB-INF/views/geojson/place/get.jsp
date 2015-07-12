@@ -9,7 +9,8 @@
 
 response.setHeader("Content-Type", "application/json; charset=utf-8");
 Place place = (Place) request.getAttribute("place");
-Boolean accessGranted = (Boolean) request.getAttribute("accessGranted");
+Boolean readAccess = (Boolean) request.getAttribute("readAccess");
+Boolean editAccess = (Boolean) request.getAttribute("editAccess");
 String baseUri = (String) request.getAttribute("baseUri");
 UserRepository userDao = (UserRepository) request.getAttribute("userDao");
 PlaceChangeRecordRepository changeRecordDao = (PlaceChangeRecordRepository) request.getAttribute("changeRecordDao");
@@ -18,4 +19,4 @@ JsonPlaceSerializer serializer = new JsonPlaceSerializer(baseUri);
 
 %>
 
-<%= serializer.serializeGeoJson(place, userDao, changeRecordDao, request, accessGranted) %>
+<%= serializer.serializeGeoJson(place, userDao, changeRecordDao, request, readAccess, editAccess) %>

@@ -33,8 +33,10 @@ public class User implements UserDetails {
 	private boolean enabled;
 
 	private List<GrantedAuthority> authorities;
-	private Set<String> recordGroupIds = new HashSet<String>();
 	
+	// Deprecated!
+	private Set<String> recordGroupIds = new HashSet<String>();
+		
 
 	public User(String username, String firstname, String lastname, String institution,
 				String email, String password, Date registrationDate, List<GrantedAuthority> authorities) {

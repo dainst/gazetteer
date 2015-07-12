@@ -9,7 +9,9 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.dainst.gazetteer.dao.GroupRoleRepository;
 import org.dainst.gazetteer.dao.RecordGroupRepository;
+import org.dainst.gazetteer.domain.GroupRole;
 import org.dainst.gazetteer.domain.User;
 import org.dainst.gazetteer.domain.RecordGroup;
 import org.dainst.gazetteer.helpers.LanguagesHelper;
@@ -53,6 +55,9 @@ public class AppController {
 	
 	@Autowired
 	private RecordGroupRepository recordGroupDao;
+	
+	@Autowired
+	private GroupRoleRepository groupRoleDao;
 	
 	@Autowired
 	LanguagesHelper langHelper;
@@ -103,14 +108,19 @@ public class AppController {
 		if (principal != null && principal instanceof User) {
 			user = (User) principal;
 		
-			List<RecordGroup> recordGroups = (List<RecordGroup>) recordGroupDao.findAll();
-			List<RecordGroup> availableRecordGroups = new ArrayList<RecordGroup>();
-			for (RecordGroup recordGroup : recordGroups) {
-				if (user.getRecordGroupIds().contains(recordGroup.getId()))
-					availableRecordGroups.add(recordGroup);
+			List<RecordGroup> recordGroups = new ArrayList<RecordGroup>();
+			List<RecordGroup> editRecordGroups = new ArrayList<RecordGroup>();
+			List<GroupRole> groupRoles = groupRoleDao.findByUserId(user.getId());
+			for (GroupRole groupRole : groupRoles) {
+				RecordGroup group = recordGroupDao.findOne(groupRole.getGroupId());
+				if (groupRole.getRoleType().equals("admin") || groupRole.getRoleType().equals("edit") || groupRole.getRoleType().equals("read"))
+					recordGroups.add(group);
+				if (groupRole.getRoleType().equals("admin") || groupRole.getRoleType().equals("edit"))
+					editRecordGroups.add(group);
 			}
 			
-			model.addAttribute("recordGroups", availableRecordGroups.toArray());
+			model.addAttribute("recordGroups", recordGroups.toArray());
+			model.addAttribute("editRecordGroups", editRecordGroups.toArray());
 		}
 		
 		model.addAttribute("baseUri",baseUri);
