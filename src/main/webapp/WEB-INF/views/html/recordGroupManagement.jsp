@@ -56,7 +56,7 @@
 		   							</a>
 		   						</li>
 		   					</sec:authorize>
-		   					<sec:authorize access="hasRole('ROLE_ADMIN')">
+		   					<sec:authorize access="hasRole('ROLE_USER')">
 		   						<li>
 		   							<a href="recordGroupManagement">
 		   								<s:message code="ui.recordGroupManagement" text="ui.recordGroupManagement"/>
@@ -153,75 +153,82 @@
 					</form>
 				</sec:authorize>
 				
-				<table class="table table-condensed table-hover user-management-table">
-					<thead>
-						<tr>			
-							<th><s:message code="user.recordGroup.name" text="user.recordGroup.name" /></th>
-							<th><s:message code="user.recordGroup.creationDate" text="user.recordGroup.creationDate" /></th>
-							<th><s:message code="user.recordGroup.members" text="user.recordGroup.members" /></th>
-							<th><s:message code="user.recordGroup.places" text="user.recordGroup.places" /></th>
-							<th><s:message code="ui.recordGroupUserManagement.access" text="ui.recordGroupUserManagement.access" /></th>
-							<c:if test="${groupRights[recordGroup.id] == 'admin'}">
-								<th></th>
-							</c:if>
-						</tr>
-					</thead>
-					<tbody>
-						<c:forEach var="recordGroup" items="${recordGroups}">
-		    				<tr>
-								<td>${recordGroup.name}</td>
-								<td>${recordGroup.creationDateAsText}</td>
-								<td>${recordGroupMembers[recordGroup.id]}</td>
-								<c:choose>
-									<c:when test="${recordGroupPlaces[recordGroup.id] > 0}">
-										<td><a href="app/#!/search?q=recordGroupId:${recordGroup.id}">${recordGroupPlaces[recordGroup.id]}</a></td>
-									</c:when>
-									<c:otherwise>
-										<td>${recordGroupPlaces[recordGroup.id]}</td>
-									</c:otherwise>
-								</c:choose>
-								<td><s:message code="ui.recordGroupUserManagement.access.${groupRights[recordGroup.id]}" text="ui.recordGroupUserManagement.access.${groupRights[recordGroup.id]}" /></td>
-								<td>
+				<c:choose>
+					<c:when test="${empty recordGroups}">
+						<em><s:message code="ui.recordGroupManagement.noRecordGroups" text="ui.recordGroupManagement.noRecordGroups" /></em>
+					</c:when>
+					<c:otherwise>
+						<table class="table table-condensed table-hover user-management-table">
+							<thead>
+								<tr>			
+									<th><s:message code="user.recordGroup.name" text="user.recordGroup.name" /></th>
+									<th><s:message code="user.recordGroup.creationDate" text="user.recordGroup.creationDate" /></th>
+									<th><s:message code="user.recordGroup.members" text="user.recordGroup.members" /></th>
+									<th><s:message code="user.recordGroup.places" text="user.recordGroup.places" /></th>
+									<th><s:message code="ui.recordGroupUserManagement.access" text="ui.recordGroupUserManagement.access" /></th>
 									<c:if test="${groupRights[recordGroup.id] == 'admin'}">
-										<a href="recordGroupUserManagement?groupId=${recordGroup.id}" class="btn btn-primary">&nbsp;<s:message code="ui.recordGroupManagement.manage" text="ui.recordGroupManagement.manage" />&nbsp;</a>
+										<th></th>
 									</c:if>
-									<sec:authorize access="hasRole('ROLE_ADMIN')">
-										<a href="#deleteGroupModal_${recordGroup.id}" class="btn btn-danger" data-toggle="modal">&nbsp;<s:message code="ui.delete" text="ui.delete" />&nbsp;</a>
-									</sec:authorize>
-								</td>
-							</tr>
-							
-							<div class="modal hide fade" id="deleteGroupModal_${recordGroup.id}">
-								<c:choose>
-									<c:when test="${recordGroupPlaces[recordGroup.id] == 0}">
-										<div class="modal-header">
-											<h3><s:message code="ui.deleteRecordGroup" text="ui.deleteRecordGroup"/>?</h3>
-										</div>
-										<div class="modal-body">
-											<s:message code="ui.deleteRecordGroup.really" text="ui.deleteRecordGroup.really" arguments="${recordGroup.name}"/>
-										</div>
-										<div class="modal-footer">
-											<a href="#" class="btn" data-dismiss="modal" aria-hidden="true"><s:message code="ui.cancel" text="ui.cancel"/></a>
-											<a href="recordGroupManagement?deleteRecordGroupId=${recordGroup.id}" class="btn btn-danger" aria-hidden="true"><s:message code="ui.delete" text="ui.delete"/></a>
-										</div>
-									</c:when>
-									<c:otherwise>
-										<div class="modal-header">
-											<h3><s:message code="ui.deleteRecordGroup.notAllowed" text="ui.deleteRecordGroup.notAllowed"/></h3>
-										</div>
-										<div class="modal-body">
-											<s:message code="ui.deleteRecordGroup.notAllowedInfo" text="ui.deleteRecordGroup.notAllowedInfo" arguments="${recordGroup.name}"/>
-										</div>
-										<div class="modal-footer">
-											<a href="#" class="btn" data-dismiss="modal" aria-hidden="true"><s:message code="ui.ok" text="ui.ok"/></a>
-										</div>
-									</c:otherwise>
-								</c:choose>
-							</div>
-														
-						</c:forEach>
-					</tbody>
-				</table>
+								</tr>
+							</thead>
+							<tbody>
+								<c:forEach var="recordGroup" items="${recordGroups}">
+		    						<tr>
+										<td>${recordGroup.name}</td>
+										<td>${recordGroup.creationDateAsText}</td>
+										<td>${recordGroupMembers[recordGroup.id]}</td>
+										<c:choose>
+											<c:when test="${recordGroupPlaces[recordGroup.id] > 0}">
+												<td><a href="app/#!/search?q=recordGroupId:${recordGroup.id}">${recordGroupPlaces[recordGroup.id]}</a></td>
+											</c:when>
+											<c:otherwise>
+												<td>${recordGroupPlaces[recordGroup.id]}</td>
+											</c:otherwise>
+										</c:choose>
+										<td><s:message code="ui.recordGroupUserManagement.access.${groupRights[recordGroup.id]}" text="ui.recordGroupUserManagement.access.${groupRights[recordGroup.id]}" /></td>
+										<td>
+											<c:if test="${groupRights[recordGroup.id] == 'admin'}">
+												<a href="recordGroupUserManagement?groupId=${recordGroup.id}" class="btn btn-primary">&nbsp;<s:message code="ui.recordGroupManagement.manage" text="ui.recordGroupManagement.manage" />&nbsp;</a>
+											</c:if>
+											<sec:authorize access="hasRole('ROLE_ADMIN')">
+												<a href="#deleteGroupModal_${recordGroup.id}" class="btn btn-danger" data-toggle="modal">&nbsp;<s:message code="ui.delete" text="ui.delete" />&nbsp;</a>
+											</sec:authorize>
+										</td>
+									</tr>
+
+									<div class="modal hide fade" id="deleteGroupModal_${recordGroup.id}">
+										<c:choose>
+											<c:when test="${recordGroupPlaces[recordGroup.id] == 0}">
+												<div class="modal-header">
+													<h3><s:message code="ui.deleteRecordGroup" text="ui.deleteRecordGroup"/>?</h3>
+												</div>
+												<div class="modal-body">
+													<s:message code="ui.deleteRecordGroup.really" text="ui.deleteRecordGroup.really" arguments="${recordGroup.name}"/>
+												</div>
+												<div class="modal-footer">
+													<a href="#" class="btn" data-dismiss="modal" aria-hidden="true"><s:message code="ui.cancel" text="ui.cancel"/></a>
+													<a href="recordGroupManagement?deleteRecordGroupId=${recordGroup.id}" class="btn btn-danger" aria-hidden="true"><s:message code="ui.delete" text="ui.delete"/></a>
+												</div>
+											</c:when>
+											<c:otherwise>
+												<div class="modal-header">
+													<h3><s:message code="ui.deleteRecordGroup.notAllowed" text="ui.deleteRecordGroup.notAllowed"/></h3>
+												</div>
+												<div class="modal-body">
+													<s:message code="ui.deleteRecordGroup.notAllowedInfo" text="ui.deleteRecordGroup.notAllowedInfo" arguments="${recordGroup.name}"/>
+												</div>
+												<div class="modal-footer">
+													<a href="#" class="btn" data-dismiss="modal" aria-hidden="true"><s:message code="ui.ok" text="ui.ok"/></a>
+												</div>
+											</c:otherwise>
+										</c:choose>
+									</div>
+
+								</c:forEach>
+							</tbody>
+						</table>
+					</c:otherwise>
+				</c:choose>
 						
 				<!-- Footer -->
 				<gaz:footer/>

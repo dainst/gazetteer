@@ -57,7 +57,7 @@
 		   							</a>
 		   						</li>
 		   					</sec:authorize>
-		   					<sec:authorize access="hasRole('ROLE_ADMIN')">
+		   					<sec:authorize access="hasRole('ROLE_USER')">
 		   						<li>
 		   							<a href="recordGroupManagement">
 		   								<s:message code="ui.recordGroupManagement" text="ui.recordGroupManagement"/>

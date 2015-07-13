@@ -75,11 +75,11 @@
 	   							</li>
 	   						</sec:authorize>
 	   						<sec:authorize access="hasRole('ROLE_USER')">
-	   							<li>
-	   								<a href="../recordGroupManagement">
-	   									<s:message code="ui.recordGroupManagement" text="ui.recordGroupManagement"/>
-	   								</a>
-	   							</li>
+   								<li>
+   									<a href="../recordGroupManagement">
+   										<s:message code="ui.recordGroupManagement" text="ui.recordGroupManagement"/>
+   									</a>
+   								</li>
 	   						</sec:authorize>
 	   						<li class="divider"></li>
 	  						<li>
