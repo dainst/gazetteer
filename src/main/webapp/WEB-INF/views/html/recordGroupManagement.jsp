@@ -160,7 +160,10 @@
 							<th><s:message code="user.recordGroup.creationDate" text="user.recordGroup.creationDate" /></th>
 							<th><s:message code="user.recordGroup.members" text="user.recordGroup.members" /></th>
 							<th><s:message code="user.recordGroup.places" text="user.recordGroup.places" /></th>
-							<th></th>
+							<th><s:message code="ui.recordGroupUserManagement.access" text="ui.recordGroupUserManagement.access" /></th>
+							<c:if test="${groupRights[recordGroup.id] == 'admin'}">
+								<th></th>
+							</c:if>
 						</tr>
 					</thead>
 					<tbody>
@@ -177,8 +180,11 @@
 										<td>${recordGroupPlaces[recordGroup.id]}</td>
 									</c:otherwise>
 								</c:choose>
+								<td><s:message code="ui.recordGroupUserManagement.access.${groupRights[recordGroup.id]}" text="ui.recordGroupUserManagement.access.${groupRights[recordGroup.id]}" /></td>
 								<td>
-									<a href="recordGroupUserManagement?groupId=${recordGroup.id}" class="btn btn-primary">&nbsp;<s:message code="ui.recordGroupManagement.manage" text="ui.recordGroupManagement.manage" />&nbsp;</a>
+									<c:if test="${groupRights[recordGroup.id] == 'admin'}">
+										<a href="recordGroupUserManagement?groupId=${recordGroup.id}" class="btn btn-primary">&nbsp;<s:message code="ui.recordGroupManagement.manage" text="ui.recordGroupManagement.manage" />&nbsp;</a>
+									</c:if>
 									<sec:authorize access="hasRole('ROLE_ADMIN')">
 										<a href="#deleteGroupModal_${recordGroup.id}" class="btn btn-danger" data-toggle="modal">&nbsp;<s:message code="ui.delete" text="ui.delete" />&nbsp;</a>
 									</sec:authorize>

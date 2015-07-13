@@ -47,22 +47,27 @@ public class RecordGroupController {
 	public String getRecordGroupManagement(@RequestParam(required=false) String deleteRecordGroupId, ModelMap model) {
 		
 		List<RecordGroup> recordGroups = null;
-		if (isAdminEdit())
+		Map<String, String> groupRights = new HashMap<String, String>();
+		if (isAdminEdit()) {
 			recordGroups = (List<RecordGroup>) recordGroupDao.findAll();
+			for (RecordGroup group : recordGroups) {
+				groupRights.put(group.getId(), "admin");
+			}
+		}
 		else {
 			recordGroups = new ArrayList<RecordGroup>();
 			User user = getUser();
 			
 			List<GroupRole> groupRoles = groupRoleDao.findByUserId(user.getId());			
 			for (GroupRole role : groupRoles) {
-				if (role.getRoleType().equals("admin")) {
-					recordGroups.add(recordGroupDao.findOne(role.getGroupId()));
-				}
+				RecordGroup group = recordGroupDao.findOne(role.getGroupId());
+				recordGroups.add(group);
+				groupRights.put(group.getId(), role.getRoleType());
 			}
 		}		
 		
 		if (deleteRecordGroupId != null && !deleteRecordGroupId.isEmpty()) {
-			RecordGroup recordGroup = recordGroupDao.findOne(deleteRecordGroupId);			
+			RecordGroup recordGroup = recordGroupDao.findOne(deleteRecordGroupId);
 			long placeCount = placeDao.getCountByRecordGroupIdAndDeletedIsFalse(deleteRecordGroupId);		
 			if (placeCount == 0) {
 				List<GroupRole> groupRoles = groupRoleDao.findByGroupId(deleteRecordGroupId);
@@ -87,6 +92,7 @@ public class RecordGroupController {
 		model.addAttribute("recordGroups", recordGroups);
 		model.addAttribute("recordGroupMembers", recordGroupMembers);
 		model.addAttribute("recordGroupPlaces", recordGroupPlaces);
+		model.addAttribute("groupRights", groupRights);
 		model.addAttribute("version", version);
 		
 		return "recordGroupManagement";

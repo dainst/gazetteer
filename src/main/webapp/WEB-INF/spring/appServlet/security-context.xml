@@ -14,7 +14,7 @@
 		<intercept-url pattern="/duplicate/**" access="hasRole('ROLE_EDITOR')" method="POST" />
 		<intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')" />
 		<intercept-url pattern="/userManagement/**" access="hasRole('ROLE_ADMIN')" />
-		<intercept-url pattern="/recordGroupManagement/**" access="hasRole('ROLE_ADMIN')" />
+		<intercept-url pattern="/recordGroupManagement/**" access="hasRole('ROLE_USER')" />
 		<intercept-url pattern="/recordGroupUserManagement/**" access="hasRole('ROLE_USER')" />
 		<intercept-url pattern="/editUser/**" access="hasRole('ROLE_USER')" />
 		<intercept-url pattern="/globalChangeHistory/**" access="hasRole('ROLE_EDITOR')" />
