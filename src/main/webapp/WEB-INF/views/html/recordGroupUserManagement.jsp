@@ -116,9 +116,40 @@
 			</div>
 			
 			<div class="gaz-container">
+				<c:if test="${failure eq 'notFound'}">
+					<div class="alert alert-error">
+						<s:message code="ui.recordGroupUserManagement.error.userNotFound" text="ui.recordGroupUserManagement.error.userNotFound" />
+					</div>
+				</c:if>
+			</div>
+			
+			<div class="gaz-container">
+				<c:if test="${failure eq 'alreadyInGroup'}">
+					<div class="alert alert-error">
+						<s:message code="ui.recordGroupUserManagement.error.userAlreadyInGroup" text="ui.recordGroupUserManagement.error.userAlreadyInGroup" />
+					</div>
+				</c:if>
+			</div>
+			
+			<div class="gaz-container">
+				<c:if test="${failure eq 'noInput'}">
+					<div class="alert alert-error">
+						<s:message code="ui.recordGroupUserManagement.error.noInput" text="ui.recordGroupUserManagement.error.noInput" />
+					</div>
+				</c:if>
+			</div>
+			
+			<div class="gaz-container">
 				<h3>
 					${recordGroup.name}
 				</h3>
+				
+				<form class="form-horizontal" name="form" action="checkAddUserToGroupForm?groupId=${recordGroup.id}" accept-charset="UTF-8" method="POST">
+					<s:message code="ui.recordGroupUserManagement.emailOrUsername" text="ui.recordGroupUserManagement.emailOrUsername" var="defaultMessage" />
+					<input type="text" name="email_or_username" value="${emailOrUsername}" placeholder="${defaultMessage}" />
+					<s:message code="ui.recordGroupUserManagement.addUser" text="ui.recordGroupUserManagement.addUser" var="submitValue" />
+					<input type="submit" class="btn btn-primary" value="${submitValue}" />	
+				</form>
 			
 				<table class="table table-condensed table-hover user-management-table">
 					<thead>

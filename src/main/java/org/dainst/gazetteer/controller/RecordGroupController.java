@@ -158,6 +158,48 @@ public class RecordGroupController {
 		return getRecordGroupUserManagement(groupId, model);
 	}
 	
+	@RequestMapping(value="/checkAddUserToGroupForm")
+	public String checkAddUserToGroupForm(HttpServletRequest request, @RequestParam(required=true) String groupId, ModelMap model) {
+	
+		GroupRole editorRole = groupRoleDao.findByGroupIdAndUserId(groupId, getUser().getId());
+		if (!isAdminEdit() && (editorRole == null || !editorRole.getRoleType().equals("admin")))
+			return "redirect:app/#!/home";
+		
+		String emailOrUsername = request.getParameter("email_or_username");
+		
+		if (emailOrUsername.isEmpty()) {
+			model.addAttribute("failure", "noInput");
+		
+			return getRecordGroupUserManagement(groupId, model);
+		}
+		
+		User user = userDao.findByUsername(emailOrUsername);
+		if (user == null)
+			user = userDao.findByEmail(emailOrUsername);
+		if (user == null) {
+			model.addAttribute("emailOrUsername", emailOrUsername);
+			model.addAttribute("failure", "notFound");
+		
+			return getRecordGroupUserManagement(groupId, model);
+		}
+		
+		if (groupRoleDao.findByGroupIdAndUserId(groupId, user.getId()) != null) {
+			model.addAttribute("emailOrUsername", emailOrUsername);
+			model.addAttribute("failure", "alreadyInGroup");
+		
+			return getRecordGroupUserManagement(groupId, model);
+		}
+		
+		
+		GroupRole role = new GroupRole();
+		role.setUserId(user.getId());
+		role.setGroupId(groupId);
+		role.setRoleType("read");
+		groupRoleDao.save(role);
+		
+		return getRecordGroupUserManagement(groupId, model);
+	}
+	
 	private boolean isAdminEdit() {
 		
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

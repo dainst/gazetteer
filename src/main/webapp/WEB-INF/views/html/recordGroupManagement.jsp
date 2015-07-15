@@ -147,7 +147,7 @@
 				<sec:authorize access="hasRole('ROLE_ADMIN')">
 					<form class="form-horizontal" name="form" action="checkCreateRecordGroupForm" accept-charset="UTF-8" method="POST">
 						<s:message code="user.recordGroup.name" text="user.recordGroup.name" var="defaultGroupNameValue" />
-						<input type="text" name="group_name" value="${defaultGroupNameValue}" />
+						<input type="text" name="group_name" value="" placeholder="${defaultGroupNameValue}" />
 						<s:message code="ui.recordGroupManagement.create" text="ui.recordGroupManagement.create" var="submitValue" />
 						<input type="submit" class="btn btn-primary" value="${submitValue}" />	
 					</form>
@@ -160,7 +160,7 @@
 					<c:otherwise>
 						<table class="table table-condensed table-hover user-management-table">
 							<thead>
-								<tr>			
+								<tr>
 									<th><s:message code="user.recordGroup.name" text="user.recordGroup.name" /></th>
 									<th><s:message code="user.recordGroup.creationDate" text="user.recordGroup.creationDate" /></th>
 									<th><s:message code="user.recordGroup.members" text="user.recordGroup.members" /></th>
