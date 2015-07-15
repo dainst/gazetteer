@@ -442,7 +442,7 @@ public class UserManagementController {
 				if (!selectedRecordGroupIds.contains(recordGroup.getId())) {
 					recordGroupValues.put(recordGroup.getId(), false);
 					GroupRole role = groupRoleDao.findByGroupIdAndUserId(recordGroup.getId(), user.getId());
-					if (role.getRoleType().equals("admin"))
+					if (role != null && role.getRoleType().equals("admin"))
 						groupRoleDao.delete(role.getId());
 				}
 			}
