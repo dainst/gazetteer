@@ -721,7 +721,7 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 			offset: ($location.search().offset) ? parseInt($location.search().offset) : 0,
 			limit: ($location.search().limit) ? parseInt($location.search().limit) : 10,
 			q: ($location.search().q) ? ($location.search().q) : "",
-			createParentLists: true
+			add: "parents,access,history"
 		};
 		if ($location.search().fq) $scope.search.fq = $location.search().fq;
 		if ($location.search().type) $scope.search.type = $location.search().type;
@@ -876,7 +876,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, Place,
 		$rootScope.loading++;
 		$scope.place = Place.get({
 			id: $routeParams.id,
-			createParentsList: true
+			add: "parents,access,history"
 		}, function(result) {
 			if (result.deleted) {
 				$rootScope.addAlert(messages["ui.place.deleted"], null, "error");

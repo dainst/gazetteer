@@ -35,6 +35,9 @@ public class JsonPlaceSerializer {
 	private String baseUri;
 	
 	private ObjectMapper mapper;
+
+	private boolean includeAccessInfo = false;
+	private boolean includeChangeHistory = false;
 	
 	public JsonPlaceSerializer(String baseUri) {
 		this.baseUri = baseUri;
@@ -281,11 +284,12 @@ public class JsonPlaceSerializer {
 		}
 		
 		// edit access
-		if (!editAccess)
+		if (includeAccessInfo && !editAccess)
 			placeNode.put("editAccessDenied", true);
 		
 		// change history
-		if (user != null  && user.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_EDITOR")) && userDao != null && changeRecordDao != null && request != null) {
+		if (includeChangeHistory && user != null  && user.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_EDITOR")) && userDao != null
+				&& changeRecordDao != null && request != null) {
 			logger.debug("serializing change history");
 			
 			List<PlaceChangeRecord> changeHistory = changeRecordDao.findByPlaceId(place.getId());
@@ -444,6 +448,22 @@ public class JsonPlaceSerializer {
 		}
 		
 		return coordinatesNode;
+	}
+
+	public boolean getIncludeAccessInfo() {
+		return includeAccessInfo;
+	}
+
+	public void setIncludeAccessInfo(boolean includeAccessInfo) {
+		this.includeAccessInfo = includeAccessInfo;
+	}
+
+	public boolean getIncludeChangeHistory() {
+		return includeChangeHistory;
+	}
+
+	public void setIncludeChangeHistory(boolean includeChangeHistory) {
+		this.includeChangeHistory = includeChangeHistory;
 	}
 	
 }

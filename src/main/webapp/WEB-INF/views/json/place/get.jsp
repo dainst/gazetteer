@@ -12,11 +12,15 @@ Place place = (Place) request.getAttribute("place");
 List<Place> parents = (List<Place>) request.getAttribute("parents");
 Boolean readAccess = (Boolean) request.getAttribute("readAccess");
 Boolean editAccess = (Boolean) request.getAttribute("editAccess");
+Boolean includeAccessInfo = (Boolean) request.getAttribute("includeAccessInfo");
+Boolean includeChangeHistory = (Boolean) request.getAttribute("includeChangeHistory");
 String baseUri = (String) request.getAttribute("baseUri");
 UserRepository userDao = (UserRepository) request.getAttribute("userDao");
 PlaceChangeRecordRepository changeRecordDao = (PlaceChangeRecordRepository) request.getAttribute("changeRecordDao");
 
 JsonPlaceSerializer serializer = new JsonPlaceSerializer(baseUri);
+serializer.setIncludeAccessInfo(includeAccessInfo);
+serializer.setIncludeChangeHistory(includeChangeHistory);
 
 %>
 

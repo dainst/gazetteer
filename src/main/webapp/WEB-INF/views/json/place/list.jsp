@@ -13,11 +13,15 @@ response.setHeader("Content-Type", "application/json; charset=utf-8");
 List<Place> places = (List<Place>) request.getAttribute("places");
 Map<String, List<Place>> parents = (Map<String, List<Place>>) request.getAttribute("parents");
 Map<String, Boolean> accessMap = (Map<String, Boolean>) request.getAttribute("accessMap");
+Boolean includeAccessInfo = (Boolean) request.getAttribute("includeAccessInfo");
+Boolean includeChangeHistory = (Boolean) request.getAttribute("includeChangeHistory");
 String baseUri = (String) request.getAttribute("baseUri");
 Long hits = (Long) request.getAttribute("hits");
 String queryId = (String) request.getAttribute("queryId");
 
 JsonPlaceSerializer serializer = new JsonPlaceSerializer(baseUri);
+serializer.setIncludeAccessInfo(includeAccessInfo);
+serializer.setIncludeChangeHistory(includeChangeHistory);
 
 StringBuilder sb = new StringBuilder("{");
 sb.append("\n\"total\": ").append(hits);

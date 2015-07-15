@@ -93,7 +93,7 @@ public class SearchController {
 			@RequestParam(required=false) double[] bbox,
 			@RequestParam(required=false) double[] polygonFilterCoordinates,
 			@RequestParam(required=false) boolean showHiddenPlaces,
-			@RequestParam(required=false) boolean createParentLists,
+			@RequestParam(required=false) List<String> add,
 			@RequestParam(required=false) boolean noPolygons,
 			@RequestParam(required=false) String queryId,
 			HttpServletRequest request,
@@ -193,7 +193,7 @@ public class SearchController {
 			protectLocationsService.protectLocations(user, place);
 			accessMap.put(place.getId(), placeAccessService.checkPlaceAccess(place));
 
-			if (createParentLists) {
+			if (add != null && add.contains("parents")) {
 				List<Place> placeParents = new ArrayList<Place>();
 				createParentsList(place, placeParents, false);
 			
@@ -209,6 +209,8 @@ public class SearchController {
 		mav.addObject("places", places);
 		if (parents.size() > 0) mav.addObject("parents", parents);
 		mav.addObject("accessMap", accessMap);
+		mav.addObject("includeAccessInfo", add != null && add.contains("access"));
+		mav.addObject("includeChangeHistory", add != null && add.contains("history"));
 		mav.addObject("facets", facets);
 		mav.addObject("baseUri", baseUri);
 		mav.addObject("language", locale.getISO3Language());
@@ -528,6 +530,8 @@ public class SearchController {
 		ModelAndView mav = new ModelAndView("place/list");
 		mav.addObject("places", places);
 		mav.addObject("accessMap", accessMap);
+		mav.addObject("includeAccessInfo", false);
+		mav.addObject("includeChangeHistory", false);
 		mav.addObject("placeDao", placeDao);
 		mav.addObject("view", view);
 		mav.addObject("baseUri", baseUri);

@@ -84,7 +84,7 @@ public class DocumentController {
 			@RequestParam(required=false) String q,
 			@RequestParam(required=false) String fuzzy,
 			@RequestParam(required=false, defaultValue="map,table") String view,
-			@RequestParam(required=false) boolean createParentsList,
+			@RequestParam(required=false) List<String> add,
 			@RequestHeader(value="User-Agent", required=false) String userAgent,
 			@RequestHeader(value="Accept", required=false) String accept,
 			HttpServletRequest request,
@@ -154,7 +154,7 @@ public class DocumentController {
 			protectLocationsService.protectLocations(user, place);
 			
 			List<Place> parents = new ArrayList<Place>();
-			if (createParentsList) {
+			if (add != null && add.contains("parents")) {
 				createParentsList(place, parents);
 				
 				for (Place parent : parents) {
@@ -174,9 +174,11 @@ public class DocumentController {
 			}
 			mav.addObject("place", place);
 			mav.addObject("relatedPlaces", relatedPlaces);
-			if (createParentsList) mav.addObject("parents", parents);
+			if (parents.size() > 0) mav.addObject("parents", parents);
 			mav.addObject("readAccess", readAccess);
 			mav.addObject("editAccess", placeAccessService.checkPlaceAccess(place, true));
+			mav.addObject("includeAccessInfo", add != null && add.contains("access"));
+			mav.addObject("includeChangeHistory", add != null && add.contains("history"));
 			mav.addObject("baseUri", baseUri);
 			mav.addObject("language", locale.getISO3Language());
 			mav.addObject("limit", limit);
