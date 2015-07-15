@@ -157,9 +157,10 @@
 							<th><s:message code="user.username" text="user.username"/></th>
 							<th><s:message code="user.firstname" text="user.firstname"/></th>
 							<th><s:message code="user.lastname" text="user.lastname"/></th>
-							<th>
-								<s:message code="ui.recordGroupUserManagement.access" text="ui.recordGroupUserManagement.access"/>
-							</th>
+							<th><s:message code="user.institution" text="user.institution"/></th>							
+							<th><s:message code="user.email" text="user.email"/></th>
+							<th><s:message code="ui.recordGroupUserManagement.access" text="ui.recordGroupUserManagement.access"/></th>
+							<th></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -168,9 +169,11 @@
 								<td>${user.username}</td>
 								<td>${user.firstname}</td>
 								<td>${user.lastname}</td>
+								<td>${user.institution}</td>
+								<td>${user.email}
 								<td>
 									<form name="form" action="checkRecordGroupUserForm?groupId=${recordGroup.id}&userId=${user.id}" accept-charset="UTF-8" method="POST">	
-										<select name="access" onchange="this.form.submit()" style="margin-bottom: -16px;">
+										<select name="access" onchange="this.form.submit()" style="margin-bottom: -16px; margin-left: -80px; margin-right: -150px;">
 											<c:forEach var="role" items="admin,edit,read">
 												<c:choose>
 													<c:when test="${roles[user.id].roleType == role}">
@@ -182,9 +185,22 @@
 												</c:choose>
 											</c:forEach>
 										</select>
-									</form>								
+									</form>
 								</td>
+								<td><a href="#removeUserModal_${user.id}" class="btn btn-block btn-danger" data-toggle="modal">&nbsp;<s:message code="ui.recordGroupUserManagement.removeUser" text="ui.recordGroupUserManagement.removeUser" />&nbsp;</a></td>
 							</tr>
+							<div class="modal hide fade" id="removeUserModal_${user.id}">
+								<div class="modal-header">
+									<h3><s:message code="ui.recordGroupUserManagement.removeUser" text="ui.recordGroupUserManagement.removeUser"/>?</h3>
+								</div>
+								<div class="modal-body">
+									<s:message code="ui.recordGroupUserManagement.removeUser.really" text="ui.recordGroupUserManagement.removeUser.really" arguments="${user.username},${recordGroup.name}"/>
+								</div>
+								<div class="modal-footer">
+									<a href="#" class="btn" data-dismiss="modal" aria-hidden="true"><s:message code="ui.cancel" text="ui.cancel"/></a>
+									<a href="removeUserFromGroup?groupId=${recordGroup.id}&userId=${user.id}" class="btn btn-danger" aria-hidden="true"><s:message code="ui.remove" text="ui.remove"/></a>
+								</div>
+							</div>
 						</c:forEach>
 					</tbody>
 				</table>

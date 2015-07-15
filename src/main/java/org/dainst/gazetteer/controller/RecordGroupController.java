@@ -200,6 +200,23 @@ public class RecordGroupController {
 		return getRecordGroupUserManagement(groupId, model);
 	}
 	
+	@RequestMapping(value="/removeUserFromGroup")
+	public String removeUserFromGroup(@RequestParam(required=true) String groupId, @RequestParam(required=true) String userId, ModelMap model) {
+		
+		GroupRole editorRole = groupRoleDao.findByGroupIdAndUserId(groupId, getUser().getId());
+		if (!isAdminEdit() && (editorRole == null || !editorRole.getRoleType().equals("admin")))
+			return "redirect:app/#!/home";
+		
+		GroupRole role = groupRoleDao.findByGroupIdAndUserId(groupId, userId);
+		
+		if (role == null)
+			throw new IllegalStateException("No group role found for groupId " + groupId + " and userId " + userId);
+		
+		groupRoleDao.delete(role);
+		
+		return getRecordGroupUserManagement(groupId, model);
+	}
+	
 	private boolean isAdminEdit() {
 		
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
