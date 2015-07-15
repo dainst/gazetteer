@@ -116,6 +116,30 @@
 			</div>
 			
 			<div class="gaz-container">
+				<c:if test="${addedUser != null}">
+					<div class="alert alert-success">
+						<s:message code="ui.recordGroupUserManagement.success.addedUser" text="ui.recordGroupUserManagement.success.addedUser" arguments="${addedUser}" />
+					</div>
+				</c:if>
+			</div>
+			
+			<div class="gaz-container">
+				<c:if test="${removedUser != null}">
+					<div class="alert alert-success">
+						<s:message code="ui.recordGroupUserManagement.success.removedUser" text="ui.recordGroupUserManagement.success.removedUser" arguments="${removedUser}" />
+					</div>
+				</c:if>
+			</div>
+			
+			<div class="gaz-container">
+				<c:if test="${changedUserStatus != null}">
+					<div class="alert alert-success">
+						<s:message code="ui.recordGroupUserManagement.success.changedUserStatus" text="ui.recordGroupUserManagement.success.changedUserStatus" arguments="${changedUserStatus}" />
+					</div>
+				</c:if>
+			</div>
+			
+			<div class="gaz-container">
 				<c:if test="${failure eq 'notFound'}">
 					<div class="alert alert-error">
 						<s:message code="ui.recordGroupUserManagement.error.userNotFound" text="ui.recordGroupUserManagement.error.userNotFound" />

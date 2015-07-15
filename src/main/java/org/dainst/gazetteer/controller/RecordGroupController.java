@@ -145,6 +145,7 @@ public class RecordGroupController {
 		if (!isAdminEdit() && (editorRole == null || !editorRole.getRoleType().equals("admin")))
 			return "redirect:app/#!/home";
 		
+		User user = userDao.findOne(userId);
 		GroupRole role = groupRoleDao.findByGroupIdAndUserId(groupId, userId);
 		
 		if (role == null)
@@ -154,6 +155,8 @@ public class RecordGroupController {
 		role.setRoleType(roleType);
 		
 		groupRoleDao.save(role);
+		
+		model.addAttribute("changedUserStatus", user.getUsername());
 		
 		return getRecordGroupUserManagement(groupId, model);
 	}
@@ -190,12 +193,13 @@ public class RecordGroupController {
 			return getRecordGroupUserManagement(groupId, model);
 		}
 		
-		
 		GroupRole role = new GroupRole();
 		role.setUserId(user.getId());
 		role.setGroupId(groupId);
 		role.setRoleType("read");
 		groupRoleDao.save(role);
+		
+		model.addAttribute("addedUser", user.getUsername());
 		
 		return getRecordGroupUserManagement(groupId, model);
 	}
@@ -207,12 +211,15 @@ public class RecordGroupController {
 		if (!isAdminEdit() && (editorRole == null || !editorRole.getRoleType().equals("admin")))
 			return "redirect:app/#!/home";
 		
+		User user = userDao.findOne(userId);
 		GroupRole role = groupRoleDao.findByGroupIdAndUserId(groupId, userId);
 		
 		if (role == null)
 			throw new IllegalStateException("No group role found for groupId " + groupId + " and userId " + userId);
 		
 		groupRoleDao.delete(role);
+		
+		model.addAttribute("removedUser", user.getUsername());
 		
 		return getRecordGroupUserManagement(groupId, model);
 	}
