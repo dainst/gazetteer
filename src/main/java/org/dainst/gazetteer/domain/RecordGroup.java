@@ -53,4 +53,28 @@ public class RecordGroup {
 		
 		return dateFormat.format(creationDate);
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		RecordGroup other = (RecordGroup) obj;
+		if (id == null && other.id != null)
+			return false;
+		if (id != null && !id.equals(other.id))
+			return false;
+		if (name == null && other.name != null)
+			return false;
+		if (name != null && !name.equals(other.name))
+			return false;
+		if (creationDate == null && other.creationDate != null)
+			return false;
+		if (creationDate != null && !creationDate.equals(other.creationDate))
+			return false;
+		return true;
+	}
 }

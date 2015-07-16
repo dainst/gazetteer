@@ -69,14 +69,15 @@ public class RecordGroupController {
 			}
 		}		
 		
-		if (deleteRecordGroupId != null && !deleteRecordGroupId.isEmpty()) {
+		if (isAdminEdit() && deleteRecordGroupId != null && !deleteRecordGroupId.isEmpty()) {
 			RecordGroup recordGroup = recordGroupDao.findOne(deleteRecordGroupId);
-			long placeCount = placeDao.getCountByRecordGroupIdAndDeletedIsFalse(deleteRecordGroupId);		
+			long placeCount = placeDao.getCountByRecordGroupIdAndDeletedIsFalse(deleteRecordGroupId);
 			if (placeCount == 0) {
 				List<GroupRole> groupRoles = groupRoleDao.findByGroupId(deleteRecordGroupId);
 				for (GroupRole role : groupRoles) {
 					groupRoleDao.delete(role);
 				}
+				recordGroups.remove(recordGroup);
 				recordGroupDao.delete(recordGroup);
 				model.addAttribute("deletedRecordGroup", recordGroup.getName());
 			}
@@ -104,17 +105,19 @@ public class RecordGroupController {
 	@RequestMapping(value="/checkCreateRecordGroupForm")
 	public String checkCreateRecordGroupForm(HttpServletRequest request, ModelMap model) {
 		
-		String groupName = request.getParameter("group_name");
+		if (isAdminEdit()) {
+			String groupName = request.getParameter("group_name");
 		
-		if (!groupName.isEmpty()) {			
-			if (recordGroupDao.findByName(groupName) != null)
-				model.addAttribute("failure", "groupNameAlreadyExists");				
-			else {
-				RecordGroup recordGroup = new RecordGroup(groupName);
-				recordGroupDao.save(recordGroup);
-				model.addAttribute("createdRecordGroup", recordGroup.getName());
+			if (!groupName.isEmpty()) {
+				if (recordGroupDao.findByName(groupName) != null)
+					model.addAttribute("failure", "groupNameAlreadyExists");
+				else {
+					RecordGroup recordGroup = new RecordGroup(groupName);
+					recordGroupDao.save(recordGroup);
+					model.addAttribute("createdRecordGroup", recordGroup.getName());
+				}
 			}
-		}		
+		}
 		
 		return getRecordGroupManagement(null, model);
 	}
@@ -123,8 +126,7 @@ public class RecordGroupController {
 	public String getRecordGroupUserManagement(@RequestParam(required=true) String groupId, @RequestParam(required=false) String sort,
 			@RequestParam(required=false) boolean isDescending, @RequestParam(required=false) Integer page, ModelMap model) {
 
-		GroupRole editorRole = groupRoleDao.findByGroupIdAndUserId(groupId, getUser().getId());
-		if (!isAdminEdit() && (editorRole == null || !editorRole.getRoleType().equals("admin")))
+		if (checkGroupUserManagementAccess(groupId))
 			return "redirect:app/#!/home";
 		
 		RecordGroup group = recordGroupDao.findOne(groupId);		
@@ -204,8 +206,7 @@ public class RecordGroupController {
 			@RequestParam(required=true) String userId, @RequestParam(required=false) String sort,
 			@RequestParam(required=false) boolean isDescending, @RequestParam(required=false) Integer page , ModelMap model) {
 		
-		GroupRole editorRole = groupRoleDao.findByGroupIdAndUserId(groupId, getUser().getId());
-		if (!isAdminEdit() && (editorRole == null || !editorRole.getRoleType().equals("admin")))
+		if (checkGroupUserManagementAccess(groupId))
 			return "redirect:app/#!/home";
 		
 		User user = userDao.findOne(userId);
@@ -228,8 +229,7 @@ public class RecordGroupController {
 	public String checkAddUserToGroupForm(HttpServletRequest request, @RequestParam(required=true) String groupId, @RequestParam(required=false) String sort,
 			@RequestParam(required=false) boolean isDescending, @RequestParam(required=false) Integer page, ModelMap model) {
 	
-		GroupRole editorRole = groupRoleDao.findByGroupIdAndUserId(groupId, getUser().getId());
-		if (!isAdminEdit() && (editorRole == null || !editorRole.getRoleType().equals("admin")))
+		if (checkGroupUserManagementAccess(groupId))
 			return "redirect:app/#!/home";
 		
 		String emailOrUsername = request.getParameter("email_or_username");
@@ -309,5 +309,12 @@ public class RecordGroupController {
 			return (User) principal;
 		else
 			return null;
+	}
+	
+	private boolean checkGroupUserManagementAccess(String groupId) {
+		
+		GroupRole editorRole = groupRoleDao.findByGroupIdAndUserId(groupId, getUser().getId());
+		
+		return (!isAdminEdit() && (editorRole == null || !editorRole.getRoleType().equals("admin")));
 	}
 }
