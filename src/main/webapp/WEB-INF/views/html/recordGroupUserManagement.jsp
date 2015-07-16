@@ -168,7 +168,7 @@
 					${recordGroup.name}
 				</h3>
 				
-				<form class="form-horizontal" name="form" action="checkAddUserToGroupForm?groupId=${recordGroup.id}&sort=${lastSort}&isDescending=${isDescending}" accept-charset="UTF-8" method="POST">
+				<form class="form-horizontal" name="form" action="checkAddUserToGroupForm?groupId=${recordGroup.id}&sort=${lastSorting}&isDescending=${isDescending}&page=${page}" accept-charset="UTF-8" method="POST">
 					<s:message code="ui.recordGroupUserManagement.emailOrUsername" text="ui.recordGroupUserManagement.emailOrUsername" var="defaultMessage" />
 					<input type="text" name="email_or_username" value="${emailOrUsername}" placeholder="${defaultMessage}" />
 					<s:message code="ui.recordGroupUserManagement.addUser" text="ui.recordGroupUserManagement.addUser" var="submitValue" />
@@ -180,42 +180,42 @@
 						<tr>
 							<c:choose>
 								<c:when test="${lastSorting eq 'username'}">
-									<th><a href="recordGroupUserManagement?groupId=${recordGroup.id}&sort=username&isDescending=${!isDescending}"><s:message code="user.username" text="user.username" /></a></th>
+									<th><a href="recordGroupUserManagement?groupId=${recordGroup.id}&sort=username&isDescending=${!isDescending}&page=${page}"><s:message code="user.username" text="user.username" /></a></th>
 								</c:when>
 								<c:otherwise>
-									<th><a href="recordGroupUserManagement?groupId=${recordGroup.id}&sort=username&isDescending=false"><s:message code="user.username" text="user.username" /></a></th>
+									<th><a href="recordGroupUserManagement?groupId=${recordGroup.id}&sort=username&isDescending=false&page=${page}"><s:message code="user.username" text="user.username" /></a></th>
 								</c:otherwise>
 							</c:choose>
 							<c:choose>
 								<c:when test="${lastSorting eq 'firstname'}">
-									<th><a href="recordGroupUserManagement?groupId=${recordGroup.id}&sort=firstname&isDescending=${!isDescending}"><s:message code="user.firstname" text="user.firstname" /></a></th>
+									<th><a href="recordGroupUserManagement?groupId=${recordGroup.id}&sort=firstname&isDescending=${!isDescending}&page=${page}"><s:message code="user.firstname" text="user.firstname" /></a></th>
 								</c:when>
 								<c:otherwise>
-									<th><a href="recordGroupUserManagement?groupId=${recordGroup.id}&sort=firstname&isDescending=false"><s:message code="user.firstname" text="user.firstname" /></a></th>
+									<th><a href="recordGroupUserManagement?groupId=${recordGroup.id}&sort=firstname&isDescending=false&page=${page}"><s:message code="user.firstname" text="user.firstname" /></a></th>
 								</c:otherwise>
 							</c:choose>
 							<c:choose>
 								<c:when test="${lastSorting eq 'lastname'}">
-									<th><a href="recordGroupUserManagement?groupId=${recordGroup.id}&sort=lastname&isDescending=${!isDescending}"><s:message code="user.lastname" text="user.lastname" /></a></th>
+									<th><a href="recordGroupUserManagement?groupId=${recordGroup.id}&sort=lastname&isDescending=${!isDescending}&page=${page}"><s:message code="user.lastname" text="user.lastname" /></a></th>
 								</c:when>
 								<c:otherwise>
-									<th><a href="recordGroupUserManagement?groupId=${recordGroup.id}&sort=lastname&isDescending=false"><s:message code="user.lastname" text="user.lastname" /></a></th>
+									<th><a href="recordGroupUserManagement?groupId=${recordGroup.id}&sort=lastname&isDescending=false&page=${page}"><s:message code="user.lastname" text="user.lastname" /></a></th>
 								</c:otherwise>
 							</c:choose>
 							<c:choose>
 								<c:when test="${lastSorting eq 'institution'}">
-									<th><a href="recordGroupUserManagement?groupId=${recordGroup.id}&sort=institution&isDescending=${!isDescending}"><s:message code="user.institution" text="user.institution" /></a></th>
+									<th><a href="recordGroupUserManagement?groupId=${recordGroup.id}&sort=institution&isDescending=${!isDescending}&page=${page}"><s:message code="user.institution" text="user.institution" /></a></th>
 								</c:when>
 								<c:otherwise>
-									<th><a href="recordGroupUserManagement?groupId=${recordGroup.id}&sort=institution&isDescending=false"><s:message code="user.institution" text="user.institution" /></a></th>
+									<th><a href="recordGroupUserManagement?groupId=${recordGroup.id}&sort=institution&isDescending=false&page=${page}"><s:message code="user.institution" text="user.institution" /></a></th>
 								</c:otherwise>
 							</c:choose>
 							<c:choose>
 								<c:when test="${lastSorting eq 'email'}">
-									<th><a href="recordGroupUserManagement?groupId=${recordGroup.id}&sort=email&isDescending=${!isDescending}"><s:message code="user.email" text="user.email" /></a></th>
+									<th><a href="recordGroupUserManagement?groupId=${recordGroup.id}&sort=email&isDescending=${!isDescending}&page=${page}"><s:message code="user.email" text="user.email" /></a></th>
 								</c:when>
 								<c:otherwise>
-									<th><a href="recordGroupUserManagement?groupId=${recordGroup.id}&sort=email&isDescending=false"><s:message code="user.email" text="user.email" /></a></th>
+									<th><a href="recordGroupUserManagement?groupId=${recordGroup.id}&sort=email&isDescending=false&page=${page}"><s:message code="user.email" text="user.email" /></a></th>
 								</c:otherwise>
 							</c:choose>
 							<th><s:message code="ui.recordGroupUserManagement.access" text="ui.recordGroupUserManagement.access"/></th>
@@ -231,7 +231,7 @@
 								<td>${user.institution}</td>
 								<td>${user.email}
 								<td>
-									<form name="form" action="checkRecordGroupUserForm?groupId=${recordGroup.id}&userId=${user.id}&sort=${lastSort}&isDescending=${isDescending}" accept-charset="UTF-8" method="POST">	
+									<form name="form" action="checkRecordGroupUserForm?groupId=${recordGroup.id}&userId=${user.id}&sort=${lastSorting}&isDescending=${isDescending}&page=${page}" accept-charset="UTF-8" method="POST">	
 										<select name="access" onchange="this.form.submit()" style="margin-bottom: -16px; margin-left: -80px; margin-right: -150px;">
 											<c:forEach var="role" items="admin,edit,read">
 												<c:choose>
@@ -257,12 +257,46 @@
 								</div>
 								<div class="modal-footer">
 									<a href="#" class="btn" data-dismiss="modal" aria-hidden="true"><s:message code="ui.cancel" text="ui.cancel"/></a>
-									<a href="removeUserFromGroup?groupId=${recordGroup.id}&userId=${user.id}&sort=${lastSort}&isDescending=${isDescending}" class="btn btn-danger" aria-hidden="true"><s:message code="ui.remove" text="ui.remove"/></a>
+									<a href="removeUserFromGroup?groupId=${recordGroup.id}&userId=${user.id}&sort=${lastSorting}&isDescending=${isDescending}&page=${page}" class="btn btn-danger" aria-hidden="true"><s:message code="ui.remove" text="ui.remove"/></a>
 								</div>
 							</div>
 						</c:forEach>
 					</tbody>
 				</table>
+				
+				<ul class="nav nav-pills" style="margin-bottom: 0; margin-left: auto; margin-right: auto; width: 20em;">
+					<c:choose>
+						<c:when test="${page eq 0}">
+							<li class="disabled">
+								<a>&larr; <s:message code="ui.previous" /></a>
+							</li>
+						</c:when>
+						<c:otherwise>
+							<li style="cursor: pointer">
+								<a href="recordGroupUserManagement?groupId=${recordGroup.id}&sort=${lastSorting}&isDescending=${isDescending}&page=${page - 1}">&larr; <s:message code="ui.previous" /></a>
+							</li>
+						</c:otherwise>
+					</c:choose>
+					
+					<li class="divider-vertical"></li>
+					<li class="disabled">
+						<a><s:message code="ui.page" text="ui.page" /> ${page + 1} / ${pages}</a>
+					</li>
+					<li class="divider-vertical"></li>
+					<c:choose>
+						<c:when test="${page eq pages - 1}">
+							<li class="disabled">
+								<a><s:message code="ui.next" text="Vor"/> &rarr;</a>
+							</li>	
+						</c:when>
+						<c:otherwise>
+							<li style="cursor:pointer">
+								<a href="recordGroupUserManagement?groupId=${recordGroup.id}&sort=${lastSorting}&isDescending=${isDescending}&page=${page + 1}"><s:message code="ui.next" text="Vor"/> &rarr;</a>
+							</li>
+						</c:otherwise>
+					</c:choose>
+					
+				</ul>
 				
 				<a href="recordGroupManagement" class="btn btn-default" style="float: right;" aria-hidden="true"><s:message code="ui.previous" text="ui.previous"/></a>
 				<div style="clear: both;"></div>

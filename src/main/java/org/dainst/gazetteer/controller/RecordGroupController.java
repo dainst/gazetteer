@@ -43,6 +43,8 @@ public class RecordGroupController {
 	@Value("${version}")
 	private String version;
 	
+	private int usersPerPage = 10;
+	
 	
 	@RequestMapping(value="/recordGroupManagement")
 	public String getRecordGroupManagement(@RequestParam(required=false) String deleteRecordGroupId, ModelMap model) {
@@ -119,7 +121,7 @@ public class RecordGroupController {
 	
 	@RequestMapping(value="/recordGroupUserManagement")
 	public String getRecordGroupUserManagement(@RequestParam(required=true) String groupId, @RequestParam(required=false) String sort,
-			@RequestParam(required=false) boolean isDescending, ModelMap model) {
+			@RequestParam(required=false) boolean isDescending, @RequestParam(required=false) Integer page, ModelMap model) {
 
 		RecordGroup group = recordGroupDao.findOne(groupId);		
 		List<GroupRole> roles = groupRoleDao.findByGroupId(groupId);
@@ -167,11 +169,27 @@ public class RecordGroupController {
 			break;
 		}
 		
+		int pages = (users.size() + usersPerPage - 1) / usersPerPage;
+		
+		if (page == null || page < 0)
+			page = 0;
+	
+		if (page >= pages)
+			page = pages - 1;
+	
+		int toIndex = page * usersPerPage + usersPerPage;
+		if (toIndex > users.size())
+			toIndex = users.size();
+	
+		users = users.subList(page * usersPerPage, toIndex);
+		
 		model.addAttribute("recordGroup", group);
 		model.addAttribute("users", users);
 		model.addAttribute("roles", roleMap);
 		model.addAttribute("isDescending", isDescending);
 		model.addAttribute("lastSorting", sort);
+		model.addAttribute("page", page);
+		model.addAttribute("pages", pages);
 		model.addAttribute("version", version);
 		
 		return "recordGroupUserManagement";
@@ -179,7 +197,8 @@ public class RecordGroupController {
 	
 	@RequestMapping(value="/checkRecordGroupUserForm")
 	public String checkRecordGroupUserForm(HttpServletRequest request, @RequestParam(required=true) String groupId,
-			@RequestParam(required=true) String userId, @RequestParam(required=false) String sort, @RequestParam(required=false) boolean isDescending, ModelMap model) {
+			@RequestParam(required=true) String userId, @RequestParam(required=false) String sort,
+			@RequestParam(required=false) boolean isDescending, @RequestParam(required=false) Integer page , ModelMap model) {
 		
 		GroupRole editorRole = groupRoleDao.findByGroupIdAndUserId(groupId, getUser().getId());
 		if (!isAdminEdit() && (editorRole == null || !editorRole.getRoleType().equals("admin")))
@@ -198,12 +217,12 @@ public class RecordGroupController {
 		
 		model.addAttribute("changedUserStatus", user.getUsername());
 		
-		return getRecordGroupUserManagement(groupId, sort, isDescending, model);
+		return getRecordGroupUserManagement(groupId, sort, isDescending, page, model);
 	}
 	
 	@RequestMapping(value="/checkAddUserToGroupForm")
 	public String checkAddUserToGroupForm(HttpServletRequest request, @RequestParam(required=true) String groupId, @RequestParam(required=false) String sort,
-			@RequestParam(required=false) boolean isDescending, ModelMap model) {
+			@RequestParam(required=false) boolean isDescending, @RequestParam(required=false) Integer page, ModelMap model) {
 	
 		GroupRole editorRole = groupRoleDao.findByGroupIdAndUserId(groupId, getUser().getId());
 		if (!isAdminEdit() && (editorRole == null || !editorRole.getRoleType().equals("admin")))
@@ -214,7 +233,7 @@ public class RecordGroupController {
 		if (emailOrUsername.isEmpty()) {
 			model.addAttribute("failure", "noInput");
 		
-			return getRecordGroupUserManagement(groupId, null, false, model);
+			return getRecordGroupUserManagement(groupId, sort, isDescending, page, model);
 		}
 		
 		User user = userDao.findByUsername(emailOrUsername);
@@ -224,14 +243,14 @@ public class RecordGroupController {
 			model.addAttribute("emailOrUsername", emailOrUsername);
 			model.addAttribute("failure", "notFound");
 		
-			return getRecordGroupUserManagement(groupId, null, false, model);
+			return getRecordGroupUserManagement(groupId, sort, isDescending, page, model);
 		}
 		
 		if (groupRoleDao.findByGroupIdAndUserId(groupId, user.getId()) != null) {
 			model.addAttribute("emailOrUsername", emailOrUsername);
 			model.addAttribute("failure", "alreadyInGroup");
 		
-			return getRecordGroupUserManagement(groupId, null, false, model);
+			return getRecordGroupUserManagement(groupId, sort, isDescending, page, model);
 		}
 		
 		GroupRole role = new GroupRole();
@@ -242,12 +261,12 @@ public class RecordGroupController {
 		
 		model.addAttribute("addedUser", user.getUsername());
 		
-		return getRecordGroupUserManagement(groupId, sort, isDescending, model);
+		return getRecordGroupUserManagement(groupId, sort, isDescending, page, model);
 	}
 	
 	@RequestMapping(value="/removeUserFromGroup")
 	public String removeUserFromGroup(@RequestParam(required=true) String groupId, @RequestParam(required=true) String userId, @RequestParam(required=false) String sort,
-			@RequestParam(required=false) boolean isDescending, ModelMap model) {
+			@RequestParam(required=false) boolean isDescending, @RequestParam(required=false) Integer page, ModelMap model) {
 		
 		GroupRole editorRole = groupRoleDao.findByGroupIdAndUserId(groupId, getUser().getId());
 		if (!isAdminEdit() && (editorRole == null || !editorRole.getRoleType().equals("admin")))
@@ -263,7 +282,7 @@ public class RecordGroupController {
 		
 		model.addAttribute("removedUser", user.getUsername());
 		
-		return getRecordGroupUserManagement(groupId, sort, isDescending, model);
+		return getRecordGroupUserManagement(groupId, sort, isDescending, page, model);
 	}
 	
 	private boolean isAdminEdit() {
