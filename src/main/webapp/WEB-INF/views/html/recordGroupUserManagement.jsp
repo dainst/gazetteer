@@ -232,7 +232,7 @@
 								<td>${user.email}
 								<td>
 									<form name="form" action="checkRecordGroupUserForm?groupId=${recordGroup.id}&userId=${user.id}&sort=${lastSorting}&isDescending=${isDescending}&page=${page}" accept-charset="UTF-8" method="POST">	
-										<select name="access" onchange="this.form.submit()" style="margin-bottom: -16px; margin-left: -80px; margin-right: -150px;">
+										<select name="access" onchange="this.form.submit()" style="margin-bottom: -16px;">
 											<c:forEach var="role" items="admin,edit,read">
 												<c:choose>
 													<c:when test="${roles[user.id].roleType == role}">
