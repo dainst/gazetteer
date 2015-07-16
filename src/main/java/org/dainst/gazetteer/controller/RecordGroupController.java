@@ -123,6 +123,10 @@ public class RecordGroupController {
 	public String getRecordGroupUserManagement(@RequestParam(required=true) String groupId, @RequestParam(required=false) String sort,
 			@RequestParam(required=false) boolean isDescending, @RequestParam(required=false) Integer page, ModelMap model) {
 
+		GroupRole editorRole = groupRoleDao.findByGroupIdAndUserId(groupId, getUser().getId());
+		if (!isAdminEdit() && (editorRole == null || !editorRole.getRoleType().equals("admin")))
+			return "redirect:app/#!/home";
+		
 		RecordGroup group = recordGroupDao.findOne(groupId);		
 		List<GroupRole> roles = groupRoleDao.findByGroupId(groupId);
 		List<User> users = new ArrayList<User>();
