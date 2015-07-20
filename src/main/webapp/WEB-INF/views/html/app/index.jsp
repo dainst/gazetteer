@@ -148,6 +148,20 @@
 								<i class="icon-spinner icon-spin icon-large" style="color:white; cursor: default;"></i>
 							</div>
 						</div>
+						<ul class="nav pull-right">
+  							<li class="dropdown">
+    							<a href="#" class="dropdown-toggle" data-toggle="dropdown">iDAI.welt <b class="caret"></b></a>
+    							<ul class="dropdown-menu">
+      								<li><a href="http://www.dainst.org/de/forschung/forschung-digital/idai.welt" target="_blank">Übersicht</a></li>
+									<li class="divider"></li>
+	   								<li><a href="http://zenon.dainst.org/" target="_blank">iDAI.bibliography / Zenon 2.0</a></li>
+      								<li><a href="http://geoserver.dainst.org/" target="_blank">iDAI.geoserver</a></li>
+      								<li><a href="http://arachne.dainst.org/" target="_blank">iDAI.objects / Arachne 4.0</a></li>
+      								<li><a href="http://archwort.dainst.org/thesaurus/de/vocab/" target="_blank">iDAI.vocab</a></li>
+      								<li><a href="http://hellespont.dainst.org" target="_blank">Hellespont</a></li>
+    							</ul>
+  							</li>
+						</ul>
 					</div>
 				</div>
 			</div>

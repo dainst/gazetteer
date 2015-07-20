@@ -51,24 +51,8 @@
 </div>
 		
 <div class="row-fluid" style="margin-top:-220px">
-	<div class="span8">
+	<div class="span12">
 		 <p class="lead">Der DAI-Gazetteer ist ein Webservice, der Ortsnamen mit Koordinaten verbindet und in zwei Richtungen wirken soll. Nach innen dient er als Normdatenvokabular für sämtliche ortsbezogenen Informationen und Informationssysteme des DAI. Nach außen soll er diese mit den weltweiten Gazetteer-Systemen verbinden. Weitere Funktionen sind in einem <a href="http://youtu.be/mISUGMFkQvU" target="_blank">Screencast</a> zusammengefasst.</p>
-	</div>
-	<div class="span2" style="padding-left: 30px;">
-		<div>
-    		<h4><center>Arachne 4.0 Beta</center></h4>
-    		<a href="http://arachne.dainst.org" target="_blank">
-    		<img src="http://arachne.uni-koeln.de/template/images/arachne_beta_logo.png"></a>
-    	</div>
-	</div>
-	<div class="span2" style="padding-left: 40px;">
-		<div>
-			<h4>Systeme</h4>
-			<a href="http://www.dainst.org/de/forschung/forschung-digital/idai.welt" target="_blank">iDAI.welt</a>
-			<br><a href="http://geoserver.dainst.org/" target="_blank">DAI-Geoserver</a>
-			<br><a href="http://zenon.dainst.org/" target="_blank">Zenon 2.0</a>
-			<br><a href="http://hellespont.dainst.org" target="_blank">Hellespont</a>
-		</div>
 	</div>
 </div>
 		
