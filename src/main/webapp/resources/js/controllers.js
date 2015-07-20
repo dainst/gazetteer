@@ -770,7 +770,7 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 
 function CreateCtrl($scope, $rootScope, $routeParams, $location, Place, messages) {
 	
-	$scope.place = { prefLocation: { publicSite: true } };
+	$scope.place = { prefLocation: { publicSite: true }, recordGroup: {} };
 	$rootScope.pageTitle = messages["ui.create"] + " | iDAI.gazetteer";
 	$rootScope.title = messages["ui.create"];
 	$rootScope.subtitle = "";
@@ -823,6 +823,9 @@ function CreateCtrl($scope, $rootScope, $routeParams, $location, Place, messages
 		if ($scope.place.types && "archaeological-site" in $scope.place.types) {
 			$scope.place.prefLocation.publicSite = false;
 		}
+		
+		if ($scope.place.recordGroup == {})
+			$scope.place.recordGroup = undefined;
 		
 		Place.save(
 			$scope.place,

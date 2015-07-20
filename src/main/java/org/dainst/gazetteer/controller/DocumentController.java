@@ -12,6 +12,7 @@ import org.dainst.gazetteer.converter.JsonPlaceDeserializer;
 import org.dainst.gazetteer.dao.GroupRoleRepository;
 import org.dainst.gazetteer.dao.PlaceChangeRecordRepository;
 import org.dainst.gazetteer.dao.PlaceRepository;
+import org.dainst.gazetteer.dao.RecordGroupRepository;
 import org.dainst.gazetteer.dao.UserRepository;
 import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.PlaceChangeRecord;
@@ -57,6 +58,9 @@ public class DocumentController {
 	
 	@Autowired
 	private GroupRoleRepository groupRoleDao;
+	
+	@Autowired
+	private RecordGroupRepository groupDao;
 	
 	@Autowired
 	private JsonPlaceDeserializer jsonPlaceDeserializer;
@@ -188,6 +192,7 @@ public class DocumentController {
 			mav.addObject("nativePlaceName", place.getNameMap().get(locale.getISO3Language()));
 			mav.addObject("userDao", userDao);
 			mav.addObject("changeRecordDao", changeRecordDao);
+			mav.addObject("groupDao", groupDao);
 			mav.addObject("placeDao", placeDao);
 			mav.addObject("googleMapsApiKey", googleMapsApiKey);
 			mav.addObject("languages", langHelper.getLocalizedLanguages(locale));
@@ -237,6 +242,7 @@ public class DocumentController {
 		ModelAndView mav = new ModelAndView("place/get");
 		mav.addObject("place", place);
 		mav.addObject("baseUri", baseUri);
+		mav.addObject("groupDao", groupDao);
 		mav.addObject("readAccess", accessGranted);
 		mav.addObject("editAccess", accessGranted);
 		return mav;
@@ -282,6 +288,7 @@ public class DocumentController {
 		ModelAndView mav = new ModelAndView("place/get");
 		mav.addObject("place", place);
 		mav.addObject("baseUri", baseUri);
+		mav.addObject("groupDao", groupDao);
 		mav.addObject("readAccess", accessGranted);
 		mav.addObject("editAccess", accessGranted);
 		return mav;

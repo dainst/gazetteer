@@ -17,11 +17,15 @@ Boolean includeChangeHistory = request.getAttribute("includeChangeHistory") == n
 String baseUri = (String) request.getAttribute("baseUri");
 UserRepository userDao = (UserRepository) request.getAttribute("userDao");
 PlaceChangeRecordRepository changeRecordDao = (PlaceChangeRecordRepository) request.getAttribute("changeRecordDao");
+RecordGroupRepository groupDao = (RecordGroupRepository) request.getAttribute("groupDao");
 
 JsonPlaceSerializer serializer = new JsonPlaceSerializer(baseUri);
 serializer.setIncludeAccessInfo(includeAccessInfo);
 serializer.setIncludeChangeHistory(includeChangeHistory);
+serializer.setUserDao(userDao);
+serializer.setChangeRecordDao(changeRecordDao);
+serializer.setGroupDao(groupDao);
 
 %>
 
-<%= serializer.serialize(place, userDao, changeRecordDao, request, parents, readAccess, editAccess) %>
+<%= serializer.serialize(place, request, parents, readAccess, editAccess) %>

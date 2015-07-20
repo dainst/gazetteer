@@ -8,6 +8,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.dainst.gazetteer.dao.PlaceChangeRecordRepository;
+import org.dainst.gazetteer.dao.RecordGroupRepository;
 import org.dainst.gazetteer.dao.UserRepository;
 import org.dainst.gazetteer.domain.Comment;
 import org.dainst.gazetteer.domain.Identifier;
@@ -16,6 +17,7 @@ import org.dainst.gazetteer.domain.Location;
 import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.PlaceChangeRecord;
 import org.dainst.gazetteer.domain.PlaceName;
+import org.dainst.gazetteer.domain.RecordGroup;
 import org.dainst.gazetteer.domain.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +41,10 @@ public class JsonPlaceSerializer {
 	private boolean includeAccessInfo = false;
 	private boolean includeChangeHistory = false;
 	
+	private UserRepository userDao = null;
+	private PlaceChangeRecordRepository changeRecordDao = null;
+	private RecordGroupRepository groupDao = null;
+	
 	public JsonPlaceSerializer(String baseUri) {
 		this.baseUri = baseUri;
 		mapper = new ObjectMapper();
@@ -46,17 +52,16 @@ public class JsonPlaceSerializer {
 	}
 	
 	public String serialize(Place place, Boolean accessGranted) {
-		return serialize(place, null, null, null, null, accessGranted, false);
+		return serialize(place, null, null, accessGranted, false);
 	}
 	
 	public String serialize(Place place, List<Place> parents, Boolean accessGranted) {
-		return serialize(place, null, null, null, parents, accessGranted, false);
+		return serialize(place, null, parents, accessGranted, false);
 	}
 	
-	public String serialize(Place place, UserRepository userDao, PlaceChangeRecordRepository changeRecordDao, HttpServletRequest request,
-			List<Place> parents, Boolean readAccess, Boolean editAccess) {
+	public String serialize(Place place, HttpServletRequest request, List<Place> parents, Boolean readAccess, Boolean editAccess) {
 		
-		ObjectNode placeNode = createJsonNodes(place, userDao, changeRecordDao, request, parents, readAccess, editAccess);
+		ObjectNode placeNode = createJsonNodes(place, request, parents, readAccess, editAccess);
 		
 		try {
 			return mapper.writeValueAsString(placeNode);
@@ -66,11 +71,11 @@ public class JsonPlaceSerializer {
 		}
 	}
 	
-	public String serializeGeoJson(Place place, UserRepository userDao, PlaceChangeRecordRepository changeRecordDao, HttpServletRequest request,
+	public String serializeGeoJson(Place place, HttpServletRequest request,
 			Boolean readAccess, Boolean editAccess) {
 		
 		ObjectNode geoJsonPlaceNode = createGeoJsonNodes(place, readAccess);		
-		ObjectNode placeNode = createJsonNodes(place, userDao, changeRecordDao, request, null, readAccess, editAccess);
+		ObjectNode placeNode = createJsonNodes(place, request, null, readAccess, editAccess);
 		geoJsonPlaceNode.put("properties", placeNode);
 		
 		try {
@@ -81,8 +86,7 @@ public class JsonPlaceSerializer {
 		}
 	}
 		
-	private ObjectNode createJsonNodes(Place place, UserRepository userDao, PlaceChangeRecordRepository changeRecordDao, HttpServletRequest request,
-			List<Place> parents, Boolean readAccess, Boolean editAccess) { 
+	private ObjectNode createJsonNodes(Place place, HttpServletRequest request, List<Place> parents, Boolean readAccess, Boolean editAccess) { 
 		
 		if (place == null) return null;
 		
@@ -258,8 +262,16 @@ public class JsonPlaceSerializer {
 		}
 		
 		// record group
-		if (place.getRecordGroupId() != null && !place.getRecordGroupId().isEmpty())
-			placeNode.put("recordGroupId", place.getRecordGroupId());
+		if (place.getRecordGroupId() != null && !place.getRecordGroupId().isEmpty()) {
+			RecordGroup group = groupDao.findOne(place.getRecordGroupId());
+			if (group != null) {
+				ObjectNode groupNode = mapper.createObjectNode();
+				groupNode.put("id", group.getId());
+				groupNode.put("name", group.getName());
+				placeNode.put("recordGroup", groupNode);
+			}			
+		}
+			
 		
 		// reisestipendium content		
 		logger.debug("serializing reisestipendium content?");
@@ -331,7 +343,7 @@ public class JsonPlaceSerializer {
 			ArrayNode parentsNode = mapper.createArrayNode();
 			
 			for (Place parent : parents) {
-				ObjectNode parentNode = createJsonNodes(parent, userDao, changeRecordDao, request, null, readAccess, editAccess);
+				ObjectNode parentNode = createJsonNodes(parent, request, null, readAccess, editAccess);
 				parentsNode.add(parentNode);
 			}
 			
@@ -464,6 +476,30 @@ public class JsonPlaceSerializer {
 
 	public void setIncludeChangeHistory(boolean includeChangeHistory) {
 		this.includeChangeHistory = includeChangeHistory;
+	}
+
+	public UserRepository getUserDao() {
+		return userDao;
+	}
+
+	public void setUserDao(UserRepository userDao) {
+		this.userDao = userDao;
+	}
+
+	public PlaceChangeRecordRepository getChangeRecordDao() {
+		return changeRecordDao;
+	}
+
+	public void setChangeRecordDao(PlaceChangeRecordRepository changeRecordDao) {
+		this.changeRecordDao = changeRecordDao;
+	}
+
+	public RecordGroupRepository getGroupDao() {
+		return groupDao;
+	}
+
+	public void setGroupDao(RecordGroupRepository groupDao) {
+		this.groupDao = groupDao;
 	}
 	
 }

@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.dainst.gazetteer.converter.JsonPlaceDeserializer;
 import org.dainst.gazetteer.dao.GroupRoleRepository;
 import org.dainst.gazetteer.dao.PlaceRepository;
+import org.dainst.gazetteer.dao.RecordGroupRepository;
 import org.dainst.gazetteer.dao.UserRepository;
 import org.dainst.gazetteer.domain.GroupRole;
 import org.dainst.gazetteer.domain.Place;
@@ -57,6 +58,9 @@ public class SearchController {
 	
 	@Autowired
 	private GroupRoleRepository groupRoleDao;
+	
+	@Autowired
+	private RecordGroupRepository groupDao;
 	
 	@Autowired
 	private JsonPlaceDeserializer jsonPlaceDeserializer;
@@ -209,8 +213,9 @@ public class SearchController {
 		mav.addObject("places", places);
 		if (parents.size() > 0) mav.addObject("parents", parents);
 		mav.addObject("accessMap", accessMap);
-		mav.addObject("includeAccessInfo", add != null && add.contains("access"));
-		mav.addObject("includeChangeHistory", add != null && add.contains("history"));
+		mav.addObject("includeAccessInfo", false);
+		mav.addObject("includeChangeHistory", false);
+		mav.addObject("groupDao", groupDao);
 		mav.addObject("facets", facets);
 		mav.addObject("baseUri", baseUri);
 		mav.addObject("language", locale.getISO3Language());
@@ -292,6 +297,7 @@ public class SearchController {
 		ModelAndView mav = new ModelAndView("place/list");
 		mav.addObject("places", places);
 		mav.addObject("accessMap", accessMap);
+		mav.addObject("groupDao", groupDao);
 		mav.addObject("facets", facets);
 		mav.addObject("baseUri", baseUri);
 		mav.addObject("language", locale.getISO3Language());
@@ -375,6 +381,7 @@ public class SearchController {
 		ModelAndView mav = new ModelAndView("place/list");
 		mav.addObject("places", places);
 		mav.addObject("accessMap", accessMap);
+		mav.addObject("groupDao", groupDao);
 		mav.addObject("facets", facets);
 		mav.addObject("baseUri", baseUri);
 		mav.addObject("language", locale.getISO3Language());
@@ -530,6 +537,7 @@ public class SearchController {
 		ModelAndView mav = new ModelAndView("place/list");
 		mav.addObject("places", places);
 		mav.addObject("accessMap", accessMap);
+		mav.addObject("groupDao", groupDao);
 		mav.addObject("includeAccessInfo", false);
 		mav.addObject("includeChangeHistory", false);
 		mav.addObject("placeDao", placeDao);

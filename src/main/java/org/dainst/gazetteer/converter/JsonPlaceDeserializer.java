@@ -325,12 +325,15 @@ public class JsonPlaceDeserializer {
 			place.setProvenance(provenance);
 			
 			// update record group
-			if (objectNode.get("recordGroupId") != null) {
-				String recordGroupId = objectNode.get("recordGroupId").asText();
-				if (recordGroupId.length() > 0)
-					place.setRecordGroupId(recordGroupId);
-				else
-					place.setRecordGroupId(null);
+			if (objectNode.get("recordGroup") != null) {
+				JsonNode recordGroupNode = objectNode.get("recordGroup");
+				if (recordGroupNode.get("id") != null) {
+					String recordGroupId = recordGroupNode.get("id").asText();
+					if (recordGroupId.length() > 0)
+						place.setRecordGroupId(recordGroupId);
+					else
+						place.setRecordGroupId(null);
+				}				
 			}
 			
 			// update identifier objects			
