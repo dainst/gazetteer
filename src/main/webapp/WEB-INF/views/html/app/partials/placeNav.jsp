@@ -15,10 +15,10 @@
 				<i class="icon-file"></i> <b class="caret"></b>
 			</a>
 			<ul class="dropdown-menu">
-				<li><a href="${baseUri}doc/{{place.gazId}}.kml" target="_blank">KML</a></li>
-				<li><a href="${baseUri}doc/{{place.gazId}}.json" target="_blank">JSON</a></li>
-				<li><a href="${baseUri}doc/{{place.gazId}}.geojson" target="_blank">GeoJSON</a></li>
-				<li><a href="${baseUri}doc/{{place.gazId}}.rdf" target="_blank">RDF/XML</a></li>
+				<li><a href="../doc/{{place.gazId}}.kml" target="_blank">KML</a></li>
+				<li><a href="../doc/{{place.gazId}}.json" target="_blank">JSON</a></li>
+				<li><a href="../doc/{{place.gazId}}.geojson" target="_blank">GeoJSON</a></li>
+				<li><a href="../doc/{{place.gazId}}.rdf" target="_blank">RDF/XML</a></li>
 			</ul>
 		</li>
 		<sec:authorize access="hasRole('ROLE_EDITOR')">
