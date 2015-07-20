@@ -176,6 +176,8 @@ public class RecordGroupController {
 		}
 		
 		int pages = (users.size() + usersPerPage - 1) / usersPerPage;
+		if (pages == 0)
+			pages = 1;
 		
 		if (page == null || page < 0)
 			page = 0;
