@@ -14,9 +14,13 @@ Boolean editAccess = (Boolean) request.getAttribute("editAccess");
 String baseUri = (String) request.getAttribute("baseUri");
 UserRepository userDao = (UserRepository) request.getAttribute("userDao");
 PlaceChangeRecordRepository changeRecordDao = (PlaceChangeRecordRepository) request.getAttribute("changeRecordDao");
+RecordGroupRepository groupDao = (RecordGroupRepository) request.getAttribute("groupDao");
 
 JsonPlaceSerializer serializer = new JsonPlaceSerializer(baseUri);
+serializer.setUserDao(userDao);
+serializer.setChangeRecordDao(changeRecordDao);
+serializer.setGroupDao(groupDao);
 
 %>
 
-<%= serializer.serializeGeoJson(place, userDao, changeRecordDao, request, readAccess, editAccess) %>
+<%= serializer.serializeGeoJson(place, request, readAccess, editAccess) %>
