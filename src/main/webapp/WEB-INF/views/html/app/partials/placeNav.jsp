@@ -22,7 +22,7 @@
 			</ul>
 		</li>
 		<sec:authorize access="hasRole('ROLE_EDITOR')">
-			<li class="pull-right" ng-class="isActive('change-history')" ng-hide="place.editAccessDenied">
+			<li class="pull-right" ng-class="isActive('change-history')" ng-hide="place.editAccessDenied || place.accessDenied">
 				<a ng-if="place.gazId" href="#!/change-history/{{place.gazId}}">
 					<i class="icon-eye-open"></i> <s:message code="ui.changeHistory" text="ui.changeHistory"/>
 				</a>
@@ -34,7 +34,7 @@
 			</a>
 		</li>
 		<sec:authorize access="hasRole('ROLE_EDITOR')">
-			<li class="pull-right" ng-class="isActive('edit')" ng-hide="place.editAccessDenied">
+			<li class="pull-right" ng-class="isActive('edit')" ng-hide="place.editAccessDenied || place.accessDenied">
 				<a ng-if="place.gazId" href="#!/edit/{{place.gazId}}">
 					<i class="icon-edit"></i> <s:message code="ui.edit" text="ui.edit"/>
 				</a>
