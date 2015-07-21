@@ -120,6 +120,7 @@
 			<ul>
 				<li><a href="${baseUri}doc/${place.id}.rdf" target="_blank">RDF/XML</a></li>
 				<li><a href="${baseUri}doc/${place.id}.json" target="_blank">JSON</a></li>
+				<li><a href="${baseUri}doc/${place.id}.geojson" target="_blank">GeoJSON</a></li>
 				<li><a href="${baseUri}doc/${place.id}.kml" target="_blank">KML</a></li>
 			</ul>
 			
