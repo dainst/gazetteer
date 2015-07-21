@@ -60,7 +60,7 @@ public class MergeController {
 		
 		PlaceAccessService placeAccessService = new PlaceAccessService(groupRoleDao);
 		
-		if (!placeAccessService.checkPlaceAccess(place1) || !placeAccessService.checkPlaceAccess(place2))
+		if (!placeAccessService.checkPlaceAccess(place1, true) || !placeAccessService.checkPlaceAccess(place2, true))
 			throw new IllegalStateException("Places may not be merged, as the user doesn't have the permission to edit both places.");
 		
 		if (!(place1.getRecordGroupId() == null && place2.getRecordGroupId() == null) && (place1.getRecordGroupId() != null && !place1.getRecordGroupId().equals(place2.getRecordGroupId())))
@@ -128,6 +128,8 @@ public class MergeController {
 		ModelAndView mav = new ModelAndView("place/get");
 		mav.addObject("place", newPlace);
 		mav.addObject("baseUri", baseUri);
+		mav.addObject("readAccess", true);
+		mav.addObject("editAccess", true);
 		mav.addObject("accessGranted", placeAccessService.checkPlaceAccess(newPlace));
 		return mav;
 		
