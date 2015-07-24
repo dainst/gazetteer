@@ -2,8 +2,10 @@ package org.dainst.gazetteer.controller;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,6 +42,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.RequestContext;
 import org.springframework.web.servlet.view.RedirectView;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 
 @Controller
@@ -221,6 +225,7 @@ public class DocumentController {
 		}
 		
 		place.setId(idGenerator.generate(place));
+		updateRelatedPlaces(place, null);
 		place.setLastChangeDate(new Date());
 		
 		Place existingPlace = placeDao.findOne(place.getId());
@@ -337,6 +342,7 @@ public class DocumentController {
 			changeRecordDao.save(createChangeRecord(place, "create"));
 		
 		place.setId(placeId);
+		updateRelatedPlaces(place, originalPlace);
 		place = placeDao.save(place);
 		
 		logger.debug("saved place {}", place);
@@ -416,6 +422,28 @@ public class DocumentController {
 			}
 		}
 		
+	}
+	
+	private void updateRelatedPlaces(Place place, Place originalPlace) {
+
+		Set<String> currentRelatedPlaces = new HashSet<String>(); 
+		if (originalPlace != null)
+			currentRelatedPlaces = originalPlace.getRelatedPlaces();
+		
+		for (String relatedPlaceId : place.getRelatedPlaces()) {
+			Place relatedPlace = placeDao.findOne(relatedPlaceId.replace(baseUri + "place/", ""));
+			relatedPlace.addRelatedPlace(place.getId());
+			placeDao.save(relatedPlace);
+		}
+			
+		for (String currentRelatedPlaceId : currentRelatedPlaces) {
+			if (currentRelatedPlaceId != null && !"null".equals(currentRelatedPlaceId)
+					&& !place.getRelatedPlaces().contains(currentRelatedPlaceId)) {
+				Place currentRelatedPlace = placeDao.findOne(currentRelatedPlaceId.replace(baseUri + "place/", ""));
+				currentRelatedPlace.getRelatedPlaces().remove(place.getId());
+				placeDao.save(currentRelatedPlace);
+			}
+		}	
 	}
 
 	private PlaceChangeRecord createChangeRecord(Place place, String changeType) {

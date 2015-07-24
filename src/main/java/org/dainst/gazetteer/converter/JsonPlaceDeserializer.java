@@ -99,25 +99,12 @@ public class JsonPlaceDeserializer {
 			
 			// set related places from URIs
 			JsonNode relatedPlacesNode = objectNode.get("relatedPlaces");
-			Set<String> oldRelatedPlaces = place.getRelatedPlaces();
 			place.setRelatedPlaces(new HashSet<String>());
 			if (relatedPlacesNode != null) for (JsonNode relatedPlaceNode : relatedPlacesNode) {
 				Place relatedPlace = getPlaceForNode(relatedPlaceNode);
-				if (relatedPlace != null) {
+				if (relatedPlace != null)
 					place.addRelatedPlace(relatedPlace.getId());
-					relatedPlace.addRelatedPlace(place.getId());
-					placeDao.save(relatedPlace);
-				}
-			}
-			// delete place from related places' related places if necessary
-			for (String oldRelatedPlace : oldRelatedPlaces) {
-				if (oldRelatedPlace != null && !"null".equals(oldRelatedPlace)
-						&& !place.getRelatedPlaces().contains(oldRelatedPlace)) {
-					Place relatedPlace = placeDao.findOne(oldRelatedPlace);
-					relatedPlace.getRelatedPlaces().remove(place.getId());
-					placeDao.save(relatedPlace);
-				}
-			}			
+			}		
 			
 			// update types
 			if (objectNode.has("types")) {
