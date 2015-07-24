@@ -412,7 +412,8 @@ directives.directive('gazShapeEditor', function($document, $timeout, PolygonVali
 							strokeWeight: 1.5,
 							fillColor: "#000000",
 							fillOpacity: 0.25,
-							editable: true
+							editable: true,
+							draggable: true
 						}
 					});
 
@@ -446,7 +447,8 @@ directives.directive('gazShapeEditor', function($document, $timeout, PolygonVali
 								strokeWeight: 1.5,
 								fillColor: "#000000",
 								fillOpacity: 0.25,
-								editable: true
+								editable: true,
+								draggable: true
 							});
 							
 							$scope.gmapsShapes[i].setMap($scope.map);
