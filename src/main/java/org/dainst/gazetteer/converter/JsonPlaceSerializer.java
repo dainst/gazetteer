@@ -55,8 +55,8 @@ public class JsonPlaceSerializer {
 		return serialize(place, null, null, accessGranted, false);
 	}
 	
-	public String serialize(Place place, List<Place> parents, Boolean accessGranted) {
-		return serialize(place, null, parents, accessGranted, false);
+	public String serialize(Place place, List<Place> parents, Boolean readAccess, Boolean editAccess) {
+		return serialize(place, null, parents, readAccess, editAccess);
 	}
 	
 	public String serialize(Place place, HttpServletRequest request, List<Place> parents, Boolean readAccess, Boolean editAccess) {

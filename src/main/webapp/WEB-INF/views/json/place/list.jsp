@@ -12,7 +12,9 @@ response.setHeader("Content-Type", "application/json; charset=utf-8");
 
 List<Place> places = (List<Place>) request.getAttribute("places");
 Map<String, List<Place>> parents = (Map<String, List<Place>>) request.getAttribute("parents");
-Map<String, Boolean> accessMap = (Map<String, Boolean>) request.getAttribute("accessMap");
+Map<String, Boolean> readAccessMap = (Map<String, Boolean>) request.getAttribute("readAccessMap");
+Map<String, Boolean> editAccessMap = (Map<String, Boolean>) request.getAttribute("editAccessMap");
+Boolean includeAccessInfo = request.getAttribute("includeAccessInfo") == null ? false : (Boolean) request.getAttribute("includeAccessInfo");
 String baseUri = (String) request.getAttribute("baseUri");
 Long hits = (Long) request.getAttribute("hits");
 String queryId = (String) request.getAttribute("queryId");
@@ -20,6 +22,7 @@ RecordGroupRepository groupDao = (RecordGroupRepository) request.getAttribute("g
 
 JsonPlaceSerializer serializer = new JsonPlaceSerializer(baseUri);
 serializer.setGroupDao(groupDao);
+serializer.setIncludeAccessInfo(includeAccessInfo);
 
 StringBuilder sb = new StringBuilder("{");
 sb.append("\n\"total\": ").append(hits);
@@ -32,11 +35,12 @@ for (Place place : places) {
 	if (parents != null)
 		placeParents = parents.get(place.getId());
 	
-	boolean accessGranted = accessMap.get(place.getId());
+	boolean readAccess = readAccessMap.get(place.getId());
+	boolean editAccess = editAccessMap.get(place.getId());
 
-	String serializedPlace = serializer.serialize(place, placeParents, accessGranted);
+	String serializedPlace = serializer.serialize(place, placeParents, readAccess, editAccess);
 	if (serializedPlace != null) {
-		if (accessGranted)
+		if (readAccess)
 			accessGrantedPlaces.add(serializedPlace);
 		else
 			accessDeniedPlaces.add(serializedPlace);

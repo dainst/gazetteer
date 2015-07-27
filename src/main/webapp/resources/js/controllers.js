@@ -1363,7 +1363,7 @@ function MergeCtrl($scope, $rootScope, $routeParams, $location, Place, EscapingS
 		}
 		query += ") AND NOT _id:" + $scope.place.gazId;
 		$rootScope.loading++;
-		Place.query({q: query, type: 'queryString'}, function(result) {
+		Place.query({q: query, type: 'queryString', add: 'access'}, function(result) {
 			$scope.candidatePlaces = result.result;
 			$scope.parents = {};
 			for(var i in $scope.candidatePlaces) {

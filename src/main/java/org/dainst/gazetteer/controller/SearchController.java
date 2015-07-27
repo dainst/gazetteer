@@ -190,12 +190,14 @@ public class SearchController {
 		Map<String,List<String[]>> facets = processFacets(query, locale);
 		
 		Map<String, List<Place>> parents = new HashMap<String, List<Place>>();
-		Map<String, Boolean> accessMap = new HashMap<String, Boolean>();
+		Map<String, Boolean> readAccessMap = new HashMap<String, Boolean>();
+		Map<String, Boolean> editAccessMap = new HashMap<String, Boolean>();
 		PlaceAccessService placeAccessService = new PlaceAccessService(groupRoleDao);
 		
 		for (Place place : places) {
 			protectLocationsService.protectLocations(user, place);
-			accessMap.put(place.getId(), placeAccessService.checkPlaceAccess(place));
+			readAccessMap.put(place.getId(), placeAccessService.checkPlaceAccess(place));
+			editAccessMap.put(place.getId(), placeAccessService.checkPlaceAccess(place, true));
 
 			if (add != null && add.contains("parents")) {
 				List<Place> placeParents = new ArrayList<Place>();
@@ -212,8 +214,9 @@ public class SearchController {
 		ModelAndView mav = new ModelAndView("place/list");
 		mav.addObject("places", places);
 		if (parents.size() > 0) mav.addObject("parents", parents);
-		mav.addObject("accessMap", accessMap);
-		mav.addObject("includeAccessInfo", false);
+		mav.addObject("readAccessMap", readAccessMap);
+		mav.addObject("editAccessMap", editAccessMap);
+		mav.addObject("includeAccessInfo", add != null && add.contains("access"));
 		mav.addObject("includeChangeHistory", false);
 		mav.addObject("groupDao", groupDao);
 		mav.addObject("facets", facets);
@@ -286,17 +289,20 @@ public class SearchController {
 		
 		List<Place> places = placesForList(result, true);
 		Map<String,List<String[]>> facets = processFacets(query, locale);
-		Map<String, Boolean> accessMap = new HashMap<String, Boolean>();
+		Map<String, Boolean> readAccessMap = new HashMap<String, Boolean>();
+		Map<String, Boolean> editAccessMap = new HashMap<String, Boolean>();
 		PlaceAccessService placeAccessService = new PlaceAccessService(groupRoleDao);
 		
 		for (Place place : places) {
 			protectLocationsService.protectLocations(user, place);
-			accessMap.put(place.getId(), placeAccessService.checkPlaceAccess(place));
+			readAccessMap.put(place.getId(), placeAccessService.checkPlaceAccess(place));
+			editAccessMap.put(place.getId(), placeAccessService.checkPlaceAccess(place, true));
 		}
 		
 		ModelAndView mav = new ModelAndView("place/list");
 		mav.addObject("places", places);
-		mav.addObject("accessMap", accessMap);
+		mav.addObject("readAccessMap", readAccessMap);
+		mav.addObject("editAccessMap", editAccessMap);
 		mav.addObject("groupDao", groupDao);
 		mav.addObject("facets", facets);
 		mav.addObject("baseUri", baseUri);
@@ -370,17 +376,20 @@ public class SearchController {
 		
 		List<Place> places = placesForList(result, true);
 		
-		Map<String, Boolean> accessMap = new HashMap<String, Boolean>();
+		Map<String, Boolean> readAccessMap = new HashMap<String, Boolean>();
+		Map<String, Boolean> editAccessMap = new HashMap<String, Boolean>();
 		PlaceAccessService placeAccessService = new PlaceAccessService(groupRoleDao);
 		
 		for (Place place : places) {
 			protectLocationsService.protectLocations(user, place);
-			accessMap.put(place.getId(), placeAccessService.checkPlaceAccess(place));
+			readAccessMap.put(place.getId(), placeAccessService.checkPlaceAccess(place));
+			editAccessMap.put(place.getId(), placeAccessService.checkPlaceAccess(place, true));
 		}
 		
 		ModelAndView mav = new ModelAndView("place/list");
 		mav.addObject("places", places);
-		mav.addObject("accessMap", accessMap);
+		mav.addObject("readAccessMap", readAccessMap);
+		mav.addObject("editAccessMap", editAccessMap);
 		mav.addObject("groupDao", groupDao);
 		mav.addObject("facets", facets);
 		mav.addObject("baseUri", baseUri);
@@ -526,17 +535,20 @@ public class SearchController {
 		if (principal instanceof User)
 			user = (User) principal;
 		
-		Map<String, Boolean> accessMap = new HashMap<String, Boolean>();
+		Map<String, Boolean> readAccessMap = new HashMap<String, Boolean>();
+		Map<String, Boolean> editAccessMap = new HashMap<String, Boolean>();
 		PlaceAccessService placeAccessService = new PlaceAccessService(groupRoleDao);
 		
 		for (Place place : places) {
 			protectLocationsService.protectLocations(user, place);
-			accessMap.put(place.getId(), placeAccessService.checkPlaceAccess(place));
+			readAccessMap.put(place.getId(), placeAccessService.checkPlaceAccess(place));
+			editAccessMap.put(place.getId(), placeAccessService.checkPlaceAccess(place, true));
 		}
 		
 		ModelAndView mav = new ModelAndView("place/list");
 		mav.addObject("places", places);
-		mav.addObject("accessMap", accessMap);
+		mav.addObject("readAccessMap", readAccessMap);
+		mav.addObject("editAccessMap", editAccessMap);
 		mav.addObject("groupDao", groupDao);
 		mav.addObject("includeAccessInfo", false);
 		mav.addObject("includeChangeHistory", false);
@@ -550,6 +562,7 @@ public class SearchController {
 	}
 	
 	private void createParentsList(Place place, List<Place> parents, boolean includePolygons) {
+		logger.warn("create parent list for place " + place.getId());
 		if (place.getParent() != null && !place.getParent().isEmpty()) {
 			Place parent = null;
 			if (includePolygons)

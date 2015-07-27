@@ -56,7 +56,7 @@
 				<td><div gaz-place-title place="candidatePlace"></div><small class="muted">{{parents[candidatePlace.parent].prefName.title}}</small></td>
 				<td>
 					<sec:authorize access="hasRole('ROLE_EDITOR')">
-						<div ng-hide="place.editAccessDenied || place.accessDenied">
+						<div ng-hide="place.editAccessDenied || place.accessDenied || candidatePlace.editAccessDenied">
 							<div class="modal hide" id="linkModal-{{candidatePlace.gazId}}">
 								<div class="modal-header">
 									<button type="button" class="close" data-dismiss="modal">×</button>
@@ -82,7 +82,7 @@
 				</td>
 				<td>
 					<sec:authorize access="hasRole('ROLE_EDITOR')">
-						<div ng-hide="place.editAccessDenied || place.accessDenied">
+						<div ng-hide="place.editAccessDenied || place.accessDenied || candidatePlace.editAccessDenied">
 							<div class="modal hide" id="mergeModal-{{candidatePlace.gazId}}">
 								<div ng-show="place.recordGroupId == candidatePlace.recordGroupId">
 									<div class="modal-header">
