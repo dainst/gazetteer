@@ -432,7 +432,7 @@ directives.directive('gazShapeEditor', function($document, $timeout, PolygonVali
 							for (var j = 0; j < $scope.shape[i].length; j++) {
 								var pathCoordinates = [];
 								for (var k = 0; k < $scope.shape[i][j].length; k++)
-									pathCoordinates[k] = new google.maps.LatLng($scope.shape[i][j][k][1], $scope.shape[i][j][k][0]);
+									pathCoordinates[k] = new google.maps.LatLng(Number(($scope.shape[i][j][k][1]).toFixed(13)), Number(($scope.shape[i][j][k][0]).toFixed(13)));
 								if (pathCoordinates[0].lat() == pathCoordinates[pathCoordinates.length - 1].lat() &&
 										pathCoordinates[0].lng() == pathCoordinates[pathCoordinates.length - 1].lng()) {
 									pathCoordinates.splice(pathCoordinates.length - 1, 1);
