@@ -364,13 +364,34 @@ CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
     end
   end
 
+  # check for existing place
+  existing_place = nil
+  id_present = true if !place[:gazId].to_s.empty?
+  if id_present
+    begin
+      response = gaz["doc/#{place[:gazId]}"].get(:content_type => :json, :accept => :json)
+      existing_place = JSON.parse(response.body, :symbolize_names => true)
+    rescue RestClient::Exception => e
+      if e.http_code == 401
+        puts "ERROR: user name or password incorrect, aborting ..."
+        exit(1)
+      end
+      puts "WARNING: gazetteer id #{place[:gazId]} not present in gazetteer, generation of custom ids is not supported"
+      puts "HTTP response code: #{e.http_code}" if options.verbose
+      place.delete(:gazId)
+      id_present = false
+    end
+  end
+
   # postprocess to delete empty fields and add provenance
   place[:provenance] = options.provenance
   place.delete(:gazId) if place[:gazId].to_s.empty?
   place[:prefName].delete(:language) if place[:prefName][:language].to_s.empty?
   place[:prefName].delete(:ancient) if !place[:prefName][:ancient]
   if place[:prefName][:title].to_s.empty?
-    if place[:names] && place[:names].size > 0
+    if existing_place && existing_place[:prefName] && existing_place[:prefName][:title] && !existing_place[:prefName][:title].empty?
+      place.delete(:prefName)
+    elsif place[:names] && place[:names].size > 0
       place[:prefName] = place[:names][0]
       place[:names].shift
     else
@@ -396,45 +417,30 @@ CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
     place[:comments].delete_if { |comment| comment[:text].to_s.empty? }
   end
 
-  id_present = true if !place[:gazId].to_s.empty?
   total += 1
 
-  # check for existing place and apply merge if necessary
+  # apply merge if necessary
   if id_present
-    begin
-      response = gaz["doc/#{place[:gazId]}"].get(:content_type => :json, :accept => :json)
-      existing_place = JSON.parse(response.body, :symbolize_names => true)
-      if !options.merge
-        if !options.replace
-          # skip place to prevent replacement of existing place
-          puts "skipping duplicate #{place[:gazId]}" if options.verbose
-          skipped += 1
-          next
-        else
-          # place will be replaced
-          puts "WARNING: place with gazetteer id #{place[:gazId]} will be replaced!"
-          replaced += 1
-        end
+    if !options.merge
+      if !options.replace
+        # skip place to prevent replacement of existing place
+        puts "skipping duplicate #{place[:gazId]}" if options.verbose
+        skipped += 1
+        next
       else
-        if !options.replace
-          # existing place has priority
-          place = place.merge(existing_place, &merger)
-        else
-          # new place has priority
-          place = existing_place.merge(place, &merger)
-        end
-        merged += 1
+        # place will be replaced
+        puts "WARNING: place with gazetteer id #{place[:gazId]} will be replaced!"
+        replaced += 1
       end
-    rescue RestClient::Exception => e
-      if e.http_code == 401
-        puts "ERROR: user name or password incorrect, aborting ..."
-        exit(1)
+    else
+      if !options.replace
+        # existing place has priority
+        place = place.merge(existing_place, &merger)
+      else
+        # new place has priority
+        place = existing_place.merge(place, &merger)
       end
-      puts "WARNING: gazetteer id #{place[:gazId]} not present in gazetteer, generation of custom ids is not supported"
-      puts "HTTP response code: #{e.http_code}" if options.verbose
-      place.delete(:gazId)
-      id_present = false
-      inserted += 1
+      merged += 1
     end
   else
     inserted += 1
