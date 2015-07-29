@@ -310,6 +310,9 @@
 										<delete file="src/main/webapp/WEB-INF/web.xml" />
 										<copy file="src/main/resources/web.test.xml"
 											tofile="src/main/webapp/WEB-INF/web.xml" />
+										<delete file="src/main/resources/log4j.xml" />
+										<copy file="src/main/resources/log4j.test.xml"
+											tofile="src/main/resources/log4j.xml" />
 									</tasks>
 								</configuration>
 							</execution>
@@ -360,6 +363,9 @@
 										<delete file="src/main/webapp/WEB-INF/web.xml" />
 										<copy file="src/main/resources/web.prod.xml"
 											tofile="src/main/webapp/WEB-INF/web.xml" />
+										<delete file="src/main/resources/log4j.xml" />
+										<copy file="src/main/resources/log4j.prod.xml"
+											tofile="src/main/resources/log4j.xml" />
 									</tasks>
 								</configuration>
 							</execution>
