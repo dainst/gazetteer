@@ -1,7 +1,7 @@
 var mapping = {
 	"city": "populated-place",
 	"Archaeological Site": "archaeological-site",
-	"museum": "institution",
+	"museum": "building-institution",
 	"populated place": "populated-place",
 	"district": "administrative-unit",
 	"archaeological-site": "archaeological-site",
@@ -39,7 +39,7 @@ var mapping = {
 	"Administrative Unit": "administrative-unit",
 	"deserted site": "archaeological-site",
 	"Island": "island",
-	"Museum": "institution",
+	"Museum": "building-institution",
 	"Provinz": "administrative-unit",
 	"Spring": "hydrography",
 	"state": "administrative-unit",
