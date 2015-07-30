@@ -393,6 +393,7 @@ CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
   place.delete(:gazId) if place[:gazId].to_s.empty?
   place[:prefName].delete(:language) if place[:prefName][:language].to_s.empty?
   place[:prefName].delete(:ancient) if !place[:prefName][:ancient]
+  place[:prefName].delete(:transliterated) if !place[:prefName][:transliterated]
   if options.splitNames
     newNames = []
     for name in place[:names] do
