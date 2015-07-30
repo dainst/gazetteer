@@ -109,6 +109,11 @@ opts = OptionParser.new do |opts|
     options.geonames = g
   end
 
+  options.splitNames = false
+  opts.on("-S", "--split-names SEPARATOR", "Divide place names into multiple names based on separator") do |s|
+    options.splitNames = s
+  end
+
   options.verbose = false
   opts.on("-v", "--[no-]verbose", "Run verbosely") do |v|
     options.verbose = v
@@ -388,6 +393,24 @@ CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
   place.delete(:gazId) if place[:gazId].to_s.empty?
   place[:prefName].delete(:language) if place[:prefName][:language].to_s.empty?
   place[:prefName].delete(:ancient) if !place[:prefName][:ancient]
+  if options.splitNames
+    newNames = []
+    for name in place[:names] do
+      titles = name[:title].split(options.splitNames)
+      if titles.length > 1
+        name[:title] = titles[0].strip
+        for i in 1..titles.length - 1 do
+          newName = {}
+          newName[:title] = titles[i].strip
+          newName[:language] = name[:language]
+          newName[:ancient] = name[:ancient]
+          newName[:transliterated] = name[:transliterated]
+          newNames << newName
+        end
+      end
+    end
+    place[:names].concat(newNames)
+  end
   if place[:prefName][:title].to_s.empty?
     if existing_place && existing_place[:prefName] && existing_place[:prefName][:title] && !existing_place[:prefName][:title].empty?
       place.delete(:prefName)
