@@ -1,8 +1,6 @@
 package org.dainst.gazetteer.controller;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.MissingResourceException;
@@ -17,6 +15,7 @@ import org.dainst.gazetteer.domain.Link;
 import org.dainst.gazetteer.domain.Location;
 import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.PlaceName;
+import org.dainst.gazetteer.helpers.GrandparentsHelper;
 import org.dainst.gazetteer.helpers.IdGenerator;
 import org.dainst.gazetteer.helpers.LanguagesHelper;
 import org.dainst.gazetteer.helpers.Merger;
@@ -240,38 +239,18 @@ public class AdminController {
 
 		long time = System.currentTimeMillis();
 
+		GrandparentsHelper helper = new GrandparentsHelper(placeDao);
+
 		List<Place> places = placeDao.findByTypesAndDeletedIsFalse("continent",new Sort("prefName"));
 
 		for (Place place : places) {
-			List<String> grandparentIds = new ArrayList<String>();
-			if (place.getParent() != null && !place.getParent().isEmpty())
-				grandparentIds.add(place.getParent());
-			updatePlaceGrandparents(place, grandparentIds);
+			helper.updatePlaceGrandparents(place);
 		}
 
 		String message = "OK: finished updating grandparents in " + (System.currentTimeMillis() - time) + "ms";
 		logger.info(message);
 
 		return message;
-	}
-
-	private void updatePlaceGrandparents(Place place, List<String> grandparentIds) {
-
-		List<String> placeGrandparentIds = new ArrayList<String>(grandparentIds);
-		if (!placeGrandparentIds.isEmpty())
-			placeGrandparentIds.remove(grandparentIds.size() - 1);
-		Collections.reverse(placeGrandparentIds);
-		if (!place.getGrandparents().equals(placeGrandparentIds)) {
-			place.setGrandparents(placeGrandparentIds);
-			placeDao.save(place);
-		}
-
-		grandparentIds.add(place.getId());
-
-		List<Place> children = placeDao.findByParentAndDeletedIsFalse(place.getId());
-		for (Place child : children) {
-			updatePlaceGrandparents(child, new ArrayList<String>(grandparentIds));
-		}
 	}
 
 	@RequestMapping(value="/admin/generateLinks", method=RequestMethod.POST)

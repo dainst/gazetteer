@@ -20,6 +20,7 @@ import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.PlaceChangeRecord;
 import org.dainst.gazetteer.domain.User;
 import org.dainst.gazetteer.domain.ValidationResult;
+import org.dainst.gazetteer.helpers.GrandparentsHelper;
 import org.dainst.gazetteer.helpers.IdGenerator;
 import org.dainst.gazetteer.helpers.LanguagesHelper;
 import org.dainst.gazetteer.helpers.PlaceAccessService;
@@ -42,8 +43,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.RequestContext;
 import org.springframework.web.servlet.view.RedirectView;
-
-import com.fasterxml.jackson.databind.JsonNode;
 
 
 @Controller
@@ -334,6 +333,13 @@ public class DocumentController {
 			return mav;
 		}
 		
+		if (!place.getParent().equals(originalPlace.getParent())) {
+			GrandparentsHelper helper = new GrandparentsHelper(placeDao);
+			place.setGrandparents(helper.findGrandparentIds(place));
+			if (place.getChildren() < 10000)
+				helper.updatePlaceGrandparents(place);
+		}
+
 		place.setLastChangeDate(new Date());
 		
 		if (placeDao.exists(place.getId()))

@@ -13,6 +13,7 @@ import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.PlaceChangeRecord;
 import org.dainst.gazetteer.domain.User;
+import org.dainst.gazetteer.helpers.GrandparentsHelper;
 import org.dainst.gazetteer.helpers.IdGenerator;
 import org.dainst.gazetteer.helpers.Merger;
 import org.dainst.gazetteer.helpers.PlaceAccessService;
@@ -69,6 +70,11 @@ public class MergeController {
 		// merge places
 		Place newPlace = merger.merge(place1, place2);
 		newPlace.setId(idGenerator.generate(newPlace));
+
+		// update grandparent ids
+		GrandparentsHelper helper = new GrandparentsHelper(placeDao);
+		newPlace.setGrandparents(helper.findGrandparentIds(newPlace));
+
 		Place existingPlace = placeDao.findOne(newPlace.getId());
 		if (existingPlace == null) {
 			placeDao.save(newPlace);
@@ -109,6 +115,9 @@ public class MergeController {
 			placeDao.save(place);
 		}
 		
+		if (place1.getChildren() + place2.getChildren() < 10000)
+			helper.updatePlaceGrandparents(newPlace);
+
 		place1.setReplacedBy(newPlace.getId());
 		place1.setDeleted(true);
 		placeDao.save(place1);
