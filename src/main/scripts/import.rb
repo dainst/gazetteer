@@ -232,7 +232,8 @@ CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
 
       tempString = place[:prefLocation][:shapeString]
       tempString = tempString.gsub("POLYGON((", "")
-      tempString = tempString.gsub("))", "")
+      tempString = tempString.gsub("MULTIPOLYGON (((", "")
+      tempString = tempString.gsub(")", "")
       points = tempString.split(',')
       pointsArray = Array.new
       for point in points do
@@ -391,9 +392,11 @@ CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
   # postprocess to delete empty fields and add provenance
   place[:provenance] = options.provenance
   place.delete(:gazId) if place[:gazId].to_s.empty?
-  place[:prefName].delete(:language) if place[:prefName][:language].to_s.empty?
-  place[:prefName].delete(:ancient) if !place[:prefName][:ancient]
-  place[:prefName].delete(:transliterated) if !place[:prefName][:transliterated]
+  if place[:prefName]
+    place[:prefName].delete(:language) if place[:prefName][:language].to_s.empty?
+    place[:prefName].delete(:ancient) if !place[:prefName][:ancient]
+    place[:prefName].delete(:transliterated) if !place[:prefName][:transliterated]
+  end
   if options.splitNames
     newNames = []
     for name in place[:names] do
@@ -412,7 +415,7 @@ CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
     end
     place[:names].concat(newNames)
   end
-  if place[:prefName][:title].to_s.empty?
+  if place[:prefName] && place[:prefName][:title].to_s.empty?
     if existing_place && existing_place[:prefName] && existing_place[:prefName][:title] && !existing_place[:prefName][:title].empty?
       place.delete(:prefName)
     elsif place[:names] && place[:names].size > 0
