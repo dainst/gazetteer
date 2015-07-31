@@ -46,7 +46,7 @@
 			</label>
 			<div class="controls">
 				<div gaz-place-picker place="parent" id="parent.gazId"></div>
-				<label class="checkbox inline" style="margin-top: -30px;">
+				<label class="checkbox inline" style="vertical-align: top;">
 					<input type="checkbox" ng-model="grandchildrenSearch" />
 					<span gaz-translate="'ui.search.grandchildren-search'"></span>
 				</label>
@@ -74,7 +74,7 @@
 			</label>
 			<div class="controls">
 				<div gaz-tag-field tags="tags" fieldname="tags" fieldwidth="274px" number="0" deactivated="filters.noTags"></div>
-				<label class="checkbox inline" style="margin-top: -30px;">
+				<label class="checkbox inline" style="vertical-align: top;">
 					<input type="checkbox" ng-model="filters.noTags" />
 					<span gaz-translate="'ui.search.filter.no-tags'"></span>
 				</label>
@@ -87,7 +87,7 @@
 			</label>
 			<div class="controls">
 				<div gaz-tag-field tags="provenance" fieldname="provenance" fieldwidth="274px" number="1" deactivated="filters.noProvenance"></div>
-				<label class="checkbox inline" style="margin-top: -30px;">
+				<label class="checkbox inline" style="vertical-align: top;">
 					<input type="checkbox" ng-model="filters.noProvenance" />
 					<span gaz-translate="'ui.search.filter.no-provenance'"></span>
 				</label>
