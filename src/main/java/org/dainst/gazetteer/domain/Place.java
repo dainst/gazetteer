@@ -43,6 +43,9 @@ public class Place {
 
 	@Indexed
 	private String parent;
+	
+	@Indexed
+	private List<String> grandparents = new ArrayList<String>();
 
 	@Indexed
 	private Set<String> relatedPlaces = new HashSet<String>();
@@ -133,6 +136,14 @@ public class Place {
 
 	public void setParent(String parent) {
 		this.parent = parent;
+	}
+
+	public List<String> getGrandparents() {
+		return grandparents;
+	}
+
+	public void setGrandparents(List<String> grandparents) {
+		this.grandparents = grandparents;
 	}
 
 	public boolean isDeleted() {

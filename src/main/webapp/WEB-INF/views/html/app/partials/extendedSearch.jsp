@@ -46,6 +46,10 @@
 			</label>
 			<div class="controls">
 				<div gaz-place-picker place="parent" id="parent.gazId"></div>
+				<label class="checkbox inline" style="margin-top: -30px;">
+					<input type="checkbox" ng-model="grandchildrenSearch" />
+					<span gaz-translate="'ui.search.grandchildren-search'"></span>
+				</label>
 			</div>
 		</div>
 		

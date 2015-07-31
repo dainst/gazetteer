@@ -300,6 +300,7 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages, PolygonVali
 		$scope.type = "";
 		$scope.names = { title: "", language: "" };
 		$scope.parent = null;
+		$scope.grandchildrenSearch = false;
 		$scope.type = "";
 		$scope.tags = [];
 		$scope.provenance = [];
@@ -378,8 +379,19 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages, PolygonVali
 		}
 		
 		// parent
-		if ($scope.parent !== null) {			
-			queries.push({ match: { "parent": $scope.parent.gazId } });
+		if ($scope.parent !== null) {
+			if ($scope.grandchildrenSearch) {
+				queries.push({
+					bool: {
+						should: [
+						    { match: { "parent": $scope.parent.gazId } },
+						    { match: { "grandparents": $scope.parent.gazId } }
+						]
+					}
+				});
+			}
+			else
+				queries.push({ match: { "parent": $scope.parent.gazId } });
 		}
 		
 		// type

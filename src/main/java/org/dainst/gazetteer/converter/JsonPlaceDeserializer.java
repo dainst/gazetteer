@@ -97,6 +97,14 @@ public class JsonPlaceDeserializer {
 				}
 			}
 			
+			// set grandparents
+			if (objectNode.has("grandparents")) {
+				List<String> grandparents = new ArrayList<String>();
+				for (JsonNode grandparentId : objectNode.get("grandparents"))
+					grandparents.add(grandparentId.asText().replace(baseUri + "place/", ""));
+				place.setGrandparents(grandparents);
+			}
+			
 			// set related places from URIs
 			JsonNode relatedPlacesNode = objectNode.get("relatedPlaces");
 			place.setRelatedPlaces(new HashSet<String>());

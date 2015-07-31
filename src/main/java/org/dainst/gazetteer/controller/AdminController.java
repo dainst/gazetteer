@@ -1,6 +1,8 @@
 package org.dainst.gazetteer.controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.MissingResourceException;
@@ -232,6 +234,46 @@ public class AdminController {
 		return size;
 	}
 	
+	@RequestMapping(value="/admin/updateGrandparents", method=RequestMethod.POST)
+	@ResponseBody
+	public String updateGrandparents() {
+
+		long time = System.currentTimeMillis();
+
+		List<Place> places = placeDao.findByTypesAndDeletedIsFalse("continent",new Sort("prefName"));
+
+		for (Place place : places) {
+			List<String> grandparentIds = new ArrayList<String>();
+			if (place.getParent() != null && !place.getParent().isEmpty())
+				grandparentIds.add(place.getParent());
+			updatePlaceGrandparents(place, grandparentIds);
+		}
+
+		String message = "OK: finished updating grandparents in " + (System.currentTimeMillis() - time) + "ms";
+		logger.info(message);
+
+		return message;
+	}
+
+	private void updatePlaceGrandparents(Place place, List<String> grandparentIds) {
+
+		List<String> placeGrandparentIds = new ArrayList<String>(grandparentIds);
+		if (!placeGrandparentIds.isEmpty())
+			placeGrandparentIds.remove(grandparentIds.size() - 1);
+		Collections.reverse(placeGrandparentIds);
+		if (!place.getGrandparents().equals(placeGrandparentIds)) {
+			place.setGrandparents(placeGrandparentIds);
+			placeDao.save(place);
+		}
+
+		grandparentIds.add(place.getId());
+
+		List<Place> children = placeDao.findByParentAndDeletedIsFalse(place.getId());
+		for (Place child : children) {
+			updatePlaceGrandparents(child, new ArrayList<String>(grandparentIds));
+		}
+	}
+
 	@RequestMapping(value="/admin/generateLinks", method=RequestMethod.POST)
 	@ResponseBody
 	public String generateLinks() {

@@ -122,6 +122,15 @@ public class JsonPlaceSerializer {
 			return placeNode;
 		}
 		
+		// grandparents
+		if (place.getGrandparents() != null && !place.getGrandparents().isEmpty()) {
+			ArrayNode grandparentsNode = mapper.createArrayNode();
+			for (String grandparentId : place.getGrandparents()) {
+				grandparentsNode.add(baseUri + "place/" + grandparentId);
+			}
+			placeNode.put("grandparents", grandparentsNode);
+		}
+		
 		// place types
 		if (place.getTypes() != null && !place.getTypes().isEmpty()) {
 			ArrayNode typesNode = mapper.createArrayNode();

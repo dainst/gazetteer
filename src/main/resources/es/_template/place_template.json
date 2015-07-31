@@ -210,6 +210,10 @@
 	                "type": "string",
 					"include_in_all": false
 	            },
+	            "grandparents": {
+					"type": "string",
+					"include_in_all": false
+	            },
 	            "relatedPlaces": {
 	            	"type": "string"
 	            },
