@@ -24,6 +24,7 @@ import org.dainst.gazetteer.helpers.GrandparentsHelper;
 import org.dainst.gazetteer.helpers.IdGenerator;
 import org.dainst.gazetteer.helpers.LanguagesHelper;
 import org.dainst.gazetteer.helpers.PlaceAccessService;
+import org.dainst.gazetteer.helpers.PolygonValidator;
 import org.dainst.gazetteer.helpers.ProtectLocationsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -223,6 +224,19 @@ public class DocumentController {
 			return mav;
 		}
 		
+		if (place.getPrefLocation() != null && place.getPrefLocation().getShape() != null && place.getPrefLocation().getShape().getCoordinates() != null) {
+			PolygonValidator validator = new PolygonValidator();
+			if (validator.validate(place.getPrefLocation().getShape())) {
+				ModelAndView mav = new ModelAndView("place/validation");
+				ValidationResult result = new ValidationResult();
+				result.setSuccess(false);
+				result.setMessage("polygonValidationError");
+				response.setStatus(422);
+				mav.addObject("result", result);
+				return mav;
+			}
+		}
+		
 		place.setId(idGenerator.generate(place));
 		updateRelatedPlaces(place, null);
 		place.setLastChangeDate(new Date());
@@ -331,6 +345,19 @@ public class DocumentController {
 			response.setStatus(403);
 			mav.addObject("result", result);
 			return mav;
+		}
+		
+		if (place.getPrefLocation() != null && place.getPrefLocation().getShape() != null && place.getPrefLocation().getShape().getCoordinates() != null) {
+			PolygonValidator validator = new PolygonValidator();
+			if (validator.validate(place.getPrefLocation().getShape())) {
+				ModelAndView mav = new ModelAndView("place/validation");
+				ValidationResult result = new ValidationResult();
+				result.setSuccess(false);
+				result.setMessage("polygonValidationError");
+				response.setStatus(422);
+				mav.addObject("result", result);
+				return mav;
+			}
 		}
 		
 		if (!place.getParent().equals(originalPlace.getParent())) {
