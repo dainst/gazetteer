@@ -360,7 +360,7 @@ public class DocumentController {
 			}
 		}
 		
-		if (!place.getParent().equals(originalPlace.getParent())) {
+		if (place.getParent() != null && !place.getParent().equals(originalPlace.getParent())) {
 			GrandparentsHelper helper = new GrandparentsHelper(placeDao);
 			place.setGrandparents(helper.findGrandparentIds(place));
 			if (place.getChildren() < 10000)
