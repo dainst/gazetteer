@@ -231,9 +231,29 @@ CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
       multipolygon[0] = Array.new
 
       tempString = place[:prefLocation][:shapeString]
-      tempString = tempString.gsub("POLYGON((", "")
-      tempString = tempString.gsub("MULTIPOLYGON (((", "")
-      tempString = tempString.gsub(")", "")
+
+      if tempString.include?("POLYGON((") || tempString.include?("POLYGON ((")
+        tempString = tempString.gsub("POLYGON((", "")
+        tempString = tempString.gsub("POLYGON ((", "")
+        if tempString.include?("))")
+          tempString = tempString.gsub("))", "")
+        else
+          puts "Incomplete polygon data for place #{temp_id}"
+          next
+        end
+      end
+
+      if tempString.include?("MULTIPOLYGON(((") || tempString.include?("MULTIPOLYGON (((")
+        tempString = tempString.gsub("MULTIPOLYGON(((", "")
+          tempString = tempString.gsub("MULTIPOLYGON (((", "")
+        if tempString.include?(")))")
+          tempString = tempString.gsub(")))", "")
+        else
+          puts "Incomplete polygon data for place #{temp_id}"
+          next
+        end
+      end
+      
       points = tempString.split(',')
       pointsArray = Array.new
       for point in points do
