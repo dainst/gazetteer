@@ -1,11 +1,4 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
-<%@ page session="false" import="org.dainst.gazetteer.domain.*,
-	org.dainst.gazetteer.converter.JsonPlaceSerializer,
-	org.dainst.gazetteer.dao.*, java.util.List" %>
-
-<%
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%><%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %><%@ taglib uri="http://www.springframework.org/tags" prefix="s" %><%@ page session="false" import="org.dainst.gazetteer.domain.*, org.dainst.gazetteer.converter.JsonPlaceSerializer, org.dainst.gazetteer.dao.*, java.util.List" %><%
 
 response.setHeader("Content-Type", "application/json; charset=utf-8");
 Place place = (Place) request.getAttribute("place");
@@ -26,6 +19,4 @@ serializer.setUserDao(userDao);
 serializer.setChangeRecordDao(changeRecordDao);
 serializer.setGroupDao(groupDao);
 
-%>
-
-<%= serializer.serialize(place, request, parents, readAccess, editAccess) %>
+%><%= serializer.serialize(place, request, parents, readAccess, editAccess) %>
