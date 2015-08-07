@@ -1,12 +1,15 @@
 package org.dainst.gazetteer.helpers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.dainst.gazetteer.domain.Shape;
 
 public class PolygonValidator {
 
 	private class LatLng {
-		double lat = 0;
-		double lng = 0;
+		double lat;
+		double lng;
 
 		LatLng(double lat, double lng) {
 			this.lat = lat;
@@ -30,29 +33,44 @@ public class PolygonValidator {
 		}
 	}
 	
-	public boolean validate(Shape shape) {
+	public List<String> validate(Shape shape) {
 		
-		for (int i = 0; i < shape.getCoordinates().length; i++) {
-			
+		List<String> errors = new ArrayList<String>();
+		
+		for (int i = 0; i < shape.getCoordinates().length; i++) {			
+			for (int j = 0; j < shape.getCoordinates()[i].length; j++) {				
+				double[][] path = shape.getCoordinates()[i][j];
+				errors.addAll(checkForIntersections(shape, path));				
+			}
+		}
+		
+		return errors;
+	}
+	
+	private List<String> checkForIntersections(Shape shape, double[][] path1) {
+		
+		List<String> errors = new ArrayList<String>();
+		
+		for (int i = 0; i < shape.getCoordinates().length; i++) {			
 			for (int j = 0; j < shape.getCoordinates()[i].length; j++) {
-				
-				double[][] path1 = shape.getCoordinates()[i][j];
+
 				double[][] path2 = null;
-				
+		
 				if (j == shape.getCoordinates()[i].length - 1)
 					path2 = shape.getCoordinates()[i][0];
 				else
 					path2 = shape.getCoordinates()[i][j + 1];
-				
-				if (checkForPathIntersection(path1, path2))
-					return true;
+		
+				errors.addAll(checkForPathIntersection(path1, path2));
 			}
 		}
 		
-		return false;
+		return errors;
 	}
 	
-	private boolean checkForPathIntersection(double[][] path1, double[][] path2) {
+	private List<String> checkForPathIntersection(double[][] path1, double[][] path2) {
+		
+		List<String> errors = new ArrayList<String>();
 		
 		for (int i = 0; i < path1.length; i++) {
 			LatLng path1Point1 = new LatLng(path1[i][1], path1[i][0]);
@@ -74,12 +92,16 @@ public class PolygonValidator {
 
 				if (!path1Point1.equals(path2Point1) && !path1Point2.equals(path2Point2) &&
 						!path1Point1.equals(path2Point2) && !path1Point2.equals(path2Point1) &&
-						checkForLineIntersection(path1Point1, path1Point2, path2Point1, path2Point2))
-					return true; 
+						checkForLineIntersection(path1Point1, path1Point2, path2Point1, path2Point2)) {
+					errors.add("ERROR: Lines (" + path1Point1.lng + ", " + path1Point1.lat + " / " +  
+							path1Point2.lng + ", " + path1Point2.lat + ") and (" + 
+							path2Point1.lng + ", " + path2Point1.lat + " / " +  
+							path2Point2.lng + ", " + path2Point2.lat + " are intersecting!"); 
+				}
 			}
 		}
 
-		return false;
+		return errors;
 	}
 
 	private boolean checkForLineIntersection(LatLng latlng1, LatLng latlng2, LatLng latlng3, LatLng latlng4) {

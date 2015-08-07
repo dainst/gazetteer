@@ -226,11 +226,17 @@ public class DocumentController {
 		
 		if (place.getPrefLocation() != null && place.getPrefLocation().getShape() != null && place.getPrefLocation().getShape().getCoordinates() != null) {
 			PolygonValidator validator = new PolygonValidator();
-			if (validator.validate(place.getPrefLocation().getShape())) {
+			List<String> validationErrors = validator.validate(place.getPrefLocation().getShape());
+			if (validationErrors.size() > 0) {
 				ModelAndView mav = new ModelAndView("place/validation");
 				ValidationResult result = new ValidationResult();
 				result.setSuccess(false);
-				result.setMessage("polygonValidationError");
+				String message = "polygonValidationError: ";
+				for (String validationError : validationErrors) {
+					message += "\n";
+					message += validationError;
+				}
+				result.setMessage(message);
 				response.setStatus(422);
 				mav.addObject("result", result);
 				return mav;
@@ -349,11 +355,17 @@ public class DocumentController {
 		
 		if (place.getPrefLocation() != null && place.getPrefLocation().getShape() != null && place.getPrefLocation().getShape().getCoordinates() != null) {
 			PolygonValidator validator = new PolygonValidator();
-			if (validator.validate(place.getPrefLocation().getShape())) {
+			List<String> validationErrors = validator.validate(place.getPrefLocation().getShape());
+			if (validationErrors.size() > 0) {
 				ModelAndView mav = new ModelAndView("place/validation");
 				ValidationResult result = new ValidationResult();
 				result.setSuccess(false);
-				result.setMessage("polygonValidationError");
+				String message = "polygonValidationError: ";
+				for (String validationError : validationErrors) {
+					message += "\n";
+					message += validationError;
+				}
+				result.setMessage(message);
 				response.setStatus(422);
 				mav.addObject("result", result);
 				return mav;
