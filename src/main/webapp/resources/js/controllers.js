@@ -63,8 +63,11 @@ function AppCtrl($scope, $location, $rootScope, $timeout, Place, GeoSearch, Esca
 		
 		if ($scope.q && $scope.q.length > 0) {
 			Place.suggestions({ field: "prefName.title.suggest", text: $scope.q }, function(result) {
-				$scope.searchSuggestions = result.suggestions;
-
+				if (result.suggestions && result.suggestions.length > 0)
+					$scope.searchSuggestions = result.suggestions;
+				
+				var additionalSuggestions = [];
+				
 				Place.suggestions({ field: "names.title.suggest", text: $scope.q }, function(result) {
 					for (var newSuggestion in result.suggestions) {
 						var sameAsPrefName = false;
@@ -75,8 +78,9 @@ function AppCtrl($scope, $location, $rootScope, $timeout, Place, GeoSearch, Esca
 							}
 						}
 						if (!sameAsPrefName && $scope.searchSuggestions.length < 7)
-							$scope.searchSuggestions.push(result.suggestions[newSuggestion]);
+							additionalSuggestions.push(result.suggestions[newSuggestion]);
 					}
+					$scope.searchSuggestions = [].concat($scope.searchSuggestions).concat(additionalSuggestions);
 				});
 			});
 		}
@@ -226,7 +230,10 @@ function HomeCtrl($scope, $location, $rootScope, Place, EscapingService) {
 		
 		if ($scope.searchFieldInput && $scope.searchFieldInput.length > 0) {
 			Place.suggestions({ field: "prefName.title.suggest", text: $scope.searchFieldInput }, function(result) {
-				$scope.homeSearchSuggestions = result.suggestions;
+				if (result.suggestions && result.suggestions.length > 0)
+					$scope.homeSearchSuggestions = result.suggestions;
+				
+				var additionalSuggestions = [];
 
 				Place.suggestions({ field: "names.title.suggest", text: $scope.searchFieldInput }, function(result) {
 					for (var newSuggestion in result.suggestions) {
@@ -238,8 +245,9 @@ function HomeCtrl($scope, $location, $rootScope, Place, EscapingService) {
 							}
 						} 
 						if (!sameAsPrefName && $scope.homeSearchSuggestions.length < 7)
-							$scope.homeSearchSuggestions.push(result.suggestions[newSuggestion]);
+							additionalSuggestions.push(result.suggestions[newSuggestion]);
 					}
+					$scope.homeSearchSuggestions = [].concat($scope.homeSearchSuggestions).concat(additionalSuggestions);
 				});
 			});
 		}
