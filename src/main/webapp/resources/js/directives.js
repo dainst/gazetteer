@@ -342,10 +342,11 @@ directives.directive('gazLocationPicker', function($document, $timeout, MapTypeS
 			$scope.$watch("coordinatesText", function() {
 				if ($scope.coordinatesText == "" && $scope.loaded)
 					$scope.coordinates = [];
-				if (/^[0-9]+\.?[0-9]*,[0-9]+\.?[0-9]*$/.test($scope.coordinatesText)) {
-					var index = $scope.coordinatesText.indexOf(",");
-					$scope.coordinates[1] = parseFloat($scope.coordinatesText.substring(0, index));
-					$scope.coordinates[0] = parseFloat($scope.coordinatesText.substring(index + 1));
+				var trimmedCoordinatesText = $scope.coordinatesText.trim();
+				if (/^\d+\.?\d*\°?s*,\s*\d+\.?\d*°?$/.test(trimmedCoordinatesText)) {
+					var index = trimmedCoordinatesText.indexOf(",");
+					$scope.coordinates[1] = parseFloat(trimmedCoordinatesText.substring(0, index));
+					$scope.coordinates[0] = parseFloat(trimmedCoordinatesText.substring(index + 1));
 				}
 				$scope.loaded = true;
 			});
