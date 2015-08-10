@@ -73,7 +73,8 @@
 										<li class="divider"></li>
 	   									<li><a href="http://zenon.dainst.org/" target="_blank">iDAI.bibliography / Zenon 2.0</a></li>
       									<li><a href="http://geoserver.dainst.org/" target="_blank">iDAI.geoserver</a></li>
-      									<li><a href="http://arachne.dainst.org/" target="_blank">iDAI.objects / Arachne 4.0</a></li>
+      									<li><a href="http://arachne.uni-koeln.de/" target="_blank">iDAI.objects / Arachne 3</a></li>
+      									<li><a href="http://arachne.dainst.org/" target="_blank">iDAI.objects / Arachne 4</a></li>
       									<li><a href="http://archwort.dainst.org/thesaurus/de/vocab/" target="_blank">iDAI.vocab</a></li>
       									<li><a href="http://hellespont.dainst.org" target="_blank">Hellespont</a></li>
     								</ul>
