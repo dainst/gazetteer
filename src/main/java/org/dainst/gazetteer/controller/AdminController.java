@@ -241,7 +241,7 @@ public class AdminController {
 
 		AncestorsHelper helper = new AncestorsHelper(placeDao);
 
-		List<Place> places = placeDao.findByTypesAndDeletedIsFalse("continent",new Sort("prefName"));
+		List<Place> places = placeDao.findByParentIsNullAndDeletedIsFalse();
 
 		for (Place place : places) {
 			helper.updateAncestors(place);
