@@ -15,7 +15,7 @@ import org.dainst.gazetteer.domain.Link;
 import org.dainst.gazetteer.domain.Location;
 import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.PlaceName;
-import org.dainst.gazetteer.helpers.GrandparentsHelper;
+import org.dainst.gazetteer.helpers.AncestorsHelper;
 import org.dainst.gazetteer.helpers.IdGenerator;
 import org.dainst.gazetteer.helpers.LanguagesHelper;
 import org.dainst.gazetteer.helpers.Merger;
@@ -233,21 +233,21 @@ public class AdminController {
 		return size;
 	}
 	
-	@RequestMapping(value="/admin/updateGrandparents", method=RequestMethod.POST)
+	@RequestMapping(value="/admin/updateAncestors", method=RequestMethod.POST)
 	@ResponseBody
-	public String updateGrandparents() {
+	public String updateAncestors() {
 
 		long time = System.currentTimeMillis();
 
-		GrandparentsHelper helper = new GrandparentsHelper(placeDao);
+		AncestorsHelper helper = new AncestorsHelper(placeDao);
 
 		List<Place> places = placeDao.findByTypesAndDeletedIsFalse("continent",new Sort("prefName"));
 
 		for (Place place : places) {
-			helper.updatePlaceGrandparents(place);
+			helper.updateAncestors(place);
 		}
 
-		String message = "OK: finished updating grandparents in " + (System.currentTimeMillis() - time) + "ms";
+		String message = "OK: finished updating ancestors in " + (System.currentTimeMillis() - time) + "ms";
 		logger.info(message);
 
 		return message;

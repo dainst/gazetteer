@@ -97,12 +97,12 @@ public class JsonPlaceDeserializer {
 				}
 			}
 			
-			// set grandparents
-			if (objectNode.has("grandparents")) {
-				List<String> grandparents = new ArrayList<String>();
-				for (JsonNode grandparentId : objectNode.get("grandparents"))
-					grandparents.add(grandparentId.asText().replace(baseUri + "place/", ""));
-				place.setGrandparents(grandparents);
+			// set ancestors
+			if (objectNode.has("ancestors")) {
+				List<String> ancestors = new ArrayList<String>();
+				for (JsonNode ancestorId : objectNode.get("ancestors"))
+					ancestors.add(ancestorId.asText().replace(baseUri + "place/", ""));
+				place.setAncestors(ancestors);
 			}
 			
 			// set related places from URIs

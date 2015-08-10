@@ -122,13 +122,13 @@ public class JsonPlaceSerializer {
 			return placeNode;
 		}
 		
-		// grandparents
-		if (place.getGrandparents() != null && !place.getGrandparents().isEmpty()) {
-			ArrayNode grandparentsNode = mapper.createArrayNode();
-			for (String grandparentId : place.getGrandparents()) {
-				grandparentsNode.add(baseUri + "place/" + grandparentId);
+		// ancestors
+		if (place.getAncestors() != null && !place.getAncestors().isEmpty()) {
+			ArrayNode ancestorsNode = mapper.createArrayNode();
+			for (String ancestorId : place.getAncestors()) {
+				ancestorsNode.add(baseUri + "place/" + ancestorId);
 			}
-			placeNode.put("grandparents", grandparentsNode);
+			placeNode.put("ancestors", ancestorsNode);
 		}
 		
 		// place types

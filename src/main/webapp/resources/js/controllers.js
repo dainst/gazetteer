@@ -393,7 +393,7 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages, PolygonVali
 					bool: {
 						should: [
 						    { match: { "parent": $scope.parent.gazId } },
-						    { match: { "grandparents": $scope.parent.gazId } }
+						    { match: { "ancestors": $scope.parent.gazId } }
 						]
 					}
 				});

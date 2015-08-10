@@ -20,7 +20,7 @@ import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.PlaceChangeRecord;
 import org.dainst.gazetteer.domain.User;
 import org.dainst.gazetteer.domain.ValidationResult;
-import org.dainst.gazetteer.helpers.GrandparentsHelper;
+import org.dainst.gazetteer.helpers.AncestorsHelper;
 import org.dainst.gazetteer.helpers.IdGenerator;
 import org.dainst.gazetteer.helpers.LanguagesHelper;
 import org.dainst.gazetteer.helpers.PlaceAccessService;
@@ -373,10 +373,10 @@ public class DocumentController {
 		}
 		
 		if (place.getParent() != null && !place.getParent().equals(originalPlace.getParent())) {
-			GrandparentsHelper helper = new GrandparentsHelper(placeDao);
-			place.setGrandparents(helper.findGrandparentIds(place));
+			AncestorsHelper helper = new AncestorsHelper(placeDao);
+			place.setAncestors(helper.findAncestorIds(place));
 			if (place.getChildren() < 10000)
-				helper.updatePlaceGrandparents(place);
+				helper.updateAncestors(place);
 		}
 
 		place.setLastChangeDate(new Date());

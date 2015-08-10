@@ -210,7 +210,7 @@
 	                "type": "string",
 					"include_in_all": false
 	            },
-	            "grandparents": {
+	            "ancestors": {
 					"type": "string",
 					"include_in_all": false
 	            },
