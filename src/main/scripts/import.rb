@@ -177,7 +177,7 @@ row_no = 0
 CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
 
   row_no += 1
-  
+
   if options.headers and !parsed_headers
     parsed_headers = true
     # write GazID header to updated CSV file
@@ -227,45 +227,78 @@ CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
     if place[:prefLocation][:shapeString] == ""
       place[:prefLocation].delete(:shapeString)
     else
-      multipolygon = Array.new
-      multipolygon[0] = Array.new
-
       tempString = place[:prefLocation][:shapeString]
 
-      if tempString.include?("POLYGON((") || tempString.include?("POLYGON ((")
-        tempString = tempString.gsub("POLYGON((", "")
-        tempString = tempString.gsub("POLYGON ((", "")
-        if tempString.include?("))")
-          tempString = tempString.gsub("))", "")
-        else
-          puts "Incomplete polygon data for place #{temp_id}"
-          next
-        end
+      if tempString.include?("MULTIPOLYGON(((") || tempString.include?("MULTIPOLYGON (((")
+        tempString = tempString.gsub("MULTIPOLYGON", "")
+        tempString.slice!(0)
+      elsif tempString.include?("POLYGON((") || tempString.include?("POLYGON ((")
+        tempString = tempString.gsub("POLYGON", "")
+      else
+        puts "Invalid polygon data for place #{temp_id}"
+        next
       end
 
-      if tempString.include?("MULTIPOLYGON(((") || tempString.include?("MULTIPOLYGON (((")
-        tempString = tempString.gsub("MULTIPOLYGON(((", "")
-          tempString = tempString.gsub("MULTIPOLYGON (((", "")
-        if tempString.include?(")))")
-          tempString = tempString.gsub(")))", "")
+      tempString.strip!
+
+      multipolygon = Array.new
+
+      level = "multipolygon"
+      i = 0
+      j = 0
+      error = false
+
+      while tempString.length > 0 do
+
+        if tempString[0] == "("
+          tempString.slice!(0)
+          if level == "multipolygon"
+            multipolygon[i] = Array.new
+            level = "polygon"
+          elsif level == "polygon"
+            level = "path"
+          end
+        elsif tempString[0] == ")"
+          tempString.slice!(0)
+          if level == "multipolygon"
+            break
+          elsif level == "polygon"
+            level = "multipolygon"
+            i += 1
+            j = 0
+          elsif level == "path"
+            level = "polygon"
+            j += 1
+          end
+        elsif tempString[0] == "," || tempString[0] == " "
+          tempString.slice!(0)
         else
-          puts "Incomplete polygon data for place #{temp_id}"
-          next
+          index = tempString.index(")")
+          if index == nil
+            error = true
+            break
+          end
+          substring = tempString.slice!(0..index - 1)
+          points = substring.split(',')
+          pointsArray = Array.new
+          for point in points do
+            pointArray = point.split(' ')
+            floatArray = Array.new
+            for coordinate in pointArray do
+              floatCoordinate = coordinate.to_f
+              floatArray << floatCoordinate
+            end
+            pointsArray << floatArray
+          end
+          multipolygon[i][j] = pointsArray
         end
+
       end
-      
-      points = tempString.split(',')
-      pointsArray = Array.new
-      for point in points do
-        pointArray = point.split(' ')
-        floatArray = Array.new
-        for coordinate in pointArray do
-          floatCoordinate = coordinate.to_f
-          floatArray << floatCoordinate
-        end
-        pointsArray << floatArray
+
+      if error
+        puts "Invalid polygon data for place #{temp_id}"
+        next
       end
-      multipolygon[0][0] = pointsArray
 
       place[:prefLocation].delete(:shapeString)
       place[:prefLocation][:shape] = multipolygon
