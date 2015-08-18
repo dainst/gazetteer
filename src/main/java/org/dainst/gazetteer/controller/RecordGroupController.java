@@ -15,6 +15,8 @@ import org.dainst.gazetteer.dao.UserRepository;
 import org.dainst.gazetteer.domain.GroupRole;
 import org.dainst.gazetteer.domain.RecordGroup;
 import org.dainst.gazetteer.domain.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -44,6 +46,8 @@ public class RecordGroupController {
 	private String version;
 	
 	private int usersPerPage = 10;
+	
+	private static final Logger logger = LoggerFactory.getLogger(RecordGroupController.class);
 	
 	
 	@RequestMapping(value="/recordGroupManagement")
@@ -135,7 +139,11 @@ public class RecordGroupController {
 		Map<String, GroupRole> roleMap = new HashMap<String, GroupRole>();
 		
 		for (GroupRole role : roles) {
-			users.add(userDao.findOne(role.getUserId()));
+			User user = userDao.findOne(role.getUserId());
+			if (user != null)
+				users.add(user);
+			else
+				logger.warn("Couldn't find user " + role.getUserId() + " for role " + role.getId());
 			roleMap.put(role.getUserId(), role);
 		}
 		

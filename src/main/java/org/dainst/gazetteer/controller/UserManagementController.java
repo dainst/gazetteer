@@ -178,8 +178,11 @@ public class UserManagementController {
 		
 		if (deleteUser) {			
 			User user = userDao.findById(deleteUserId);
-			if (user != null && !user.isEnabled()) {			
+			if (user != null && !user.isEnabled()) {
+				List<GroupRole> roles = groupRoleDao.findByUserId(deleteUserId);
+				groupRoleDao.delete(roles);
 				userDao.delete(user);
+				
 				model.addAttribute("userDeleted", user.getUsername());
 			}	
 		}
