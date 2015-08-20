@@ -116,49 +116,68 @@
 				<table class="table table-condensed" style="width: auto; margin-bottom: 0px; margin-top: -4px; border: none !important;">
 					<tbody>
 						<tr>
-							<td ng-hide="filters.noCoordinates" style="border: none !important;">
+							<td ng-hide="filters.noCoordinates || filters.unlocatable" style="border: none !important;">
 								<label class="checkbox inline">
 									<input type="checkbox" ng-model="filters.coordinates" />
 									<span gaz-translate="'ui.search.filter.coordinates'"></span>
 								</label>
 							</td>
-							<td ng-show="filters.noCoordinates" style="border: none !important;">
+							<td ng-show="filters.noCoordinates || filters.unlocatable" style="border: none !important;">
 								<label class="checkbox inline" style="cursor: default !important;">
 									<input type="checkbox" ng-model="filters.coordinates" disabled />
 									<span gaz-translate="'ui.search.filter.coordinates'" style="color: grey;"></span>
 								</label>
 							</td>
-							<td ng-hide="filters.coordinates" style="padding-left: 10px; border: none !important;">
-								<label class="checkbox inline">
-									<input type="checkbox" ng-model="filters.noCoordinates" />
-									<span gaz-translate="'ui.search.filter.no-coordinates'"></span>
-								</label>
-							</td>
-							<td ng-show="filters.coordinates" style="padding-left: 10px; border: none !important;">
-								<label class="checkbox inline" style="cursor: default !important;">
-									<input type="checkbox" ng-model="filters.noCoordinates" disabled />
-									<span gaz-translate="'ui.search.filter.no-coordinates'" style="color: grey;"></span>
-								</label>
-							</td>
-							<td ng-hide="filters.noPolygon" style="padding-left: 10px; border: none !important;">
+							
+							<td ng-hide="filters.noPolygon || filters.unlocatable" style="padding-left: 10px; border: none !important;">
 								<label class="checkbox inline">
 									<input type="checkbox" ng-model="filters.polygon" />
 									<span gaz-translate="'ui.search.filter.polygon'"></span>
 								</label>
 							</td>
-							<td ng-show="filters.noPolygon" style="padding-left: 10px; border: none !important;">
+							<td ng-show="filters.noPolygon || filters.unlocatable" style="padding-left: 10px; border: none !important;">
 								<label class="checkbox inline" style="cursor: default !important;">
 									<input type="checkbox" ng-model="filters.polygon" disabled />
 									<span gaz-translate="'ui.search.filter.polygon'" style="color: grey;"></span>
 								</label>
 							</td>
-							<td ng-hide="filters.polygon" style="padding-left: 10px; border: none !important;">
+							
+							<td ng-hide="filters.coordinates || filters.noCoordinates || filters.polygon || filters.noPolygon"
+									style="padding-left: 10px; border: none !important;">
+								<label class="checkbox inline">
+									<input type="checkbox" ng-model="filters.unlocatable" />
+									<span gaz-translate="'ui.search.filter.unlocatable'"></span>
+								</label>
+							</td>
+							<td ng-show="filters.coordinates || filters.noCoordinates || filters.polygon || filters.noPolygon"
+									style="padding-left: 10px; border: none !important;">
+								<label class="checkbox inline" style="cursor: default !important;">
+									<input type="checkbox" ng-model="filters.unlocatable" disabled />
+									<span gaz-translate="'ui.search.filter.unlocatable'" style="color: grey;"></span>
+								</label>
+							</td>
+						</tr>
+						<tr>							
+							<td ng-hide="filters.coordinates || filters.unlocatable" style="border: none !important;">
+								<label class="checkbox inline">
+									<input type="checkbox" ng-model="filters.noCoordinates" />
+									<span gaz-translate="'ui.search.filter.no-coordinates'"></span>
+								</label>
+							</td>
+							<td ng-show="filters.coordinates || filters.unlocatable" style="border: none !important;">
+								<label class="checkbox inline" style="cursor: default !important;">
+									<input type="checkbox" ng-model="filters.noCoordinates" disabled />
+									<span gaz-translate="'ui.search.filter.no-coordinates'" style="color: grey;"></span>
+								</label>
+							</td>
+							
+							<td ng-hide="filters.polygon || filters.unlocatable" style="padding-left: 10px; border: none !important;">
 								<label class="checkbox inline">
 									<input type="checkbox" ng-model="filters.noPolygon" />
 									<span gaz-translate="'ui.search.filter.no-polygon'"></span>
 								</label>
 							</td>
-							<td ng-show="filters.polygon" style="padding-left: 10px; border: none !important;">
+							<td ng-show="filters.polygon || filters.unlocatable" style="padding-left: 10px; border: none !important;">
 								<label class="checkbox inline" style="cursor: default !important;">
 									<input type="checkbox" ng-model="filters.noPolygon" disabled />
 									<span gaz-translate="'ui.search.filter.no-polygon'" style="color: grey;"></span>
