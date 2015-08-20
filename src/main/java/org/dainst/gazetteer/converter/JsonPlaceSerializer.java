@@ -213,6 +213,9 @@ public class JsonPlaceSerializer {
 			placeNode.put("locations", locationsNode);
 		}
 		
+		if (place.isUnlocatable())
+			placeNode.put("unlocatable", true);				
+		
 		// identifiers
 		if (!place.getIdentifiers().isEmpty()) {
 			ArrayNode idsNode = mapper.createArrayNode();

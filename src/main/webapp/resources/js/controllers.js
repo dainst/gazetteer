@@ -1175,7 +1175,11 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, Place,
 	};
 	
 	$scope.prepareSave = function() {
-		if($scope.place.prefLocation && !$scope.place.prefLocation.coordinates && !$scope.place.prefLocation.shape)
+		if ($scope.place.unlocatable) {
+			$scope.place.prefLocation = {};
+			$scope.place.locations = [];
+		}
+		else if($scope.place.prefLocation && !$scope.place.prefLocation.coordinates && !$scope.place.prefLocation.shape)
 			$scope.place.prefLocation = undefined;
 		if($scope.comment) $scope.addComment();
 		if($scope.name) $scope.addName();

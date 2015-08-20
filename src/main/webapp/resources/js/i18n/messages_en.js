@@ -80,6 +80,7 @@ messages.factory('messages', function(){
 		"place.types.groups.human-geographic": "Human geographic units",
 		"place.types.groups.archaeological": "Archaeological/cultural-historical units",
 		"place.types.groups.building": "Building",
+		"place.unlocatable": "Unlocatable place",
 		"location.confidence.0": "Not specified",
 		"location.confidence.1": "Uncertain",
 		"location.confidence.2": "Certain",

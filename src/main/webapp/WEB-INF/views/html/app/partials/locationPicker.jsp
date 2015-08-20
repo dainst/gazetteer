@@ -3,8 +3,11 @@
 
 <span>
 	<span>
-		<input type="text" ng-model="coordinatesText"></input>
-		<button class="btn gaz-pick-button location-edit-btn" type="button" ng-click="openOverlay()">
+		<input type="text" ng-model="coordinatesText" ng-disabled="deactivated"></input>
+		<button ng-hide="deactivated" class="btn gaz-pick-button location-edit-btn" type="button" ng-click="openOverlay()">
+			<i class="icon-map-marker"></i>
+		</button>
+		<button ng-show="deactivated" class="btn gaz-pick-button location-edit-btn" type="button" ng-click="openOverlay()" disabled>
 			<i class="icon-map-marker"></i>
 		</button>
 	</span>

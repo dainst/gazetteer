@@ -351,8 +351,8 @@
 							<s:message code="domain.location.coordinates" text="domain.location.coordinates" />
 						</label>
 						<div class="controls">
-							<div gaz-location-picker coordinates="place.prefLocation.coordinates"></div>
-							<select ng-model="place.prefLocation.confidence" class="input-medium">
+							<div gaz-location-picker coordinates="place.prefLocation.coordinates" deactivated="place.unlocatable"></div>
+							<select ng-model="place.prefLocation.confidence" class="input-medium" ng-disabled="place.unlocatable">
 								<option value="0" gaz-translate="'location.confidence.0'">
 								<option value="4" gaz-translate="'location.confidence.4'">
 								<option value="1" gaz-translate="'location.confidence.1'">
@@ -365,8 +365,8 @@
 						<label class="control-label">
 							<s:message code="domain.location.altitudeInMeters" text="domain.location.altitudeInMeters" />
 						</label>
-						<div class="controls">							
-							<input type="text" ng-model="place.prefLocation.altitude" />
+						<div class="controls">					
+							<input type="text" ng-model="place.prefLocation.altitude" ng-disabled="place.unlocatable"/>
 						</div>
 					</div>
 					<div class="control-group">
@@ -374,14 +374,26 @@
 							<s:message code="domain.location.polygon" text="domain.location.polygon" />
 						</label>
 						<div class="controls">
-							<div gaz-shape-editor shape="place.prefLocation.shape" pos="place.prefLocation.coordinates" editor-name="'prefLocationShapeEditor'"></div>
+							<div gaz-shape-editor shape="place.prefLocation.shape" pos="place.prefLocation.coordinates" editor-name="'prefLocationShapeEditor'"  deactivated="place.unlocatable"></div>
 						</div>
 					</div>
 					<div class="control-group">
+						<div class="controls" ng-hide="place.unlocatable">
+							<label class="checkbox inline">
+								<input type="checkbox" ng-model="place.prefLocation.publicSite" />
+								<span gaz-translate="'location.public'"></span>
+							</label>
+						</div>
+						<div class="controls" ng-show="place.unlocatable">
+							<label class="checkbox inline" style="cursor: default !important;">
+								<input type="checkbox" ng-model="place.prefLocation.publicSite" disabled/>
+								<span gaz-translate="'location.public'"></span>
+							</label>
+						</div>
 						<div class="controls">
 							<label class="checkbox inline">
-								<input type="checkbox" ng-model="place.prefLocation.publicSite"/>
-								<span gaz-translate="'location.public'"></span>
+								<input type="checkbox" ng-model="place.unlocatable"/>
+								<span gaz-translate="'place.unlocatable'"></span>
 							</label>
 						</div>
 					</div>
@@ -394,15 +406,18 @@
 							<s:message code="domain.location.coordinates" text="domain.location.coordinates" />
 						</label>
 						<div class="controls">
-							<div gaz-location-picker coordinates="location.coordinates"></div>
-							<select ng-model="location.confidence" class="input-medium">
+							<div gaz-location-picker coordinates="location.coordinates" deactivated="place.unlocatable"></div>
+							<select ng-model="location.confidence" class="input-medium" ng-disabled="place.unlocatable">
 								<option value="0" gaz-translate="'location.confidence.0'">
 								<option value="4" gaz-translate="'location.confidence.4'">
 								<option value="1" gaz-translate="'location.confidence.1'">
 								<option value="2" gaz-translate="'location.confidence.2'">
 								<option value="3" gaz-translate="'location.confidence.3'">
 							</select>
-							<div class="btn btn-primary plus" ng-click="addLocation()" ng-disabled="(!location.coordinates || location.coordinates.length == 0) && !location.shape">
+							<div ng-hide="place.unlocatable" class="btn btn-primary plus" ng-click="addLocation()" ng-disabled="(!location.coordinates || location.coordinates.length == 0) && !location.shape">
+								<i class="icon-plus icon-white"></i>
+							</div>
+							<div ng-show="place.unlocatable" class="btn btn-primary plus" disabled>
 								<i class="icon-plus icon-white"></i>
 							</div>
 						</div>
@@ -412,7 +427,7 @@
 							<s:message code="domain.location.altitudeInMeters" text="domain.location.altitudeInMeters" />
 						</label>
 						<div class="controls">							
-							<input type="text" ng-model="location.altitude" />
+							<input type="text" ng-model="place.prefLocation.altitude" ng-disabled="place.unlocatable" />
 						</div>
 					</div>
 					<div class="control-group">
@@ -420,13 +435,19 @@
 							<s:message code="domain.location.polygon" text="domain.location.polygon" />
 						</label>
 						<div class="controls">
-							<div gaz-shape-editor shape="location.shape" pos="location.coordinates" editor-name="'additionalLocationsShapeEditor'"></div>
+							<div gaz-shape-editor shape="location.shape" pos="location.coordinates" editor-name="'additionalLocationsShapeEditor'" deactivated="place.unlocatable"></div>
 						</div>
 					</div>
 					<div class="control-group">
-						<div class="controls">
+						<div class="controls" ng-hide="place.unlocatable">
 							<label class="checkbox inline">
 								<input type="checkbox" ng-model="location.publicSite" />
+								<span gaz-translate="'location.public'"></span>
+							</label>
+						</div>
+						<div class="controls" ng-show="place.unlocatable">
+							<label class="checkbox inline" style="cursor: default !important;">
+								<input type="checkbox" ng-model="location.publicSite" disabled/>
 								<span gaz-translate="'location.public'"></span>
 							</label>
 						</div>

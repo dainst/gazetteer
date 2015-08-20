@@ -159,7 +159,7 @@
 		<br/>
 	</span>
 	
-	<span ng-hide="!place.prefLocation || !((place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0) || place.prefLocation.shape)">
+	<span ng-hide="!place.unlocatable && (!place.prefLocation || !((place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0) || place.prefLocation.shape))">
 		<dt><s:message code="domain.place.locations" text="domain.place.locations" /></dt>
 		<dd>
 			<span ng-show="place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0" ng-show="location.coordinates" ng-mouseover="setHighlight(place.gazId, 'prefLocation', 0)" ng-mouseout="setHighlight(null, null, null)">
@@ -186,6 +186,7 @@
 					<br ng-show="(place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0) || place.prefLocation.altitude"/>
 				</span>
 			</span>
+			<span ng-show="place.unlocatable" gaz-translate="'place.unlocatable'"></span>
 			<em ng-show="place.prefLocation.shape" ng-mouseover="setHighlight(place.gazId, 'polygon', -1)" ng-mouseout="setHighlight(null, null, null)" style="text-decoration:none; border-bottom: 1px dotted black; cursor: pointer;"><s:message code="domain.location.polygonSpecified" text="domain.location.polygonSpecified" /></em>
 		</dd>
 		<span ng-hide="!place.locations">

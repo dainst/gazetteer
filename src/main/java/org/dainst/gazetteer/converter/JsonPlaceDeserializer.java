@@ -285,6 +285,11 @@ public class JsonPlaceDeserializer {
 			}
 			place.setLocations(locations);
 			
+			if (objectNode.get("unlocatable") != null && objectNode.get("unlocatable").asBoolean())
+				place.setUnlocatable(true);
+			else
+				place.setUnlocatable(false);
+			
 			// update comment objects			
 			List<Comment> comments = new ArrayList<Comment>();
 			JsonNode commentsNode = objectNode.get("comments");

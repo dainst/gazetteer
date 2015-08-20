@@ -38,8 +38,10 @@ public class Place {
 	private Set<String> types = new HashSet<String>();
 	
 	private Location prefLocation;
-
+	
 	private Set<Location> locations = new HashSet<Location>();
+	
+	private boolean unlocatable = false;
 
 	@Indexed
 	private String parent;
@@ -128,6 +130,14 @@ public class Place {
 	
 	public void addLocation(Location location) {
 		locations.add(location);
+	}
+
+	public boolean isUnlocatable() {
+		return unlocatable;
+	}
+
+	public void setUnlocatable(boolean unlocatable) {
+		this.unlocatable = unlocatable;
 	}
 
 	public String getParent() {
@@ -356,6 +366,7 @@ public class Place {
 		result = prime * result + ((parent == null) ? 0 : parent.hashCode());
 		result = prime * result
 				+ ((prefLocation == null) ? 0 : prefLocation.hashCode());
+		result = prime * result + (unlocatable ? 1231 : 1237);
 		result = prime * result
 				+ ((prefName == null) ? 0 : prefName.hashCode());
 		result = prime * result
@@ -434,6 +445,8 @@ public class Place {
 			if (other.prefLocation != null)
 				return false;
 		} else if (!prefLocation.equals(other.prefLocation))
+			return false;
+		if (unlocatable != other.unlocatable)
 			return false;
 		if (prefName == null) {
 			if (other.prefName != null)

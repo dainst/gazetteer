@@ -264,7 +264,8 @@ directives.directive('gazLocationPicker', function($document, $timeout, MapTypeS
 	return {
 		replace: true,
 		scope: {
-			coordinates: '='
+			coordinates: '=',
+			deactivated: '='
 		},
 		templateUrl: 'partials/locationPicker.html',
 		controller: function($scope, $element) {
@@ -360,13 +361,22 @@ directives.directive('gazShapeEditor', function($document, $timeout, PolygonVali
 		scope: {
 			shape: '=',
 			pos: '=',
-			editorName: '='				
+			editorName: '=',
+			deactivated: '='
 		},
 		templateUrl: 'partials/shapeEditor.html',
 		controller: function($scope, $element) {
 			
 			$scope.gmapsShapes = [];
 			$scope.initialized = false;
+			$scope.backgroundColor = "#fcfcfc";
+			
+			$scope.$watch("deactivated", function() {
+				if ($scope.deactivated)
+					$scope.backgroundColor = "#e6e6e6";
+				else
+					$scope.backgroundColor = "#fcfcfc";
+			})
 			
 			$scope.mapOptions = {
 				center: new google.maps.LatLng(0, 0),

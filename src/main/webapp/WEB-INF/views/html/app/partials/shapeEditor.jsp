@@ -3,17 +3,20 @@
 
 <span>
 	<span>
-		<div class="shape-editor-field">
+		<div class="shape-editor-field" ng-style="{ 'background-color': backgroundColor }">
 			<em ng-show="shape"><s:message code="ui.shapeEditor.editPolygon" text="ui.shapeEditor.editPolygon" /></em>
 			<em ng-hide="shape"><s:message code="ui.shapeEditor.createPolygon" text="ui.shapeEditor.createPolygon" /></em>
 		</div>
-		<button class="btn gaz-pick-button location-edit-btn" type="button" ng-click="openOverlay()">
+		<button ng-hide="deactivated" class="btn gaz-pick-button location-edit-btn" type="button" ng-click="openOverlay()">
 			<i class="icon-pencil"></i>
 		</button>
-		<button ng-show="shape" class="btn location-edit-btn" href="#deleteShapeModal_{{editorName}}" data-toggle="modal">
+		<button ng-show="deactivated" class="btn gaz-pick-button location-edit-btn disabled" type="button">
+			<i class="icon-pencil"></i>
+		</button>
+		<button ng-show="shape && !deactivated" class="btn location-edit-btn" href="#deleteShapeModal_{{editorName}}" data-toggle="modal">
 			<i class="icon-remove"></i>
 		</button>
-		<button ng-hide="shape" class="btn location-edit-btn disabled">
+		<button ng-hide="shape && !deactivated" class="btn location-edit-btn disabled">
 			<i class="icon-remove"></i>
 		</button>
 	</span>
