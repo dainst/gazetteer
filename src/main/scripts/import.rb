@@ -114,6 +114,11 @@ opts = OptionParser.new do |opts|
     options.splitNames = s
   end
 
+  options.degrees = false
+  opts.on("-d", "--degrees", "Convert coordinates from degrees (°), minutes ('), seconds ('') to decimal values") do |d|
+    options.degrees = d
+  end
+
   options.verbose = false
   opts.on("-v", "--[no-]verbose", "Run verbosely") do |v|
     options.verbose = v
@@ -143,6 +148,80 @@ merger = lambda do |key, oldval, newval|
   else
     newval
   end
+end
+
+# coordinates conversion helper method (from degrees, minutes, seconds to decimal values)
+def convert_degrees_to_decimal(coordinate)
+  pos = 0
+  tempString = ""
+  degrees = 99999
+  minutes = 99999
+  seconds = 99999
+  orientation = ""
+  while pos < coordinate.length do
+    if pos != coordinate.length - 1
+      nextCharacter = coordinate[pos + 1]
+    else
+      nextCharacter = ""
+    end
+    if coordinate[pos] == "°"
+      if degrees == 99999
+        degrees = tempString.to_i
+        tempString = ""
+        pos += 1
+      else
+        return nil
+      end
+    elsif ["'", "’", "‘"].include?(coordinate[pos]) && !["'", "’", "‘"].include?(nextCharacter)
+      if minutes == 99999
+        minutes = tempString.to_i
+        tempString = ""
+        pos += 1
+      else
+        return nil
+      end
+    elsif ["'", "’", "‘"].include?(coordinate[pos]) && ["'", "’", "‘"].include?(nextCharacter)
+      if seconds == 99999
+        seconds = tempString.to_i
+        tempString = ""
+        pos += 2
+      else
+        return nil
+      end
+    elsif ["n", "s", "w", "o" ].include? coordinate[pos].downcase
+      if orientation == "" && tempString == "" && degrees != 99999
+        orientation = coordinate[pos].downcase
+        pos += 1
+      else
+        return nil
+      end
+    elsif coordinate[pos] == " "
+      if tempString == "" || !(nextCharacter =~ /[[:digit:]]/)
+        pos += 1
+        next
+      else
+        return nil
+      end
+    else
+      if coordinate[pos] =~ /[[:digit:]]/ && orientation == ""
+        tempString += coordinate[pos]
+        pos += 1
+      else
+        return nil
+      end
+    end  
+  end
+
+  result = 0.0
+  result += seconds.to_f / 60 if seconds != 99999
+  result += minutes.to_f / 60 if minutes != 99999
+  result += degrees.to_f if degrees != 99999
+
+  if ["s", "w"].include? orientation
+    result *= -1.0
+  end
+  
+  return result
 end
 
 # id map helper
@@ -222,7 +301,35 @@ CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
   	next
   end
 
-  #shape
+  # convert coordinates
+  if options.degrees
+    if place[:prefLocation] && place[:prefLocation][:coordinates] && place[:prefLocation][:coordinates].length == 2
+      lng = convert_degrees_to_decimal(place[:prefLocation][:coordinates][0])
+      lat = convert_degrees_to_decimal(place[:prefLocation][:coordinates][1])
+      if lng != nil && lat != nil
+        place[:prefLocation][:coordinates] = [lng, lat]
+      else
+        puts "Failed to convert coordinates for pref location of place #{temp_id}"
+        next
+      end
+    end
+    if place[:locations]
+      for location in place[:locations] do
+        if location && location[:coordinates] && location[:coordinates].length == 2
+          lng = convert_degrees_to_decimal(location[:coordinates][0])
+          lat = convert_degrees_to_decimal(location[:coordinates][1])
+          if lng != nil && lat != nil
+            location[:coordinates] = [lng, lat]
+          else
+            puts "Failed to convert coordinates for additional location of place #{temp_id}"
+            next
+          end
+        end
+      end
+    end
+  end
+
+  # shape
   if place[:prefLocation] && place[:prefLocation][:shapeString]
     if place[:prefLocation][:shapeString] == ""
       place[:prefLocation].delete(:shapeString)
