@@ -227,13 +227,13 @@ CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
     if place[:prefLocation][:shapeString] == ""
       place[:prefLocation].delete(:shapeString)
     else
-      tempString = place[:prefLocation][:shapeString]
+      tempString = place[:prefLocation][:shapeString].downcase
 
-      if tempString.include?("MULTIPOLYGON(((") || tempString.include?("MULTIPOLYGON (((")
-        tempString = tempString.gsub("MULTIPOLYGON", "")
+      if tempString.include?("multipolygon(((") || tempString.include?("multipolygon (((")
+        tempString = tempString.gsub("multipolygon", "")
         tempString.slice!(0)
-      elsif tempString.include?("POLYGON((") || tempString.include?("POLYGON ((")
-        tempString = tempString.gsub("POLYGON", "")
+      elsif tempString.include?("polygon((") || tempString.include?("polygon ((")
+        tempString = tempString.gsub("polygon", "")
       else
         puts "Invalid polygon data for place #{temp_id}"
         next
