@@ -335,7 +335,7 @@ directives.directive('gazLocationPicker', function($document, $timeout, MapTypeS
 			
 			$scope.$watch("coordinates", function() {
 				if ($scope.coordinates)
-					$scope.coordinatesText = $scope.coordinates.reverse().join(",");
+					$scope.coordinatesText = $scope.coordinates.slice(0).reverse().join(",");
 				else
 					$scope.coordinatesText = "";
 			});
