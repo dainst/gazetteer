@@ -344,11 +344,13 @@ directives.directive('gazLocationPicker', function($document, $timeout, MapTypeS
 				if ($scope.coordinatesText == "" && $scope.loaded)
 					$scope.coordinates = [];
 				var trimmedCoordinatesText = $scope.coordinatesText.trim();
-				if (/^\d+\.?\d*\°?s*,\s*\d+\.?\d*°?$/.test(trimmedCoordinatesText)) {
+				if (/^-?\d+\.?\d*\°?s*,\s*-?\d+\.?\d*°?$/.test(trimmedCoordinatesText)) {
+					console.log("yes!");
 					var index = trimmedCoordinatesText.indexOf(",");
 					$scope.coordinates[1] = parseFloat(trimmedCoordinatesText.substring(0, index));
 					$scope.coordinates[0] = parseFloat(trimmedCoordinatesText.substring(index + 1));
-				}
+				} else
+					console.log("no!");
 				$scope.loaded = true;
 			});
 		}
