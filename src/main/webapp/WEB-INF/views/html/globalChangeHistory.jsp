@@ -79,7 +79,6 @@
 							<a href="app/#!/home" style="color:inherit">iDAI.gazetteer</a>
 						</h3>
 					</div>
-					<div id="archaeo-fixed-menu-logo"></div>
 				</div>
 				<div class="affix-menu-wrapper">
 					<div id="affix-menu" style="z-index: 100000"

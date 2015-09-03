@@ -238,3 +238,10 @@ footer {
   margin-top: 24px;
   float: left;
 }
+
+.dai-footer-logo {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 16px;
+}
