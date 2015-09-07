@@ -1423,8 +1423,8 @@ function MergeCtrl($scope, $rootScope, $routeParams, $location, Place, EscapingS
 	$scope.getCandidatesByLocation = function() {
 		$rootScope.loading++;
 		Place.distance({
-			lon: $scope.place.prefLocation.coordinates[1],
-			lat: $scope.place.prefLocation.coordinates[0],
+			lon: $scope.place.prefLocation.coordinates[0],
+			lat: $scope.place.prefLocation.coordinates[1],
 			distance: 50,
 			filter: "NOT _id:" + $scope.place.gazId
 		}, function(result) {
