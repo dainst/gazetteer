@@ -93,6 +93,7 @@ public class DocumentController {
 			@RequestParam(required=false) String fuzzy,
 			@RequestParam(required=false, defaultValue="map,table") String view,
 			@RequestParam(required=false) List<String> add,
+			@RequestParam(required=false) boolean pretty,
 			@RequestHeader(value="User-Agent", required=false) String userAgent,
 			@RequestHeader(value="Accept", required=false) String accept,
 			HttpServletRequest request,
@@ -193,6 +194,7 @@ public class DocumentController {
 			mav.addObject("offset", offset);
 			mav.addObject("view", view);
 			mav.addObject("q", q);
+			mav.addObject("pretty", pretty);
 			mav.addObject("nativePlaceName", place.getNameMap().get(locale.getISO3Language()));
 			mav.addObject("userDao", userDao);
 			mav.addObject("changeRecordDao", changeRecordDao);

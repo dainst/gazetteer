@@ -46,9 +46,15 @@ public class JsonPlaceSerializer {
 	private RecordGroupRepository groupDao = null;
 	
 	public JsonPlaceSerializer(String baseUri) {
+		this(baseUri, false);
+	}
+	
+	public JsonPlaceSerializer(String baseUri, boolean pretty) {
 		this.baseUri = baseUri;
 		mapper = new ObjectMapper();
-		mapper.enable(SerializationFeature.INDENT_OUTPUT);
+		
+		if (pretty)
+			mapper.enable(SerializationFeature.INDENT_OUTPUT);
 	}
 	
 	public String serialize(Place place, Boolean accessGranted) {

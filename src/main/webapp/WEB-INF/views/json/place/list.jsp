@@ -7,12 +7,13 @@ Map<String, List<Place>> parents = (Map<String, List<Place>>) request.getAttribu
 Map<String, Boolean> readAccessMap = (Map<String, Boolean>) request.getAttribute("readAccessMap");
 Map<String, Boolean> editAccessMap = (Map<String, Boolean>) request.getAttribute("editAccessMap");
 Boolean includeAccessInfo = request.getAttribute("includeAccessInfo") == null ? false : (Boolean) request.getAttribute("includeAccessInfo");
+Boolean pretty = request.getAttribute("pretty") == null ? false : (Boolean) request.getAttribute("pretty");
 String baseUri = (String) request.getAttribute("baseUri");
 Long hits = (Long) request.getAttribute("hits");
 String queryId = (String) request.getAttribute("queryId");
 RecordGroupRepository groupDao = (RecordGroupRepository) request.getAttribute("groupDao");
 
-JsonPlaceSerializer serializer = new JsonPlaceSerializer(baseUri);
+JsonPlaceSerializer serializer = new JsonPlaceSerializer(baseUri, pretty);
 serializer.setGroupDao(groupDao);
 serializer.setIncludeAccessInfo(includeAccessInfo);
 

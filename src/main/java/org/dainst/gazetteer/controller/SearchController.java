@@ -100,6 +100,7 @@ public class SearchController {
 			@RequestParam(required=false) List<String> add,
 			@RequestParam(required=false) boolean noPolygons,
 			@RequestParam(required=false) String queryId,
+			@RequestParam(required=false) boolean pretty,
 			HttpServletRequest request,
 			HttpServletResponse response) {
 		
@@ -229,6 +230,7 @@ public class SearchController {
 		mav.addObject("placeDao", placeDao);
 		mav.addObject("view", view);
 		mav.addObject("q", q);
+		mav.addObject("pretty", pretty);
 		mav.addObject("googleMapsApiKey", googleMapsApiKey);
 		mav.addObject("callback", callback);
 		
