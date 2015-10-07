@@ -427,7 +427,7 @@
 							<s:message code="domain.location.altitudeInMeters" text="domain.location.altitudeInMeters" />
 						</label>
 						<div class="controls">							
-							<input type="text" ng-model="place.prefLocation.altitude" ng-disabled="place.unlocatable" />
+							<input type="text" ng-model="location.altitude" ng-disabled="place.unlocatable" />
 						</div>
 					</div>
 					<div class="control-group">
