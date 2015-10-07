@@ -17,7 +17,7 @@
 			<ul class="dropdown-menu">
 				<li><a href="../doc/{{place.gazId}}.kml" target="_blank">KML</a></li>
 				<li><a href="../doc/{{place.gazId}}.json?pretty=true" target="_blank">JSON</a></li>
-				<li><a href="../doc/{{place.gazId}}.geojson" target="_blank">GeoJSON</a></li>
+				<li><a href="../doc/{{place.gazId}}.geojson?pretty=true" target="_blank">GeoJSON</a></li>
 				<li><a href="../doc/{{place.gazId}}.rdf" target="_blank">RDF/XML</a></li>
 			</ul>
 		</li>
