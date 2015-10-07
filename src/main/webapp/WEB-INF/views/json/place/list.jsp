@@ -19,7 +19,7 @@ serializer.setIncludeAccessInfo(includeAccessInfo);
 
 StringBuilder sb = new StringBuilder("{");
 sb.append("\n\"total\": ").append(hits);
-sb.append(",\n\"result\": [");
+sb.append(",\n\"result\": [\n");
 int numberOfPlaces = 0;
 List<String> accessGrantedPlaces = new ArrayList<String>();
 List<String> accessDeniedPlaces = new ArrayList<String>();
