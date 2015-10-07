@@ -54,7 +54,7 @@ angular.module('gazetteer.filters', []).
 		  string2 = string2.replace(/ß/g, "s");
 
 		  return (string1 == string2) ? 0 : (string1 > string2 ) ? 1 : -1;
-	  }
+	  };
 	  
 	  return function(items) {
 		  return items.sort(compareStrings);

@@ -291,8 +291,8 @@ directives.directive('gazLocationPicker', function($document, $timeout, MapTypeS
 			$scope.showOverlay = false;
 			
 			$scope.openOverlay = function() {
-				var geocoder = new google.maps.Geocoder();
 				if (!$scope.validCoordinates) {
+					var geocoder = new google.maps.Geocoder();
 					geocoder.geocode({'address': $scope.coordinatesText}, function(results, status) {
 						if (status == google.maps.GeocoderStatus.OK) {
 							$scope.marker.setPosition(results[0].geometry.location);
@@ -304,7 +304,7 @@ directives.directive('gazLocationPicker', function($document, $timeout, MapTypeS
 						}
 					});
 				}
-
+				
 				$scope.mapOptions.mapTypeId = MapTypeService.getMapTypeId();
 				$scope.showOverlay = true;
 				window.setTimeout(function() { $scope.initialize(); }, 20);
@@ -345,6 +345,17 @@ directives.directive('gazLocationPicker', function($document, $timeout, MapTypeS
 			$scope.saveCoordinates = function() {
 				$scope.coordinates = [+$scope.marker.getPosition().lng().toFixed(6), +$scope.marker.getPosition().lat().toFixed(6)];
 				$scope.closeOverlay();
+			};
+			
+			$scope.checkForGeocoding = function() {
+				if (!$scope.validCoordinates) {
+					var geocoder = new google.maps.Geocoder();
+					geocoder.geocode({'address': $scope.coordinatesText}, function(results, status) {
+						if (status == google.maps.GeocoderStatus.OK)
+							$scope.coordinates = [+results[0].geometry.location.lng().toFixed(6), +results[0].geometry.location.lat().toFixed(6)];
+							$scope.$apply();
+					});
+				}
 			};
 			
 			$scope.$watch("coordinates", function() {
