@@ -291,6 +291,20 @@ directives.directive('gazLocationPicker', function($document, $timeout, MapTypeS
 			$scope.showOverlay = false;
 			
 			$scope.openOverlay = function() {
+				var geocoder = new google.maps.Geocoder();
+				if (!$scope.validCoordinates) {
+					geocoder.geocode({'address': $scope.coordinatesText}, function(results, status) {
+						if (status == google.maps.GeocoderStatus.OK) {
+							$scope.marker.setPosition(results[0].geometry.location);
+							if (results[0].viewport) {
+								$scope.map.fitBounds(results[0].viewport);
+								$scope.map.setZoom($scope.map.getZoom() + 2);
+							} else
+								$scope.map.panTo(results[0].geometry.location);
+						}
+					});
+				}
+
 				$scope.mapOptions.mapTypeId = MapTypeService.getMapTypeId();
 				$scope.showOverlay = true;
 				window.setTimeout(function() { $scope.initialize(); }, 20);
@@ -348,7 +362,9 @@ directives.directive('gazLocationPicker', function($document, $timeout, MapTypeS
 					var index = trimmedCoordinatesText.indexOf(",");
 					$scope.coordinates[1] = parseFloat(trimmedCoordinatesText.substring(0, index));
 					$scope.coordinates[0] = parseFloat(trimmedCoordinatesText.substring(index + 1));
-				}
+					$scope.validCoordinates = true;
+				} else
+					$scope.validCoordinates = false;
 				$scope.loaded = true;
 			});
 		}
