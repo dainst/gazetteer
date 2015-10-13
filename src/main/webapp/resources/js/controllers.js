@@ -62,26 +62,9 @@ function AppCtrl($scope, $location, $rootScope, $timeout, Place, GeoSearch, Esca
 		$scope.selectedSuggestionIndex = -1;
 		
 		if ($scope.q && $scope.q.length > 0) {
-			Place.suggestions({ field: "prefName.title.suggest", text: $scope.q }, function(result) {
+			Place.suggestions({ field: "suggestionNames.suggest", text: $scope.q }, function(result) {
 				if (result.suggestions && result.suggestions.length > 0)
 					$scope.searchSuggestions = result.suggestions;
-				
-				var additionalSuggestions = [];
-				
-				Place.suggestions({ field: "names.title.suggest", text: $scope.q }, function(result) {
-					for (var newSuggestion in result.suggestions) {
-						var sameAsPrefName = false;
-						for (var prefNameSuggestion in $scope.searchSuggestions) {
-							if ($scope.searchSuggestions[prefNameSuggestion].trim() == result.suggestions[newSuggestion].trim()) {
-								sameAsPrefName = true;
-								break;
-							}
-						}
-						if (!sameAsPrefName && $scope.searchSuggestions.length < 7)
-							additionalSuggestions.push(result.suggestions[newSuggestion]);
-					}
-					$scope.searchSuggestions = [].concat($scope.searchSuggestions).concat(additionalSuggestions);
-				});
 			});
 		}
 	};
@@ -229,26 +212,9 @@ function HomeCtrl($scope, $location, $rootScope, Place, EscapingService) {
 		$scope.homeSearchSuggestions = [];
 		
 		if ($scope.searchFieldInput && $scope.searchFieldInput.length > 0) {
-			Place.suggestions({ field: "prefName.title.suggest", text: $scope.searchFieldInput }, function(result) {
+			Place.suggestions({ field: "suggestionNames.suggest", text: $scope.searchFieldInput }, function(result) {
 				if (result.suggestions && result.suggestions.length > 0)
 					$scope.homeSearchSuggestions = result.suggestions;
-				
-				var additionalSuggestions = [];
-
-				Place.suggestions({ field: "names.title.suggest", text: $scope.searchFieldInput }, function(result) {
-					for (var newSuggestion in result.suggestions) {
-						var sameAsPrefName = false;
-						for (var prefNameSuggestion in $scope.homeSearchSuggestions) {
-							if ($scope.homeSearchSuggestions[prefNameSuggestion].trim() == result.suggestions[newSuggestion].trim()) {
-								sameAsPrefName = true;
-								break;
-							}
-						} 
-						if (!sameAsPrefName && $scope.homeSearchSuggestions.length < 7)
-							additionalSuggestions.push(result.suggestions[newSuggestion]);
-					}
-					$scope.homeSearchSuggestions = [].concat($scope.homeSearchSuggestions).concat(additionalSuggestions);
-				});
 			});
 		}
 	};

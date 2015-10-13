@@ -410,7 +410,7 @@ public class SearchController {
 	public Map<String, List<String>> getSuggestions(@RequestParam String field, 
 						  @RequestParam String text) {
 		
-		ElasticSearchSuggestionQuery query = new ElasticSearchSuggestionQuery(client);
+		ElasticSearchSuggestionQuery query = new ElasticSearchSuggestionQuery(client, groupRoleDao);
 		List<String> suggestions = query.getSuggestions(field, text);
 		
 		Map<String, List<String>> resultMap = new HashMap<String,List<String>>();
