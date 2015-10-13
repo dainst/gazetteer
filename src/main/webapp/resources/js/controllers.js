@@ -1245,6 +1245,23 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, Place,
 		if ($scope.place.identifiers == undefined)
 			$scope.place.identifiers = [];
 		$scope.place.identifiers.push($scope.identifier);
+		
+		var contextValues = ["pleiades", "geonames"];
+		var baseUriValues = ["http://pleiades.stoa.org/places/", "http://sws.geonames.org/"];
+		var predicateValues = ["owl:sameAs", "owl:sameAs"];
+		
+		var contextIndex = contextValues.indexOf($scope.identifier.context);
+		if (contextIndex > -1) {
+			var link = {
+				predicate: predicateValues[contextIndex],
+				object: baseUriValues[contextIndex] + $scope.identifier.value,
+				description: ""
+			};
+			if ($scope.place.links == undefined)
+				$scope.place.links = [];
+			$scope.place.links.push(link);
+		}
+		
 		$scope.identifier = { };
 	};
 	
