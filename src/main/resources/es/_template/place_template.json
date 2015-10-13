@@ -252,7 +252,7 @@
 	            }
 	        },
 			"transform" : {
-				"script": "if (ctx._source['deleted'] == true) ctx._source['prefName'] = null",
+				"script": "if (ctx._source['deleted'] == true) { ctx._source['prefName'] = null; ctx._source['names'] = null; }",
 				"lang": "groovy"
     		}
 	    }
