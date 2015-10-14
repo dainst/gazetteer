@@ -12,8 +12,6 @@ import org.elasticsearch.action.suggest.SuggestResponse;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.search.suggest.Suggest;
 import org.elasticsearch.search.suggest.completion.CompletionSuggestionBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class ElasticSearchSuggestionQuery {
@@ -29,52 +27,35 @@ public class ElasticSearchSuggestionQuery {
 		
 		this.groupRoleDao = groupRoleDao;
 	}
-	
+
 	public List<String> getSuggestions(String field, String text) {
-		
+
+		SuggestResponse response = suggestRequestBuilder.addSuggestion(new CompletionSuggestionBuilder("suggestions")
+										.field(field)
+										.text(text)
+										.size(size)
+										.addCategory("recordGroupId", getAccessibleRecordGroups()
+												)).execute().actionGet();
+
 		List<String> suggestions = new ArrayList<String>();
-		
-		suggestions.addAll(executeSuggestionQuery(field, text, size));
-		
-		if (suggestions.size() < size) {
-			List<String> groupIds = getAccessibleRecordGroupIds();
-			
-			for (String groupId : groupIds) {
-				if (suggestions.size() < size)
-					for (String suggestion : executeSuggestionQuery(field, groupId + "%" + text, size - suggestions.size())) {
-						suggestions.add(suggestion.substring(groupId.length() + 1));
-					}
-				else
-					break;
-			}			
-		}
-		
-		return suggestions;
-	}
-	
-	private List<String> executeSuggestionQuery(String field, String text, int size) {
-		
-		SuggestResponse response = suggestRequestBuilder.addSuggestion(new CompletionSuggestionBuilder("suggestions").field(field).text(text).size(size)).execute().actionGet();
-		
-	
-		List<String> suggestions = new ArrayList<String>();
-		
+
 		if (response != null && response.getSuggest() != null && response.getSuggest().getSuggestion("suggestions") != null 
 				&& response.getSuggest().getSuggestion("suggestions").getEntries() != null && response.getSuggest().getSuggestion("suggestions").getEntries().size() > 0) {
-			
+
 			Iterator<? extends Suggest.Suggestion.Entry.Option> iterator = response.getSuggest().getSuggestion("suggestions").getEntries().get(0).getOptions().iterator();
-			
+
 			while (iterator.hasNext()) {
 				suggestions.add(iterator.next().getText().toString());
 			}
 		}
-			
+
 		return suggestions;
 	}
 	
-	private List<String> getAccessibleRecordGroupIds() {
+	private List<String> getAccessibleRecordGroups() {
 		
 		List<String> groupIds = new ArrayList<String>();
+		groupIds.add("none");
 		
 		User user = null;
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();

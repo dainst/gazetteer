@@ -131,7 +131,14 @@
 							"analyzer": "raw"
 						},
 						"suggest" : {
-							"type": "completion"
+							"type": "completion",
+							"context": {
+								"recordGroupId": {
+									"type": "category",
+									"path": "recordGroupId",
+									"default": "none"
+								}
+							}
 						}
 	            	}
 	            },
@@ -264,7 +271,7 @@
 	            }
 	        },
 			"transform" : {
-				"script": "ctx._source.suggestionNames = []; if (ctx._source['deleted'] == true) { ctx._source['prefName'] = null; ctx._source['names'] = null; } else { if (ctx._source['prefName']) { String title = ctx._source['prefName'].title; if (ctx._source['recordGroupId']) title = ctx._source['recordGroupId'] + '%' + title; ctx._source['suggestionNames'] += title; }; if (ctx._source['names']) { ctx._source['names'].each { String title = it.title; if (ctx._source['recordGroupId']) title = ctx._source['recordGroupId'] + '%' + title; ctx._source['suggestionNames'] += title; } } }",
+				"script": "ctx._source.suggestionNames = []; if (ctx._source['deleted'] == true) { ctx._source['prefName'] = null; ctx._source['names'] = null; } else { if (ctx._source['prefName']) ctx._source['suggestionNames'] += ctx._source['prefName'].title; if (ctx._source['names']) { ctx._source['names'].each { ctx._source['suggestionNames'] += it.title; } } }",
 				"lang": "groovy"
     		}
 	    }
