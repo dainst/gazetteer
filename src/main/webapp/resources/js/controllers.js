@@ -24,6 +24,7 @@ function AppCtrl($scope, $location, $rootScope, $timeout, Place, GeoSearch, Esca
 	
 	$scope.searchSuggestions = [];
 	$scope.selectedSuggestionIndex = -1;
+	$scope.queryId = 0;
 	
 	$scope.scrollPosition = 0;
 	
@@ -60,10 +61,11 @@ function AppCtrl($scope, $location, $rootScope, $timeout, Place, GeoSearch, Esca
 	$scope.updateSuggestions = function() {
 		$scope.searchSuggestions = [];
 		$scope.selectedSuggestionIndex = -1;
+		$scope.queryId++;
 		
 		if ($scope.q && $scope.q.length > 0) {
-			Place.suggestions({ field: "suggestionNames.suggest", text: $scope.q }, function(result) {
-				if (result.suggestions && result.suggestions.length > 0)
+			Place.suggestions({ field: "suggestionNames.suggest", text: $scope.q, queryId: $scope.queryId }, function(result) {
+				if (result.suggestions && result.suggestions.length > 0 && result.queryId[0] == $scope.queryId)
 					$scope.searchSuggestions = result.suggestions;
 			});
 		}
@@ -139,6 +141,7 @@ function HomeCtrl($scope, $location, $rootScope, Place, EscapingService) {
 	
 	$scope.homeSearchSuggestions = [];
 	$scope.selectedSuggestionIndex = -1;
+	$scope.queryId = 0;
 	
 	var map_canvas = document.getElementById('home_map_canvas');
 	
@@ -210,10 +213,11 @@ function HomeCtrl($scope, $location, $rootScope, Place, EscapingService) {
 	
 	$scope.updateSuggestions = function() {
 		$scope.homeSearchSuggestions = [];
+		$scope.queryId++;
 		
 		if ($scope.searchFieldInput && $scope.searchFieldInput.length > 0) {
-			Place.suggestions({ field: "suggestionNames.suggest", text: $scope.searchFieldInput }, function(result) {
-				if (result.suggestions && result.suggestions.length > 0)
+			Place.suggestions({ field: "suggestionNames.suggest", text: $scope.searchFieldInput, queryId: $scope.queryId }, function(result) {
+				if (result.suggestions && result.suggestions.length > 0 && result.queryId[0] == $scope.queryId)
 					$scope.homeSearchSuggestions = result.suggestions;
 			});
 		}

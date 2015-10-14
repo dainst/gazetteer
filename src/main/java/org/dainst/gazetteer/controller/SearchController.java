@@ -408,13 +408,18 @@ public class SearchController {
 	@RequestMapping(value="/suggestions", method=RequestMethod.GET)
 	@ResponseBody
 	public Map<String, List<String>> getSuggestions(@RequestParam String field, 
-						  @RequestParam String text) {
+						  @RequestParam String text,
+						  @RequestParam String queryId) {
 		
 		ElasticSearchSuggestionQuery query = new ElasticSearchSuggestionQuery(client, groupRoleDao);
 		List<String> suggestions = query.getSuggestions(field, text);
 		
+		List<String> queryIdList = new ArrayList<String>();
+		queryIdList.add(queryId);
+		
 		Map<String, List<String>> resultMap = new HashMap<String,List<String>>();
 		resultMap.put("suggestions", suggestions);
+		resultMap.put("queryId", queryIdList);
 		
 		return resultMap;
 	}
