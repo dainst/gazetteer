@@ -5,9 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -33,9 +31,6 @@ public class User implements UserDetails {
 	private boolean enabled;
 
 	private List<GrantedAuthority> authorities;
-	
-	// Deprecated!
-	private Set<String> recordGroupIds = new HashSet<String>();
 		
 
 	public User(String username, String firstname, String lastname, String institution,
@@ -183,17 +178,6 @@ public class User implements UserDetails {
 	public boolean isEnabled() {
 		return enabled;
 	}
-	
-	public Set<String> getRecordGroupIds() {
-		if (recordGroupIds == null)
-			recordGroupIds = new HashSet<String>();
-			
-		return recordGroupIds;
-	}
-
-	public void setRecordGroupIds(Set<String> recordGroupIds) {
-		this.recordGroupIds = recordGroupIds;
-	}
 
 	public static class UsernameComparator implements Comparator<User> {
 		public int compare(User user1, User user2) {
@@ -308,10 +292,6 @@ public class User implements UserDetails {
 		if (authorities == null && other.authorities != null)
 			return false;
 		if (authorities != null && !authorities.equals(other.authorities))
-			return false;
-		if (recordGroupIds == null && other.recordGroupIds != null)
-			return false;
-		if (recordGroupIds != null && !recordGroupIds.equals(other.recordGroupIds))
 			return false;
 		return true;
 	}
