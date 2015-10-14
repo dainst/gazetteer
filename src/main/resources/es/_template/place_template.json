@@ -74,11 +74,12 @@
 									"analyzer": "collation"
 								},
 								"suggest": {
-									"type": "completion"
+									"type": "completion",
+									"analyzer": "standard"
 								},
 								"autocomplete": {
 									"type": "string",
-									"analyzer": "autocomplete"									 
+									"analyzer": "autocomplete"
 								}
 							}   
 						}
@@ -113,11 +114,12 @@
 									"analyzer": "collation"
 								},
 								"suggest" : {
-									"type": "completion"
+									"type": "completion",
+									"analyzer": "standard"
 								},
 								"autocomplete": {
 									"type": "string",
-									"analyzer": "autocomplete"									 
+									"analyzer": "autocomplete"
 								}
 							}
 	                    }
@@ -132,6 +134,7 @@
 						},
 						"suggest" : {
 							"type": "completion",
+							"analyzer": "standard",
 							"context": {
 								"recordGroupId": {
 									"type": "category",
