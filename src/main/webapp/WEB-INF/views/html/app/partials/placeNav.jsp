@@ -10,7 +10,7 @@
 				<s:message code="ui.back" />
 			</a>
 		</li>
-		<li class="dropdown pull-right">
+		<li class="dropdown pull-right" ng-show="!place.accessDenied">
 			<a class="dropdown-toggle" data-toggle="dropdown" href="">
 				<i class="icon-file"></i> <b class="caret"></b>
 			</a>

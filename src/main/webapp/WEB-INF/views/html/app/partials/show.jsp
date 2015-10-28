@@ -36,7 +36,7 @@
 	});
 </script>
 
-<h3><s:message code="ui.information" text="ui.information"/></h3>
+<h3 ng-if="place.gazId && !place.accessDenied"><s:message code="ui.information" text="ui.information"/></h3>
 
 <dl class="dl-horizontal">
 
@@ -239,7 +239,7 @@
 		<br/>
 	</span>
 	
-	<span>
+	<span ng-show="place.gazId && !place.accessDenied">
 		<dt><s:message code="ui.contexts" text="ui.contexts"/></dt>
 		<dd>
 			<a ng-href="http://arachne.uni-koeln.de/arachne/index.php?view[layout]=search_result_overview&view[category]=overview&search[constraints]=Gazetteerid:%22{{place.gazId}}%22" target="_blank">
