@@ -12,8 +12,8 @@ RecordGroupRepository groupDao = (RecordGroupRepository) request.getAttribute("g
 JsonPlaceSerializer serializer = new JsonPlaceSerializer(baseUri, pretty);
 serializer.setGroupDao(groupDao);
 
-StringBuilder sb = new StringBuilder("{");
-sb.append(" \"type\": \"FeatureCollection\", \"features\": [");
+StringBuilder sb = new StringBuilder("{\n");
+sb.append("  \"type\": \"FeatureCollection\",\n  \"features\": [\n");
 int numberOfPlaces = 0;
 List<String> accessGrantedPlaces = new ArrayList<String>();
 List<String> accessDeniedPlaces = new ArrayList<String>();
@@ -23,6 +23,7 @@ for (Place place : places) {
 
 	String serializedPlace = serializer.serializeGeoJson(place, request, readAccess, editAccess);
 	if (serializedPlace != null) {
+		serializedPlace = "    " + serializedPlace.replace("\n", "\n    ");
 		if (readAccess)
 			accessGrantedPlaces.add(serializedPlace);
 		else
@@ -43,6 +44,6 @@ for (String serializedPlace : accessDeniedPlaces) {
 	if (numberOfPlaces > appendedPlaces)
 		sb.append(",\n");
 }
-sb.append("]\n}");
+sb.append("\n  ]\n}");
 
 %><%= sb.toString() %>
