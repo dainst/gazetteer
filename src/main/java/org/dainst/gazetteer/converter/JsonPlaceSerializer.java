@@ -108,6 +108,11 @@ public class JsonPlaceSerializer {
 			return placeNode;
 		}
 		
+		if (!readAccess) {
+			placeNode.put("accessDenied", true);
+			return placeNode;
+		}
+		
 		// parent
 		if (place.getParent() != null && !place.getParent().isEmpty())
 			placeNode.put("parent", baseUri + "place/" + place.getParent());
@@ -121,11 +126,6 @@ public class JsonPlaceSerializer {
 				}
 			}
 			placeNode.put("relatedPlaces", relatedPlacesNode);
-		}
-		
-		if (!readAccess) {
-			placeNode.put("accessDenied", true);
-			return placeNode;
 		}
 		
 		// ancestors
