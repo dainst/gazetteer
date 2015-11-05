@@ -95,8 +95,13 @@ opts = OptionParser.new do |opts|
   end
 
   options.replace = false
-  opts.on("-r", "--[no-]replace", "Replace existing data\n                                     when merging new data will have priority over existing data\n                                     when merging is switchted on existing places with the same id will be replaced") do |r|
+  opts.on("-r", "--[no-]replace", "Replace existing data\n                                     when merging new data will have priority over existing data\n                                     when merging is switched off existing places with the same id will be replaced") do |r|
     options.replace = r
+  end
+
+  options.keepAsAlternative = false
+  opts.on("-k", "--keep-as-alternative", "Keep preferred names/locations as alternative names/locations when merging with activated replace option") do |k|
+    options.keepAsAlternative = k
   end
 
   options.updatedCSV = false
@@ -274,7 +279,7 @@ CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
   end
 
   if row[0] && row[0].start_with?('#')
-    puts "skipping comment row #{row_no}" if options.verbose
+    puts "skipping comment row #{row_no}"
     next
   end
 
@@ -625,6 +630,25 @@ CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
         place = place.merge(existing_place, &merger)
       else
         # new place has priority
+
+        # keep prefNames & prefLocations as alternative names/locations if keepAsAlternative option is switched on
+        if options.keepAsAlternative
+          if place[:prefName] && place[:prefName][:title] && !place[:prefName][:title].to_s.empty?
+            if existing_place[:prefName] && existing_place[:prefName][:title] && !existing_place[:prefName][:title].to_s.empty?
+              if place[:prefName][:title] != existing_place[:prefName][:title] || place[:prefName][:language] != existing_place[:prefName][:language]
+                existing_place[:names] = [] if !existing_place[:names]                
+                existing_place[:names] << existing_place[:prefName]
+              end
+            end
+          end
+          if place[:prefLocation] && (place[:prefLocation][:coordinates] || place[:prefLocation][:shape])
+            if existing_place[:prefLocation] && (existing_place[:prefLocation][:coordinates] || existing_place[:prefLocation][:shape])
+              existing_place[:locations] = [] if !existing_place[:locations]
+              existing_place[:locations] << existing_place[:prefLocation]
+            end
+          end
+        end
+
         place = existing_place.merge(place, &merger)
       end
       merged += 1
