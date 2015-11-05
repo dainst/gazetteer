@@ -356,6 +356,8 @@ directives.directive('gazLocationPicker', function($document, $timeout, MapTypeS
 							$scope.$apply();
 					});
 				}
+				
+				$scope.openOverlay();
 			};
 			
 			$scope.$watch("coordinates", function() {
