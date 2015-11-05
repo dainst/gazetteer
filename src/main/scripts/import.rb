@@ -280,6 +280,13 @@ CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
 
   if row[0] && row[0].start_with?('#')
     puts "skipping comment row #{row_no}"
+    # copy comment row to updated CSV file
+    if options.updateCSV
+      updatedRow = row.dup
+      CSV.open(options.updateCSV, "ab", {:col_sep => options.separator}) do |csv|
+        csv << updatedRow
+      end
+    end
     next
   end
 
