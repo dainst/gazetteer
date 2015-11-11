@@ -579,7 +579,6 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 		$rootScope.loading++;
 		
 		$scope.updateFilters();
-		$scope.updatePolygonFilterCoordinates();
 		Place.query($scope.search, function(result) {
 			$scope.places = result.result;
 			var markers = 0;
@@ -751,13 +750,11 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 			GeoSearch.setPolygon($scope.search.polygonFilterCoordinates);
 			
 			google.maps.event.addListener(GeoSearch.getPolygon().getPaths().getAt(0), 'insert_at', function() {
-				$scope.search.offset = 0;
-				$scope.submit();
+				updatePolygonFilterSearch();
 			});
 			
 			google.maps.event.addListener(GeoSearch.getPolygon().getPaths().getAt(0), 'set_at', function() {
-				$scope.search.offset = 0;
-				$scope.submit();
+				updatePolygonFilterSearch();
 			});
 		}
 		else {
@@ -774,6 +771,13 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 				$scope.polygonFilterCoordinatesString += $scope.search.polygonFilterCoordinates[i];
 			}
 		}
+	};
+	
+	function updatePolygonFilterSearch() {
+		$scope.search.offset = 0;
+		$scope.updatePolygonFilterCoordinates();
+		$location.path('/search').search($scope.search);
+		$scope.submit();
 	};
 }
 
