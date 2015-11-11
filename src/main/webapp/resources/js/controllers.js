@@ -481,10 +481,10 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 	$rootScope.mapMode = "standard";
 	
 	$scope.filters = {
-			coordinates : false,
-			noCoordinates : false,
-			polygon : false,
-			noPolygon : false
+		coordinates : false,
+		noCoordinates : false,
+		polygon : false,
+		noPolygon : false
 	};
 	
 	setSearchFromLocation();
@@ -496,18 +496,6 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 	$scope.facetOffsets = {};
 	
 	GeoSearch.setCreateMode(false);
-	
-	if (GeoSearch.getPolygon() != null) {
-		google.maps.event.addListener(GeoSearch.getPolygon().getPaths().getAt(0), 'insert_at', function() {
-			$scope.search.offset = 0;
-			$scope.submit();
-		});
-	
-		google.maps.event.addListener(GeoSearch.getPolygon().getPaths().getAt(0), 'set_at', function() {
-			$scope.search.offset = 0;
-			$scope.submit();
-		});
-	}
 	
 	$scope.$on("$destroy", function() {
 		if (GeoSearch.getPolygon() != null) {
@@ -719,6 +707,7 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 	);
 	
 	function setSearchFromLocation() {
+		
 		$scope.search = {
 			offset: ($location.search().offset) ? parseInt($location.search().offset) : 0,
 			limit: ($location.search().limit) ? parseInt($location.search().limit) : 10,
@@ -756,8 +745,21 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 			}
 		}
 		
-		if ($scope.search.polygonFilterCoordinates)
+		if ($scope.search.polygonFilterCoordinates) {
 			$rootScope.geoSearch = true;
+			GeoSearch.activate($rootScope.map);
+			GeoSearch.setPolygon($scope.search.polygonFilterCoordinates);
+			
+			google.maps.event.addListener(GeoSearch.getPolygon().getPaths().getAt(0), 'insert_at', function() {
+				$scope.search.offset = 0;
+				$scope.submit();
+			});
+			
+			google.maps.event.addListener(GeoSearch.getPolygon().getPaths().getAt(0), 'set_at', function() {
+				$scope.search.offset = 0;
+				$scope.submit();
+			});
+		}
 		else {
 			$rootScope.geoSearch = false;
 			GeoSearch.deactivate();

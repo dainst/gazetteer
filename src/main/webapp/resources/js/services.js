@@ -114,9 +114,21 @@ services.factory('GeoSearch', function(PolygonValidator) {
 		polygon.setMap(null);
 	};
 	
+	var addListeners = function() {
+		google.maps.event.addListener(polygon.getPaths().getAt(0), "insert_at", function(index) {
+			if (PolygonValidator.checkForPathIntersection(this, this))
+				this.removeAt(index);
+		});
+		
+		google.maps.event.addListener(polygon.getPaths().getAt(0), "set_at", function(index, oldLatLng) {
+			if (PolygonValidator.checkForPathIntersection(this, this))
+				this.setAt(index, oldLatLng);
+		});
+	};
+	
 	return {
 		activate: function(targetMap) {
-			if (map == null) {			
+			if (map == null) {
 				map = targetMap;
 				
 				if (polygon == null) {
@@ -150,15 +162,7 @@ services.factory('GeoSearch', function(PolygonValidator) {
 						polygon.setPath(polygonCoordinates);		
 						polygon.setMap(map);
 						
-						google.maps.event.addListener(polygon.getPaths().getAt(0), "insert_at", function(index) {
-							if (PolygonValidator.checkForPathIntersection(this, this))
-								this.removeAt(index);
-						});
-						
-						google.maps.event.addListener(polygon.getPaths().getAt(0), "set_at", function(index, oldLatLng) {
-							if (PolygonValidator.checkForPathIntersection(this, this))
-								this.setAt(index, oldLatLng);
-						});
+						addListeners();
 						
 						map.setOptions({ disableDoubleClickZoom: true });
 					}
@@ -187,6 +191,17 @@ services.factory('GeoSearch', function(PolygonValidator) {
 		
 		getPolygon: function() { 
 			return polygon;
+		},
+		
+		setPolygon: function(coordinates) {
+			var latLngCoordinates = [];
+			for (var i = 0; i < coordinates.length; i += 2) {
+				var latLng = new google.maps.LatLng(coordinates[i + 1], coordinates[i]);
+				latLngCoordinates.push(latLng);
+			}
+			polygon.setPath(latLngCoordinates);
+			polygon.setMap(map);
+			addListeners();
 		},
 		
 		deletePolygon: function() {
