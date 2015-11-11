@@ -28,14 +28,17 @@ public class ElasticSearchSuggestionQuery {
 		this.groupRoleDao = groupRoleDao;
 	}
 
-	public List<String> getSuggestions(String field, String text) {
+	public List<String> getSuggestions(String field, String text, boolean checkRecordGroup) {
 
-		SuggestResponse response = suggestRequestBuilder.addSuggestion(new CompletionSuggestionBuilder("suggestions")
-										.field(field)
-										.text(text)
-										.size(size)
-										.addCategory("recordGroupId", getAccessibleRecordGroups()
-												)).execute().actionGet();
+		CompletionSuggestionBuilder builder = new CompletionSuggestionBuilder("suggestions")
+			.field(field)
+			.text(text)
+			.size(size);
+
+		if (checkRecordGroup)
+			builder.addCategory("recordGroupId", getAccessibleRecordGroups());
+		
+		SuggestResponse response = suggestRequestBuilder.addSuggestion(builder).execute().actionGet();
 
 		List<String> suggestions = new ArrayList<String>();
 

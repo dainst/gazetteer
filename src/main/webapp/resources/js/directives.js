@@ -150,6 +150,7 @@ directives.directive('gazTagField', function($document) {
 			$scope.suggestions = [];
 			$scope.selectedSuggestionIndex = 0;
 			$scope.backgroundColor = "#fcfcfc";
+			$scope.queryId = 0;
 			
 			$scope.$watch("deactivated", function() {
 				if ($scope.deactivated) {
@@ -209,11 +210,14 @@ directives.directive('gazTagField', function($document) {
 			
 			$scope.updateSuggestions = function() {
 				$scope.suggestions = [];
+				$scope.queryId++;
 				if ($scope.inputText.length > 0) {
-					Place.suggestions({ field: $scope.fieldname + ".suggest", text: $scope.inputText }, function(result) {
-						for (var i = 0; i < result.suggestions.length; i++) {
-							if (!$scope.searchInList(result.suggestions[i]))
-								$scope.suggestions.push(result.suggestions[i]);
+					Place.suggestions({ field: $scope.fieldname + ".suggest", text: $scope.inputText, queryId: $scope.queryId }, function(result) {
+						if (result.queryId[0] == $scope.queryId) {
+							for (var i = 0; i < result.suggestions.length; i++) {
+								if (!$scope.searchInList(result.suggestions[i]))
+									$scope.suggestions.push(result.suggestions[i]);
+							}
 						}
 					});
 				}

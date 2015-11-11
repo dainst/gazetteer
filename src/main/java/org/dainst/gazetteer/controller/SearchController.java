@@ -412,7 +412,7 @@ public class SearchController {
 						  @RequestParam String queryId) {
 		
 		ElasticSearchSuggestionQuery query = new ElasticSearchSuggestionQuery(client, groupRoleDao);
-		List<String> suggestions = query.getSuggestions(field, text);
+		List<String> suggestions = query.getSuggestions(field, text, field.equals("suggestionNames.suggest"));
 		
 		List<String> queryIdList = new ArrayList<String>();
 		queryIdList.add(queryId);
