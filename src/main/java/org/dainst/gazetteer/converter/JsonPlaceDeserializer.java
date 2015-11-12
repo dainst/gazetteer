@@ -6,8 +6,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.dainst.gazetteer.dao.GroupRoleRepository;
 import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.domain.Comment;
+import org.dainst.gazetteer.domain.GroupRole;
+import org.dainst.gazetteer.domain.GroupInternalData;
 import org.dainst.gazetteer.domain.Identifier;
 import org.dainst.gazetteer.domain.Link;
 import org.dainst.gazetteer.domain.Location;
@@ -39,6 +42,9 @@ public class JsonPlaceDeserializer {
 	
 	@Autowired
 	private PlaceRepository placeDao;
+	
+	@Autowired
+	private GroupRoleRepository groupRoleDao;
 	
 	public Place deserializeLazily(InputStream jsonStream) throws InvalidIdException {
 		try {
@@ -375,11 +381,12 @@ public class JsonPlaceDeserializer {
 			}
 			place.setLinks(links);
 			
-			// update reisestipendium content
 			Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			logger.debug("user: {}", principal);
 			if (principal instanceof User) {
 				User user = (User) principal;
+				
+				// update reisestipendium content
 				if (user.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_REISESTIPENDIUM"))) {
 					if (objectNode.has("noteReisestipendium"))
 						place.setNoteReisestipendium(objectNode.get("noteReisestipendium").asText());
@@ -402,6 +409,36 @@ public class JsonPlaceDeserializer {
 					}
 					place.setCommentsReisestipendium(commentsReisestipendium);
 				}
+				
+				// update record group internal data
+				List<GroupInternalData> groupInternalData = new ArrayList<GroupInternalData>();
+				for (GroupInternalData data : place.getGroupInternalData()) {
+					GroupRole role = groupRoleDao.findByGroupIdAndUserId(data.getGroupId(), user.getId());
+					if (role == null)
+						groupInternalData.add(data);
+				}
+				JsonNode groupInternalDataNode = objectNode.get("groupInternalData");
+				if (groupInternalDataNode != null) for (JsonNode dataNode : groupInternalDataNode) {
+					GroupInternalData data = new GroupInternalData();					
+					JsonNode textNode = dataNode.get("text");
+					JsonNode groupNode = dataNode.get("recordGroup");
+					if (textNode == null)
+						throw new HttpMessageNotReadableException(
+								"Invalid group internal data object. Attribute \"text\" has to be set.");
+					if (groupNode == null)
+						throw new HttpMessageNotReadableException(
+								"Invalid group internal data object. Attribute \"recordGroup\" has to be set.");
+										
+					data.setText(textNode.asText());
+					data.setGroupId(groupNode.get("id").asText());
+					
+					GroupRole role = groupRoleDao.findByGroupIdAndUserId(data.getGroupId(), user.getId());
+					if (role != null) {
+						groupInternalData.add(data);
+						logger.debug("updated group internal data: {}", data);
+					}
+				}
+				place.setGroupInternalData(groupInternalData);
 			}
 			
 			logger.debug("returning place {}", place);

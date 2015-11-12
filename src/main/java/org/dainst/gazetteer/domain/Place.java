@@ -74,6 +74,8 @@ public class Place {
 	
 	private List<Comment> commentsReisestipendium = new ArrayList<Comment>();
 	
+	private List<GroupInternalData> groupInternalData = new ArrayList<GroupInternalData>();
+	
 	@Indexed
 	private String recordGroupId;
 	
@@ -324,6 +326,14 @@ public class Place {
 		this.commentsReisestipendium = commentsReisestipendium;
 	}
 	
+	public List<GroupInternalData> getGroupInternalData() {
+		return groupInternalData;
+	}
+
+	public void setGroupInternalData(List<GroupInternalData> groupInternalData) {
+		this.groupInternalData = groupInternalData;
+	}
+
 	public String getRecordGroupId() {
 		return recordGroupId;
 	}
@@ -351,6 +361,10 @@ public class Place {
 				* result
 				+ ((commentsReisestipendium == null) ? 0
 						: commentsReisestipendium.hashCode());
+		result = prime
+				* result
+				+ ((groupInternalData == null) ? 0
+						: groupInternalData.hashCode());
 		result = prime * result + (deleted ? 1231 : 1237);
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((ids == null) ? 0 : ids.hashCode());
@@ -401,6 +415,12 @@ public class Place {
 				return false;
 		} else if (!commentsReisestipendium
 				.equals(other.commentsReisestipendium))
+			return false;
+		if (groupInternalData == null) {
+			if (other.groupInternalData != null)
+				return false;
+		} else if (!groupInternalData
+				.equals(other.groupInternalData))
 			return false;
 		if (deleted != other.deleted)
 			return false;

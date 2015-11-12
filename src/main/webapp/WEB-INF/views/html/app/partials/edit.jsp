@@ -1,5 +1,6 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page contentType="text/html; charset=utf-8" session="false"%>
 
@@ -266,6 +267,34 @@
 							</div>
 						</div>
 					</div>
+					
+					<!-- record group internal data -->
+					<c:if test="${fn:length(editRecordGroups) gt 0}">
+						<div class="control-group">
+							<label class="control-label">
+								<s:message code="domain.place.groupInternalData" text="domain.place.groupInternalData" />
+							</label>
+							<div class="controls">
+								<textarea ng-model="groupInternalData.text"></textarea>
+								<select ng-model="groupInternalData.group" class="input-large">
+									<c:forEach var="recordGroup" items="${editRecordGroups}">
+										<option value="${recordGroup.id}$$${recordGroup.name}">${recordGroup.name}</option>
+									</c:forEach>
+								</select>
+								<div class="btn btn-primary plus" ng-click="addGroupInternalData()"
+										ng-disabled="!groupInternalData.text || !groupInternalData.group">
+									<i class="icon-plus icon-white"></i>
+								</div>
+								<div ng-hide="!place.groupInternalData" style="margin-top: 1em">
+									<blockquote ng-repeat="data in place.groupInternalData">
+										<a ng-click="place.groupInternalData.splice($index,1)"><i class="icon-remove-sign"></i></a>
+										<p>{{data.text}}</p>
+										<p>{{data.recordGroup.name}}</p>
+									</blockquote>
+								</div>
+							</div>
+						</div>
+					</c:if>
 					
 				</div>
 				

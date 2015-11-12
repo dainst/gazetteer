@@ -285,6 +285,14 @@
 		<br/>
 	</span>
 	
+	<span ng-hide="!place.groupInternalData">
+		<dt><s:message code="domain.place.groupInternalData" text="domain.place.groupInternalData" /></dt>
+		<dd ng-repeat="data in place.groupInternalData">
+			<blockquote>{{data.text}}</blockquote>
+		</dd>
+		<br/>
+	</span>
+	
 	<span ng-hide="!place.comments">
 		<dt><s:message code="domain.place.comments" text="domain.place.comments" /></dt>
 		<dd ng-repeat="comment in place.comments">

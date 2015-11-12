@@ -7,10 +7,13 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.dainst.gazetteer.dao.GroupRoleRepository;
 import org.dainst.gazetteer.dao.PlaceChangeRecordRepository;
 import org.dainst.gazetteer.dao.RecordGroupRepository;
 import org.dainst.gazetteer.dao.UserRepository;
 import org.dainst.gazetteer.domain.Comment;
+import org.dainst.gazetteer.domain.GroupRole;
+import org.dainst.gazetteer.domain.GroupInternalData;
 import org.dainst.gazetteer.domain.Identifier;
 import org.dainst.gazetteer.domain.Link;
 import org.dainst.gazetteer.domain.Location;
@@ -53,7 +56,10 @@ public class JsonPlaceSerializer {
 	
 	@Autowired
 	private RecordGroupRepository groupDao;
-		
+	
+	@Autowired
+	private GroupRoleRepository groupRoleDao;
+	
 	public String serialize(Place place, Boolean accessGranted) {
 		return serialize(place, null, null, accessGranted, false);
 	}
@@ -63,7 +69,6 @@ public class JsonPlaceSerializer {
 	}
 	
 	public String serialize(Place place, HttpServletRequest request, List<Place> parents, Boolean readAccess, Boolean editAccess) {
-		 
 		mapper = new ObjectMapper();
 		
 		if (pretty)
@@ -312,6 +317,26 @@ public class JsonPlaceSerializer {
 				}
 				placeNode.put("commentsReisestipendium", commentsNode);
 			}
+		}
+		
+		// record group internal data
+		if (user != null && !place.getGroupInternalData().isEmpty()) {
+			logger.debug("serializing record group internal data");
+			ArrayNode groupInternalDataNode = mapper.createArrayNode();
+			for (GroupInternalData data : place.getGroupInternalData()) {
+				GroupRole role = groupRoleDao.findByGroupIdAndUserId(data.getGroupId(), user.getId());
+				if (role != null) {
+					ObjectNode dataNode = mapper.createObjectNode();
+					dataNode.put("text", data.getText());
+					ObjectNode groupNode = mapper.createObjectNode();
+					groupNode.put("id", data.getGroupId());
+					groupNode.put("name", groupDao.findOne(data.getGroupId()).getName());
+					dataNode.put("recordGroup", groupNode);
+					groupInternalDataNode.add(dataNode);
+				}
+			}
+			if (groupInternalDataNode.size() > 0)
+				placeNode.put("groupInternalData", groupInternalDataNode);
 		}
 		
 		// edit access

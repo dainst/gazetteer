@@ -1172,17 +1172,18 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, Place,
 			$scope.place.prefLocation = {};
 			$scope.place.locations = [];
 		}
-		else if($scope.place.prefLocation && !$scope.place.prefLocation.coordinates && !$scope.place.prefLocation.shape)
+		else if ($scope.place.prefLocation && !$scope.place.prefLocation.coordinates && !$scope.place.prefLocation.shape)
 			$scope.place.prefLocation = undefined;
-		if($scope.comment) $scope.addComment();
-		if($scope.name) $scope.addName();
-		if($scope.location) $scope.addLocation();
-		if($scope.identifier) $scope.addIdentifier();
-		if($scope.link) $scope.addLink();
-		if($scope.relatedPlace)
+		if ($scope.comment) $scope.addComment();
+		if ($scope.groupInternalData) $scope.addGroupInternalData();
+		if ($scope.name) $scope.addName();
+		if ($scope.location) $scope.addLocation();
+		if ($scope.identifier) $scope.addIdentifier();
+		if ($scope.link) $scope.addLink();
+		if ($scope.relatedPlace)
 			$scope.addRelatedPlace();
 		$scope.updateRelatedPlaces();
-		if($scope.commentReisestipendium) $scope.addCommentReisestipendium();
+		if ($scope.commentReisestipendium) $scope.addCommentReisestipendium();
 	};
 	
 	$scope.addComment = function() {
@@ -1192,6 +1193,23 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, Place,
 			$scope.place.comments = [];
 		$scope.place.comments.push($scope.comment);
 		$scope.comment = {};
+	};
+	
+	$scope.addGroupInternalData = function() {
+		if (!$scope.groupInternalData.text || !$scope.groupInternalData.group)
+			return;
+		
+		var newData = {
+				text: $scope.groupInternalData.text,
+				recordGroup: {}
+		};
+		newData.recordGroup.id = $scope.groupInternalData.group.substr(0, $scope.groupInternalData.group.indexOf('$$')); 
+		newData.recordGroup.name = $scope.groupInternalData.group.substr($scope.groupInternalData.group.indexOf('$$') + 2);
+
+		if ($scope.place.groupInternalData == undefined)
+			$scope.place.groupInternalData = [];
+		$scope.place.groupInternalData.push(newData);
+		$scope.groupInternalData = {};		
 	};
 	
 	$scope.addName = function() {
