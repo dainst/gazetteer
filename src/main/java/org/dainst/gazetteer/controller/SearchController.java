@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.dainst.gazetteer.converter.JsonPlaceDeserializer;
+import org.dainst.gazetteer.converter.JsonPlaceSerializer;
 import org.dainst.gazetteer.dao.GroupRoleRepository;
 import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.dao.RecordGroupRepository;
@@ -64,6 +65,9 @@ public class SearchController {
 	
 	@Autowired
 	private JsonPlaceDeserializer jsonPlaceDeserializer;
+	
+	@Autowired
+	private JsonPlaceSerializer jsonPlaceSerializer;
 	
 	@Autowired
 	private ProtectLocationsService protectLocationsService;
@@ -212,16 +216,19 @@ public class SearchController {
 			}			
 		}
 		
+		jsonPlaceSerializer.setBaseUri(baseUri);
+		jsonPlaceSerializer.setPretty(pretty);
+		jsonPlaceSerializer.setIncludeAccessInfo(add != null && add.contains("access"));
+		jsonPlaceSerializer.setIncludeChangeHistory(false);
+		
 		ModelAndView mav = new ModelAndView("place/list");
 		mav.addObject("places", places);
 		if (parents.size() > 0) mav.addObject("parents", parents);
+		mav.addObject("jsonPlaceSerializer", jsonPlaceSerializer);
 		mav.addObject("readAccessMap", readAccessMap);
 		mav.addObject("editAccessMap", editAccessMap);
-		mav.addObject("includeAccessInfo", add != null && add.contains("access"));
-		mav.addObject("includeChangeHistory", false);
 		mav.addObject("groupDao", groupDao);
 		mav.addObject("facets", facets);
-		mav.addObject("baseUri", baseUri);
 		mav.addObject("language", locale.getISO3Language());
 		mav.addObject("limit", limit);
 		mav.addObject("offset", offset);
@@ -230,7 +237,6 @@ public class SearchController {
 		mav.addObject("placeDao", placeDao);
 		mav.addObject("view", view);
 		mav.addObject("q", q);
-		mav.addObject("pretty", pretty);
 		mav.addObject("googleMapsApiKey", googleMapsApiKey);
 		mav.addObject("callback", callback);
 		
@@ -552,16 +558,19 @@ public class SearchController {
 			editAccessMap.put(place.getId(), placeAccessService.checkPlaceAccess(place, true));
 		}
 		
+		jsonPlaceSerializer.setBaseUri(baseUri);
+		jsonPlaceSerializer.setPretty(false);
+		jsonPlaceSerializer.setIncludeAccessInfo(false);
+		jsonPlaceSerializer.setIncludeChangeHistory(false);
+		
 		ModelAndView mav = new ModelAndView("place/list");
 		mav.addObject("places", places);
+		mav.addObject("jsonPlaceSerializer", jsonPlaceSerializer);
 		mav.addObject("readAccessMap", readAccessMap);
 		mav.addObject("editAccessMap", editAccessMap);
 		mav.addObject("groupDao", groupDao);
-		mav.addObject("includeAccessInfo", false);
-		mav.addObject("includeChangeHistory", false);
 		mav.addObject("placeDao", placeDao);
 		mav.addObject("view", view);
-		mav.addObject("baseUri", baseUri);
 		mav.addObject("language", locale.getISO3Language());
 		mav.addObject("googleMapsApiKey", googleMapsApiKey);
 		

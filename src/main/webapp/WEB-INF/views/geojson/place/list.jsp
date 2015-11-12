@@ -5,10 +5,7 @@ response.setHeader("Content-Type", "application/json; charset=utf-8");
 List<Place> places = (List<Place>) request.getAttribute("places");
 Map<String, Boolean> readAccessMap = (Map<String, Boolean>) request.getAttribute("readAccessMap");
 Map<String, Boolean> editAccessMap = (Map<String, Boolean>) request.getAttribute("editAccessMap");
-Boolean pretty = request.getAttribute("pretty") == null ? false : (Boolean) request.getAttribute("pretty");
-String baseUri = (String) request.getAttribute("baseUri");
-
-JsonPlaceSerializer serializer = new JsonPlaceSerializer(baseUri, pretty);
+JsonPlaceSerializer serializer = (JsonPlaceSerializer) request.getAttribute("jsonPlaceSerializer");
 
 StringBuilder sb = new StringBuilder("{\n");
 sb.append("  \"type\": \"FeatureCollection\",\n  \"features\": [\n");

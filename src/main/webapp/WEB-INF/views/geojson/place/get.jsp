@@ -4,10 +4,6 @@ response.setHeader("Content-Type", "application/json; charset=utf-8");
 Place place = (Place) request.getAttribute("place");
 Boolean readAccess = (Boolean) request.getAttribute("readAccess");
 Boolean editAccess = (Boolean) request.getAttribute("editAccess");
-Boolean pretty = request.getAttribute("pretty") == null ? false : (Boolean) request.getAttribute("pretty");
-String baseUri = (String) request.getAttribute("baseUri");
-
-JsonPlaceSerializer serializer = new JsonPlaceSerializer(baseUri, pretty);
-
+JsonPlaceSerializer serializer = (JsonPlaceSerializer) request.getAttribute("jsonPlaceSerializer");
 
 %><%= serializer.serializeGeoJson(place, request, readAccess, editAccess) %>

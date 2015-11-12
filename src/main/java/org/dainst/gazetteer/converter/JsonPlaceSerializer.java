@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.support.RequestContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,6 +32,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+@Component
 public class JsonPlaceSerializer {
 	
 	private final static Logger logger = LoggerFactory.getLogger("org.dainst.gazetteer.JsonPlaceSerializer");
@@ -41,6 +43,7 @@ public class JsonPlaceSerializer {
 
 	private boolean includeAccessInfo = false;
 	private boolean includeChangeHistory = false;
+	private boolean pretty = false;
 	
 	@Autowired
 	private UserRepository userDao;
@@ -50,19 +53,7 @@ public class JsonPlaceSerializer {
 	
 	@Autowired
 	private RecordGroupRepository groupDao;
-	
-	public JsonPlaceSerializer(String baseUri) {
-		this(baseUri, false);
-	}
-	
-	public JsonPlaceSerializer(String baseUri, boolean pretty) {
-		this.baseUri = baseUri;
-		mapper = new ObjectMapper();
 		
-		if (pretty)
-			mapper.enable(SerializationFeature.INDENT_OUTPUT);
-	}
-	
 	public String serialize(Place place, Boolean accessGranted) {
 		return serialize(place, null, null, accessGranted, false);
 	}
@@ -72,6 +63,11 @@ public class JsonPlaceSerializer {
 	}
 	
 	public String serialize(Place place, HttpServletRequest request, List<Place> parents, Boolean readAccess, Boolean editAccess) {
+		 
+		mapper = new ObjectMapper();
+		
+		if (pretty)
+			mapper.enable(SerializationFeature.INDENT_OUTPUT);
 		
 		ObjectNode placeNode = createJsonNodes(place, request, parents, readAccess, editAccess);
 		
@@ -484,6 +480,14 @@ public class JsonPlaceSerializer {
 		
 		return coordinatesNode;
 	}
+	
+	public String getBaseUri() {
+		return baseUri;
+	}
+
+	public void setBaseUri(String baseUri) {
+		this.baseUri = baseUri;
+	}
 
 	public boolean getIncludeAccessInfo() {
 		return includeAccessInfo;
@@ -499,5 +503,13 @@ public class JsonPlaceSerializer {
 
 	public void setIncludeChangeHistory(boolean includeChangeHistory) {
 		this.includeChangeHistory = includeChangeHistory;
-	}	
+	}
+	
+	public boolean isPretty() {
+		return pretty;
+	}
+
+	public void setPretty(boolean pretty) {
+		this.pretty = pretty;
+	}
 }

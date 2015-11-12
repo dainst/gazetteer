@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.dainst.gazetteer.converter.JsonPlaceDeserializer;
+import org.dainst.gazetteer.converter.JsonPlaceSerializer;
 import org.dainst.gazetteer.dao.GroupRoleRepository;
 import org.dainst.gazetteer.dao.PlaceChangeRecordRepository;
 import org.dainst.gazetteer.dao.PlaceRepository;
@@ -68,6 +69,9 @@ public class DocumentController {
 	
 	@Autowired
 	private JsonPlaceDeserializer jsonPlaceDeserializer;
+	
+	@Autowired
+	private JsonPlaceSerializer jsonPlaceSerializer;
 	
 	@Autowired
 	private ProtectLocationsService protectLocationsService;
@@ -177,6 +181,11 @@ public class DocumentController {
 			if (!readAccess)
 				response.setStatus(403);
 			
+			jsonPlaceSerializer.setBaseUri(baseUri);
+			jsonPlaceSerializer.setPretty(pretty);
+			jsonPlaceSerializer.setIncludeAccessInfo(add != null && add.contains("access"));
+			jsonPlaceSerializer.setIncludeChangeHistory(add != null && add.contains("history"));
+			
 			mav = new ModelAndView("place/get");
 			if (layout != null) {
 				mav.setViewName("place/"+layout);
@@ -184,17 +193,14 @@ public class DocumentController {
 			mav.addObject("place", place);
 			mav.addObject("relatedPlaces", relatedPlaces);
 			if (parents.size() > 0) mav.addObject("parents", parents);
+			mav.addObject("jsonPlaceSerializer", jsonPlaceSerializer);
 			mav.addObject("readAccess", readAccess);
 			mav.addObject("editAccess", placeAccessService.checkPlaceAccess(place, true));
-			mav.addObject("includeAccessInfo", add != null && add.contains("access"));
-			mav.addObject("includeChangeHistory", add != null && add.contains("history"));
-			mav.addObject("baseUri", baseUri);
 			mav.addObject("language", locale.getISO3Language());
 			mav.addObject("limit", limit);
 			mav.addObject("offset", offset);
 			mav.addObject("view", view);
 			mav.addObject("q", q);
-			mav.addObject("pretty", pretty);
 			mav.addObject("nativePlaceName", place.getNameMap().get(locale.getISO3Language()));
 			mav.addObject("googleMapsApiKey", googleMapsApiKey);
 			mav.addObject("languages", langHelper.getLocalizedLanguages(locale));
