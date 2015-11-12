@@ -11,10 +11,8 @@ Boolean pretty = request.getAttribute("pretty") == null ? false : (Boolean) requ
 String baseUri = (String) request.getAttribute("baseUri");
 Long hits = (Long) request.getAttribute("hits");
 String queryId = (String) request.getAttribute("queryId");
-RecordGroupRepository groupDao = (RecordGroupRepository) request.getAttribute("groupDao");
 
 JsonPlaceSerializer serializer = new JsonPlaceSerializer(baseUri, pretty);
-serializer.setGroupDao(groupDao);
 serializer.setIncludeAccessInfo(includeAccessInfo);
 
 StringBuilder sb = new StringBuilder("{");

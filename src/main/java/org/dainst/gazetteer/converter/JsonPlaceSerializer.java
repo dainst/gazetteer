@@ -21,6 +21,7 @@ import org.dainst.gazetteer.domain.RecordGroup;
 import org.dainst.gazetteer.domain.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.servlet.support.RequestContext;
@@ -41,9 +42,14 @@ public class JsonPlaceSerializer {
 	private boolean includeAccessInfo = false;
 	private boolean includeChangeHistory = false;
 	
-	private UserRepository userDao = null;
-	private PlaceChangeRecordRepository changeRecordDao = null;
-	private RecordGroupRepository groupDao = null;
+	@Autowired
+	private UserRepository userDao;
+	
+	@Autowired
+	private PlaceChangeRecordRepository changeRecordDao;
+	
+	@Autowired
+	private RecordGroupRepository groupDao;
 	
 	public JsonPlaceSerializer(String baseUri) {
 		this(baseUri, false);
@@ -288,8 +294,7 @@ public class JsonPlaceSerializer {
 				groupNode.put("name", group.getName());
 				placeNode.put("recordGroup", groupNode);
 			}			
-		}
-			
+		}		
 		
 		// reisestipendium content		
 		logger.debug("serializing reisestipendium content?");
@@ -494,30 +499,5 @@ public class JsonPlaceSerializer {
 
 	public void setIncludeChangeHistory(boolean includeChangeHistory) {
 		this.includeChangeHistory = includeChangeHistory;
-	}
-
-	public UserRepository getUserDao() {
-		return userDao;
-	}
-
-	public void setUserDao(UserRepository userDao) {
-		this.userDao = userDao;
-	}
-
-	public PlaceChangeRecordRepository getChangeRecordDao() {
-		return changeRecordDao;
-	}
-
-	public void setChangeRecordDao(PlaceChangeRecordRepository changeRecordDao) {
-		this.changeRecordDao = changeRecordDao;
-	}
-
-	public RecordGroupRepository getGroupDao() {
-		return groupDao;
-	}
-
-	public void setGroupDao(RecordGroupRepository groupDao) {
-		this.groupDao = groupDao;
-	}
-	
+	}	
 }

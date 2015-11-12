@@ -7,10 +7,8 @@ Map<String, Boolean> readAccessMap = (Map<String, Boolean>) request.getAttribute
 Map<String, Boolean> editAccessMap = (Map<String, Boolean>) request.getAttribute("editAccessMap");
 Boolean pretty = request.getAttribute("pretty") == null ? false : (Boolean) request.getAttribute("pretty");
 String baseUri = (String) request.getAttribute("baseUri");
-RecordGroupRepository groupDao = (RecordGroupRepository) request.getAttribute("groupDao");
 
 JsonPlaceSerializer serializer = new JsonPlaceSerializer(baseUri, pretty);
-serializer.setGroupDao(groupDao);
 
 StringBuilder sb = new StringBuilder("{\n");
 sb.append("  \"type\": \"FeatureCollection\",\n  \"features\": [\n");

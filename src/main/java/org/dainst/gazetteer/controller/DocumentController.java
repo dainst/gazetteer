@@ -196,10 +196,6 @@ public class DocumentController {
 			mav.addObject("q", q);
 			mav.addObject("pretty", pretty);
 			mav.addObject("nativePlaceName", place.getNameMap().get(locale.getISO3Language()));
-			mav.addObject("userDao", userDao);
-			mav.addObject("changeRecordDao", changeRecordDao);
-			mav.addObject("groupDao", groupDao);
-			mav.addObject("placeDao", placeDao);
 			mav.addObject("googleMapsApiKey", googleMapsApiKey);
 			mav.addObject("languages", langHelper.getLocalizedLanguages(locale));
 			mav.addObject("langHelper", langHelper);
@@ -268,7 +264,6 @@ public class DocumentController {
 		ModelAndView mav = new ModelAndView("place/get");
 		mav.addObject("place", place);
 		mav.addObject("baseUri", baseUri);
-		mav.addObject("groupDao", groupDao);
 		mav.addObject("readAccess", accessGranted);
 		mav.addObject("editAccess", accessGranted);
 		return mav;
@@ -314,7 +309,6 @@ public class DocumentController {
 		ModelAndView mav = new ModelAndView("place/get");
 		mav.addObject("place", place);
 		mav.addObject("baseUri", baseUri);
-		mav.addObject("groupDao", groupDao);
 		mav.addObject("readAccess", accessGranted);
 		mav.addObject("editAccess", accessGranted);
 		return mav;
