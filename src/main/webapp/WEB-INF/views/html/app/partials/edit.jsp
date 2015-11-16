@@ -288,8 +288,9 @@
 								<div ng-hide="!place.groupInternalData" style="margin-top: 1em">
 									<div ng-repeat="data in place.groupInternalData">
 										<a ng-click="place.groupInternalData.splice($index,1)"><i class="icon-remove-sign"></i></a>
-										<div>{{data.text}}</div>
+										<div style="white-space: pre;">{{data.text}}</div>
 										<small><em>{{data.recordGroup.name}}</em></small>
+										<br/><br/>
 									</div>
 								</div>
 							</div>
@@ -556,7 +557,7 @@
 									<i class="icon-plus icon-white"></i>
 								</div>
 								<div ng-hide="!place.commentsReisestipendium" style="margin-top: 1em">
-									<blockquote ng-repeat="comment in place.commentsReisestipendium">
+									<blockquote style="white-space: pre;" ng-repeat="comment in place.commentsReisestipendium">
 										<a ng-click="place.commentsReisestipendium.splice($index,1)"><i class="icon-remove-sign"></i></a>
 										{{comment.text}}
 										<small ng-hide="!comment.user">{{comment.user}}</small>
