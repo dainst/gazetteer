@@ -288,9 +288,10 @@
 	<span ng-hide="!place.groupInternalData">
 		<dt><s:message code="domain.place.groupInternalData" text="domain.place.groupInternalData" /></dt>
 		<dd ng-repeat="data in place.groupInternalData">
-			<blockquote>{{data.text}}</blockquote>
+			<div>{{data.text}}</div>
+			<small><em>{{data.recordGroup.name}}</em></small>
+			<br/><br/>
 		</dd>
-		<br/>
 	</span>
 	
 	<span ng-hide="!place.comments">

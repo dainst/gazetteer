@@ -286,11 +286,11 @@
 									<i class="icon-plus icon-white"></i>
 								</div>
 								<div ng-hide="!place.groupInternalData" style="margin-top: 1em">
-									<blockquote ng-repeat="data in place.groupInternalData">
+									<div ng-repeat="data in place.groupInternalData">
 										<a ng-click="place.groupInternalData.splice($index,1)"><i class="icon-remove-sign"></i></a>
-										<p>{{data.text}}</p>
-										<p>{{data.recordGroup.name}}</p>
-									</blockquote>
+										<div>{{data.text}}</div>
+										<small><em>{{data.recordGroup.name}}</em></small>
+									</div>
 								</div>
 							</div>
 						</div>
