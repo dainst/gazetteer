@@ -267,9 +267,14 @@ public class DocumentController {
 		response.setStatus(201);
 		response.setHeader("Location", baseUri + "place/" + place.getId());
 		
+		jsonPlaceSerializer.setBaseUri(baseUri);
+		jsonPlaceSerializer.setPretty(false);
+		jsonPlaceSerializer.setIncludeAccessInfo(false);
+		jsonPlaceSerializer.setIncludeChangeHistory(false);
+		
 		ModelAndView mav = new ModelAndView("place/get");
 		mav.addObject("place", place);
-		mav.addObject("baseUri", baseUri);
+		mav.addObject("jsonPlaceSerializer", jsonPlaceSerializer);
 		mav.addObject("readAccess", accessGranted);
 		mav.addObject("editAccess", accessGranted);
 		return mav;
