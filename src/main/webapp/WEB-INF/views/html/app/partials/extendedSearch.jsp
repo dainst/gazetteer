@@ -109,6 +109,20 @@
 		</div>
 		
 		<div class="control-group">
+			<label class="control-label"> <s:message
+					code="domain.place.groupInternalData" text="domain.place.groupInternalData" />
+			</label>
+			<div class="controls">
+				<input type="text" class="input-xlarge" id="inputIDs" ng-model="groupInternalData.text">
+				<select ng-model="groupInternalData.groupId" class="input-medium">
+					<c:forEach var="recordGroup" items="${recordGroups}">
+						<option value="${recordGroup.id}">${recordGroup.name}</option>
+					</c:forEach>
+				</select>
+			</div>
+		</div>
+		
+		<div class="control-group">
 			<label class="control-label">
 				<span gaz-translate="'ui.search.filter'"></span>
 			</label>

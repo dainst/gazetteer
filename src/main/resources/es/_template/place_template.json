@@ -261,6 +261,19 @@
 						}
 					}
 				},
+				"groupInternalData": {
+					"type": "nested",
+					"properties": {
+						"text": {
+							"type": "string",
+							"include_in_all": false
+						},
+						"groupId": {
+							"type": "string",
+							"include_in_all": false
+						}
+					}
+				},
 				"recordGroupId": {
 					"type": "string",
 					"include_in_all": false

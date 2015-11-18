@@ -122,12 +122,15 @@ public class SearchController {
 		
 		ElasticSearchPlaceQuery query = new ElasticSearchPlaceQuery(client);
 		
-		if (q != null) {
-			if ("fuzzy".equals(type)) query.fuzzySearch(q);
-			else if ("queryString".equals(type)) query.queryStringSearch(q);
-			else if ("extended".equals(type)) query.extendedSearch(q);
-			else if ("prefix".equals(type)) query.prefixSearch(q);
-			else query.metaSearch(q);
+		if (q != null) {			
+			if (checkQueryAuthorization(q, user)) {
+				if ("fuzzy".equals(type)) query.fuzzySearch(q);
+				else if ("queryString".equals(type)) query.queryStringSearch(q);
+				else if ("extended".equals(type)) query.extendedSearch(q);
+				else if ("prefix".equals(type)) query.prefixSearch(q);
+				else query.metaSearch(q);			
+			} else
+				query.listAll();
 		} else {
 			query.listAll();
 		}
@@ -590,5 +593,22 @@ public class SearchController {
 				createParentsList(parent, parents, includePolygons);
 			}
 		}
+	}
+	
+	private boolean checkQueryAuthorization(String q, User user) {
+		
+		if (q.contains("groupInternalData")) {
+			if (q.contains("groupInternalData.groupId")) {
+				int start = q.indexOf("groupInternalData.groupId\":\"") + 28;
+				int end = q.indexOf("\"}", start);
+				String groupId = q.substring(start, end);
+				if (user != null && groupRoleDao.findByGroupIdAndUserId(groupId, user.getId()) != null)
+					return true;
+				else
+					return false;
+			} else
+				return false;
+		} else
+			return true;	
 	}
 }

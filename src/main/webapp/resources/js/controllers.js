@@ -378,6 +378,17 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages, PolygonVali
 			queries.push({ match: { "types": $scope.type } });
 		}
 		
+		if ($scope.groupInternalData && $scope.groupInternalData.text && $scope.groupInternalData.groupId) {
+			queries.push({ nested: { path: "groupInternalData", query: {
+				bool: {
+					must: [
+						{ match: { "groupInternalData.text": $scope.groupInternalData.text }},
+						{ match: { "groupInternalData.groupId": $scope.groupInternalData.groupId }}
+					]
+				}
+			}}});
+		}
+		
 		// tags
 		if ($scope.tags != []) {
 			for (var i = 0; i < $scope.tags.length; i++) {
