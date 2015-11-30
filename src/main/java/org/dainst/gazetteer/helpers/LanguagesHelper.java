@@ -54,7 +54,7 @@ public class LanguagesHelper {
 			HashMap<String, String> map = new HashMap<String,String>();
 			for (String language : languages) {
 				String displayLanguage = getLocaleForISO3Language(language).getDisplayLanguage(locale);
-				if (displayLanguage != language)
+				if (!displayLanguage.equals(language))
 					map.put(language, getLocaleForISO3Language(language).getDisplayLanguage(locale));
 				else {
 					try {
