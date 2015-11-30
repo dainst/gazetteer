@@ -59,7 +59,7 @@
 				</em>
 			</dd>
 		</span>
-		<dd ng-repeat="placename in place.names | orderBy:['language','title'] | limitTo: namesDisplayed">
+		<dd ng-repeat="placename in place.names | orderBy:['displayLanguage','title'] | limitTo: namesDisplayed">
 			{{placename.title}}
 			<span ng-show="placename.ancient">
 				(<small gaz-translate="'place.name.ancient'"></small>)

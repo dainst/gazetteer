@@ -4,6 +4,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -22,6 +24,7 @@ import org.dainst.gazetteer.domain.PlaceChangeRecord;
 import org.dainst.gazetteer.domain.PlaceName;
 import org.dainst.gazetteer.domain.RecordGroup;
 import org.dainst.gazetteer.domain.User;
+import org.dainst.gazetteer.helpers.LanguagesHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +50,7 @@ public class JsonPlaceSerializer {
 	private boolean includeAccessInfo = false;
 	private boolean includeChangeHistory = false;
 	private boolean pretty = false;
+	private Locale locale = null;
 	
 	@Autowired
 	private UserRepository userDao;
@@ -59,6 +63,9 @@ public class JsonPlaceSerializer {
 	
 	@Autowired
 	private GroupRoleRepository groupRoleDao;
+	
+	@Autowired
+	private LanguagesHelper languagesHelper;
 	
 	public String serialize(Place place, Boolean accessGranted) {
 		return serialize(place, null, null, accessGranted, false);
@@ -152,12 +159,20 @@ public class JsonPlaceSerializer {
 			placeNode.put("types", typesNode);
 		}
 		
+		// get localized language names if locale is set		
+		Map<String, String> localizedLanguages = null;
+		if (locale != null)
+			localizedLanguages = languagesHelper.getLocalizedLanguages(locale);		
+		
 		// preferred name
 		if (place.getPrefName() != null) {
 			ObjectNode prefNameNode = mapper.createObjectNode();
 			prefNameNode.put("title", place.getPrefName().getTitle());
-			if (place.getPrefName().getLanguage() != null)
+			if (place.getPrefName().getLanguage() != null) {
 				prefNameNode.put("language", place.getPrefName().getLanguage());
+				if (localizedLanguages != null)
+					prefNameNode.put("displayLanguage", localizedLanguages.get(place.getPrefName().getLanguage()));
+			}
 			if (place.getPrefName().isAncient())
 				prefNameNode.put("ancient", true);
 			if (place.getPrefName().isTransliterated())
@@ -171,8 +186,11 @@ public class JsonPlaceSerializer {
 			for (PlaceName name : place.getNames()) {
 				ObjectNode nameNode = mapper.createObjectNode();
 				nameNode.put("title", name.getTitle());
-				if (name.getLanguage() != null) 
+				if (name.getLanguage() != null) { 
 					nameNode.put("language", name.getLanguage());
+					if (localizedLanguages != null)
+						nameNode.put("displayLanguage", localizedLanguages.get(name.getLanguage()));
+				}
 				if (name.isAncient())
 					nameNode.put("ancient", true);
 				if (name.isTransliterated())
@@ -536,5 +554,13 @@ public class JsonPlaceSerializer {
 
 	public void setPretty(boolean pretty) {
 		this.pretty = pretty;
+	}
+	
+	public Locale getLocale() {
+		return locale;
+	}
+
+	public void setLocale(Locale locale) {
+		this.locale = locale;
 	}
 }

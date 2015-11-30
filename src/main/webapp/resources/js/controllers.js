@@ -903,7 +903,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, Place,
 		$rootScope.loading++;
 		$scope.place = Place.get({
 			id: $routeParams.id,
-			add: "parents,access,history"
+			add: "parents,access,history,displayLanguages"
 		}, function(result) {
 			if (result.deleted) {
 				$rootScope.addAlert(messages["ui.place.deleted"], null, "error");

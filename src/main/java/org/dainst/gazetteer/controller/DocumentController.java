@@ -185,6 +185,10 @@ public class DocumentController {
 			jsonPlaceSerializer.setPretty(pretty);
 			jsonPlaceSerializer.setIncludeAccessInfo(add != null && add.contains("access"));
 			jsonPlaceSerializer.setIncludeChangeHistory(add != null && add.contains("history"));
+			if (add != null && add.contains("displayLanguages"))
+				jsonPlaceSerializer.setLocale(locale);
+			else
+				jsonPlaceSerializer.setLocale(null);
 			
 			mav = new ModelAndView("place/get");
 			if (layout != null) {
@@ -213,7 +217,10 @@ public class DocumentController {
 	
 	@RequestMapping(value="/doc", method={RequestMethod.POST, RequestMethod.PUT})
 	public ModelAndView createPlace(@RequestBody Place place,
+			HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
+		
+		RequestContext requestContext = new RequestContext(request);
 		
 		PlaceAccessService placeAccessService = new PlaceAccessService(groupRoleDao);
 		
@@ -271,6 +278,7 @@ public class DocumentController {
 		jsonPlaceSerializer.setPretty(false);
 		jsonPlaceSerializer.setIncludeAccessInfo(false);
 		jsonPlaceSerializer.setIncludeChangeHistory(false);
+		jsonPlaceSerializer.setLocale(requestContext.getLocale());
 		
 		ModelAndView mav = new ModelAndView("place/get");
 		mav.addObject("place", place);
