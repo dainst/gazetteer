@@ -5,7 +5,7 @@
             "analyzer" : {
             	"default": {
             		"tokenizer" : "standard",
-                    "filter" : ["standard", "folding"]
+                    "filter" : ["lowercase", "folding"]
             	},
             	"raw": {
             		"tokenizer": "keyword",
