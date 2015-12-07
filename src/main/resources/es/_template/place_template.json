@@ -5,7 +5,7 @@
             "analyzer" : {
             	"default": {
             		"tokenizer" : "standard",
-                    "filter" : ["standard", "icu_folding"]
+                    "filter" : ["standard", "folding"]
             	},
             	"raw": {
             		"tokenizer": "keyword",
@@ -18,7 +18,7 @@
                 "autocomplete": {
           			"type": "custom",
           			"tokenizer": "ngramTokenizer",
-          			"filter" :["lowercase"]
+          			"filter" :["lowercase", "folding"]
           		} 
             },
             "tokenizer" : {
@@ -37,6 +37,10 @@
                 },
                 "lowercase" : {
                 	"type" : "lowercase"
+                },
+                "folding": {
+                	"type": "icu_folding",
+                	"unicodeSetFilter": "[^äöüÄÖÜß]"
                 }
             }
         }
@@ -75,7 +79,7 @@
 								},
 								"suggest": {
 									"type": "completion",
-									"analyzer": "standard"
+									"analyzer": "default"
 								},
 								"autocomplete": {
 									"type": "string",
@@ -115,7 +119,7 @@
 								},
 								"suggest" : {
 									"type": "completion",
-									"analyzer": "standard"
+									"analyzer": "default"
 								},
 								"autocomplete": {
 									"type": "string",
@@ -134,7 +138,7 @@
 						},
 						"suggest" : {
 							"type": "completion",
-							"analyzer": "standard",
+							"analyzer": "default",
 							"context": {
 								"recordGroupId": {
 									"type": "category",
