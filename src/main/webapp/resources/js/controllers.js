@@ -620,8 +620,8 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 			query.bool.must.push(match);
 			$scope.search.q = angular.toJson(query);
 		} else {
-			if ($scope.search.fq) $scope.search.fq += " AND " + facetName + ":" + term;
-			else $scope.search.fq = facetName + ":" + term;
+			if ($scope.search.fq) $scope.search.fq += " AND " + facetName + ":\"" + term + "\"";
+			else $scope.search.fq = facetName + ":\"" + term + "\"";
 		}
 		$scope.search.offset = 0;
 		$location.search($scope.search);
