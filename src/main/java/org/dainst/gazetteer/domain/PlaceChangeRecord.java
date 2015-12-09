@@ -16,6 +16,7 @@ public class PlaceChangeRecord {
 	private String placeId;
 	private String changeType;
 	private Date changeDate;
+	private String additionalData;
 	
 	public String getId() {
 		return id;
@@ -57,9 +58,18 @@ public class PlaceChangeRecord {
 		this.changeDate = changeDate;
 	}
 	
+	public String getAdditionalData() {
+		return additionalData;
+	}
+
+	public void setAdditionalData(String additionalData) {
+		this.additionalData = additionalData;
+	}
+
 	@Override
 	public String toString() {
-		return "PlaceChangeRecord [userId=" + userId + ", placeId=" + placeId + ", changeDate=" + changeDate + "]";
+		return "PlaceChangeRecord [userId=" + userId + ", placeId=" + placeId + ", changeDate="
+				+ changeDate + ", additionalData=" + additionalData + "]";
 	}
 	
 	public static class ChangeDateComparator implements Comparator<PlaceChangeRecord> {

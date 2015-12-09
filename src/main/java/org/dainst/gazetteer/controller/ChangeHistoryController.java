@@ -136,6 +136,7 @@ public class ChangeHistoryController {
 					presChangeRecord.setPlacename(place.getPrefName().getTitle());
 				
 				presChangeRecord.setChangeType(changeRecord.getChangeType());
+				presChangeRecord.setAdditionalData(changeRecord.getAdditionalData());
 				presChangeHistory.add(presChangeRecord);
 			}
 		}
@@ -220,6 +221,8 @@ public class ChangeHistoryController {
 		
 		private String changeType;
 		
+		private String additionalData;
+		
 		private boolean notFound = false;
 			
 		public Date getChangeDate() {
@@ -277,6 +280,14 @@ public class ChangeHistoryController {
 
 		public void setChangeType(String changeType) {
 			this.changeType = changeType;
+		}
+		
+		public String getAdditionalData() {
+			return additionalData;
+		}
+
+		public void setAdditionalData(String additionalData) {
+			this.additionalData = additionalData;
 		}
 
 		public boolean isNotFound() {

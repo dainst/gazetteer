@@ -390,6 +390,9 @@ public class JsonPlaceSerializer {
 						changeRecordNode.put("changeType", changeRecord.getChangeType());
 					else
 						changeRecordNode.put("changeType", "unknown");
+					
+					if (changeRecord.getAdditionalData() != null)
+						changeRecordNode.put("additionalData", changeRecord.getAdditionalData());
 				
 					DateFormat format = new SimpleDateFormat("dd.MM.yyyy (HH:mm:ss z)");
 					changeRecordNode.put("changeDate", format.format(changeRecord.getChangeDate()));

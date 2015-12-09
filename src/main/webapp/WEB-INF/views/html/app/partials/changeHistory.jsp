@@ -35,7 +35,15 @@
 		<tr ng-repeat="placeChangeRecord in place.changeHistory">
 			<td>{{placeChangeRecord.changeDate}}</td>
 			<td>{{placeChangeRecord.username}}</td>
-			<td gaz-translate="'ui.change-history.change-type.' + placeChangeRecord.changeType"></td>
-		</tr>		
+			<td>
+				<span ng-show="(placeChangeRecord.changeType == 'merge' || placeChangeRecord.changeType == 'replace') && placeChangeRecord.additionalData">
+					<span gaz-translate="'ui.change-history.change-type.' + placeChangeRecord.changeType + '-with'"></span>
+					{{placeChangeRecord.additionalData}}
+				</span>
+				<span ng-hide="(placeChangeRecord.changeType == 'merge' || placeChangeRecord.changeType == 'replace') && placeChangeRecord.additionalData">
+					<span gaz-translate="'ui.change-history.change-type.' + placeChangeRecord.changeType"></span>
+				</span>
+			</td>
+		</tr>
 	</tbody>
 </table>

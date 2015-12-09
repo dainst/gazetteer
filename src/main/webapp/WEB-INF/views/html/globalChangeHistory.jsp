@@ -307,7 +307,16 @@
 										</em>
 									</c:if>
 								</td>
-								<td><s:message code="ui.changeHistory.changeType.${changeRecord.changeType}" text="ui.changeHistory.changeType.${changeRecord.changeType}" /></td>
+								<td>
+									<c:choose>
+										<c:when test="${(changeRecord.changeType eq 'merge' || changeRecord.changeType eq 'replace') && changeRecord.additionalData != null}">
+											<s:message code="ui.changeHistory.changeType.${changeRecord.changeType}With" text="ui.changeHistory.changeType.${changeRecord.changeType}" arguments="${changeRecord.additionalData}"/>
+										</c:when>
+										<c:otherwise>
+											<s:message code="ui.changeHistory.changeType.${changeRecord.changeType}" text="ui.changeHistory.changeType.${changeRecord.changeType}"/>
+										</c:otherwise>									
+									</c:choose>
+								</td>								
 							</tr>
 			  			</c:forEach>
 					</tbody>
