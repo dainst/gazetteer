@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -18,6 +19,7 @@ import org.dainst.gazetteer.domain.PlaceChangeRecord;
 import org.dainst.gazetteer.domain.User;
 import org.dainst.gazetteer.helpers.AncestorsHelper;
 import org.dainst.gazetteer.helpers.IdGenerator;
+import org.dainst.gazetteer.helpers.MailService;
 import org.dainst.gazetteer.helpers.Merger;
 import org.dainst.gazetteer.helpers.PlaceAccessService;
 import org.slf4j.Logger;
@@ -55,8 +57,14 @@ public class MergeController {
 	@Autowired
 	private JsonPlaceSerializer jsonPlaceSerializer;
 	
+	@Autowired
+	private MailService mailService;
+	
 	@Value("${baseUri}")
 	private String baseUri;
+	
+	@Value("${mergeNotificationMail}")
+	private String mergeNotificationMail;
 
 	@RequestMapping(value="/merge/{id1}/{id2}", method=RequestMethod.POST)
 	public ModelAndView getPlace(@PathVariable String id1,
@@ -125,6 +133,12 @@ public class MergeController {
 	
 		logger.debug("finished merging " + place1.getId() + " and " + place2.getId() + " to " + place1.getId());
 		
+		try {
+			sendNotificationMail(place1, place2, request);
+		} catch (MessagingException e) {
+			logger.warn("Could not send merge notification mail!", e);
+		}
+		
 		response.setStatus(201);
 		response.setHeader("location", baseUri + "place/" + place1.getId());
 		
@@ -160,5 +174,24 @@ public class MergeController {
 		changeRecord.setAdditionalData(additionalData);
 		
 		return changeRecord;
+	}
+	
+	private void sendNotificationMail(Place place1, Place place2, HttpServletRequest request) throws MessagingException {
+		
+		if (mergeNotificationMail == null || mergeNotificationMail.isEmpty())
+			return;
+		
+		String place1Name = (place1.getPrefName() != null) ? place1.getPrefName().getTitle() : "";
+		String place2Name = (place2.getPrefName() != null) ? place2.getPrefName().getTitle() : "";
+		
+		String link = baseUri + "place/" + place1.getId();
+		
+		RequestContext context = new RequestContext(request);
+		context.changeLocale(Locale.GERMAN);
+		String subject = context.getMessage("mail.mergeNotification.subject", new Object[] { });
+		String content = context.getMessage("mail.mergeNotification.content", new Object[] { place2Name, place2.getId(), link, place1Name, place1.getId() });
+		
+		mailService.sendMail(mergeNotificationMail, subject, content);
+		logger.info("Sending merge notification mail to " + mergeNotificationMail);
 	}
 }

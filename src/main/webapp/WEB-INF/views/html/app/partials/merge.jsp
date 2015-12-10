@@ -92,8 +92,8 @@
 									<div class="modal-body">
 										<p><s:message code="ui.merge.dialog.body" text="ui.merge.dialog.body"/></p>
 										<ul>
-											<li><a href="#/show/{{place.gazId}}">{{place.gazId}} {{place.prefName.title}}</a></li>
-											<li><a href="#/show/{{candidatePlace.gazId}}">{{candidatePlace.gazId}} {{candidatePlace.prefName.title}}</a></li>
+											<li><a href="#/show/{{place.gazId}}">{{place.gazId}}: {{place.prefName.title}}</a></li>
+											<li><a href="#/show/{{candidatePlace.gazId}}">{{candidatePlace.gazId}}: {{candidatePlace.prefName.title}}</a></li>
 										</ul>
 										<p><s:message code="ui.merge.dialog.info" text="ui.merge.dialog.info" arguments="{{place.gazId}}"/></p>
 									</div>
