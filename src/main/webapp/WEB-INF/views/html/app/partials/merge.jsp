@@ -84,7 +84,7 @@
 					<sec:authorize access="hasRole('ROLE_EDITOR')">
 						<div ng-hide="place.editAccessDenied || place.accessDenied || candidatePlace.editAccessDenied">
 							<div class="modal hide" id="mergeModal-{{candidatePlace.gazId}}">
-								<div ng-show="place.recordGroupId == candidatePlace.recordGroupId">
+								<div ng-show="(!place.recordGroup && !candidatePlace.recordGroup) || place.recordGroup.id == candidatePlace.recordGroup.id">
 									<div class="modal-header">
 										<button type="button" class="close" data-dismiss="modal">×</button>
 										<h3><s:message code="ui.merge.dialog.head" text="ui.merge.dialog.head"/></h3>
@@ -102,7 +102,7 @@
 										<a ng-click="merge(place, candidatePlace)" data-dismiss="modal" class="btn btn-primary"><s:message code="ui.ok" text="ui.ok"/></a>
 									</div>
 								</div>
-								<div ng-hide="place.recordGroupId == candidatePlace.recordGroupId">
+								<div ng-hide="(!place.recordGroup && !candidatePlace.recordGroup) || place.recordGroup.id == candidatePlace.recordGroup.id">
 									<div class="modal-header">
 										<button type="button" class="close" data-dismiss="modal">×</button>
 										<h3><s:message code="ui.merge.notAllowed.head" text="ui.merge.notAllowed.head"/></h3>

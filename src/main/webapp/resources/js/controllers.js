@@ -1107,7 +1107,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, Place,
 	};
 	
 	$scope.publish = function() {
-		$scope.place.recordGroupId = "";
+		$scope.place.recordGroup.id = "";
 		$scope.save();
 	};
 	

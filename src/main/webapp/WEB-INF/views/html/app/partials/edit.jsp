@@ -575,7 +575,7 @@
 		
 	    <div class="form-actions">
            	<button ng-click="save()" class="save btn btn-primary"><s:message code="ui.save" text="ui.save"/></button>
-           	<button href="#publishModal" class="btn btn-success" data-toggle="modal" ng-show="place.recordGroupId"><s:message code="ui.publish" text="ui.publish"/></button>
+           	<button href="#publishModal" class="btn btn-success" data-toggle="modal" ng-show="place.recordGroup.id"><s:message code="ui.publish" text="ui.publish"/></button>
            	<button href="#duplicateModal" class="btn btn-info" data-toggle="modal"><s:message code="ui.duplicate" text="ui.duplicate"/></button>
            	<a class="btn" href="javascript:history.back()"><s:message code="ui.cancel" text="ui.cancel"/></a>
            	<button href="#deleteModal" class="btn btn-danger" data-toggle="modal"><s:message code="ui.delete" text="ui.delete"/></button>
@@ -648,7 +648,7 @@
 				</div>
 				<div class="modal-body">
 					<c:forEach var="recordGroup" items="${recordGroups}">
-						<span ng-show="'${recordGroup.id}' == place.recordGroupId">
+						<span ng-show="'${recordGroup.id}' == place.recordGroup.id">
 							<p><s:message code="ui.publish.warning.body" text="ui.publish.warning.body" arguments="${recordGroup.name}"/></p>
 						</span>
 					</c:forEach>
