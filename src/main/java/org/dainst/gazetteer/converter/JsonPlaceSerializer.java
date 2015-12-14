@@ -118,7 +118,9 @@ public class JsonPlaceSerializer {
 		}
 		
 		if (place.isDeleted()) {
-			placeNode.put("deleted", true);			
+			placeNode.put("deleted", true);
+			if (place.getReplacedBy() != null && !place.getReplacedBy().isEmpty())
+				placeNode.put("replacedBy", place.getReplacedBy());
 			return placeNode;
 		}
 		

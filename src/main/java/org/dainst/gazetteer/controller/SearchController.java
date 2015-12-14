@@ -164,7 +164,7 @@ public class SearchController {
 		if (sort != null && !sort.isEmpty()) {
 			query.addSort(sort, order);
 		}
-		query.addFilter("deleted:false");
+		if (add == null || !add.contains("deleted")) query.addFilter("deleted:false");
 		if (!"true".equals(showInReview)) query.addFilter("needsReview:false");		
 		query.addFacet("parent");
 		query.addFacet("types");
