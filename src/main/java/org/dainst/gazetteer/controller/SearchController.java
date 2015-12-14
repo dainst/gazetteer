@@ -397,13 +397,18 @@ public class SearchController {
 			editAccessMap.put(place.getId(), placeAccessService.checkPlaceAccess(place, true));
 		}
 		
+		jsonPlaceSerializer.setBaseUri(baseUri);
+		jsonPlaceSerializer.setPretty(false);
+		jsonPlaceSerializer.setIncludeAccessInfo(true);
+		jsonPlaceSerializer.setIncludeChangeHistory(false);
+		
 		ModelAndView mav = new ModelAndView("place/list");
 		mav.addObject("places", places);
+		mav.addObject("jsonPlaceSerializer", jsonPlaceSerializer);
 		mav.addObject("readAccessMap", readAccessMap);
 		mav.addObject("editAccessMap", editAccessMap);
 		mav.addObject("groupDao", groupDao);
 		mav.addObject("facets", facets);
-		mav.addObject("baseUri", baseUri);
 		mav.addObject("language", locale.getISO3Language());
 		mav.addObject("limit", limit);
 		mav.addObject("offset", offset);
