@@ -152,11 +152,15 @@ public class AdminController {
 				boolean updated = false;
 				List<String> languages = Arrays.asList(languagesHelper.getLanguages());
 				for (JsonNode entry : entries) {
-					if (entry.has("longitude")) {
-						logger.debug("found coordinates in doc: {}", entry);
-						place.setPrefLocation(new Location(entry.get("longitude").get(0).asDouble(),
-								entry.get("latitude").get(0).asDouble()));
-						updated = true;
+					if (entry.has("longitude") && entry.has("latitude")) {
+						if (place.getPrefLocation() == null	|| ((place.getPrefLocation().getCoordinates() == null
+								|| place.getPrefLocation().getCoordinates().length == 0)
+								&& place.getPrefLocation().getShape() == null)) {
+							logger.debug("found coordinates in doc: {}", entry);
+							place.setPrefLocation(new Location(entry.get("longitude").get(0).asDouble(),
+									entry.get("latitude").get(0).asDouble()));
+							updated = true;
+						}
 					}
 					if (entry.has("alternateName")) {
 						String altName = entry.get("alternateName").get(0).asText();
