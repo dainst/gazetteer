@@ -494,7 +494,7 @@ CSV.parse(ARGF.read, {:col_sep => options.separator}) do |row|
   # get geonames id
   if options.geonames && place[:prefName][:title] && !place[:types].include?("administrative-unit")
     uri = URI.parse("http://arachne.uni-koeln.de")
-    http = Net::HTTP.new(uri.host, 8080)
+    http = Net::HTTP.new(uri.host, 80)
 
     # get administrative unit
     if $administrative_units_geonames_ids.key?(temp_id.to_s)
