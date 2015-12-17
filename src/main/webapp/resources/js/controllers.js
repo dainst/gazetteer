@@ -722,7 +722,7 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 			offset: ($location.search().offset) ? parseInt($location.search().offset) : 0,
 			limit: ($location.search().limit) ? parseInt($location.search().limit) : 10,
 			q: ($location.search().q) ? ($location.search().q) : "",
-			add: "parents,access,history"
+			add: "parents,access,history,sort"
 		};
 		if ($location.search().fq) $scope.search.fq = $location.search().fq;
 		if ($location.search().type) $scope.search.type = $location.search().type;
@@ -903,7 +903,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, Place,
 		$rootScope.loading++;
 		$scope.place = Place.get({
 			id: $routeParams.id,
-			add: "parents,access,history,displayLanguages"
+			add: "parents,access,history,sort"
 		}, function(result) {
 			if (result.deleted) {
 				$rootScope.addAlert(messages["ui.place.deleted"], null, "error");
@@ -928,7 +928,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, Place,
 				$rootScope.loading--;
 			}
 			$rootScope.loading++;
-			Place.query({q: "relatedPlaces:" + $scope.place.gazId, sort:"prefName.title.sort", showHiddenPlaces: true }, function(result) {
+			Place.query({q: "relatedPlaces:" + $scope.place.gazId, sort:"prefName.title.sort", showHiddenPlaces: true, add: "sort" }, function(result) {
 				$scope.totalRelatedPlaces = result.total;
 				$scope.relatedPlaces = result.result;
 				$scope.offsetRelatedPlaces = 0;
@@ -938,7 +938,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, Place,
 				$rootScope.loading--;
 			});
 			$rootScope.loading++;
-			Place.query({q: "relatedPlaces:" + $scope.place.gazId, sort:"prefName.title.sort", limit: "1000", showHiddenPlaces: true }, function(result) {
+			Place.query({q: "relatedPlaces:" + $scope.place.gazId, sort:"prefName.title.sort", limit: "1000", showHiddenPlaces: true, add: "sort" }, function(result) {
 				$scope.allRelatedPlaces = result.result;
 				$rootScope.loading--;
 			}, function() {
@@ -946,7 +946,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, Place,
 				$rootScope.loading--;
 			});
 			$rootScope.loading++;
-			Place.query({q: "parent:" + $scope.place.gazId, sort:"prefName.title.sort", showHiddenPlaces: true}, function(result) {
+			Place.query({q: "parent:" + $scope.place.gazId, sort:"prefName.title.sort", showHiddenPlaces: true, add: "sort"}, function(result) {
 				$scope.totalChildren = result.total;
 				$scope.children = result.result;
 				$scope.offsetChildren = 0;
@@ -1048,7 +1048,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, Place,
 	$scope.prevChildren = function() {
 		$scope.offsetChildren -= 10;
 		$rootScope.loading++;
-		Place.query({q: "parent:" + $scope.place.gazId, sort: "prefName.title.sort", offset: $scope.offsetChildren, showHiddenPlaces: true }, function(result) {
+		Place.query({q: "parent:" + $scope.place.gazId, sort: "prefName.title.sort", offset: $scope.offsetChildren, showHiddenPlaces: true, add: "sort" }, function(result) {
 			$scope.children = result.result;
 			$rootScope.loading--;
 		}, function() {
@@ -1060,7 +1060,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, Place,
 	$scope.nextChildren = function() {
 		$scope.offsetChildren += 10;
 		$rootScope.loading++;
-		Place.query({q: "parent:" + $scope.place.gazId, sort: "prefName.title.sort", offset: $scope.offsetChildren, showHiddenPlaces: true }, function(result) {
+		Place.query({q: "parent:" + $scope.place.gazId, sort: "prefName.title.sort", offset: $scope.offsetChildren, showHiddenPlaces: true, add: "sort" }, function(result) {
 			$scope.children = result.result;
 			$rootScope.loading--;
 		}, function() {
@@ -1072,7 +1072,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, Place,
 	$scope.prevRelatedPlaces = function() {
 		$scope.offsetRelatedPlaces -= 10;
 		$rootScope.loading++;
-		Place.query({q: "relatedPlaces:" + $scope.place.gazId, sort: "prefName.title.sort", offset: $scope.offsetRelatedPlaces, showHiddenPlaces: true }, function(result) {
+		Place.query({q: "relatedPlaces:" + $scope.place.gazId, sort: "prefName.title.sort", offset: $scope.offsetRelatedPlaces, showHiddenPlaces: true, add: "sort"  }, function(result) {
 			$scope.relatedPlaces = result.result;
 			$rootScope.loading--;
 		}, function() {
@@ -1084,7 +1084,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, Place,
 	$scope.nextRelatedPlaces = function() {
 		$scope.offsetRelatedPlaces += 10;
 		$rootScope.loading++;
-		Place.query({q: "relatedPlaces:" + $scope.place.gazId, sort: "prefName.title.sort", offset: $scope.offsetRelatedPlaces, showHiddenPlaces: true }, function(result) {
+		Place.query({q: "relatedPlaces:" + $scope.place.gazId, sort: "prefName.title.sort", offset: $scope.offsetRelatedPlaces, showHiddenPlaces: true, add: "sort"  }, function(result) {
 			$scope.relatedPlaces = result.result;
 			$rootScope.loading--;
 		}, function() {
@@ -1426,7 +1426,7 @@ function MergeCtrl($scope, $rootScope, $routeParams, $location, Place, EscapingS
 		}
 		query += ") AND NOT _id:" + $scope.place.gazId;
 		$rootScope.loading++;
-		Place.query({q: query, type: 'queryString', add: 'access'}, function(result) {
+		Place.query({q: query, type: 'queryString', add: 'access,sort'}, function(result) {
 			$scope.candidatePlaces = result.result;
 			$scope.parents = {};
 			for(var i in $scope.candidatePlaces) {
@@ -1535,7 +1535,8 @@ function ThesaurusCtrl($scope, $rootScope, $location, Place, messages, $route) {
 	Place.query({
 		sort: 'prefName.title.sort',
 				limit: 10000,
-				q: 'types:continent'
+				q: 'types:continent',
+				add: 'sort'
 		}, function(result) {
 			$rootScope.loading--;
 			$scope.places = result.result;		

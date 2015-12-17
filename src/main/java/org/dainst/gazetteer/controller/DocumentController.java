@@ -105,7 +105,8 @@ public class DocumentController {
 		
 		RequestContext requestContext = new RequestContext(request);
 		Locale locale = requestContext.getLocale();
-
+		Locale originalLocale = request.getLocale();
+		
 		ModelAndView mav;
 		
 		String suffix = "";
@@ -185,10 +186,14 @@ public class DocumentController {
 			jsonPlaceSerializer.setPretty(pretty);
 			jsonPlaceSerializer.setIncludeAccessInfo(add != null && add.contains("access"));
 			jsonPlaceSerializer.setIncludeChangeHistory(add != null && add.contains("history"));
-			if (add != null && add.contains("displayLanguages"))
+			if (add != null && add.contains("sort")) {
 				jsonPlaceSerializer.setLocale(locale);
-			else
+				jsonPlaceSerializer.setOriginalLocale(originalLocale);
+			}
+			else {
 				jsonPlaceSerializer.setLocale(null);
+				jsonPlaceSerializer.setOriginalLocale(null);
+			}
 			
 			mav = new ModelAndView("place/get");
 			if (layout != null) {

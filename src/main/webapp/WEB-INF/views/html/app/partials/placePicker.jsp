@@ -32,7 +32,7 @@
 					<td>
 						<span>
 							<a href="">
-								{{place.prefName.title}}<em><small ng-repeat="name in place.names.slice(0,3)">, 
+								{{place.prefName.title}}<em><small ng-repeat="name in place.names | orderBy: ['sort'] | limitTo: 3">, 
 									{{name.title}}</small><small ng-show="place.names.length > 3">, ...</small></em>
 							</a>
 						</span>

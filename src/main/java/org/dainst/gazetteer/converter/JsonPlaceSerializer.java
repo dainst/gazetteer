@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -25,6 +24,7 @@ import org.dainst.gazetteer.domain.PlaceName;
 import org.dainst.gazetteer.domain.RecordGroup;
 import org.dainst.gazetteer.domain.User;
 import org.dainst.gazetteer.helpers.LanguagesHelper;
+import org.dainst.gazetteer.helpers.PlaceNameHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +51,8 @@ public class JsonPlaceSerializer {
 	private boolean includeChangeHistory = false;
 	private boolean pretty = false;
 	private Locale locale = null;
+	private Locale originalLocale = null;
+	
 	
 	@Autowired
 	private UserRepository userDao;
@@ -161,26 +163,28 @@ public class JsonPlaceSerializer {
 			placeNode.put("types", typesNode);
 		}
 		
-		// get localized language names if locale is set		
-		Map<String, String> localizedLanguages = null;
-		if (locale != null)
-			localizedLanguages = languagesHelper.getLocalizedLanguages(locale);		
-		
 		// preferred name
 		if (place.getPrefName() != null) {
 			ObjectNode prefNameNode = mapper.createObjectNode();
 			prefNameNode.put("title", place.getPrefName().getTitle());
-			if (place.getPrefName().getLanguage() != null) {
+			if (place.getPrefName().getLanguage() != null)
 				prefNameNode.put("language", place.getPrefName().getLanguage());
-				if (localizedLanguages != null)
-					prefNameNode.put("displayLanguage", localizedLanguages.get(place.getPrefName().getLanguage()));
-			}
 			if (place.getPrefName().isAncient())
 				prefNameNode.put("ancient", true);
 			if (place.getPrefName().isTransliterated())
 				prefNameNode.put("transliterated", true);
 			placeNode.put("prefName", prefNameNode);
 		}
+
+		// get sorted place names if locale is set
+		List<PlaceName> sortedPlaceNames = null;
+		if (locale != null && originalLocale != null) {
+			PlaceNameHelper placeNameHelper = new PlaceNameHelper();
+			placeNameHelper.setLocale(locale);
+			placeNameHelper.setOriginalLocale(originalLocale);
+			placeNameHelper.setLanguagesHelper(languagesHelper);
+			sortedPlaceNames = placeNameHelper.sortPlaceNames(place.getNames());
+		}			
 		
 		// other names
 		if (!place.getNames().isEmpty()) {
@@ -188,15 +192,14 @@ public class JsonPlaceSerializer {
 			for (PlaceName name : place.getNames()) {
 				ObjectNode nameNode = mapper.createObjectNode();
 				nameNode.put("title", name.getTitle());
-				if (name.getLanguage() != null) { 
+				if (name.getLanguage() != null)
 					nameNode.put("language", name.getLanguage());
-					if (localizedLanguages != null)
-						nameNode.put("displayLanguage", localizedLanguages.get(name.getLanguage()));
-				}
 				if (name.isAncient())
 					nameNode.put("ancient", true);
 				if (name.isTransliterated())
 					nameNode.put("transliterated", true);
+				if (sortedPlaceNames != null)
+					nameNode.put("sort", sortedPlaceNames.indexOf(name));
 				namesNode.add(nameNode);
 			}
 			placeNode.put("names", namesNode);
@@ -567,5 +570,13 @@ public class JsonPlaceSerializer {
 
 	public void setLocale(Locale locale) {
 		this.locale = locale;
+	}
+
+	public Locale getOriginalLocale() {
+		return originalLocale;
+	}
+
+	public void setOriginalLocale(Locale originalLocale) {
+		this.originalLocale = originalLocale;
 	}
 }

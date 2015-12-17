@@ -112,6 +112,7 @@ public class SearchController {
 		
 		RequestContext requestContext = new RequestContext(request);
 		Locale locale = requestContext.getLocale();
+		Locale originalLocale = request.getLocale();
 		
 		User user = null;
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -223,6 +224,14 @@ public class SearchController {
 		jsonPlaceSerializer.setPretty(pretty);
 		jsonPlaceSerializer.setIncludeAccessInfo(add != null && add.contains("access"));
 		jsonPlaceSerializer.setIncludeChangeHistory(false);
+		if (add != null && add.contains("sort")) {
+			jsonPlaceSerializer.setLocale(locale);
+			jsonPlaceSerializer.setOriginalLocale(originalLocale);
+		}
+		else {
+			jsonPlaceSerializer.setLocale(null);
+			jsonPlaceSerializer.setOriginalLocale(null);
+		}
 		
 		ModelAndView mav = new ModelAndView("place/list");
 		mav.addObject("places", places);
@@ -339,6 +348,7 @@ public class SearchController {
 		
 		RequestContext requestContext = new RequestContext(request);
 		Locale locale = requestContext.getLocale();
+		Locale originalLocale = request.getLocale();
 		
 		User user = null;
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -401,6 +411,8 @@ public class SearchController {
 		jsonPlaceSerializer.setPretty(false);
 		jsonPlaceSerializer.setIncludeAccessInfo(true);
 		jsonPlaceSerializer.setIncludeChangeHistory(false);
+		jsonPlaceSerializer.setLocale(locale);
+		jsonPlaceSerializer.setOriginalLocale(originalLocale);
 		
 		ModelAndView mav = new ModelAndView("place/list");
 		mav.addObject("places", places);
@@ -550,6 +562,7 @@ public class SearchController {
 		
 		RequestContext requestContext = new RequestContext(request);
 		Locale locale = requestContext.getLocale();
+		Locale originalLocale = request.getLocale();
 		
 		User user = null;
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -570,7 +583,9 @@ public class SearchController {
 		jsonPlaceSerializer.setPretty(false);
 		jsonPlaceSerializer.setIncludeAccessInfo(false);
 		jsonPlaceSerializer.setIncludeChangeHistory(false);
-		
+		jsonPlaceSerializer.setLocale(locale);
+		jsonPlaceSerializer.setOriginalLocale(originalLocale);
+
 		ModelAndView mav = new ModelAndView("place/list");
 		mav.addObject("places", places);
 		mav.addObject("jsonPlaceSerializer", jsonPlaceSerializer);
