@@ -98,6 +98,7 @@ public class DocumentController {
 			@RequestParam(required=false, defaultValue="map,table") String view,
 			@RequestParam(required=false) List<String> add,
 			@RequestParam(required=false) boolean pretty,
+			@RequestParam(required=false) String replacing,
 			@RequestHeader(value="User-Agent", required=false) String userAgent,
 			@RequestHeader(value="Accept", required=false) String accept,
 			HttpServletRequest request,
@@ -145,7 +146,11 @@ public class DocumentController {
 			RedirectView redirectView = new RedirectView("/doc/" + place.getReplacedBy() + suffix, true, true);
 			redirectView.setStatusCode(HttpStatus.MOVED_PERMANENTLY);
 			mav = new ModelAndView(redirectView);
-		
+			if (add != null && add.contains("replacing")) {
+				mav.addObject("replacing", (replacing != null) ? replacing : placeId);
+				mav.addObject("add", add);
+			}
+	
 		// places that need to be reviewed should not be available to the public
 		} else if (place.isNeedsReview()) {
 			
@@ -200,6 +205,7 @@ public class DocumentController {
 				mav.setViewName("place/"+layout);
 			}
 			mav.addObject("place", place);
+			mav.addObject("replacing", replacing);
 			mav.addObject("relatedPlaces", relatedPlaces);
 			if (parents.size() > 0) mav.addObject("parents", parents);
 			mav.addObject("jsonPlaceSerializer", jsonPlaceSerializer);

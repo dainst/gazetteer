@@ -70,20 +70,20 @@ public class JsonPlaceSerializer {
 	private LanguagesHelper languagesHelper;
 	
 	public String serialize(Place place, Boolean accessGranted) {
-		return serialize(place, null, null, accessGranted, false);
+		return serialize(place, null, null, accessGranted, false, null);
 	}
 	
 	public String serialize(Place place, List<Place> parents, Boolean readAccess, Boolean editAccess) {
-		return serialize(place, null, parents, readAccess, editAccess);
+		return serialize(place, null, parents, readAccess, editAccess, null);
 	}
 	
-	public String serialize(Place place, HttpServletRequest request, List<Place> parents, Boolean readAccess, Boolean editAccess) {
+	public String serialize(Place place, HttpServletRequest request, List<Place> parents, Boolean readAccess, Boolean editAccess, String replacing) {
 		mapper = new ObjectMapper();
 		
 		if (pretty)
 			mapper.enable(SerializationFeature.INDENT_OUTPUT);
 		
-		ObjectNode placeNode = createJsonNodes(place, request, parents, readAccess, editAccess);
+		ObjectNode placeNode = createJsonNodes(place, request, parents, readAccess, editAccess, replacing);
 		
 		try {
 			return mapper.writeValueAsString(placeNode);
@@ -97,7 +97,7 @@ public class JsonPlaceSerializer {
 			Boolean readAccess, Boolean editAccess) {
 		
 		ObjectNode geoJsonPlaceNode = createGeoJsonNodes(place, readAccess);		
-		ObjectNode placeNode = createJsonNodes(place, request, null, readAccess, editAccess);
+		ObjectNode placeNode = createJsonNodes(place, request, null, readAccess, editAccess, null);
 		geoJsonPlaceNode.put("properties", placeNode);
 		
 		try {
@@ -108,7 +108,7 @@ public class JsonPlaceSerializer {
 		}
 	}
 		
-	private ObjectNode createJsonNodes(Place place, HttpServletRequest request, List<Place> parents, Boolean readAccess, Boolean editAccess) { 
+	private ObjectNode createJsonNodes(Place place, HttpServletRequest request, List<Place> parents, Boolean readAccess, Boolean editAccess, String replacing) { 
 		
 		if (place == null) return null;
 		
@@ -131,6 +131,10 @@ public class JsonPlaceSerializer {
 			return placeNode;
 		}
 		
+		// replacing
+		if (replacing != null && !replacing.isEmpty())
+			placeNode.put("replacing", replacing);
+				
 		// parent
 		if (place.getParent() != null && !place.getParent().isEmpty())
 			placeNode.put("parent", baseUri + "place/" + place.getParent());
@@ -413,7 +417,7 @@ public class JsonPlaceSerializer {
 			ArrayNode parentsNode = mapper.createArrayNode();
 			
 			for (Place parent : parents) {
-				ObjectNode parentNode = createJsonNodes(parent, request, null, readAccess, editAccess);
+				ObjectNode parentNode = createJsonNodes(parent, request, null, readAccess, editAccess, replacing);
 				parentsNode.add(parentNode);
 			}
 			

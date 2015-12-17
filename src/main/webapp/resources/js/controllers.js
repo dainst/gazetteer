@@ -903,7 +903,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, Place,
 		$rootScope.loading++;
 		$scope.place = Place.get({
 			id: $routeParams.id,
-			add: "parents,access,history,sort"
+			add: "parents,access,history,sort,replacing"
 		}, function(result) {
 			if (result.deleted) {
 				$rootScope.addAlert(messages["ui.place.deleted"], null, "error");
@@ -912,6 +912,9 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, Place,
 				$rootScope.title = messages["ui.place.hiddenPlace"];
 				$rootScope.pageTitle = messages["ui.place.hiddenPlace"] + " | iDAI.gazetteer";
 			}
+			if ($scope.place.replacing)
+				$rootScope.addAlert(
+						messages["ui.place.replacing.first"] + $scope.place.replacing + messages["ui.place.replacing.second"], null, "warning");
 			if (!$scope.place.prefLocation) {
 				if ($scope.hasType("archaeological-site"))
 					$scope.place.prefLocation = { confidence: 0, publicSite: false, coordinates: [] };

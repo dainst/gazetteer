@@ -37,6 +37,8 @@ messages.factory('messages', function(){
 		"ui.place.remove.failure": "Ort konnte nicht gelöscht werden",
 		"ui.place.protected-site-info": "Bitte loggen Sie sich ein, um Zugriff auf die exakten Koordinaten zu erhalten.",
 		"ui.place.user-group-info": "Wenn eine Datensatzgruppe festgelegt wird, ist der Ort nur für Mitglieder dieser Gruppe sichtbar. Diese Einstellung kann zu einem späteren Zeitpunkt nicht mehr geändert werden.",
+		"ui.place.replacing.first": "Der Ort mit der ID ",
+		"ui.place.replacing.second": " wurde ersetzt. Sie wurden zum neuen Ortseintrag weitergeleitet.",
 		"ui.thesaurus": "Thesaurus",
 		"ui.create": "Ort anlegen",
 		"ui.link.tooltip": "Mit aktuellem Ort verknüpfen",
