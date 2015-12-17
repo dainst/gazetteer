@@ -1048,7 +1048,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, Place,
 	$scope.prevChildren = function() {
 		$scope.offsetChildren -= 10;
 		$rootScope.loading++;
-		Place.query({q: "parent:" + $scope.place.gazId, sort:"prefName.title.sort", offset:$scope.offsetChildren }, function(result) {
+		Place.query({q: "parent:" + $scope.place.gazId, sort: "prefName.title.sort", offset: $scope.offsetChildren, showHiddenPlaces: true }, function(result) {
 			$scope.children = result.result;
 			$rootScope.loading--;
 		}, function() {
@@ -1060,7 +1060,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, Place,
 	$scope.nextChildren = function() {
 		$scope.offsetChildren += 10;
 		$rootScope.loading++;
-		Place.query({q: "parent:" + $scope.place.gazId, sort:"prefName.title.sort", offset:$scope.offsetChildren }, function(result) {
+		Place.query({q: "parent:" + $scope.place.gazId, sort: "prefName.title.sort", offset: $scope.offsetChildren, showHiddenPlaces: true }, function(result) {
 			$scope.children = result.result;
 			$rootScope.loading--;
 		}, function() {
@@ -1072,7 +1072,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, Place,
 	$scope.prevRelatedPlaces = function() {
 		$scope.offsetRelatedPlaces -= 10;
 		$rootScope.loading++;
-		Place.query({q: "relatedPlaces:" + $scope.place.gazId, sort:"prefName.title.sort", offset:$scope.offsetRelatedPlaces }, function(result) {
+		Place.query({q: "relatedPlaces:" + $scope.place.gazId, sort: "prefName.title.sort", offset: $scope.offsetRelatedPlaces, showHiddenPlaces: true }, function(result) {
 			$scope.relatedPlaces = result.result;
 			$rootScope.loading--;
 		}, function() {
@@ -1084,7 +1084,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, Place,
 	$scope.nextRelatedPlaces = function() {
 		$scope.offsetRelatedPlaces += 10;
 		$rootScope.loading++;
-		Place.query({q: "relatedPlaces:" + $scope.place.gazId, sort:"prefName.title.sort", offset:$scope.offsetRelatedPlaces }, function(result) {
+		Place.query({q: "relatedPlaces:" + $scope.place.gazId, sort: "prefName.title.sort", offset: $scope.offsetRelatedPlaces, showHiddenPlaces: true }, function(result) {
 			$scope.relatedPlaces = result.result;
 			$rootScope.loading--;
 		}, function() {
