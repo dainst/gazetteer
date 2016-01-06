@@ -1234,6 +1234,13 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, Place,
 		$scope.name = {};
 	};
 	
+	$scope.removeName = function(name) {
+		var index = $scope.place.names.indexOf(name);
+		
+		if (index > -1)		
+			$scope.place.names.splice(index, 1);
+	};
+	
 	$scope.addLocation = function() {
 		if ($scope.location.shape && $scope.location.shape.coordinates && $scope.location.shape.coordinates.length == 0)
 			$scope.location.shape = null;

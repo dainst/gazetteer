@@ -153,7 +153,7 @@
 								</table>
 							</div>
 							<div ng-repeat="placename in place.names | orderBy:['sort']">
-								<a ng-click="place.names.splice($index,1)"><i class="icon-remove-sign"></i></a> {{placename.title}}
+								<a ng-click="removeName(placename)"><i class="icon-remove-sign"></i></a> {{placename.title}}
 								<em ng-show="placename.ancient && !placename.transliterated">
 									(<small gaz-translate="'place.name.ancient'"></small>)
 								</em>
