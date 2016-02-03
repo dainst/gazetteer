@@ -14,6 +14,7 @@ import org.dainst.gazetteer.converter.JsonPlaceSerializer;
 import org.dainst.gazetteer.dao.GroupRoleRepository;
 import org.dainst.gazetteer.dao.PlaceChangeRecordRepository;
 import org.dainst.gazetteer.dao.PlaceRepository;
+import org.dainst.gazetteer.dao.RecordGroupRepository;
 import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.PlaceChangeRecord;
 import org.dainst.gazetteer.domain.User;
@@ -46,6 +47,9 @@ public class MergeController {
 	private PlaceChangeRecordRepository changeRecordDao;
 	
 	@Autowired
+	private RecordGroupRepository recordGroupDao;
+	
+	@Autowired
 	private GroupRoleRepository groupRoleDao;
 	
 	@Autowired
@@ -75,7 +79,7 @@ public class MergeController {
 		Place place1 = placeDao.findOne(id1);
 		Place place2 = placeDao.findOne(id2);
 		
-		PlaceAccessService placeAccessService = new PlaceAccessService(groupRoleDao);
+		PlaceAccessService placeAccessService = new PlaceAccessService(recordGroupDao, groupRoleDao);
 		
 		if (!placeAccessService.checkPlaceAccess(place1, true) || !placeAccessService.checkPlaceAccess(place2, true))
 			throw new IllegalStateException("Places may not be merged, as the user doesn't have the permission to edit both places.");
@@ -156,7 +160,6 @@ public class MergeController {
 		mav.addObject("baseUri", baseUri);
 		mav.addObject("readAccess", true);
 		mav.addObject("editAccess", true);
-		mav.addObject("accessGranted", placeAccessService.checkPlaceAccess(place1));
 		mav.addObject("jsonPlaceSerializer", jsonPlaceSerializer);
 		return mav;
 		

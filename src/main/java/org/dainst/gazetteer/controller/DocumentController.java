@@ -181,7 +181,7 @@ public class DocumentController {
 				}
 			}
 			
-			PlaceAccessService placeAccessService = new PlaceAccessService(groupRoleDao);
+			PlaceAccessService placeAccessService = new PlaceAccessService(groupDao, groupRoleDao);
 			
 			boolean readAccess = placeAccessService.checkPlaceAccess(place, false);
 			if (!readAccess)
@@ -233,7 +233,7 @@ public class DocumentController {
 		
 		RequestContext requestContext = new RequestContext(request);
 		
-		PlaceAccessService placeAccessService = new PlaceAccessService(groupRoleDao);
+		PlaceAccessService placeAccessService = new PlaceAccessService(groupDao, groupRoleDao);
 		
 		boolean accessGranted = placeAccessService.checkPlaceAccess(place, true);
 		if (!accessGranted) {
@@ -304,7 +304,7 @@ public class DocumentController {
 	public ModelAndView duplicatePlace(@RequestBody Place place,
 			HttpServletResponse response) throws Exception {
 		
-		PlaceAccessService placeAccessService = new PlaceAccessService(groupRoleDao);
+		PlaceAccessService placeAccessService = new PlaceAccessService(groupDao, groupRoleDao);
 		
 		boolean accessGranted = placeAccessService.checkPlaceAccess(place, true);
 		if (!accessGranted) {
@@ -365,7 +365,7 @@ public class DocumentController {
 			}
 		}
 		
-		PlaceAccessService placeAccessService = new PlaceAccessService(groupRoleDao);
+		PlaceAccessService placeAccessService = new PlaceAccessService(groupDao, groupRoleDao);
 		
 		Place originalPlace = placeDao.findOne(place.getId());
 		
@@ -454,7 +454,7 @@ public class DocumentController {
 		List<Place> children = placeDao.findByParent(placeId);
 		List<Place> relatedPlaces = placeDao.findByRelatedPlaces(placeId);
 		Place place = placeDao.findOne(placeId);
-		PlaceAccessService placeAccessService = new PlaceAccessService(groupRoleDao);
+		PlaceAccessService placeAccessService = new PlaceAccessService(groupDao, groupRoleDao);
 		
 		if (children.size() > 0 || relatedPlaces.size() > 0 || !placeAccessService.checkPlaceAccess(place, true)) {
 			if (children.size() > 0)

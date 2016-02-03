@@ -182,6 +182,43 @@
 					${recordGroup.name}
 				</h3>
 				
+				<div>
+					<s:message code="ui.recordGroupUserManagement.placeVisibilityStatus.first" text="ui.recordGroupUserManagement.placeVisibilityStatus.first" />
+					<c:choose>
+						<c:when test="${recordGroup.showPlaces}">
+							<b><s:message code="ui.recordGroupUserManagement.placeVisibilityStatus.visible" text="ui.recordGroupUserManagement.placeVisibilityStatus.visible" /></b>
+						</c:when>
+						<c:otherwise>
+							<b><s:message code="ui.recordGroupUserManagement.placeVisibilityStatus.invisible" text="ui.recordGroupUserManagement.placeVisibilityStatus.invisible" /></b>
+						</c:otherwise>
+					</c:choose>
+					<s:message code="ui.recordGroupUserManagement.placeVisibilityStatus.last" text="ui.recordGroupUserManagement.placeVisibilityStatus.last" />
+				</div>
+				
+				<a href="#changePlaceVisibilityModal" class="btn btn-default" data-toggle="modal"><s:message code="ui.recordGroupUserManagement.changePlaceVisibility" text="ui.recordGroupUserManagement.changePlaceVisibility" /></a>
+				
+				<div class="modal hide fade" id="changePlaceVisibilityModal">
+					<div class="modal-header">
+						<h3><s:message code="ui.recordGroupUserManagement.changePlaceVisibility" text="ui.recordGroupUserManagement.changePlaceVisibility"/></h3>
+					</div>
+					<div class="modal-body">
+						<c:choose>
+							<c:when test="${recordGroup.showPlaces}">
+								<s:message code="ui.recordGroupUserManagement.changePlaceVisibility.warning.invisible" text="ui.recordGroupUserManagement.changePlaceVisibility.warning.invisible"/>
+							</c:when>
+							<c:otherwise>
+								<s:message code="ui.recordGroupUserManagement.changePlaceVisibility.warning.visible" text="ui.recordGroupUserManagement.changePlaceVisibility.warning.visible"/>
+							</c:otherwise>
+						</c:choose>
+					</div>
+					<div class="modal-footer">
+						<a href="#" class="btn" data-dismiss="modal" aria-hidden="true"><s:message code="ui.cancel" text="ui.cancel"/></a>
+						<a href="changeGroupPlaceVisibilityMode?groupId=${recordGroup.id}&showPlaces=${!recordGroup.showPlaces}&sort=${lastSorting}&isDescending=${isDescending}&page=${page}" class="btn btn-primary"><s:message code="ui.ok" text="ui.ok"/></a>
+					</div>
+				</div>
+				
+				<br><br>
+				
 				<form class="form-horizontal" name="form" action="checkAddUserToGroupForm?groupId=${recordGroup.id}&sort=${lastSorting}&isDescending=${isDescending}&page=${page}" accept-charset="UTF-8" method="POST">
 					<s:message code="ui.recordGroupUserManagement.emailOrUsername" text="ui.recordGroupUserManagement.emailOrUsername" var="defaultMessage" />
 					<input type="text" name="email_or_username" value="${emailOrUsername}" placeholder="${defaultMessage}" />

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.dainst.gazetteer.dao.GroupRoleRepository;
 import org.dainst.gazetteer.dao.PlaceRepository;
+import org.dainst.gazetteer.dao.RecordGroupRepository;
 import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.helpers.PlaceAccessService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class SitemapController {
 
 	@Autowired
 	private PlaceRepository placeDao;
+	
+	@Autowired
+	private RecordGroupRepository recordGroupDao;
 	
 	@Autowired
 	private GroupRoleRepository groupRoleDao;
@@ -47,10 +51,10 @@ public class SitemapController {
 		
 		Map<String, Boolean> accessMap = new HashMap<String, Boolean>();
 		
-		PlaceAccessService placeAccessService = new PlaceAccessService(groupRoleDao);
+		PlaceAccessService placeAccessService = new PlaceAccessService(recordGroupDao, groupRoleDao);
 		
 		for (Place place : places) {
-			accessMap.put(place.getId(), placeAccessService.checkPlaceAccess(place));
+			accessMap.put(place.getId(), placeAccessService.checkPlaceAccess(place, false));
 		}
 		
 		mav.addObject("no", no);

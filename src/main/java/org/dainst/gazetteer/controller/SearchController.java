@@ -201,11 +201,11 @@ public class SearchController {
 		Map<String, List<Place>> parents = new HashMap<String, List<Place>>();
 		Map<String, Boolean> readAccessMap = new HashMap<String, Boolean>();
 		Map<String, Boolean> editAccessMap = new HashMap<String, Boolean>();
-		PlaceAccessService placeAccessService = new PlaceAccessService(groupRoleDao);
+		PlaceAccessService placeAccessService = new PlaceAccessService(groupDao, groupRoleDao);
 		
 		for (Place place : places) {
 			protectLocationsService.protectLocations(user, place);
-			readAccessMap.put(place.getId(), placeAccessService.checkPlaceAccess(place));
+			readAccessMap.put(place.getId(), placeAccessService.checkPlaceAccess(place, false));
 			editAccessMap.put(place.getId(), placeAccessService.checkPlaceAccess(place, true));
 
 			if (add != null && add.contains("parents")) {
@@ -311,11 +311,11 @@ public class SearchController {
 		Map<String,List<String[]>> facets = processFacets(query, locale);
 		Map<String, Boolean> readAccessMap = new HashMap<String, Boolean>();
 		Map<String, Boolean> editAccessMap = new HashMap<String, Boolean>();
-		PlaceAccessService placeAccessService = new PlaceAccessService(groupRoleDao);
+		PlaceAccessService placeAccessService = new PlaceAccessService(groupDao, groupRoleDao);
 		
 		for (Place place : places) {
 			protectLocationsService.protectLocations(user, place);
-			readAccessMap.put(place.getId(), placeAccessService.checkPlaceAccess(place));
+			readAccessMap.put(place.getId(), placeAccessService.checkPlaceAccess(place, false));
 			editAccessMap.put(place.getId(), placeAccessService.checkPlaceAccess(place, true));
 		}
 		
@@ -399,11 +399,11 @@ public class SearchController {
 		
 		Map<String, Boolean> readAccessMap = new HashMap<String, Boolean>();
 		Map<String, Boolean> editAccessMap = new HashMap<String, Boolean>();
-		PlaceAccessService placeAccessService = new PlaceAccessService(groupRoleDao);
+		PlaceAccessService placeAccessService = new PlaceAccessService(groupDao, groupRoleDao);
 		
 		for (Place place : places) {
 			protectLocationsService.protectLocations(user, place);
-			readAccessMap.put(place.getId(), placeAccessService.checkPlaceAccess(place));
+			readAccessMap.put(place.getId(), placeAccessService.checkPlaceAccess(place, false));
 			editAccessMap.put(place.getId(), placeAccessService.checkPlaceAccess(place, true));
 		}
 		
@@ -571,11 +571,11 @@ public class SearchController {
 		
 		Map<String, Boolean> readAccessMap = new HashMap<String, Boolean>();
 		Map<String, Boolean> editAccessMap = new HashMap<String, Boolean>();
-		PlaceAccessService placeAccessService = new PlaceAccessService(groupRoleDao);
+		PlaceAccessService placeAccessService = new PlaceAccessService(groupDao, groupRoleDao);
 		
 		for (Place place : places) {
 			protectLocationsService.protectLocations(user, place);
-			readAccessMap.put(place.getId(), placeAccessService.checkPlaceAccess(place));
+			readAccessMap.put(place.getId(), placeAccessService.checkPlaceAccess(place, false));
 			editAccessMap.put(place.getId(), placeAccessService.checkPlaceAccess(place, true));
 		}
 		

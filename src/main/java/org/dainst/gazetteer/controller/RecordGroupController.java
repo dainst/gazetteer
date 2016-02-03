@@ -130,7 +130,7 @@ public class RecordGroupController {
 	public String getRecordGroupUserManagement(@RequestParam(required=true) String groupId, @RequestParam(required=false) String sort,
 			@RequestParam(required=false) boolean isDescending, @RequestParam(required=false) Integer page, ModelMap model) {
 
-		if (checkGroupUserManagementAccess(groupId))
+		if (!checkGroupUserManagementAccess(groupId))
 			return "redirect:app/#!/home";
 		
 		RecordGroup group = recordGroupDao.findOne(groupId);		
@@ -216,7 +216,7 @@ public class RecordGroupController {
 			@RequestParam(required=true) String userId, @RequestParam(required=false) String sort,
 			@RequestParam(required=false) boolean isDescending, @RequestParam(required=false) Integer page , ModelMap model) {
 		
-		if (checkGroupUserManagementAccess(groupId))
+		if (!checkGroupUserManagementAccess(groupId))
 			return "redirect:app/#!/home";
 		
 		User user = userDao.findOne(userId);
@@ -239,7 +239,7 @@ public class RecordGroupController {
 	public String checkAddUserToGroupForm(HttpServletRequest request, @RequestParam(required=true) String groupId, @RequestParam(required=false) String sort,
 			@RequestParam(required=false) boolean isDescending, @RequestParam(required=false) Integer page, ModelMap model) {
 	
-		if (checkGroupUserManagementAccess(groupId))
+		if (!checkGroupUserManagementAccess(groupId))
 			return "redirect:app/#!/home";
 		
 		String emailOrUsername = request.getParameter("email_or_username");
@@ -282,8 +282,7 @@ public class RecordGroupController {
 	public String removeUserFromGroup(@RequestParam(required=true) String groupId, @RequestParam(required=true) String userId, @RequestParam(required=false) String sort,
 			@RequestParam(required=false) boolean isDescending, @RequestParam(required=false) Integer page, ModelMap model) {
 		
-		GroupRole editorRole = groupRoleDao.findByGroupIdAndUserId(groupId, getUser().getId());
-		if (!isAdminEdit() && (editorRole == null || !editorRole.getRoleType().equals("admin")))
+		if (!checkGroupUserManagementAccess(groupId))
 			return "redirect:app/#!/home";
 		
 		User user = userDao.findOne(userId);
@@ -295,6 +294,24 @@ public class RecordGroupController {
 		groupRoleDao.delete(role);
 		
 		model.addAttribute("removedUser", user.getUsername());
+		
+		return getRecordGroupUserManagement(groupId, sort, isDescending, page, model);
+	}
+	
+	@RequestMapping(value="/changeGroupPlaceVisibilityMode")
+	public String changeGroupPlaceVisibilityMode(@RequestParam(required=true) String groupId, @RequestParam(required=true) boolean showPlaces, @RequestParam(required=false) String sort,
+			@RequestParam(required=false) boolean isDescending, @RequestParam(required=false) Integer page, ModelMap model) {
+		
+		if (!checkGroupUserManagementAccess(groupId))
+			return "redirect:app/#!/home";
+		
+		RecordGroup group = recordGroupDao.findOne(groupId);
+		
+		if (group == null )
+			throw new IllegalStateException("No group with groupId " + groupId + " could be found.");
+		
+		group.setShowPlaces(showPlaces);
+		recordGroupDao.save(group);
 		
 		return getRecordGroupUserManagement(groupId, sort, isDescending, page, model);
 	}
@@ -325,6 +342,6 @@ public class RecordGroupController {
 		
 		GroupRole editorRole = groupRoleDao.findByGroupIdAndUserId(groupId, getUser().getId());
 		
-		return (!isAdminEdit() && (editorRole == null || !editorRole.getRoleType().equals("admin")));
+		return (isAdminEdit() || (editorRole != null && editorRole.getRoleType().equals("admin")));
 	}
 }

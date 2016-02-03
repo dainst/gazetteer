@@ -13,7 +13,8 @@ public class RecordGroup {
 	@Id
 	private String id;
 	
-	private String name;	
+	private String name;
+	private boolean showPlaces;
 	private Date creationDate;
 	
 	public RecordGroup(String name) {
@@ -35,6 +36,14 @@ public class RecordGroup {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public boolean getShowPlaces() {
+		return showPlaces;
+	}
+
+	public void setShowPlaces(boolean showPlaces) {
+		this.showPlaces = showPlaces;
 	}
 
 	public Date getCreationDate() {
@@ -70,6 +79,8 @@ public class RecordGroup {
 		if (name == null && other.name != null)
 			return false;
 		if (name != null && !name.equals(other.name))
+			return false;
+		if (showPlaces != other.showPlaces)
 			return false;
 		if (creationDate == null && other.creationDate != null)
 			return false;
