@@ -3,9 +3,11 @@ package org.dainst.gazetteer.controller;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,6 +20,7 @@ import org.dainst.gazetteer.dao.RecordGroupRepository;
 import org.dainst.gazetteer.dao.UserRepository;
 import org.dainst.gazetteer.domain.GroupRole;
 import org.dainst.gazetteer.domain.Place;
+import org.dainst.gazetteer.domain.RecordGroup;
 import org.dainst.gazetteer.domain.User;
 import org.dainst.gazetteer.helpers.PlaceAccessService;
 import org.dainst.gazetteer.helpers.ProtectLocationsService;
@@ -139,25 +142,8 @@ public class SearchController {
 		if (fq != null && !fq.isEmpty())
 			query.addFilter(fq);
 		
-		if (!showHiddenPlaces) {
-			String recordGroupFilter = "_missing_:recordGroupId";
-			if (user != null) {
-				List<GroupRole> groupRoles = groupRoleDao.findByUserId(user.getId());			
-				if (groupRoles.size() > 0) {
-					boolean first = true;
-					recordGroupFilter += " OR recordGroupId:(";
-					for (GroupRole groupRole : groupRoles) {
-						if (first)
-							first = false;
-						else
-							recordGroupFilter += " OR ";
-						recordGroupFilter += groupRole.getGroupId();
-					}
-					recordGroupFilter += ")";
-				}
-			}
-			query.addFilter(recordGroupFilter);
-		}
+		if (!showHiddenPlaces)
+			query.addFilter(buildRecordGroupFilter(user));
 		
 		query.addBoostForChildren();
 		query.limit(limit);
@@ -277,24 +263,7 @@ public class SearchController {
 		query.offset(offset);
 		query.addBoostForChildren();
 		query.addFilter("deleted:false");
-		
-		String recordGroupFilter = "_missing_:recordGroupId";
-		if (user != null) {
-			List<GroupRole> groupRoles = groupRoleDao.findByUserId(user.getId());			
-			if (groupRoles.size() > 0) {
-				boolean first = true;
-				recordGroupFilter += " OR recordGroupId:(";
-				for (GroupRole groupRole : groupRoles) {
-					if (first)
-						first = false;
-					else
-						recordGroupFilter += " OR ";
-					recordGroupFilter += groupRole.getGroupId();
-				}
-				recordGroupFilter += ")";
-			}
-		}
-		query.addFilter(recordGroupFilter);
+		query.addFilter(buildRecordGroupFilter(user));
 		
 		if (!"true".equals(showInReview)) query.addFilter("needsReview:false");
 		
@@ -361,24 +330,7 @@ public class SearchController {
 		query.limit(limit);
 		query.offset(offset);
 		query.addFilter("deleted:false");
-		
-		String recordGroupFilter = "_missing_:recordGroupId";
-		if (user != null) {
-			List<GroupRole> groupRoles = groupRoleDao.findByUserId(user.getId());			
-			if (groupRoles.size() > 0) {
-				boolean first = true;
-				recordGroupFilter += " OR recordGroupId:(";
-				for (GroupRole groupRole : groupRoles) {
-					if (first)
-						first = false;
-					else
-						recordGroupFilter += " OR ";
-					recordGroupFilter += groupRole.getGroupId();
-				}
-				recordGroupFilter += ")";
-			}
-		}
-		query.addFilter(recordGroupFilter);
+		query.addFilter(buildRecordGroupFilter(user));
 		
 		if (!"true".equals(showInReview)) query.addFilter("needsReview:false");
 		query.addFacet("parent");
@@ -630,5 +582,38 @@ public class SearchController {
 				return false;
 		} else
 			return true;	
+	}
+	
+	private String buildRecordGroupFilter(User user) {
+		
+		String recordGroupFilter = "_missing_:recordGroupId";
+		
+		Set<String> groupIds = new HashSet<String>();
+		List<RecordGroup> showPlacesGroups = groupDao.findByShowPlaces(true);
+		for (RecordGroup group : showPlacesGroups) {
+			groupIds.add(group.getId());
+		}
+		
+		if (user != null) {
+			List<GroupRole> groupRoles = groupRoleDao.findByUserId(user.getId());
+			for (GroupRole role : groupRoles) {
+				groupIds.add(role.getGroupId());
+			}				
+		}
+		
+		if (groupIds.size() > 0) {
+			boolean first = true;
+			recordGroupFilter += " OR recordGroupId:(";
+			for (String groupId : groupIds) {
+				if (first)
+					first = false;
+				else
+					recordGroupFilter += " OR ";
+				recordGroupFilter += groupId;
+			}
+			recordGroupFilter += ")";
+		}
+		
+		return recordGroupFilter;
 	}
 }
