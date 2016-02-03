@@ -29,7 +29,7 @@
 		<script src="resources/js/custom.js"></script>
 	</head>
 	<body>
-		<div class="container">
+		<div class="container-fluid">
 			<div class="archaeo-fixed-menu">
 				<div class="gaz-container archaeo-fixed-menu-header">
 					<div class="btn-group pull-right" style="margin-top:12px">
@@ -98,8 +98,8 @@
 					</div>
 				</c:if>
 		
-				<div class="row">
-					<div class="span6 offset3 well">
+				<div class="row-fluid">
+					<div class="span4 offset4 well">
 						<form class="form-horizontal" name="f" action="j_spring_security_check" method="POST">
 							<c:if test="${not empty r}">
 								<input type="hidden" name="spring-security-redirect" value="/app/#!/<c:out value="${r}" />">

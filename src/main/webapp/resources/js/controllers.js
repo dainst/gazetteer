@@ -265,7 +265,7 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages, PolygonVali
 	$rootScope.showMap = true;
 	$rootScope.showHeader = true;
 	$rootScope.showNavbarSearch = true;
-	$rootScope.viewClass = "span7";
+	$rootScope.viewClass = "span6";
 	$rootScope.activePlaces = [];	
 	$rootScope.isFocused = false;
 	$rootScope.geoSearch = true;
@@ -487,7 +487,7 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 	$rootScope.showMap = true;
 	$rootScope.showHeader = true;
 	$rootScope.showNavbarSearch = true;
-	$rootScope.viewClass = "span7";
+	$rootScope.viewClass = "span6";
 	$rootScope.isFocused = true;
 	$rootScope.mapMode = "standard";
 	
@@ -801,7 +801,7 @@ function CreateCtrl($scope, $rootScope, $routeParams, $location, Place, messages
 	$rootScope.showMap = true;
 	$rootScope.showHeader = true;
 	$rootScope.showNavbarSearch = true;
-	$rootScope.viewClass = "span7";
+	$rootScope.viewClass = "span6";
 	$rootScope.activePlaces = [];
 	$rootScope.isFocused = true;
 	$rootScope.geoSearch = false;
@@ -888,7 +888,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, Place,
 	$rootScope.showMap = true;
 	$rootScope.showHeader = true;
 	$rootScope.showNavbarSearch = true;
-	$rootScope.viewClass = "span7";
+	$rootScope.viewClass = "span6";
 	$rootScope.isFocused = true;
 	$rootScope.geoSearch = false;
 	$rootScope.mapMode = "singlePlace";
@@ -1535,7 +1535,7 @@ function ThesaurusCtrl($scope, $rootScope, $location, Place, messages, $route) {
 	$rootScope.showMap = true;
 	$rootScope.showHeader = true;
 	$rootScope.showNavbarSearch = true;
-	$rootScope.viewClass = "span7";
+	$rootScope.viewClass = "span6";
 	$rootScope.activePlaces = [];
 	$rootScope.isFocused = true;
 	$rootScope.geoSearch = false;

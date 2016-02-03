@@ -29,7 +29,7 @@
 		<script src="resources/js/custom.js"></script>
 	</head>
 	<body>
-		<div class="container">
+		<div class="container-fluid">
 			<div class="archaeo-fixed-menu">
 				<div class="gaz-container archaeo-fixed-menu-header">
 					<div class="btn-group pull-right" style="margin-top:12px">

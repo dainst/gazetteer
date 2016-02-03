@@ -35,7 +35,7 @@
 
 	<div scroll-position="scrollPosition"></div>
 	
-	<div class="container">
+	<div class="container-fluid">
 	
 		<div class="archaeo-fixed-menu">
 			<div class="gaz-container archaeo-fixed-menu-header">
@@ -198,8 +198,8 @@
 			</div>
 			
 			<div class="row-fluid" style="position:relative;">
-				<div class="span5" id="map-well-wrapper" ng-style="mapContainerStyle">
-					<div class="well" id="map-well">
+				<div class="span6" id="map-well-wrapper" ng-style="mapContainerStyle">
+					<div class="well-small" id="map-well">
 						<div gaz-map map="$root.map" places="activePlaces" height="500" zoom="zoom" bbox="bbox" highlight="highlight" mode="mapMode" ng-mouseup="setUpdateMapPropertiesTimer()"></div>
 					</div>
 				</div>
