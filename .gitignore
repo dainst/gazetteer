@@ -10,4 +10,3 @@ tmp/
 .kitchen
 .kitchen.local.yml
 .DS_Store
-src/main/webapp/WEB-INF/mailAccount.properties

@@ -5,6 +5,8 @@ import java.util.Properties;
 import javax.mail.*;
 import javax.mail.internet.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 
 public class MailService {
@@ -24,8 +26,15 @@ public class MailService {
 	@Value("${mailPassword}")
 	private String mailPassword;
 	
+	private static Logger logger = LoggerFactory.getLogger(MailService.class);
+	
 	
 	public void sendMail(String recipientMail, String subject, String content) throws MessagingException {
+		
+		if (senderMail.isEmpty() || smtpHost.isEmpty() || smtpPort.isEmpty() || mailUsername.isEmpty() || mailPassword.isEmpty()) {
+			logger.warn("Could not send mail: Mail properties not set");
+			return;
+		}			
 		
 		Properties properties = new Properties();
 		properties.setProperty("mail.smtp.host", smtpHost);
