@@ -273,7 +273,7 @@
 								<td>
 									<form name="form" action="checkRecordGroupUserForm?groupId=${recordGroup.id}&userId=${user.id}&sort=${lastSorting}&isDescending=${isDescending}&page=${page}" accept-charset="UTF-8" method="POST">	
 										<select name="access" onchange="this.form.submit()" style="margin-bottom: -16px;">
-											<c:forEach var="role" items="admin,edit,read">
+											<c:forEach var="role" items="admin,edit,read,limitedRead">
 												<c:choose>
 													<c:when test="${roles[user.id].roleType == role}">
 														<option value="${role}" selected><s:message code="ui.recordGroupUserManagement.access.${role}" text="ui.recordGroupUserManagement.access.${role}"/></option>

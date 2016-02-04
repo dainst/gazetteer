@@ -13,9 +13,11 @@ public class ProtectLocationsService {
 	@Value("${protectionDecimalPlaces}")
 	private int decimalPlaces;
 
-	public void protectLocations(User user, Place place) {
+	public void protectLocations(User user, Place place, PlaceAccessService.AccessStatus accessStatus) {
 		
-		if (user == null || !user.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER"))) {			
+		if (user == null
+				|| !user.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER"))
+				|| accessStatus.equals(PlaceAccessService.AccessStatus.LIMITED_READ)) {			
 			
 			if (place.getPrefLocation() != null && !place.getPrefLocation().isPublicSite()) {
 				double lng = BigDecimal.valueOf(place.getPrefLocation().getLng()).setScale(decimalPlaces, BigDecimal.ROUND_HALF_UP).doubleValue();

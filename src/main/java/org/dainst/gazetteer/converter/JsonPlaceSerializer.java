@@ -367,6 +367,10 @@ public class JsonPlaceSerializer {
 				placeNode.put("groupInternalData", groupInternalDataNode);
 		}
 		
+		// read access
+		if (includeAccessInfo && accessStatus.equals(PlaceAccessService.AccessStatus.LIMITED_READ))
+			placeNode.put("limitedReadAccess", true);
+		
 		// edit access
 		if (includeAccessInfo && !PlaceAccessService.hasEditAccess(accessStatus))
 			placeNode.put("editAccessDenied", true);

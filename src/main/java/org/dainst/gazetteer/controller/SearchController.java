@@ -90,8 +90,6 @@ public class SearchController {
 	@Autowired
 	MessageSource messageSource;
 	
-	PlaceAccessService placeAccessService = new PlaceAccessService(groupDao, groupRoleDao);
-	
 	@RequestMapping(value="/search", method=RequestMethod.GET)
 	public ModelAndView simpleSearch(@RequestParam(defaultValue="10") int limit,
 			@RequestParam(defaultValue="0") int offset,
@@ -189,16 +187,19 @@ public class SearchController {
 		Map<String, List<Place>> parents = new HashMap<String, List<Place>>();
 		Map<String, PlaceAccessService.AccessStatus> accessStatusMap = new HashMap<String, PlaceAccessService.AccessStatus>();
 		
+		PlaceAccessService placeAccessService = new PlaceAccessService(groupDao, groupRoleDao);
+		
 		for (Place place : places) {
-			protectLocationsService.protectLocations(user, place);
-			accessStatusMap.put(place.getId(), placeAccessService.getAccessStatus(place));
+			PlaceAccessService.AccessStatus accessStatus = placeAccessService.getAccessStatus(place);
+			protectLocationsService.protectLocations(user, place, accessStatus);
+			accessStatusMap.put(place.getId(), accessStatus);
 
 			if (add != null && add.contains("parents")) {
 				List<Place> placeParents = new ArrayList<Place>();
 				createParentsList(place, placeParents, false);
 			
 				for (Place parent : placeParents) {
-					protectLocationsService.protectLocations(user, parent);
+					protectLocationsService.protectLocations(user, parent, placeAccessService.getAccessStatus(parent));
 				}
 				
 				parents.put(place.getId(), placeParents);
@@ -591,11 +592,14 @@ public class SearchController {
 		if (principal instanceof User)
 			user = (User) principal;
 		
+		PlaceAccessService placeAccessService = new PlaceAccessService(groupDao, groupRoleDao);
+		
 		Map<String, PlaceAccessService.AccessStatus> accessStatusMap = new HashMap<String, PlaceAccessService.AccessStatus>();
 		
 		for (Place place : places) {
-			protectLocationsService.protectLocations(user, place);
-			accessStatusMap.put(place.getId(), placeAccessService.getAccessStatus(place));
+			PlaceAccessService.AccessStatus accessStatus = placeAccessService.getAccessStatus(place);
+			protectLocationsService.protectLocations(user, place, accessStatus);
+			accessStatusMap.put(place.getId(), accessStatus);
 		}
 		
 		return accessStatusMap;

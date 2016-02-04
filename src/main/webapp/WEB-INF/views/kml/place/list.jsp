@@ -2,7 +2,7 @@
 <kml xmlns="http://www.opengis.net/kml/2.2">
 	<Folder>
 		<c:forEach var="place" items="${places}">
-			<c:if test="${place.prefLocation != null && (accessStatusMap[place.id] == 'READ' || accessStatusMap[place.id] == 'EDIT')}">
+			<c:if test="${place.prefLocation != null && (accessStatusMap[place.id] == 'READ' || accessStatus == 'LIMITED_READ' || accessStatusMap[place.id] == 'EDIT')}">
 				<Placemark id="${baseUri}place/${place.id}">
 					<name><c:out value="${place.prefName.title}"/></name>
 					<description>

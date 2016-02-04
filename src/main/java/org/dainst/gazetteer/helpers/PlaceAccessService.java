@@ -16,6 +16,7 @@ public class PlaceAccessService {
 	
 	public enum AccessStatus {
 		NONE,
+		LIMITED_READ,		// Can not access complete coordinates of protected locations
 		READ,
 		EDIT
 	}
@@ -46,12 +47,14 @@ public class PlaceAccessService {
 					return AccessStatus.EDIT;
 				else if (role.getRoleType().equals("read"))
 					return AccessStatus.READ;
+				else if (role.getRoleType().equals("limitedRead"))
+					return AccessStatus.LIMITED_READ;
 				else
 					return AccessStatus.NONE;
 			} else
 				return AccessStatus.NONE;
 		} else if (group.getShowPlaces())
-			return AccessStatus.READ;
+			return AccessStatus.LIMITED_READ;
 		else
 			return AccessStatus.NONE;
 	}
@@ -64,6 +67,7 @@ public class PlaceAccessService {
 	public static boolean hasReadAccess(AccessStatus accessStatus) {
 		
 		switch(accessStatus) {
+		case LIMITED_READ:
 		case READ:
 		case EDIT:
 			return true;
@@ -79,11 +83,6 @@ public class PlaceAccessService {
 	
 	public static boolean hasEditAccess(AccessStatus accessStatus) {
 		
-		switch(accessStatus) {
-		case EDIT:
-			return true;
-		default:
-			return false;
-		}
+		return accessStatus.equals(AccessStatus.EDIT);
 	}
 }

@@ -271,7 +271,7 @@ public class RecordGroupController {
 		GroupRole role = new GroupRole();
 		role.setUserId(user.getId());
 		role.setGroupId(groupId);
-		role.setRoleType("read");
+		role.setRoleType("limitedRead");
 		groupRoleDao.save(role);
 		
 		model.addAttribute("addedUser", user.getUsername());

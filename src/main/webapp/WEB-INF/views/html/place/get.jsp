@@ -11,7 +11,7 @@
 <head>
 <title>
 	<c:choose>
-		<c:when test="${accessStatus == 'READ' || accessStatus == 'EDIT'}">
+		<c:when test="${accessStatus == 'READ' || accessStatus == 'LIMITED_READ' || accessStatus == 'EDIT'}">
 			iDAI.gazetteer - ${place.prefName.title}
 			<c:forEach var="placename" items="${place.names}"> / ${placename.title}</c:forEach>
 		</c:when>

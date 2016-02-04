@@ -8,7 +8,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:owl ="http://www.w3.org/2002/07/owl#"
 	xmlns:gaz_id="http://gazetteer.dainst.org/types/id#">
-	<c:if test="${accessStatus == 'READ' || accessStatus == 'EDIT'}">
+	<c:if test="${accessStatus == 'READ' || accessStatus == 'LIMITED_READ' || accessStatus == 'EDIT'}">
 		<edm:Place rdf:about="${baseUri}place/${place.id}">
 			<c:choose>
 				<c:when test="${place.prefName.language != null}">

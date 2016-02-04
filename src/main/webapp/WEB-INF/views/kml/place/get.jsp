@@ -1,6 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%><%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %><%@ taglib uri="http://www.springframework.org/tags" prefix="s"%><%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %><%@ page session="false" import="org.dainst.gazetteer.domain.*" %><% response.setHeader("Content-Type", "application/vnd.google-earth.kml+xml; charset=utf-8"); %><?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
-	<c:if test="${accessStatus == 'READ' || accessStatus == 'EDIT'}">
+	<c:if test="${accessStatus == 'READ' || accessStatus == 'LIMITED_READ' || accessStatus == 'EDIT'}">
 		<Placemark id="place_${place.id}">
 			<name><c:out value="${place.prefName.title}"/></name>
 			<description>

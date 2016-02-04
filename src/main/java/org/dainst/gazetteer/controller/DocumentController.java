@@ -87,8 +87,6 @@ public class DocumentController {
 	
 	@Value("${googleMapsApiKey}")
 	private String googleMapsApiKey;
-	
-	private PlaceAccessService placeAccessService = new PlaceAccessService(groupDao, groupRoleDao);
 		
 	@RequestMapping(value="/doc/{placeId}", method=RequestMethod.GET)
 	public ModelAndView getPlace(@PathVariable String placeId,
@@ -168,18 +166,22 @@ public class DocumentController {
 			logger.debug("findByIdIn: {}", System.currentTimeMillis() - time);
 			time = System.currentTimeMillis();
 			
+			PlaceAccessService placeAccessService = new PlaceAccessService(groupDao, groupRoleDao);			
+			PlaceAccessService.AccessStatus accessStatus = placeAccessService.getAccessStatus(place);
+			
 			User user = null;
 			Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 			if (principal instanceof User)
 				user = (User) principal;
-			protectLocationsService.protectLocations(user, place);
+			
+			protectLocationsService.protectLocations(user, place, accessStatus);
 			
 			List<Place> parents = new ArrayList<Place>();
 			if (add != null && add.contains("parents")) {
 				createParentsList(place, parents);
 				
 				for (Place parent : parents) {
-					protectLocationsService.protectLocations(user, parent);
+					protectLocationsService.protectLocations(user, parent, placeAccessService.getAccessStatus(parent));
 				}
 			}
 			
@@ -208,7 +210,7 @@ public class DocumentController {
 			mav.addObject("relatedPlaces", relatedPlaces);
 			if (parents.size() > 0) mav.addObject("parents", parents);
 			mav.addObject("jsonPlaceSerializer", jsonPlaceSerializer);
-			mav.addObject("accessStatus", placeAccessService.getAccessStatus(place));
+			mav.addObject("accessStatus", accessStatus);
 			mav.addObject("language", locale.getISO3Language());
 			mav.addObject("limit", limit);
 			mav.addObject("offset", offset);
@@ -230,6 +232,8 @@ public class DocumentController {
 			HttpServletResponse response) throws Exception {
 		
 		RequestContext requestContext = new RequestContext(request);
+		
+		PlaceAccessService placeAccessService = new PlaceAccessService(groupDao, groupRoleDao);
 		
 		if (!placeAccessService.hasEditAccess(place)) {
 			ModelAndView mav = new ModelAndView("place/validation");
@@ -298,6 +302,8 @@ public class DocumentController {
 	public ModelAndView duplicatePlace(@RequestBody Place place,
 			HttpServletResponse response) throws Exception {
 		
+		PlaceAccessService placeAccessService = new PlaceAccessService(groupDao, groupRoleDao);
+		
 		if (!placeAccessService.hasEditAccess(place)) {
 			ModelAndView mav = new ModelAndView("place/validation");
 			ValidationResult result = new ValidationResult();
@@ -356,6 +362,8 @@ public class DocumentController {
 		}
 		
 		Place originalPlace = placeDao.findOne(place.getId());
+		
+		PlaceAccessService placeAccessService = new PlaceAccessService(groupDao, groupRoleDao);
 		
 		if (!placeAccessService.hasEditAccess(originalPlace)) {
 			ModelAndView mav = new ModelAndView("place/validation");
@@ -442,6 +450,8 @@ public class DocumentController {
 		List<Place> children = placeDao.findByParent(placeId);
 		List<Place> relatedPlaces = placeDao.findByRelatedPlaces(placeId);
 		Place place = placeDao.findOne(placeId);
+		
+		PlaceAccessService placeAccessService = new PlaceAccessService(groupDao, groupRoleDao);
 
 		if (children.size() > 0 || relatedPlaces.size() > 0 || !placeAccessService.hasEditAccess(place)) {
 			if (children.size() > 0)
