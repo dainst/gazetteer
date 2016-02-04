@@ -88,6 +88,8 @@ public class DocumentController {
 	@Value("${googleMapsApiKey}")
 	private String googleMapsApiKey;
 	
+	private PlaceAccessService placeAccessService = new PlaceAccessService(groupDao, groupRoleDao);
+		
 	@RequestMapping(value="/doc/{placeId}", method=RequestMethod.GET)
 	public ModelAndView getPlace(@PathVariable String placeId,
 			@RequestParam(required=false) String layout,
@@ -181,10 +183,7 @@ public class DocumentController {
 				}
 			}
 			
-			PlaceAccessService placeAccessService = new PlaceAccessService(groupDao, groupRoleDao);
-			
-			boolean readAccess = placeAccessService.checkPlaceAccess(place, false);
-			if (!readAccess)
+			if (!placeAccessService.hasReadAccess(place))
 				response.setStatus(403);
 			
 			jsonPlaceSerializer.setBaseUri(baseUri);
@@ -209,8 +208,7 @@ public class DocumentController {
 			mav.addObject("relatedPlaces", relatedPlaces);
 			if (parents.size() > 0) mav.addObject("parents", parents);
 			mav.addObject("jsonPlaceSerializer", jsonPlaceSerializer);
-			mav.addObject("readAccess", readAccess);
-			mav.addObject("editAccess", placeAccessService.checkPlaceAccess(place, true));
+			mav.addObject("accessStatus", placeAccessService.getAccessStatus(place));
 			mav.addObject("language", locale.getISO3Language());
 			mav.addObject("limit", limit);
 			mav.addObject("offset", offset);
@@ -233,10 +231,7 @@ public class DocumentController {
 		
 		RequestContext requestContext = new RequestContext(request);
 		
-		PlaceAccessService placeAccessService = new PlaceAccessService(groupDao, groupRoleDao);
-		
-		boolean accessGranted = placeAccessService.checkPlaceAccess(place, true);
-		if (!accessGranted) {
+		if (!placeAccessService.hasEditAccess(place)) {
 			ModelAndView mav = new ModelAndView("place/validation");
 			ValidationResult result = new ValidationResult();
 			result.setSuccess(false);
@@ -294,8 +289,7 @@ public class DocumentController {
 		ModelAndView mav = new ModelAndView("place/get");
 		mav.addObject("place", place);
 		mav.addObject("jsonPlaceSerializer", jsonPlaceSerializer);
-		mav.addObject("readAccess", accessGranted);
-		mav.addObject("editAccess", accessGranted);
+		mav.addObject("accessStatus", placeAccessService.getAccessStatus(place));
 		return mav;
 		
 	}
@@ -304,10 +298,7 @@ public class DocumentController {
 	public ModelAndView duplicatePlace(@RequestBody Place place,
 			HttpServletResponse response) throws Exception {
 		
-		PlaceAccessService placeAccessService = new PlaceAccessService(groupDao, groupRoleDao);
-		
-		boolean accessGranted = placeAccessService.checkPlaceAccess(place, true);
-		if (!accessGranted) {
+		if (!placeAccessService.hasEditAccess(place)) {
 			ModelAndView mav = new ModelAndView("place/validation");
 			ValidationResult result = new ValidationResult();
 			result.setSuccess(false);
@@ -339,8 +330,7 @@ public class DocumentController {
 		ModelAndView mav = new ModelAndView("place/get");
 		mav.addObject("place", place);
 		mav.addObject("baseUri", baseUri);
-		mav.addObject("readAccess", accessGranted);
-		mav.addObject("editAccess", accessGranted);
+		mav.addObject("accessStatus", placeAccessService.getAccessStatus(place));
 		return mav;
 		
 	}
@@ -365,11 +355,9 @@ public class DocumentController {
 			}
 		}
 		
-		PlaceAccessService placeAccessService = new PlaceAccessService(groupDao, groupRoleDao);
-		
 		Place originalPlace = placeDao.findOne(place.getId());
 		
-		if (!placeAccessService.checkPlaceAccess(originalPlace, true)) {
+		if (!placeAccessService.hasEditAccess(originalPlace)) {
 			ModelAndView mav = new ModelAndView("place/validation");
 			ValidationResult result = new ValidationResult();
 			result.setSuccess(false);
@@ -454,14 +442,13 @@ public class DocumentController {
 		List<Place> children = placeDao.findByParent(placeId);
 		List<Place> relatedPlaces = placeDao.findByRelatedPlaces(placeId);
 		Place place = placeDao.findOne(placeId);
-		PlaceAccessService placeAccessService = new PlaceAccessService(groupDao, groupRoleDao);
-		
-		if (children.size() > 0 || relatedPlaces.size() > 0 || !placeAccessService.checkPlaceAccess(place, true)) {
+
+		if (children.size() > 0 || relatedPlaces.size() > 0 || !placeAccessService.hasEditAccess(place)) {
 			if (children.size() > 0)
 				logger.debug("cannot delete place " + placeId + ": has " + children.size() + " children!");
 			if (relatedPlaces.size() > 0)
 				logger.debug("cannot delete place " + placeId + ": has " + relatedPlaces.size() + " related places!");
-			if (!placeAccessService.checkPlaceAccess(place, true))
+			if (!placeAccessService.hasEditAccess(place))
 				logger.debug("cannot delete place " + placeId + ": no place access!");
 			response.setStatus(409);
 		} else {			

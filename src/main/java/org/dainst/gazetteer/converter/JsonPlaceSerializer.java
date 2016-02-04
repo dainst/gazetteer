@@ -24,6 +24,7 @@ import org.dainst.gazetteer.domain.PlaceName;
 import org.dainst.gazetteer.domain.RecordGroup;
 import org.dainst.gazetteer.domain.User;
 import org.dainst.gazetteer.helpers.LanguagesHelper;
+import org.dainst.gazetteer.helpers.PlaceAccessService;
 import org.dainst.gazetteer.helpers.PlaceNameHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,21 +70,21 @@ public class JsonPlaceSerializer {
 	@Autowired
 	private LanguagesHelper languagesHelper;
 	
-	public String serialize(Place place, Boolean accessGranted) {
-		return serialize(place, null, null, accessGranted, false, null);
+	public String serialize(Place place, PlaceAccessService.AccessStatus accessStatus) {
+		return serialize(place, null, null, accessStatus, null);
 	}
 	
-	public String serialize(Place place, List<Place> parents, Boolean readAccess, Boolean editAccess) {
-		return serialize(place, null, parents, readAccess, editAccess, null);
+	public String serialize(Place place, List<Place> parents, PlaceAccessService.AccessStatus accessStatus) {
+		return serialize(place, null, parents, accessStatus, null);
 	}
 	
-	public String serialize(Place place, HttpServletRequest request, List<Place> parents, Boolean readAccess, Boolean editAccess, String replacing) {
+	public String serialize(Place place, HttpServletRequest request, List<Place> parents, PlaceAccessService.AccessStatus accessStatus, String replacing) {
 		mapper = new ObjectMapper();
 		
 		if (pretty)
 			mapper.enable(SerializationFeature.INDENT_OUTPUT);
 		
-		ObjectNode placeNode = createJsonNodes(place, request, parents, readAccess, editAccess, replacing);
+		ObjectNode placeNode = createJsonNodes(place, request, parents, accessStatus, replacing);
 		
 		try {
 			return mapper.writeValueAsString(placeNode);
@@ -94,10 +95,10 @@ public class JsonPlaceSerializer {
 	}
 	
 	public String serializeGeoJson(Place place, HttpServletRequest request,
-			Boolean readAccess, Boolean editAccess) {
+			PlaceAccessService.AccessStatus accessStatus) {
 		
-		ObjectNode geoJsonPlaceNode = createGeoJsonNodes(place, readAccess);		
-		ObjectNode placeNode = createJsonNodes(place, request, null, readAccess, editAccess, null);
+		ObjectNode geoJsonPlaceNode = createGeoJsonNodes(place, accessStatus);		
+		ObjectNode placeNode = createJsonNodes(place, request, null, accessStatus, null);
 		geoJsonPlaceNode.put("properties", placeNode);
 		
 		try {
@@ -108,7 +109,7 @@ public class JsonPlaceSerializer {
 		}
 	}
 		
-	private ObjectNode createJsonNodes(Place place, HttpServletRequest request, List<Place> parents, Boolean readAccess, Boolean editAccess, String replacing) { 
+	private ObjectNode createJsonNodes(Place place, HttpServletRequest request, List<Place> parents, PlaceAccessService.AccessStatus accessStatus, String replacing) { 
 		
 		if (place == null) return null;
 		
@@ -126,7 +127,7 @@ public class JsonPlaceSerializer {
 			return placeNode;
 		}
 		
-		if (!readAccess) {
+		if (!PlaceAccessService.hasReadAccess(accessStatus)) {
 			placeNode.put("accessDenied", true);
 			return placeNode;
 		}
@@ -367,7 +368,7 @@ public class JsonPlaceSerializer {
 		}
 		
 		// edit access
-		if (includeAccessInfo && !editAccess)
+		if (includeAccessInfo && !PlaceAccessService.hasEditAccess(accessStatus))
 			placeNode.put("editAccessDenied", true);
 		
 		// change history
@@ -417,7 +418,7 @@ public class JsonPlaceSerializer {
 			ArrayNode parentsNode = mapper.createArrayNode();
 			
 			for (Place parent : parents) {
-				ObjectNode parentNode = createJsonNodes(parent, request, null, readAccess, editAccess, replacing);
+				ObjectNode parentNode = createJsonNodes(parent, request, null, accessStatus, replacing);
 				parentsNode.add(parentNode);
 			}
 			
@@ -427,7 +428,7 @@ public class JsonPlaceSerializer {
 		return placeNode;
 	}
 	
-	private ObjectNode createGeoJsonNodes(Place place, Boolean accessGranted) {
+	private ObjectNode createGeoJsonNodes(Place place, PlaceAccessService.AccessStatus accessStatus) {
 	
 		if (place == null) return null;		
 		
@@ -440,7 +441,7 @@ public class JsonPlaceSerializer {
 		
 		ArrayNode geometriesNode = mapper.createArrayNode();
 		
-		if (!accessGranted) {
+		if (!PlaceAccessService.hasReadAccess(accessStatus)) {
 			geometryCollectionNode.put("geometries", geometriesNode);
 			placeNode.put("geometry", geometryCollectionNode);
 			return placeNode;

@@ -1,11 +1,10 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%><%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %><%@ taglib uri="http://www.springframework.org/tags" prefix="s" %><%@ page session="false" import="org.dainst.gazetteer.domain.*, java.util.List, java.util.ArrayList, java.util.Map, org.dainst.gazetteer.converter.JsonPlaceSerializer, org.dainst.gazetteer.dao.*" %><% 
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%><%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %><%@ taglib uri="http://www.springframework.org/tags" prefix="s" %><%@ page session="false" import="org.dainst.gazetteer.domain.*, java.util.List, java.util.ArrayList, java.util.Map, org.dainst.gazetteer.converter.JsonPlaceSerializer, org.dainst.gazetteer.dao.*, org.dainst.gazetteer.helpers.PlaceAccessService" %><% 
 
 response.setHeader("Content-Type", "application/json; charset=utf-8"); 
 
 List<Place> places = (List<Place>) request.getAttribute("places");
 Map<String, List<Place>> parents = (Map<String, List<Place>>) request.getAttribute("parents");
-Map<String, Boolean> readAccessMap = (Map<String, Boolean>) request.getAttribute("readAccessMap");
-Map<String, Boolean> editAccessMap = (Map<String, Boolean>) request.getAttribute("editAccessMap");
+Map<String, PlaceAccessService.AccessStatus> accessStatusMap = (Map<String, PlaceAccessService.AccessStatus>) request.getAttribute("accessStatusMap");
 Long hits = (Long) request.getAttribute("hits");
 String queryId = (String) request.getAttribute("queryId");
 JsonPlaceSerializer serializer = (JsonPlaceSerializer) request.getAttribute("jsonPlaceSerializer");
@@ -21,12 +20,11 @@ for (Place place : places) {
 	if (parents != null)
 		placeParents = parents.get(place.getId());
 	
-	boolean readAccess = readAccessMap.get(place.getId());
-	boolean editAccess = editAccessMap.get(place.getId());
+	PlaceAccessService.AccessStatus accessStatus = accessStatusMap.get(place.getId());
 
-	String serializedPlace = serializer.serialize(place, placeParents, readAccess, editAccess);
+	String serializedPlace = serializer.serialize(place, placeParents, accessStatus);
 	if (serializedPlace != null) {
-		if (readAccess)
+		if (PlaceAccessService.hasReadAccess(accessStatus))
 			accessGrantedPlaces.add(serializedPlace);
 		else
 			accessDeniedPlaces.add(serializedPlace);

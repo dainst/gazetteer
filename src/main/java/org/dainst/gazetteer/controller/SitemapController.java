@@ -54,7 +54,7 @@ public class SitemapController {
 		PlaceAccessService placeAccessService = new PlaceAccessService(recordGroupDao, groupRoleDao);
 		
 		for (Place place : places) {
-			accessMap.put(place.getId(), placeAccessService.checkPlaceAccess(place, false));
+			accessMap.put(place.getId(), placeAccessService.hasReadAccess(place));
 		}
 		
 		mav.addObject("no", no);

@@ -90,6 +90,8 @@ public class SearchController {
 	@Autowired
 	MessageSource messageSource;
 	
+	PlaceAccessService placeAccessService = new PlaceAccessService(groupDao, groupRoleDao);
+	
 	@RequestMapping(value="/search", method=RequestMethod.GET)
 	public ModelAndView simpleSearch(@RequestParam(defaultValue="10") int limit,
 			@RequestParam(defaultValue="0") int offset,
@@ -185,14 +187,11 @@ public class SearchController {
 		Map<String,List<String[]>> facets = processFacets(query, locale);
 		
 		Map<String, List<Place>> parents = new HashMap<String, List<Place>>();
-		Map<String, Boolean> readAccessMap = new HashMap<String, Boolean>();
-		Map<String, Boolean> editAccessMap = new HashMap<String, Boolean>();
-		PlaceAccessService placeAccessService = new PlaceAccessService(groupDao, groupRoleDao);
+		Map<String, PlaceAccessService.AccessStatus> accessStatusMap = new HashMap<String, PlaceAccessService.AccessStatus>();
 		
 		for (Place place : places) {
 			protectLocationsService.protectLocations(user, place);
-			readAccessMap.put(place.getId(), placeAccessService.checkPlaceAccess(place, false));
-			editAccessMap.put(place.getId(), placeAccessService.checkPlaceAccess(place, true));
+			accessStatusMap.put(place.getId(), placeAccessService.getAccessStatus(place));
 
 			if (add != null && add.contains("parents")) {
 				List<Place> placeParents = new ArrayList<Place>();
@@ -223,8 +222,7 @@ public class SearchController {
 		mav.addObject("places", places);
 		if (parents.size() > 0) mav.addObject("parents", parents);
 		mav.addObject("jsonPlaceSerializer", jsonPlaceSerializer);
-		mav.addObject("readAccessMap", readAccessMap);
-		mav.addObject("editAccessMap", editAccessMap);
+		mav.addObject("accessStatusMap", accessStatusMap);
 		mav.addObject("groupDao", groupDao);
 		mav.addObject("facets", facets);
 		mav.addObject("language", locale.getISO3Language());
@@ -278,20 +276,12 @@ public class SearchController {
 		
 		List<Place> places = placesForList(result, true);
 		Map<String,List<String[]>> facets = processFacets(query, locale);
-		Map<String, Boolean> readAccessMap = new HashMap<String, Boolean>();
-		Map<String, Boolean> editAccessMap = new HashMap<String, Boolean>();
-		PlaceAccessService placeAccessService = new PlaceAccessService(groupDao, groupRoleDao);
 		
-		for (Place place : places) {
-			protectLocationsService.protectLocations(user, place);
-			readAccessMap.put(place.getId(), placeAccessService.checkPlaceAccess(place, false));
-			editAccessMap.put(place.getId(), placeAccessService.checkPlaceAccess(place, true));
-		}
+		Map<String, PlaceAccessService.AccessStatus> accessStatusMap = checkAccess(places);
 		
 		ModelAndView mav = new ModelAndView("place/list");
 		mav.addObject("places", places);
-		mav.addObject("readAccessMap", readAccessMap);
-		mav.addObject("editAccessMap", editAccessMap);
+		mav.addObject("accessStatusMap", accessStatusMap);
 		mav.addObject("groupDao", groupDao);
 		mav.addObject("facets", facets);
 		mav.addObject("baseUri", baseUri);
@@ -349,15 +339,7 @@ public class SearchController {
 		
 		List<Place> places = placesForList(result, true);
 		
-		Map<String, Boolean> readAccessMap = new HashMap<String, Boolean>();
-		Map<String, Boolean> editAccessMap = new HashMap<String, Boolean>();
-		PlaceAccessService placeAccessService = new PlaceAccessService(groupDao, groupRoleDao);
-		
-		for (Place place : places) {
-			protectLocationsService.protectLocations(user, place);
-			readAccessMap.put(place.getId(), placeAccessService.checkPlaceAccess(place, false));
-			editAccessMap.put(place.getId(), placeAccessService.checkPlaceAccess(place, true));
-		}
+		Map<String, PlaceAccessService.AccessStatus> accessStatusMap = checkAccess(places);
 		
 		jsonPlaceSerializer.setBaseUri(baseUri);
 		jsonPlaceSerializer.setPretty(false);
@@ -369,8 +351,7 @@ public class SearchController {
 		ModelAndView mav = new ModelAndView("place/list");
 		mav.addObject("places", places);
 		mav.addObject("jsonPlaceSerializer", jsonPlaceSerializer);
-		mav.addObject("readAccessMap", readAccessMap);
-		mav.addObject("editAccessMap", editAccessMap);
+		mav.addObject("accessStatusMap", accessStatusMap);
 		mav.addObject("groupDao", groupDao);
 		mav.addObject("facets", facets);
 		mav.addObject("language", locale.getISO3Language());
@@ -512,24 +493,11 @@ public class SearchController {
 		List<Place> places = placesForList(result, true);
 		logger.debug("Places: {}", places);
 		
+		Map<String, PlaceAccessService.AccessStatus> accessStatusMap = checkAccess(places);
+		
 		RequestContext requestContext = new RequestContext(request);
 		Locale locale = requestContext.getLocale();
 		Locale originalLocale = request.getLocale();
-		
-		User user = null;
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		if (principal instanceof User)
-			user = (User) principal;
-		
-		Map<String, Boolean> readAccessMap = new HashMap<String, Boolean>();
-		Map<String, Boolean> editAccessMap = new HashMap<String, Boolean>();
-		PlaceAccessService placeAccessService = new PlaceAccessService(groupDao, groupRoleDao);
-		
-		for (Place place : places) {
-			protectLocationsService.protectLocations(user, place);
-			readAccessMap.put(place.getId(), placeAccessService.checkPlaceAccess(place, false));
-			editAccessMap.put(place.getId(), placeAccessService.checkPlaceAccess(place, true));
-		}
 		
 		jsonPlaceSerializer.setBaseUri(baseUri);
 		jsonPlaceSerializer.setPretty(false);
@@ -541,8 +509,7 @@ public class SearchController {
 		ModelAndView mav = new ModelAndView("place/list");
 		mav.addObject("places", places);
 		mav.addObject("jsonPlaceSerializer", jsonPlaceSerializer);
-		mav.addObject("readAccessMap", readAccessMap);
-		mav.addObject("editAccessMap", editAccessMap);
+		mav.addObject("accessStatusMap", accessStatusMap);
 		mav.addObject("groupDao", groupDao);
 		mav.addObject("placeDao", placeDao);
 		mav.addObject("view", view);
@@ -615,5 +582,22 @@ public class SearchController {
 		}
 		
 		return recordGroupFilter;
+	}
+	
+	private Map<String, PlaceAccessService.AccessStatus> checkAccess(List<Place> places) {
+		
+		User user = null;
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal instanceof User)
+			user = (User) principal;
+		
+		Map<String, PlaceAccessService.AccessStatus> accessStatusMap = new HashMap<String, PlaceAccessService.AccessStatus>();
+		
+		for (Place place : places) {
+			protectLocationsService.protectLocations(user, place);
+			accessStatusMap.put(place.getId(), placeAccessService.getAccessStatus(place));
+		}
+		
+		return accessStatusMap;
 	}
 }

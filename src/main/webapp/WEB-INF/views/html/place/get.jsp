@@ -11,7 +11,7 @@
 <head>
 <title>
 	<c:choose>
-		<c:when test="${readAccess}">
+		<c:when test="${accessStatus == 'READ' || accessStatus == 'EDIT'}">
 			iDAI.gazetteer - ${place.prefName.title}
 			<c:forEach var="placename" items="${place.names}"> / ${placename.title}</c:forEach>
 		</c:when>
@@ -86,7 +86,7 @@
 		<div class="page-header">
 			<h2>
 				<c:choose>
-					<c:when test="${readAccess}">
+					<c:when test="${accessStatus == 'READ' || accessStatus == 'EDIT'}">
 						<span itemprop="name">${place.prefName.title}</span>
 					</c:when>
 					<c:otherwise>
@@ -124,7 +124,7 @@
 				<li><a href="${baseUri}doc/${place.id}.kml" target="_blank">KML</a></li>
 			</ul>
 			
-			<c:if test="${readAccess}">
+			<c:if test="${accessStatus == 'READ' || accessStatus == 'EDIT'}">
 		
 				<!-- names -->
 				<h2><s:message code="domain.place.names"/></h2>

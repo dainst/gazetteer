@@ -14,36 +14,76 @@ public class PlaceAccessService {
 	
 	private GroupRoleRepository groupRoleDao;
 	
+	public enum AccessStatus {
+		NONE,
+		READ,
+		EDIT
+	}
+	
 	public PlaceAccessService(RecordGroupRepository recordGroupDao, GroupRoleRepository groupRoleDao) {
 		
 		this.recordGroupDao = recordGroupDao;
 		this.groupRoleDao = groupRoleDao;
 	}
 	
-	public boolean checkPlaceAccess(Place place, boolean editAccessRequired) {
+	public AccessStatus getAccessStatus(Place place) {
 		
 		if (place.getRecordGroupId() == null || place.getRecordGroupId().isEmpty())
-			return true;
+			return AccessStatus.EDIT;
 		
 		RecordGroup group = recordGroupDao.findOne(place.getRecordGroupId());
-		
-		if (group.getShowPlaces() && !editAccessRequired)
-			return true;		
 		
 		User user = null;
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if (principal instanceof User)
 			user = (User) principal;
 		
-		if (user == null)
-			return false;
+		if (user != null) {		
+			GroupRole role = groupRoleDao.findByGroupIdAndUserId(place.getRecordGroupId(), user.getId());
 		
-		GroupRole role = groupRoleDao.findByGroupIdAndUserId(place.getRecordGroupId(), user.getId());
-		
-		if (role != null && (role.getRoleType().equals("admin") || role.getRoleType().equals("edit")
-				|| (role.getRoleType().equals("read") && !editAccessRequired)))
-			return true;
+			if (role != null) {
+				if (role.getRoleType().equals("admin") || role.getRoleType().equals("edit"))
+					return AccessStatus.EDIT;
+				else if (role.getRoleType().equals("read"))
+					return AccessStatus.READ;
+				else
+					return AccessStatus.NONE;
+			} else
+				return AccessStatus.NONE;
+		} else if (group.getShowPlaces())
+			return AccessStatus.READ;
 		else
+			return AccessStatus.NONE;
+	}
+	
+	public boolean hasReadAccess(Place place) {
+		
+		return hasReadAccess(getAccessStatus(place));
+	}
+	
+	public static boolean hasReadAccess(AccessStatus accessStatus) {
+		
+		switch(accessStatus) {
+		case READ:
+		case EDIT:
+			return true;
+		default:
 			return false;
+		}
+	}
+	
+	public boolean hasEditAccess(Place place) {
+		
+		return hasEditAccess(getAccessStatus(place));
+	}
+	
+	public static boolean hasEditAccess(AccessStatus accessStatus) {
+		
+		switch(accessStatus) {
+		case EDIT:
+			return true;
+		default:
+			return false;
+		}
 	}
 }
