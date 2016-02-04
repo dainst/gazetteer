@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -56,7 +57,7 @@ public class RecordGroupController {
 		List<RecordGroup> recordGroups = null;
 		Map<String, String> groupRights = new HashMap<String, String>();
 		if (isAdminEdit()) {
-			recordGroups = (List<RecordGroup>) recordGroupDao.findAll();
+			recordGroups = (List<RecordGroup>) recordGroupDao.findAll(new Sort(Sort.Direction.ASC, "creationDate"));
 			for (RecordGroup group : recordGroups) {
 				groupRights.put(group.getId(), "admin");
 			}
