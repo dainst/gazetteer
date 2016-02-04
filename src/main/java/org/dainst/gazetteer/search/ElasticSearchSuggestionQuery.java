@@ -1,11 +1,15 @@
 package org.dainst.gazetteer.search;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.dainst.gazetteer.dao.GroupRoleRepository;
+import org.dainst.gazetteer.dao.RecordGroupRepository;
 import org.dainst.gazetteer.domain.GroupRole;
+import org.dainst.gazetteer.domain.RecordGroup;
 import org.dainst.gazetteer.domain.User;
 import org.elasticsearch.action.suggest.SuggestRequestBuilder;
 import org.elasticsearch.action.suggest.SuggestResponse;
@@ -18,13 +22,16 @@ public class ElasticSearchSuggestionQuery {
 	
 	private SuggestRequestBuilder suggestRequestBuilder;
 	
+	private RecordGroupRepository recordGroupDao;
+	
 	private GroupRoleRepository groupRoleDao;
 
 	private static int size = 7;
 
-	public ElasticSearchSuggestionQuery(Client client, GroupRoleRepository groupRoleDao) {
+	public ElasticSearchSuggestionQuery(Client client, RecordGroupRepository groupDao, GroupRoleRepository groupRoleDao) {
 		suggestRequestBuilder = client.prepareSuggest("gazetteer");
 		
+		this.recordGroupDao = groupDao;
 		this.groupRoleDao = groupRoleDao;
 	}
 
@@ -55,10 +62,15 @@ public class ElasticSearchSuggestionQuery {
 		return suggestions;
 	}
 	
-	private List<String> getAccessibleRecordGroups() {
+	private Set<String> getAccessibleRecordGroups() {
 		
-		List<String> groupIds = new ArrayList<String>();
+		Set<String> groupIds = new HashSet<String>();
 		groupIds.add("none");
+		
+		List<RecordGroup> groups = recordGroupDao.findByShowPlaces(true);
+		for (RecordGroup group : groups) {
+			groupIds.add(group.getId());
+		}
 		
 		User user = null;
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
