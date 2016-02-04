@@ -99,7 +99,7 @@
 				</c:if>
 		
 				<div class="row-fluid">
-					<div class="span4 offset4 well">
+					<div class="span6 offset3 well">
 						<form class="form-horizontal" name="f" action="j_spring_security_check" method="POST">
 							<c:if test="${not empty r}">
 								<input type="hidden" name="spring-security-redirect" value="/app/#!/<c:out value="${r}" />">

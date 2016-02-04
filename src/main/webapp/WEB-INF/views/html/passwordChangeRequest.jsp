@@ -108,7 +108,7 @@
 				</c:if>
 		
 				<div class="row-fluid">
-					<div class="span4 offset4 well">
+					<div class="span6 offset3 well">
 						<form class="form-horizontal" name="f" action="checkPasswordChangeRequestForm?r=${r}" accept-charset="UTF-8" method="POST">
 							<h3>
 								<s:message code="ui.passwordChangeRequest" text="ui.passwordChangeRequest" />
