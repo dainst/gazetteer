@@ -33,6 +33,12 @@ footer {
 	font-size: 13px;
 }
 
+.footer-container {
+	z-index: 10000;
+	position: relative;
+	background-color: white;
+}
+
 .navbar-search .icon-search {
 	position: absolute;
 	top: 6px;

@@ -209,7 +209,9 @@
 			</div>
 			
 			<!-- Footer -->
-			<gaz:appFooter/>
+			<div class="footer-container">
+				<gaz:appFooter/>
+			</div>
 			
 		</div>
 		
