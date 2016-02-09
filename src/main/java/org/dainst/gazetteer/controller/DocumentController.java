@@ -220,6 +220,7 @@ public class DocumentController {
 			mav.addObject("googleMapsApiKey", googleMapsApiKey);
 			mav.addObject("languages", langHelper.getLocalizedLanguages(locale));
 			mav.addObject("langHelper", langHelper);
+			mav.addObject("baseUri", baseUri);
 		}
 		
 		return mav;
