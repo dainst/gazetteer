@@ -236,7 +236,7 @@
 		<br/>
 	</span>
 	
-	<span ng-hide="!place.recordGroup">
+	<span ng-hide="!place.recordGroup || place.recordGroup.id.length == 0">
 		<dt><s:message code="domain.place.recordGroup" text="domain.place.recordGroup" /></dt>
 			<dd>
 				<a href="#!/search?q=recordGroupId:{{place.recordGroup.id}}">{{place.recordGroup.name}}</a>

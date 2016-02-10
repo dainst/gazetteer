@@ -588,7 +588,8 @@
 		</fieldset>
 		
 	    <div class="form-actions">
-           	<button ng-click="save()" class="save btn btn-primary"><s:message code="ui.save" text="ui.save"/></button>
+           	<button ng-hide="originalRecordGroupId != place.recordGroup.id" ng-click="save()" class="save btn btn-primary"><s:message code="ui.save" text="ui.save"/></button>
+           	<button ng-show="originalRecordGroupId != place.recordGroup.id" href="#changeRecordGroupModal" data-toggle="modal" class="save btn btn-primary"><s:message code="ui.save" text="ui.save"/></button>
            	<button href="#duplicateModal" class="btn btn-info" data-toggle="modal"><s:message code="ui.duplicate" text="ui.duplicate"/></button>
            	<a class="btn" href="javascript:history.back()"><s:message code="ui.cancel" text="ui.cancel"/></a>
            	<button href="#deleteModal" class="btn btn-danger" data-toggle="modal"><s:message code="ui.delete" text="ui.delete"/></button>
@@ -665,6 +666,20 @@
 				<div class="modal-footer">
 					<a href="#" class="btn" data-dismiss="modal" aria-hidden="true"><s:message code="ui.cancel" text="ui.cancel"/></a>
 					<a ng-click="duplicate()" data-dismiss="modal" class="btn btn-primary"><s:message code="ui.ok" text="ui.ok"/></a>
+				</div>
+			</div>
+			<div class="modal hide fade" id="changeRecordGroupModal">
+				<div class="modal-header">
+					<h3 ng-hide="place.recordGroup.id.length == 0"><s:message code="ui.changeRecordGroupInfo.change.header" text="ui.changeRecordGroupInfo.change.header"/></h3>
+					<h3 ng-show="place.recordGroup.id.length == 0"><s:message code="ui.changeRecordGroupInfo.publish.header" text="ui.changeRecordGroupInfo.publish.header"/></h3>
+				</div>
+				<div class="modal-body">
+					<span ng-hide="place.recordGroup.id.length == 0"><s:message code="ui.changeRecordGroupInfo.change.body" text="ui.changeRecordGroupInfo.change.body"/></span>
+					<span ng-show="place.recordGroup.id.length == 0"><s:message code="ui.changeRecordGroupInfo.publish.body" text="ui.changeRecordGroupInfo.publish.body"/></span>
+				</div>
+				<div class="modal-footer">
+					<a href="#" class="btn" data-dismiss="modal" aria-hidden="true"><s:message code="ui.cancel" text="ui.cancel"/></a>
+					<a ng-click="save()" data-dismiss="modal" class="btn btn-primary"><s:message code="ui.ok" text="ui.ok"/></a>
 				</div>
 			</div>
 	</div>

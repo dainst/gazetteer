@@ -930,6 +930,9 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, Place,
 				});
 				$rootScope.loading--;
 			}
+			if (!$scope.place.recordGroup)
+				$scope.place.recordGroup = { id: "" };
+			$scope.originalRecordGroupId = $scope.place.recordGroup.id;
 			$rootScope.loading++;
 			Place.query({q: "relatedPlaces:" + $scope.place.gazId, sort:"prefName.title.sort", showHiddenPlaces: true, add: "sort" }, function(result) {
 				$scope.totalRelatedPlaces = result.total;
@@ -1193,6 +1196,8 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, Place,
 			$scope.addRelatedPlace();
 		$scope.updateRelatedPlaces();
 		if ($scope.commentReisestipendium) $scope.addCommentReisestipendium();
+		if ($scope.place.recordGroup.id.length == 0)
+			$scope.place.recordGroup = undefined;
 	};
 	
 	$scope.addComment = function() {
