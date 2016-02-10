@@ -1010,37 +1010,20 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, Place,
 
 		var polygonPlace = null;
 		var markerPlaces = [];
-		var parentsWithCoordinates = [];
 		for (var i in $scope.place.parents) {
 			if ((!$scope.place.prefLocation || !$scope.place.prefLocation.shape) && $scope.place.parents[i].prefLocation
 					&& $scope.place.parents[i].prefLocation.shape && !polygonPlace)
 				polygonPlace = $scope.place.parents[i];
-			if ($scope.place.parents[i].prefLocation && $scope.place.parents[i].prefLocation.coordinates
-					&& $scope.place.parents[i].prefLocation.coordinates.length > 0) {
-				$scope.place.parents[i].mapType = "markerParent";
-				parentsWithCoordinates.push($scope.place.parents[i]);
-				markerPlaces.push($scope.place.parents[i]);
-			}
 		}
-		for (var i in parentsWithCoordinates) {
-			parentsWithCoordinates[i].markerNumber = parentsWithCoordinates.length - i; 
-		}
-		if (!polygonPlace && markerPlaces.length == 0)
+		if (!polygonPlace) {
 			$rootScope.activePlaces = [ $scope.place ];
-		else if (polygonPlace && markerPlaces.length == 0) {
+			$scope.mapPolygonPlace = $scope.place;
+			$scope.mainMapPolygonPlace = $scope.place;
+		} else {
 			polygonPlace.mapType = "polygonParent";
+			$scope.mapPolygonPlace = polygonPlace;
+			$scope.mainMapPolygonPlace = polygonPlace;
 			$rootScope.activePlaces = [ $scope.place, polygonPlace ];
-		} else if (!polygonPlace && markerPlaces.length > 0)
-			$rootScope.activePlaces = [ $scope.place ].concat(markerPlaces);
-		else {
-			var index = markerPlaces.indexOf(polygonPlace);
-			if (index > -1) {
-				markerPlaces[index].mapType = "parent";
-				$rootScope.activePlaces = [ $scope.place ].concat(markerPlaces);
-			} else {
-				polygonPlace.mapType = "polygonParent";
-				$rootScope.activePlaces = [ $scope.place, polygonPlace ].concat(markerPlaces);
-			}
 		}
 	};
 	
@@ -1405,6 +1388,40 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, Place,
 	$scope.hideChildMarker = function() {
 		$scope.activeTimeout = $timeout(removeChildrenFromMap, 200);		
 	};
+	
+	$scope.showPolygon = function(place) {
+		var places = $rootScope.activePlaces.slice();
+		places = removeCurrentlyShownPolygon(places);
+		if (place != $scope.place) {
+			if (place != $scope.mainMapPolygonPlace)
+				place.mapType = "polygonParent";
+			else
+				place.mapType = "mainPolygon";
+		}
+		places.push(place);
+		$scope.mapPolygonPlace = place;
+		$rootScope.activePlaces = places;
+	};
+	
+	$scope.showMainPolygon = function() {
+		var places = $rootScope.activePlaces.slice();
+		places = removeCurrentlyShownPolygon(places);
+		if ($scope.mainMapPolygonPlace != $scope.place) {
+			$scope.mainMapPolygonPlace.mapType = "polygonParent";
+			places.push($scope.mainMapPolygonPlace);
+			$scope.mapPolygonPlace = $scope.mainMapPolygonPlace;
+		}
+		$rootScope.activePlaces = places;
+	};
+	
+	var removeCurrentlyShownPolygon = function(places) {
+		if ($scope.mapPolygonPlace != $scope.place) {
+			var index = places.indexOf($scope.mapPolygonPlace);
+			if (index > -1)
+				places.splice(index, 1);
+		}
+		return places;
+	}
 
 	// update relatedPlaces attribute of place when relatedPlaces in scope changes
 	$scope.$watch("allRelatedPlaces.length", $scope.updateRelatedPlaces());
@@ -1578,26 +1595,13 @@ function ThesaurusCtrl($scope, $rootScope, $location, Place, messages, $route) {
 	$scope.showMarker = function(place) {
 		place.mapType = "standard";
 		var polygonPlace = null;
-		var markerPlaces = [];
 		if (!place.prefLocation || !place.prefLocation.shape)
 			polygonPlace = getPolygonPlace(place, false);
-		markerPlaces = getMarkerPlaces(place, false);
-		if (!polygonPlace && markerPlaces.length == 0)
+		if (!polygonPlace)
 			$rootScope.activePlaces = [ place ];
-		else if (polygonPlace && markerPlaces.length == 0) {
+		else {
 			polygonPlace.mapType = "polygonParent";
 			$rootScope.activePlaces = [ place, polygonPlace ];
-		} else if (!polygonPlace && markerPlaces.length > 0)
-			$rootScope.activePlaces = [ place ].concat(markerPlaces);
-		else {
-			var index = markerPlaces.indexOf(polygonPlace);
-			if (index > -1) {
-				markerPlaces[index].mapType = "parent";
-				$rootScope.activePlaces = [ place ].concat(markerPlaces);
-			} else {
-				polygonPlace.mapType = "polygonParent";
-				$rootScope.activePlaces = [ place, polygonPlace ].concat(markerPlaces);
-			}
 		}
 		$rootScope.zoom = 6;
 	};
@@ -1612,17 +1616,5 @@ function ThesaurusCtrl($scope, $rootScope, $location, Place, messages, $route) {
 		else if (place.parentPlace)
 			return getPolygonPlace(place.parentPlace, true);
 		return null;
-	};
-
-	var getMarkerPlaces = function(place, isParent) {
-		var markerPlaces = [];
-		if (isParent && place.prefLocation && place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0)  {
-			place.mapType = "markerParent";
-			markerPlaces.push(place);
-		}
-		if (place.parentPlace) {
-			markerPlaces = markerPlaces.concat(getMarkerPlaces(place.parentPlace, true));
-		}
-		return markerPlaces;
 	};
 }
