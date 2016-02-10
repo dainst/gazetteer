@@ -10,7 +10,7 @@
 				<s:message code="ui.back" />
 			</a>
 		</li>
-		<li class="dropdown pull-right" ng-show="!place.accessDenied">
+		<li class="dropdown pull-right" ng-hide="place.accessDenied || place.deleted">
 			<a class="dropdown-toggle" data-toggle="dropdown" href="">
 				<i class="icon-file"></i> <b class="caret"></b>
 			</a>
@@ -22,19 +22,19 @@
 			</ul>
 		</li>
 		<sec:authorize access="hasRole('ROLE_EDITOR')">
-			<li class="pull-right" ng-class="isActive('change-history')" ng-hide="place.editAccessDenied || place.accessDenied">
+			<li class="pull-right" ng-class="isActive('change-history')" ng-hide="place.editAccessDenied || place.accessDenied || place.deleted">
 				<a ng-if="place.gazId" href="#!/change-history/{{place.gazId}}">
 					<i class="icon-eye-open"></i> <s:message code="ui.changeHistory" text="ui.changeHistory"/>
 				</a>
 			</li>
 		</sec:authorize>
-		<li class="pull-right" ng-class="isActive('merge')" ng-hide="place.accessDenied">	
+		<li class="pull-right" ng-class="isActive('merge')" ng-hide="place.accessDenied || place.deleted">
 			<a ng-if="place.gazId" href="#!/merge/{{place.gazId}}">
 				<i class="icon-globe"></i> <s:message code="ui.similarPlaces" text="ui.merge"/>
 			</a>
 		</li>
 		<sec:authorize access="hasRole('ROLE_EDITOR')">
-			<li class="pull-right" ng-class="isActive('edit')" ng-hide="place.editAccessDenied || place.accessDenied">
+			<li class="pull-right" ng-class="isActive('edit')" ng-hide="place.editAccessDenied || place.accessDenied || place.deleted">
 				<a ng-if="place.gazId" href="#!/edit/{{place.gazId}}">
 					<i class="icon-edit"></i> <s:message code="ui.edit" text="ui.edit"/>
 				</a>
