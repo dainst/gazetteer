@@ -57,7 +57,6 @@
 				<div class="control-group">
 					<label class="control-label">
 						<s:message code="domain.place.recordGroup" text="domain.place.recordGroup" />
-						<i class="icon-info-sign" style="color: #5572a1;" gaz-tooltip="'ui.place.user-group-info'"></i>
 					</label>
 					<div class="controls">
 						<select ng-model="place.recordGroup.id" class="input-large">
