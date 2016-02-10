@@ -6,10 +6,9 @@
 
 <s:message code="ui.language.notSpecified" text="ui.language.notSpecified" var="langNotSpecified" />
 <s:message code="domain.place.recordGroup.noGroup" text="domain.place.recordGroup.noGroup" var="recordGroupNotSpecified"/>
+<s:message code="ui.copyToClipboard" text="ui.copyToClipboard" var="copyMsg"/>
 
 <div gaz-place-nav active-tab="edit" place="place"></div>
-
-<s:message code="ui.copyToClipboard" var="copyMsg"/>
 
 <div class="modal hide" id="copyUriModal">
 	<div class="modal-header">
@@ -297,6 +296,21 @@
 						</div>
 					</c:if>
 					
+					<!-- record group -->
+					<div class="control-group">
+						<label class="control-label">
+							<s:message code="domain.place.recordGroup" text="domain.place.recordGroup" />
+						</label>
+						<div class="controls">
+							<select ng-model="place.recordGroup.id" class="input-large">
+								<option value="">${recordGroupNotSpecified}</option>
+								<c:forEach var="recordGroup" items="${editRecordGroups}">
+									<option value="${recordGroup.id}">${recordGroup.name}</option>
+								</c:forEach>
+							</select>
+						</div>
+					</div>
+					
 				</div>
 				
 				<div class="tab-pane" id="identification">
@@ -575,7 +589,6 @@
 		
 	    <div class="form-actions">
            	<button ng-click="save()" class="save btn btn-primary"><s:message code="ui.save" text="ui.save"/></button>
-           	<button href="#publishModal" class="btn btn-success" data-toggle="modal" ng-show="place.recordGroup.id"><s:message code="ui.publish" text="ui.publish"/></button>
            	<button href="#duplicateModal" class="btn btn-info" data-toggle="modal"><s:message code="ui.duplicate" text="ui.duplicate"/></button>
            	<a class="btn" href="javascript:history.back()"><s:message code="ui.cancel" text="ui.cancel"/></a>
            	<button href="#deleteModal" class="btn btn-danger" data-toggle="modal"><s:message code="ui.delete" text="ui.delete"/></button>
@@ -641,22 +654,6 @@
 						<a href="#" class="btn" data-dismiss="modal" aria-hidden="true"><s:message code="ui.ok" text="ui.ok"/></a>
 					</div>
 				</span>
-			</div>
-			<div class="modal hide fade" id="publishModal">
-				<div class="modal-header">
-					<h3><s:message code="ui.publish.warning.header" text="ui.publish.warning.header"/></h3>
-				</div>
-				<div class="modal-body">
-					<c:forEach var="recordGroup" items="${recordGroups}">
-						<span ng-show="'${recordGroup.id}' == place.recordGroup.id">
-							<p><s:message code="ui.publish.warning.body" text="ui.publish.warning.body" arguments="${recordGroup.name}"/></p>
-						</span>
-					</c:forEach>
-				</div>
-				<div class="modal-footer">
-					<a href="#" class="btn" data-dismiss="modal" aria-hidden="true"><s:message code="ui.cancel" text="ui.cancel"/></a>
-					<a ng-click="publish()" data-dismiss="modal" class="btn btn-primary"><s:message code="ui.ok" text="ui.ok"/></a>
-				</div>
 			</div>
 			<div class="modal hide fade" id="duplicateModal">
 				<div class="modal-header">

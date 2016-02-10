@@ -1108,12 +1108,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, Place,
 			$rootScope.loading--;
 		});
 	};
-	
-	$scope.publish = function() {
-		$scope.place.recordGroup.id = "";
-		$scope.save();
-	};
-	
+		
 	$scope.duplicate = function() {
 		$rootScope.loading++;
 		$scope.prepareSave();
