@@ -1179,8 +1179,6 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, Place,
 			$scope.addRelatedPlace();
 		$scope.updateRelatedPlaces();
 		if ($scope.commentReisestipendium) $scope.addCommentReisestipendium();
-		if ($scope.place.recordGroup.id.length == 0)
-			$scope.place.recordGroup = undefined;
 	};
 	
 	$scope.addComment = function() {
