@@ -19,7 +19,6 @@ import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.PlaceChangeRecord;
 import org.dainst.gazetteer.domain.User;
 import org.dainst.gazetteer.helpers.AncestorsHelper;
-import org.dainst.gazetteer.helpers.IdGenerator;
 import org.dainst.gazetteer.helpers.MailService;
 import org.dainst.gazetteer.helpers.Merger;
 import org.dainst.gazetteer.helpers.PlaceAccessService;
@@ -54,9 +53,6 @@ public class MergeController {
 	
 	@Autowired
 	private Merger merger;
-	
-	@Autowired
-	private IdGenerator idGenerator;
 	
 	@Autowired
 	private JsonPlaceSerializer jsonPlaceSerializer;

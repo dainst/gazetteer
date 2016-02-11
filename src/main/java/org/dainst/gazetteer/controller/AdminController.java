@@ -16,7 +16,6 @@ import org.dainst.gazetteer.domain.Location;
 import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.PlaceName;
 import org.dainst.gazetteer.helpers.AncestorsHelper;
-import org.dainst.gazetteer.helpers.IdGenerator;
 import org.dainst.gazetteer.helpers.LanguagesHelper;
 import org.dainst.gazetteer.helpers.Merger;
 import org.dainst.gazetteer.match.AutoMatchService;
@@ -60,9 +59,6 @@ public class AdminController {
 	
 	@Autowired
 	private ElasticSearchService esService;
-	
-	@Autowired
-	private IdGenerator idGenerator;
 	
 	@Autowired
 	private Merger merger;

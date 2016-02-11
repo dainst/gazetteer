@@ -3,7 +3,6 @@ package org.dainst.gazetteer.controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.dainst.gazetteer.converter.JsonPlaceDeserializer;
 import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.search.ElasticSearchPlaceQuery;
@@ -33,9 +32,6 @@ public class WidgetController {
 	
 	@Autowired
 	private Client client;
-	
-	@Autowired
-	private JsonPlaceDeserializer jsonPlaceDeserializer;
 
 	@RequestMapping(value="/widget/lib.js")
 	public ModelAndView getLibJs() {

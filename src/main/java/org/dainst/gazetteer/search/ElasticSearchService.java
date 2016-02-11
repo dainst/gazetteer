@@ -4,7 +4,6 @@ import java.io.InputStream;
 import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 
-import org.dainst.gazetteer.dao.PlaceRepository;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.admin.indices.mapping.delete.DeleteMappingRequest;
@@ -24,9 +23,6 @@ public class ElasticSearchService {
 
 	@Autowired
 	private Client client;
-
-	@Autowired
-	private PlaceRepository placeDao;
 
 	public void deletePlaceFromIndex(long placeId) {		
 		DeleteResponse deleteResponse = client.prepareDelete("gazetteer", "place", String.valueOf(placeId))

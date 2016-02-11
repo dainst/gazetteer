@@ -8,7 +8,6 @@ import org.dainst.gazetteer.helpers.Merger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 
@@ -21,9 +20,6 @@ public class HarvestingManager {
 	
 	@Autowired
 	private PlaceRepository placeDao;
-
-	@Autowired
-	private TaskExecutor taskExecutor;
 
 	@Autowired
 	private TaskScheduler taskScheduler;

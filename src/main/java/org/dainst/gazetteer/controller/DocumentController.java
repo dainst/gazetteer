@@ -10,13 +10,11 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.dainst.gazetteer.converter.JsonPlaceDeserializer;
 import org.dainst.gazetteer.converter.JsonPlaceSerializer;
 import org.dainst.gazetteer.dao.GroupRoleRepository;
 import org.dainst.gazetteer.dao.PlaceChangeRecordRepository;
 import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.dao.RecordGroupRepository;
-import org.dainst.gazetteer.dao.UserRepository;
 import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.PlaceChangeRecord;
 import org.dainst.gazetteer.domain.User;
@@ -56,9 +54,6 @@ public class DocumentController {
 	private PlaceRepository placeDao;
 	
 	@Autowired
-	private UserRepository userDao;
-	
-	@Autowired
 	private PlaceChangeRecordRepository changeRecordDao;
 	
 	@Autowired
@@ -66,9 +61,6 @@ public class DocumentController {
 	
 	@Autowired
 	private RecordGroupRepository groupDao;
-	
-	@Autowired
-	private JsonPlaceDeserializer jsonPlaceDeserializer;
 	
 	@Autowired
 	private JsonPlaceSerializer jsonPlaceSerializer;
@@ -237,6 +229,7 @@ public class DocumentController {
 		PlaceAccessService placeAccessService = new PlaceAccessService(groupDao, groupRoleDao);
 		
 		if (!placeAccessService.hasEditAccess(place)) {
+			logger.debug("No edit access");
 			ModelAndView mav = new ModelAndView("place/validation");
 			ValidationResult result = new ValidationResult();
 			result.setSuccess(false);

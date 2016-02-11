@@ -12,12 +12,10 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.dainst.gazetteer.converter.JsonPlaceDeserializer;
 import org.dainst.gazetteer.converter.JsonPlaceSerializer;
 import org.dainst.gazetteer.dao.GroupRoleRepository;
 import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.dao.RecordGroupRepository;
-import org.dainst.gazetteer.dao.UserRepository;
 import org.dainst.gazetteer.domain.GroupRole;
 import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.RecordGroup;
@@ -58,16 +56,10 @@ public class SearchController {
 	private PlaceRepository placeDao;
 	
 	@Autowired
-	private UserRepository userDao;
-	
-	@Autowired
 	private GroupRoleRepository groupRoleDao;
 	
 	@Autowired
 	private RecordGroupRepository groupDao;
-	
-	@Autowired
-	private JsonPlaceDeserializer jsonPlaceDeserializer;
 	
 	@Autowired
 	private JsonPlaceSerializer jsonPlaceSerializer;
