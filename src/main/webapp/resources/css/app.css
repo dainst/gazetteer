@@ -1,7 +1,3 @@
-body {
-	padding-bottom: 40px;
-}
-
 @media (max-width: 979px) {
 	body {
 		padding-top: 0;
@@ -37,6 +33,7 @@ footer {
 	z-index: 1000;
 	position: relative;
 	background-color: white;
+	padding-bottom: 20px;
 }
 
 .navbar-search .icon-search {
