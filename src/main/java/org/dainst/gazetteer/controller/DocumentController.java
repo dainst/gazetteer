@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -440,6 +441,18 @@ public class DocumentController {
 	@RequestMapping(value="/doc/{placeId}", method=RequestMethod.DELETE)
 	public void deletePlace(@PathVariable String placeId,
 			HttpServletResponse response) {
+		
+		logger.debug("Deleting place " + placeId + "...");
+		
+		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (user == null)
+			logger.debug("No user logged in!");
+		else {
+			logger.debug("User is logged in!");
+			for (GrantedAuthority authority : user.getAuthorities()) {
+				logger.debug("User has authority: " + authority.getAuthority());
+			}
+		}
 		
 		List<Place> children = placeDao.findByParent(placeId);
 		List<Place> relatedPlaces = placeDao.findByRelatedPlaces(placeId);
