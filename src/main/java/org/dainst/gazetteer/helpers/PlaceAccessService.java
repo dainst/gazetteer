@@ -51,7 +51,9 @@ public class PlaceAccessService {
 					return AccessStatus.LIMITED_READ;
 				else
 					return AccessStatus.NONE;
-			} else
+			} else if (group.getShowPlaces())
+				return AccessStatus.LIMITED_READ;
+			else
 				return AccessStatus.NONE;
 		} else if (group.getShowPlaces())
 			return AccessStatus.LIMITED_READ;
