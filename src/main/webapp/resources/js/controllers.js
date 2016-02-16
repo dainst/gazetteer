@@ -865,7 +865,7 @@ function CreateCtrl($scope, $rootScope, $routeParams, $location, Place, messages
 				} else {
 					$scope.failure = data.message;
 					$rootScope.addAlert(messages["ui.place.save.failure." + $scope.failure], null, "error");
-					window.scrollTo(0,0); 
+					window.scrollTo(0,0);
 					$rootScope.loading--;
 				}
 				
@@ -965,7 +965,7 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, Place,
 			$rootScope.loading--;
 		}, function(response) {
 			if (response.status == 403) {
-				$scope.place = { gazId: $routeParams.id, accessDenied: true};
+				$scope.place = { gazId: $routeParams.id, recordGroup: response.data.recordGroup, accessDenied: true};
 				$rootScope.title = messages["ui.place.hiddenPlace"];
 				$rootScope.pageTitle = messages["ui.place.hiddenPlace"] + " | iDAI.gazetteer";
 			} else {

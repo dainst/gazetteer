@@ -127,6 +127,17 @@ public class JsonPlaceSerializer {
 			return placeNode;
 		}
 		
+		// record group
+		if (place.getRecordGroupId() != null && !place.getRecordGroupId().isEmpty()) {
+			RecordGroup group = groupDao.findOne(place.getRecordGroupId());
+			if (group != null) {
+				ObjectNode groupNode = mapper.createObjectNode();
+				groupNode.put("id", group.getId());
+				groupNode.put("name", group.getName());
+				placeNode.put("recordGroup", groupNode);
+			}			
+		}
+		
 		if (!PlaceAccessService.hasReadAccess(accessStatus)) {
 			placeNode.put("accessDenied", true);
 			return placeNode;
@@ -312,17 +323,6 @@ public class JsonPlaceSerializer {
 				provenanceNode.add(provenanceEntry);
 			}
 			placeNode.put("provenance", provenanceNode);
-		}
-		
-		// record group
-		if (place.getRecordGroupId() != null && !place.getRecordGroupId().isEmpty()) {
-			RecordGroup group = groupDao.findOne(place.getRecordGroupId());
-			if (group != null) {
-				ObjectNode groupNode = mapper.createObjectNode();
-				groupNode.put("id", group.getId());
-				groupNode.put("name", group.getName());
-				placeNode.put("recordGroup", groupNode);
-			}			
 		}		
 		
 		// reisestipendium content		
