@@ -28,13 +28,17 @@ public class MailService {
 	
 	private static Logger logger = LoggerFactory.getLogger(MailService.class);
 	
-	
 	public void sendMail(String recipientMail, String subject, String content) throws MessagingException {
+		
+		sendMail(recipientMail, subject, content, null);
+	}
+	
+	public void sendMail(String recipientMail, String subject, String content, String replyTo) throws MessagingException {
 		
 		if (senderMail.isEmpty() || smtpHost.isEmpty() || smtpPort.isEmpty() || mailUsername.isEmpty() || mailPassword.isEmpty()) {
 			logger.warn("Could not send mail: Mail properties not set");
 			return;
-		}			
+		}
 		
 		Properties properties = new Properties();
 		properties.setProperty("mail.smtp.host", smtpHost);
@@ -45,6 +49,7 @@ public class MailService {
 		MimeMessage message = new MimeMessage(session);
 		message.setFrom(new InternetAddress(senderMail));
 		message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipientMail));
+		if (replyTo != null) message.setReplyTo(new InternetAddress[] {new InternetAddress(replyTo)});
 		message.setSubject(subject);
 		message.setContent(content, "text/html; charset=utf-8");
 		

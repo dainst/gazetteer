@@ -1,12 +1,16 @@
 package org.dainst.gazetteer.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.dainst.gazetteer.dao.GroupRoleRepository;
 import org.dainst.gazetteer.dao.PlaceRepository;
@@ -15,6 +19,7 @@ import org.dainst.gazetteer.dao.UserRepository;
 import org.dainst.gazetteer.domain.GroupRole;
 import org.dainst.gazetteer.domain.RecordGroup;
 import org.dainst.gazetteer.domain.User;
+import org.dainst.gazetteer.helpers.MailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +31,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.support.RequestContext;
 
 @Controller
 public class RecordGroupController {
@@ -42,6 +49,9 @@ public class RecordGroupController {
 	
 	@Autowired
 	private GroupRoleRepository groupRoleDao;
+	
+	@Autowired
+	private MailService mailService;
 	
 	@Value("${version}")
 	private String version;
@@ -315,6 +325,51 @@ public class RecordGroupController {
 		recordGroupDao.save(group);
 		
 		return getRecordGroupUserManagement(groupId, sort, isDescending, page, model);
+	}
+	
+	@RequestMapping(value="/sendRecordGroupContactMail", method=RequestMethod.POST)
+	public void checkRecordGroupContactForm(HttpServletRequest request, HttpServletResponse response,
+			@RequestParam(required=true) String groupId) {
+		
+		RecordGroup group = recordGroupDao.findOne(groupId);
+		if (group == null)
+			throw new IllegalStateException("Record group with id " + groupId + " could not be found.");
+		
+		String message;
+		try {
+			message = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+		} catch (IOException e) {
+			throw new RuntimeException("Failed to read request body");
+		}
+		message = message.replace("\n", "<br/>");
+		
+		User user = getUser();
+		if (user == null)
+			throw new IllegalStateException("Only registered users can send contact mails to group administrators");
+		
+		String name = user.getFirstname() + " " + user.getLastname();
+
+		List<GroupRole> groupAdminRoles = groupRoleDao.findByGroupIdAndRoleType(groupId, "admin");
+		
+		RequestContext context = new RequestContext(request);
+		String subject = context.getMessage("mail.recordGroupContact.subject", new Object[] { group.getName() });
+		String content = "";
+		
+		if (!name.isEmpty())
+			content = context.getMessage("mail.recordGroupContact.content", new Object[] { group.getName(), user.getUsername(), name, user.getInstitution(), user.getEmail(), message })
+				+ message;
+		
+		for (GroupRole role : groupAdminRoles) {
+			User admin = userDao.findOne(role.getUserId());
+			try {
+				mailService.sendMail(admin.getEmail(), subject, content, user.getEmail());
+			} catch (MessagingException e) {
+				logger.warn("Failed to send contact mail to group admins!", admin.getEmail());
+				response.setStatus(500);
+			}
+		}
+		
+		response.setStatus(204);
 	}
 	
 	private boolean isAdminEdit() {

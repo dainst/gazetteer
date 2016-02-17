@@ -239,11 +239,73 @@
 	
 	<span ng-hide="!place.recordGroup || place.recordGroup.id.length == 0">
 		<dt><s:message code="domain.place.recordGroup" text="domain.place.recordGroup" /></dt>
-			<dd>
-				<a href="#!/search?q=recordGroupId:{{place.recordGroup.id}}">{{place.recordGroup.name}}</a>
-			</dd>
+		<dd>
+			<a data-toggle="modal" href="#recordGroupModal">{{place.recordGroup.name}}</a>
+		</dd>
 		<br/>
 	</span>
+	
+	<div class="modal large fade hide" id="recordGroupModal">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal">×</button>
+			<h3><s:message code="ui.recordGroupModal.header" text="ui.recordGroupModal.header" /></h3>
+		</div>
+		<div class="modal-body large">
+			<h4>
+				<s:message code="ui.recordGroupModal.info.header" text="ui.recordGroupModal.info.header" />
+			</h4>
+			<div><s:message code="ui.recordGroupModal.info.main" text="ui.recordGroupModal.info" arguments="{{place.recordGroup.name}}" /></div>
+			<div>
+				<sec:authorize access="!hasRole('ROLE_USER')">
+					<s:message code="ui.recordGroupModal.info.notLoggedIn" text="ui.recordGroupModal.info.notLoggedIn" />
+				</sec:authorize>
+				<sec:authorize access="hasRole('ROLE_USER')">
+					<span ng-show="place.accessDenied">
+						<s:message code="ui.recordGroupModal.info.noAccess" text="ui.recordGroupModal.info.noAccess" />
+					</span>
+					<span ng-show="place.limitedReadAccess">
+						<s:message code="ui.recordGroupModal.info.limitedReadAccess" text="ui.recordGroupModal.info.limitedReadAccess" />
+					</span>
+					<span ng-show="!place.limitedReadAccess && place.editAccessDenied">
+						<s:message code="ui.recordGroupModal.info.readAccess" text="ui.recordGroupModal.info.readAccess" />
+					</span>
+					<span ng-show="!place.accessDenied && !place.editAccessDenied">
+						<s:message code="ui.recordGroupModal.info.editAccess" text="ui.recordGroupModal.info.editAccess" />
+					</span>
+				</sec:authorize>				
+			</div>
+			
+			<div ng-hide="place.accessDenied">
+				<br>
+				<h4>
+					<s:message code="ui.recordGroupModal.search.header" text="ui.recordGroupModal.search.header" />
+				</h4>
+				<a ng-click="recordGroupSearch()" data-dismiss="modal" style="cursor: pointer;">
+					<i class="icon-search"></i> <s:message code="ui.recordGroupModal.search.link" text="ui.recordGroupModal.search.link" />
+				</a>
+			</div>
+			<br>			
+			<div>
+				<h4>
+					<s:message code="ui.recordGroupModal.contact.header" text="ui.recordGroupModal.contact.header" />
+				</h4>
+				<sec:authorize access="!hasRole('ROLE_USER')">
+					<s:message code="ui.recordGroupModal.contact.loggedOutInfo" text="ui.recordGroupModal.contact.loggedOutInfo" />
+					<textarea name="message" class="contact-form-textarea" disabled></textarea>
+					<a class="btn btn-primary" disabled>
+						<s:message code="ui.recordGroupModal.contact.submit" text="ui.recordGroupModal.contact.submit"/>
+					</a>
+				</sec:authorize>
+				<sec:authorize access="hasRole('ROLE_USER')">
+					<s:message code="ui.recordGroupModal.contact.info" text="ui.recordGroupModal.contact.info" />
+					<textarea name="message" ng-model="contactMessage" class="contact-form-textarea"></textarea>
+					<a class="btn btn-primary" data-dismiss="modal" ng-click="sendRecordGroupContactMail()">
+						<s:message code="ui.recordGroupModal.contact.submit" text="ui.recordGroupModal.contact.submit"/>
+					</a>
+				</sec:authorize>
+			</div>
+		</div>
+	</div>
 	
 	<span ng-show="place.gazId && !place.accessDenied">
 		<dt><s:message code="ui.contexts" text="ui.contexts"/></dt>

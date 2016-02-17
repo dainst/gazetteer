@@ -256,3 +256,14 @@ footer {
 .group-place-visibility-button {
 	margin-left: 10px;
 }
+
+.contact-form-textarea {
+	width: 97.7%;
+	height: 100px;
+	resize: none;
+}
+
+.modal.large {
+    width: 70%;
+    margin-left: -35%;
+}

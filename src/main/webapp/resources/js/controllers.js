@@ -881,7 +881,7 @@ function CreateCtrl($scope, $rootScope, $routeParams, $location, Place, messages
 }
 
 
-function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, Place, messages) {
+function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, $http, Place, messages) {
 	
 	$scope.location = { confidence: 0, publicSite: true, coordinates: [] };
 	$scope.link = { predicate: "owl:sameAs", description: "" };
@@ -1419,6 +1419,21 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, Place,
 				places.splice(index, 1);
 		}
 		return places;
+	}
+	
+	$scope.recordGroupSearch = function() {
+		$timeout(function() { $location.path("/search").search({q: "recordGroupId:" + $scope.place.recordGroup.id}); }, 200);
+	}
+	
+	$scope.sendRecordGroupContactMail = function() {
+		$http.post("../sendRecordGroupContactMail?groupId=" + $scope.place.recordGroup.id, $scope.contactMessage)
+			.success(function(data, status) {
+				$rootScope.addAlert(messages["ui.recordGroupContact.success"], null, "success");
+			})
+			.error(function(data, status) {
+				$rootScope.addAlert(messages["ui.recordGroupContact.error"], null, "error");
+			});
+		$scope.contactMessage = "";
 	}
 
 	// update relatedPlaces attribute of place when relatedPlaces in scope changes

@@ -16,4 +16,6 @@ public interface GroupRoleRepository extends PagingAndSortingRepository<GroupRol
 	
 	@Query(value = "{ 'groupId': ?0 }", count = true)
 	public long getCountByGroupId(String groupId);
+	
+	public List<GroupRole> findByGroupIdAndRoleType(String groupId, String roleType);
 }

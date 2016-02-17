@@ -40,6 +40,8 @@ messages.factory('messages', function(){
 		"ui.place.user-group-info": "If a record group is set, this place is only visible to members of that group. This setting cannot be changed at a later point in time.",
 		"ui.place.replacing.first": "The place with the ID ",
 		"ui.place.replacing.second": " has been replaced. You have been redirected to the new place entry.",
+		"ui.recordGroupContact.success": "Your message has been sent successfully.",
+		"ui.recordGroupContact.error": "An error has occured. Your message could not be sent.",
 		"ui.create": "Create place",
 		"ui.thesaurus": "Thesaurus",
 		"ui.link.tooltip": "Link to current place",
