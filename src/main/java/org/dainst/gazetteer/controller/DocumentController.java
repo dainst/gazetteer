@@ -2,9 +2,11 @@ package org.dainst.gazetteer.controller;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -169,11 +171,14 @@ public class DocumentController {
 			
 			protectLocationsService.protectLocations(user, place, accessStatus);
 			
+			Map<String, PlaceAccessService.AccessStatus> parentAccessStatusMap = new HashMap<String, PlaceAccessService.AccessStatus>();
+			
 			List<Place> parents = new ArrayList<Place>();
 			if (add != null && add.contains("parents")) {
 				createParentsList(place, parents);
 				
 				for (Place parent : parents) {
+					parentAccessStatusMap.put(parent.getId(), placeAccessService.getAccessStatus(parent));
 					protectLocationsService.protectLocations(user, parent, placeAccessService.getAccessStatus(parent));
 				}
 			}
@@ -204,6 +209,7 @@ public class DocumentController {
 			if (parents.size() > 0) mav.addObject("parents", parents);
 			mav.addObject("jsonPlaceSerializer", jsonPlaceSerializer);
 			mav.addObject("accessStatus", accessStatus);
+			mav.addObject("parentAccessStatusMap", parentAccessStatusMap);
 			mav.addObject("language", locale.getISO3Language());
 			mav.addObject("limit", limit);
 			mav.addObject("offset", offset);

@@ -178,6 +178,7 @@ public class SearchController {
 		
 		Map<String, List<Place>> parents = new HashMap<String, List<Place>>();
 		Map<String, PlaceAccessService.AccessStatus> accessStatusMap = new HashMap<String, PlaceAccessService.AccessStatus>();
+		Map<String, PlaceAccessService.AccessStatus> parentAccessStatusMap = new HashMap<String, PlaceAccessService.AccessStatus>();
 		
 		PlaceAccessService placeAccessService = new PlaceAccessService(groupDao, groupRoleDao);
 		
@@ -191,6 +192,7 @@ public class SearchController {
 				createParentsList(place, placeParents, false);
 			
 				for (Place parent : placeParents) {
+					parentAccessStatusMap.put(parent.getId(), placeAccessService.getAccessStatus(parent));
 					protectLocationsService.protectLocations(user, parent, placeAccessService.getAccessStatus(parent));
 				}
 				
@@ -216,6 +218,7 @@ public class SearchController {
 		if (parents.size() > 0) mav.addObject("parents", parents);
 		mav.addObject("jsonPlaceSerializer", jsonPlaceSerializer);
 		mav.addObject("accessStatusMap", accessStatusMap);
+		mav.addObject("parentAccessStatusMap", parentAccessStatusMap);
 		mav.addObject("groupDao", groupDao);
 		mav.addObject("facets", facets);
 		mav.addObject("language", locale.getISO3Language());

@@ -5,6 +5,7 @@ response.setHeader("Content-Type", "application/json; charset=utf-8");
 List<Place> places = (List<Place>) request.getAttribute("places");
 Map<String, List<Place>> parents = (Map<String, List<Place>>) request.getAttribute("parents");
 Map<String, PlaceAccessService.AccessStatus> accessStatusMap = (Map<String, PlaceAccessService.AccessStatus>) request.getAttribute("accessStatusMap");
+Map<String, PlaceAccessService.AccessStatus> parentAccessStatusMap = (Map<String, PlaceAccessService.AccessStatus>) request.getAttribute("parentAccessStatusMap");
 Long hits = (Long) request.getAttribute("hits");
 String queryId = (String) request.getAttribute("queryId");
 JsonPlaceSerializer serializer = (JsonPlaceSerializer) request.getAttribute("jsonPlaceSerializer");
@@ -22,7 +23,7 @@ for (Place place : places) {
 	
 	PlaceAccessService.AccessStatus accessStatus = accessStatusMap.get(place.getId());
 
-	String serializedPlace = serializer.serialize(place, placeParents, accessStatus);
+	String serializedPlace = serializer.serialize(place, placeParents, accessStatus, parentAccessStatusMap);
 	if (serializedPlace != null) {
 		if (PlaceAccessService.hasReadAccess(accessStatus))
 			accessGrantedPlaces.add(serializedPlace);

@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -71,20 +72,22 @@ public class JsonPlaceSerializer {
 	private LanguagesHelper languagesHelper;
 	
 	public String serialize(Place place, PlaceAccessService.AccessStatus accessStatus) {
-		return serialize(place, null, null, accessStatus, null);
+		return serialize(place, null, null, accessStatus, null, null);
 	}
 	
-	public String serialize(Place place, List<Place> parents, PlaceAccessService.AccessStatus accessStatus) {
-		return serialize(place, null, parents, accessStatus, null);
+	public String serialize(Place place, List<Place> parents, PlaceAccessService.AccessStatus accessStatus,
+			Map<String, PlaceAccessService.AccessStatus> parentAccessStatusMap) {
+		return serialize(place, null, parents, accessStatus, parentAccessStatusMap, null);
 	}
 	
-	public String serialize(Place place, HttpServletRequest request, List<Place> parents, PlaceAccessService.AccessStatus accessStatus, String replacing) {
+	public String serialize(Place place, HttpServletRequest request, List<Place> parents, PlaceAccessService.AccessStatus accessStatus, 
+			Map<String, PlaceAccessService.AccessStatus> parentAccessStatusMap, String replacing) {
 		mapper = new ObjectMapper();
 		
 		if (pretty)
 			mapper.enable(SerializationFeature.INDENT_OUTPUT);
 		
-		ObjectNode placeNode = createJsonNodes(place, request, parents, accessStatus, replacing);
+		ObjectNode placeNode = createJsonNodes(place, request, parents, accessStatus, parentAccessStatusMap, replacing);
 		
 		try {
 			return mapper.writeValueAsString(placeNode);
@@ -98,7 +101,7 @@ public class JsonPlaceSerializer {
 			PlaceAccessService.AccessStatus accessStatus) {
 		
 		ObjectNode geoJsonPlaceNode = createGeoJsonNodes(place, accessStatus);		
-		ObjectNode placeNode = createJsonNodes(place, request, null, accessStatus, null);
+		ObjectNode placeNode = createJsonNodes(place, request, null, accessStatus, null, null);
 		geoJsonPlaceNode.put("properties", placeNode);
 		
 		try {
@@ -109,7 +112,9 @@ public class JsonPlaceSerializer {
 		}
 	}
 		
-	private ObjectNode createJsonNodes(Place place, HttpServletRequest request, List<Place> parents, PlaceAccessService.AccessStatus accessStatus, String replacing) { 
+	private ObjectNode createJsonNodes(Place place, HttpServletRequest request, List<Place> parents,
+			PlaceAccessService.AccessStatus accessStatus,
+			Map<String, PlaceAccessService.AccessStatus> parentAccessStatusMap, String replacing) { 
 		
 		if (place == null) return null;
 		
@@ -418,11 +423,11 @@ public class JsonPlaceSerializer {
 		}
 		
 		// parents list
-		if (parents != null) {
+		if (parents != null && parentAccessStatusMap != null) {
 			ArrayNode parentsNode = mapper.createArrayNode();
 			
 			for (Place parent : parents) {
-				ObjectNode parentNode = createJsonNodes(parent, request, null, accessStatus, replacing);
+				ObjectNode parentNode = createJsonNodes(parent, request, null, parentAccessStatusMap.get(parent.getId()), null, replacing);
 				parentsNode.add(parentNode);
 			}
 			
