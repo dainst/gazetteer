@@ -256,27 +256,26 @@
 			</h4>
 			<div><s:message code="ui.recordGroupModal.info.main" text="ui.recordGroupModal.info" arguments="{{place.recordGroup.name}}" /></div>
 			<div>
-				<sec:authorize access="!hasRole('ROLE_USER')">
-					<s:message code="ui.recordGroupModal.info.notLoggedIn" text="ui.recordGroupModal.info.notLoggedIn" />
-				</sec:authorize>
-				<sec:authorize access="hasRole('ROLE_USER')">
-					<span ng-show="place.accessDenied">
+				<span ng-show="place.accessDenied">
+					<sec:authorize access="hasRole('ROLE_USER')">
 						<s:message code="ui.recordGroupModal.info.noAccess" text="ui.recordGroupModal.info.noAccess" />
-					</span>
-					<span ng-show="place.limitedReadAccess">
-						<s:message code="ui.recordGroupModal.info.limitedReadAccess" text="ui.recordGroupModal.info.limitedReadAccess" />
-					</span>
-					<span ng-show="!place.limitedReadAccess && place.editAccessDenied">
-						<s:message code="ui.recordGroupModal.info.readAccess" text="ui.recordGroupModal.info.readAccess" />
-					</span>
-					<span ng-show="!place.accessDenied && !place.editAccessDenied">
-						<s:message code="ui.recordGroupModal.info.editAccess" text="ui.recordGroupModal.info.editAccess" />
-					</span>
-				</sec:authorize>				
+					</sec:authorize>
+					<sec:authorize access="!hasRole('ROLE_USER')">
+						<s:message code="ui.recordGroupModal.info.notLoggedIn" text="ui.recordGroupModal.info.notLoggedIn" />
+					</sec:authorize>
+				</span>
+				<span ng-show="place.limitedReadAccess">
+					<s:message code="ui.recordGroupModal.info.limitedReadAccess" text="ui.recordGroupModal.info.limitedReadAccess" />
+				</span>
+				<span ng-show="!place.limitedReadAccess && place.editAccessDenied">
+					<s:message code="ui.recordGroupModal.info.readAccess" text="ui.recordGroupModal.info.readAccess" />
+				</span>
+				<span ng-show="!place.accessDenied && !place.editAccessDenied">
+					<s:message code="ui.recordGroupModal.info.editAccess" text="ui.recordGroupModal.info.editAccess" />
+				</span>
 			</div>
 			
-			<div ng-hide="place.accessDenied">
-				<br>
+			<div ng-hide="place.accessDenied" style="margin-top: 20px;">
 				<h4>
 					<s:message code="ui.recordGroupModal.search.header" text="ui.recordGroupModal.search.header" />
 				</h4>
@@ -284,8 +283,8 @@
 					<i class="icon-search"></i> <s:message code="ui.recordGroupModal.search.link" text="ui.recordGroupModal.search.link" />
 				</a>
 			</div>
-			<br>			
-			<div>
+			
+			<div style="margin-top: 20px;">
 				<h4>
 					<s:message code="ui.recordGroupModal.contact.header" text="ui.recordGroupModal.contact.header" />
 				</h4>
