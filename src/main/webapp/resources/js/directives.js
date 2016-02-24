@@ -842,7 +842,8 @@ directives.directive('gazMap', function($location, Place) {
 						title = place.prefName.title;
 					
 					if (place.prefLocation) {
-						if (place.prefLocation.coordinates && place.mapType != "polygonParent" && place.mapType != "mainPolygon") {
+						if (place.prefLocation.coordinates && place.mapType != "polygonParent" && place.mapType != "mainPolygon"
+								&& (place.prefLocation.shape == null || place.mapType == "polygonAndMarker")) {
 							var icon = defaultIcon;
 							if (place.mapType == "searchResults")
 								icon = getNumberedMarkerIcon(parseInt(place.markerNumber), "red");

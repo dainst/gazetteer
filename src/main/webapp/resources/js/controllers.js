@@ -1387,6 +1387,20 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, $http,
 		$scope.activeTimeout = $timeout(removeChildrenFromMap, 200);		
 	};
 	
+	$scope.showPrefLocationMarker = function() {
+		if ($scope.place.prefLocation.shape) {
+			$scope.place.mapType ="polygonAndMarker";
+			$rootScope.activePlaces = $rootScope.activePlaces.slice();
+		}
+	};
+	
+	$scope.hidePrefLocationMarker = function() {
+		if ($scope.place.prefLocation.shape) {
+			$scope.place.mapType ="standard";
+			$rootScope.activePlaces = $rootScope.activePlaces.slice();
+		}
+	};
+	
 	$scope.showPolygon = function(place) {
 		var places = $rootScope.activePlaces.slice();
 		places = removeCurrentlyShownPolygon(places);

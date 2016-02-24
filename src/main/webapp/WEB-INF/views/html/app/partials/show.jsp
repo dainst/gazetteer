@@ -163,7 +163,7 @@
 	<span ng-hide="!place.unlocatable && (!place.prefLocation || !((place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0) || place.prefLocation.shape))">
 		<dt><s:message code="domain.place.locations" text="domain.place.locations" /></dt>
 		<dd>
-			<span ng-show="place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0" ng-show="location.coordinates" ng-mouseover="setHighlight(place.gazId, 'prefLocation', 0)" ng-mouseout="setHighlight(null, null, null)">
+			<span ng-show="place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0" ng-show="location.coordinates" ng-mouseover="showPrefLocationMarker(); setHighlight(place.gazId, 'prefLocation', 0)" ng-mouseout="hidePrefLocationMarker(); setHighlight(null, null, null)">
 				<span class="icon-map-marker" style="margin-right: 5px; cursor: default; color: #FD7567; text-shadow: 1px 1px 1px #000000;"></span>
 				<span style="text-decoration:none; border-bottom: 1px dotted black; cursor: pointer;">
 					<em><s:message code="domain.location.latitude" text="domain.location.latitude" />: </em>{{place.prefLocation.coordinates[1]}},
