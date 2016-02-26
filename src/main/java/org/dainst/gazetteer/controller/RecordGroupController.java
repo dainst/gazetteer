@@ -1,12 +1,12 @@
 package org.dainst.gazetteer.controller;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
@@ -328,20 +328,27 @@ public class RecordGroupController {
 	}
 	
 	@RequestMapping(value="/sendRecordGroupContactMail", method=RequestMethod.POST)
-	public void checkRecordGroupContactForm(HttpServletRequest request, HttpServletResponse response,
+	public void sendRecordGroupContactMail(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam(required=true) String groupId) {
 		
 		RecordGroup group = recordGroupDao.findOne(groupId);
 		if (group == null)
 			throw new IllegalStateException("Record group with id " + groupId + " could not be found.");
 		
-		String message;
+		StringBuffer messageBuffer = new StringBuffer();
+		String line = null;
+		BufferedReader reader;
 		try {
-			message = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+			reader = request.getReader();
+			while ((line = reader.readLine()) != null) {
+				if (messageBuffer.length() > 0)
+					messageBuffer.append("<br/>");
+		    	messageBuffer.append(line);
+		    }
 		} catch (IOException e) {
-			throw new RuntimeException("Failed to read request body");
-		}
-		message = message.replace("\n", "<br/>");
+			throw new RuntimeException("Failed to read request body", e);
+		}	    
+	    String message = messageBuffer.toString();		
 		
 		User user = getUser();
 		if (user == null)
