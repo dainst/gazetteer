@@ -36,7 +36,7 @@ messages.factory('messages', function(){
 		"ui.place.remove.success": "Successfully deleted place",
 		"ui.place.remove.failure": "Could not delete place",
 		"ui.place.protected-site-login-info": "Please log in to gain access to the exact coordinates.",
-		"ui.place.protected-site-group-info": "You don't have the necessary group rights to access the exact coordinates.",
+		"ui.place.protected-site-group-info": "You don't have the necessary group rights to access the exact coordinates. Please contact the administrators of the record group.",
 		"ui.place.user-group-info": "If a record group is set, this place is only visible to members of that group. This setting cannot be changed at a later point in time.",
 		"ui.place.replacing.first": "The place with the ID ",
 		"ui.place.replacing.second": " has been replaced. You have been redirected to the new place entry.",
