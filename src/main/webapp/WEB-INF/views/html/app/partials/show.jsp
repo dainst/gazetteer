@@ -174,7 +174,7 @@
 					<span ng-show="place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0 && !place.prefLocation.publicSite">
 						<sec:authorize access="hasRole('ROLE_USER')">
 							<span ng-show="place.limitedReadAccess">
-								(<span><s:message code="domain.location.rounded" text="domain.location.rounded" /> <i class="icon-info-sign" style="color: #5572a1;" gaz-tooltip="'ui.place.protected-site-group-info'"></i></span>)
+								(<span><s:message code="domain.location.rounded" text="domain.location.rounded" /> <i class="icon-info-sign" style="color: #5572a1; cursor: pointer;" gaz-tooltip="'ui.place.protected-site-group-info'"></i></span>)
 							</span>
 							<span ng-hide="place.limitedReadAccess">
 								(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />:</em>
@@ -182,7 +182,7 @@
 							</span>
 						</sec:authorize>
 						<sec:authorize access="!hasRole('ROLE_USER')">
-							(<span><s:message code="domain.location.rounded" text="domain.location.rounded" /> <i class="icon-info-sign" style="color: #5572a1;" gaz-tooltip="'ui.place.protected-site-login-info'"></i></span>)
+							(<span><s:message code="domain.location.rounded" text="domain.location.rounded" /> <i class="icon-info-sign" style="color: #5572a1; cursor: pointer;" gaz-tooltip="'ui.place.protected-site-login-info'"></i></span>)
 						</sec:authorize>
 					</span>
 					<span ng-hide="!place.prefLocation.publicSite">
@@ -213,7 +213,7 @@
 								<span gaz-translate="'location.confidence.'+location.confidence"></span>)
 							</sec:authorize>
 							<sec:authorize access="!hasRole('ROLE_USER')">
-								(<span><s:message code="domain.location.rounded" text="domain.location.rounded" /> <i class="icon-info-sign" style="color: #5572a1;" gaz-tooltip="'ui.place.protected-site-info'"></i></span>)
+								(<span><s:message code="domain.location.rounded" text="domain.location.rounded" /> <i class="icon-info-sign" style="color: #5572a1; cursor: pointer;" gaz-tooltip="'ui.place.protected-site-info'"></i></span>)
 							</sec:authorize>
 						</span>
 						<span ng-hide="!location.publicSite">
