@@ -86,7 +86,10 @@ public class PlaceNameHelper {
 				String localizedLanguage1 = localizedLanguages.get(placeName1.getLanguage());
 				String localizedLanguage2 = localizedLanguages.get(placeName2.getLanguage());
 				
-				langComp = Collator.getInstance(locale).compare(localizedLanguage1, localizedLanguage2);
+				if (localizedLanguage1 != null && localizedLanguage2 != null)
+					langComp = Collator.getInstance(locale).compare(localizedLanguage1, localizedLanguage2);
+				else
+					langComp = 0;
 			}
 			
 			if (langComp != 0)
