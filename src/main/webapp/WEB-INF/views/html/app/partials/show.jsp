@@ -193,7 +193,7 @@
 				</span>
 			</span>
 			<span ng-show="place.unlocatable" gaz-translate="'place.unlocatable'"></span>
-			<em ng-show="place.prefLocation.shape" ng-mouseover="setHighlight(place.gazId, 'polygon', -1)" ng-mouseout="setHighlight(null, null, null)" style="text-decoration:none; border-bottom: 1px dotted black; cursor: pointer;"><s:message code="domain.location.polygonSpecified" text="domain.location.polygonSpecified" /></em>
+			<span ng-show="place.prefLocation.shape" ng-mouseover="setHighlight(place.gazId, 'polygon', -1)" ng-mouseout="setHighlight(null, null, null)"><div class="polygon-icon" style="float: left; margin-right: 5px;"></div><em style="text-decoration:none; border-bottom: 1px dotted black; cursor: pointer;"><s:message code="domain.location.polygonSpecified" text="domain.location.polygonSpecified" /></em></span>
 		</dd>
 		<span ng-hide="!place.locations">
 			<br />
