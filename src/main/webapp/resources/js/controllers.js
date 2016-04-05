@@ -594,7 +594,8 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 			$scope.places = result.result;
 			var markers = 0;
 			for (var i in $scope.places) {
-				if ($scope.places[i].prefLocation) {
+				if ($scope.places[i].prefLocation && !$scope.places[i].prefLocation.shape
+						&& $scope.places[i].prefLocation.coordinates && $scope.places[i].prefLocation.coordinates.length > 0) {
 					markers++;
 					$scope.places[i].markerNumber = markers;
 				}

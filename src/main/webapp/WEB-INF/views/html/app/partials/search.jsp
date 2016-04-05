@@ -198,7 +198,9 @@
 	</thead>
 	<tbody>
 		<tr ng-repeat="place in places" ng-click="$location.path('show/'+place.gazId)" ng-mouseover="setHighlight(place.gazId, 'searchResult', place.markerNumber)" ng-mouseout="setHighlight(null, null, null)" ng-class="{info: place.gazId==highlight}">
-			<td><span style="white-space: nowrap; cursor: default;"><span ng-show="place.prefLocation" class="icon-map-marker"
+			<td><span style="white-space: nowrap; cursor: default;"><span ng-show="place.prefLocation && !place.prefLocation.shape" class="icon-map-marker"
+				style="color: #FD7567; text-shadow: 1px 1px 1px #000000; margin-right: 5px;"></span>
+				<span ng-show="place.prefLocation && place.prefLocation.shape" class="icon-map-marker"
 				style="color: #FD7567; text-shadow: 1px 1px 1px #000000; margin-right: 5px;"></span>{{place.markerNumber}}</span></td>
 			<td>{{place.gazId}}</td>
 			<td>

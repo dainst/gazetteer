@@ -758,7 +758,7 @@ directives.directive('gazMap', function($location, Place) {
 					$scope.highlightedShape = null;
 				}
 				
-				if ($scope.highlight != null && $scope.highlight.type == "polygon") {
+				if ($scope.highlight != null && ($scope.highlight.type == "polygon" || $scope.highlight.type == "searchResult")) {
 					var id = $scope.highlight.id;
 					if ($scope.highlight.index > -1)
 						id += "#" + $scope.highlight.index;					
@@ -767,10 +767,12 @@ directives.directive('gazMap', function($location, Place) {
 						var fillOpacity = $scope.highlightedShape.get("fillOpacity") * 2;
 						var strokeOpacity = $scope.highlightedShape.get("strokeOpacity") * 2;
 						$scope.highlightedShape.setOptions({ fillOpacity: fillOpacity, strokeOpacity: strokeOpacity });
-						var bounds = new google.maps.LatLngBounds();
-						bounds.extend($scope.highlightedShape.getBounds().getSouthWest());
-						bounds.extend($scope.highlightedShape.getBounds().getNorthEast());
-						$scope.map.fitBounds(bounds);
+						if ($scope.highlight.type == "polygon") {
+							var bounds = new google.maps.LatLngBounds();
+							bounds.extend($scope.highlightedShape.getBounds().getSouthWest());
+							bounds.extend($scope.highlightedShape.getBounds().getNorthEast());
+							$scope.map.fitBounds(bounds);
+						}
 					}	
 				}
 				
