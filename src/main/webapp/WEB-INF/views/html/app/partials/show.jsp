@@ -127,13 +127,14 @@
 		<dd>
 			<div class="place-list-container">
 				<li ng-repeat="child in children">
-					<div ng-if="child.prefLocation && child.prefLocation.coordinates && child.prefLocation.coordinates.length > 0"
+					<div ng-if="child.prefLocation && (child.prefLocation.coordinates && child.prefLocation.coordinates.length > 0) || child.prefLocation.shape"
 							ng-mouseover="showChildMarker(child)" ng-mouseout="hideChildMarker()">
-						<span class="icon-map-marker" ng-show="child.prefLocation && child.prefLocation.coordinates && child.prefLocation.coordinates.length > 0"
-							style="margin-left: 3px; margin-right: 5px; cursor: default; color: #00E64D; text-shadow: 1px 1px 1px #000000;"></span>
+						<span ng-show="child.prefLocation && child.prefLocation.coordinates && child.prefLocation.coordinates.length > 0 && !child.prefLocation.shape"
+							class="icon-map-marker" style="margin-left: 3px; margin-right: 5px; cursor: default; color: #00E64D; text-shadow: 1px 1px 1px #000000;"></span>
+						<div ng-show="child.prefLocation.shape" class="polygon-icon" style="float: left; margin-left: 5px; margin-right: 9px;"></div>	
 						<div gaz-place-title place="child"></div>
 					</div>
-					<div ng-if="!child.prefLocation || !child.prefLocation.coordinates || child.prefLocation.coordinates.length == 0" gaz-place-title place="child"></div>
+					<div ng-if="!child.prefLocation || ((!child.prefLocation.coordinates || child.prefLocation.coordinates.length == 0) && !child.prefLocation.shape)" gaz-place-title place="child"></div>
 				</li>
 			</div>
 		</dd>
