@@ -1,5 +1,6 @@
-senderMail=
 smtpHost=
 smtpPort=
+senderMail=
 mailUsername=
 mailPassword=
+mergeNotificationMail=
