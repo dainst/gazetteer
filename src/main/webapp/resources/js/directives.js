@@ -825,9 +825,11 @@ directives.directive('gazMap', function($location, Place) {
 				$scope.shapeMap = {};
 				for (var i in $scope.markers)
 					$scope.markers[i].setMap(null);
+				$scope.markers = [];
 
 				for (var i in $scope.shapes)
 					$scope.shapes[i].setMap(null);
+				$scope.shapes = [];
 
 				if ($scope.places.length == 0) return;
 

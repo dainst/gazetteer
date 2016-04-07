@@ -1356,12 +1356,17 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, $http,
 	};
 	
 	var removeChildrenFromMap = function() {
-		var places = $rootScope.activePlaces.slice();		
-		for (var i in $scope.children) {
-			var index = places.indexOf($scope.children[i]);
-			if (index > -1)
-				places.splice(index, 1);
+		var places = $rootScope.activePlaces.slice();
+		var placesToRemove = [];
+		for (var i in places) {
+			if (places[i].mapType == "markerChild" || places[i].mapType == "markerChildInvisible")
+				placesToRemove.push(places[i]);
 		}
+		for (var i in placesToRemove) {
+			var index = places.indexOf(placesToRemove[i]); 
+			places.splice(index, 1);
+		}
+				
 		$rootScope.activePlaces = places;
 	};
 	
