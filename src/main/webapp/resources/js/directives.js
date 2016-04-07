@@ -935,10 +935,10 @@ directives.directive('gazMap', function($location, Place) {
 								}
 							}
 						}
-						if (place.prefLocation.shape && place.mapType != "markerChildInvisible") {
+						if (place.prefLocation.shape) {
 							var shapeCoordinates = convertShapeCoordinates(place.prefLocation.shape);
-	
-							shape = new google.maps.Polygon({
+							
+							var tempShape = new google.maps.Polygon({
 								paths: shapeCoordinates,
 								strokeColor: "#000000",
 								strokeOpacity: strokeOpacity,
@@ -947,13 +947,23 @@ directives.directive('gazMap', function($location, Place) {
 								fillOpacity: fillOpacity,
 								placeId: place.gazId
 							});
-							shape.setMap($scope.map);
-							$scope.shapes.push(shape);
-							$scope.shapeMap[place.gazId] = shape;
-							addPolygonListener(shape);
+							
+							if (place.mapType != "markerChildInvisible") {
+								shape = tempShape;
+								shape.setMap($scope.map);
+								$scope.shapes.push(shape);
+								$scope.shapeMap[place.gazId] = shape;
+								addPolygonListener(shape);
 
-							bounds.extend(shape.getBounds().getSouthWest());
-							bounds.extend(shape.getBounds().getNorthEast());
+								bounds.extend(shape.getBounds().getSouthWest());
+								bounds.extend(shape.getBounds().getNorthEast());
+							}
+							
+							if (place.mapType == "markerChild" || place.mapType == "markerChildInvisible"
+								|| place.mapType == "standard") {
+								childMarkerLocations.push(tempShape.getBounds().getSouthWest());
+								childMarkerLocations.push(tempShape.getBounds().getNorthEast());
+							}
 						}
 					}
 				}
