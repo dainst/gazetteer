@@ -107,34 +107,32 @@
 					</div>
 				</c:if>
 		
-				<div class="row-fluid">
-					<div class="span6 offset3 well">
-						<form class="form-horizontal" name="f" action="checkPasswordChangeRequestForm?r=${r}" accept-charset="UTF-8" method="POST">
-							<h3>
-								<s:message code="ui.passwordChangeRequest" text="ui.passwordChangeRequest" />
-							</h3>
-							<div class="control-group">
-									<label class="control-label"> <s:message
-											code="user.username" text="user.username" />
-									</label>
-									<div class="controls">
-										<input type="text" name="password_change_request_username" value="${password_change_request_username_value}" />
-									</div>
-							</div>
-							
-							<div class="control-group">
-								<label class="control-label">
-									&nbsp;
+				<div class="well" style="width: 550px; margin: 0 auto;">
+					<form class="form-horizontal" name="f" action="checkPasswordChangeRequestForm?r=${r}" accept-charset="UTF-8" method="POST">
+						<h3>
+							<s:message code="ui.passwordChangeRequest" text="ui.passwordChangeRequest" />
+						</h3>
+						<div class="control-group">
+								<label class="control-label"> <s:message
+										code="user.username" text="user.username" />
 								</label>
 								<div class="controls">
-									<a href="redirect?r=${r}" class="btn" data-dismiss="modal" aria-hidden="true"><s:message
-												code="ui.cancel" text="ui.cancel" /></a>
-									<s:message code="ui.ok" text="ui.ok" var="submitValue" />
-									<input type="submit" class="btn btn-primary" value="${submitValue}" />
+									<input type="text" name="password_change_request_username" value="${password_change_request_username_value}" />
 								</div>
+						</div>
+						
+						<div class="control-group">
+							<label class="control-label">
+								&nbsp;
+							</label>
+							<div class="controls">
+								<a href="redirect?r=${r}" class="btn" data-dismiss="modal" aria-hidden="true"><s:message
+											code="ui.cancel" text="ui.cancel" /></a>
+								<s:message code="ui.ok" text="ui.ok" var="submitValue" />
+								<input type="submit" class="btn btn-primary" value="${submitValue}" />
 							</div>
-						</form>
-					</div>
+						</div>
+					</form>
 				</div>
 		
 				<!-- Footer -->

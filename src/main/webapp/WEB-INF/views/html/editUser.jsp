@@ -191,169 +191,167 @@
 					</div>
 				</c:if>
 		
-				<div class="row-fluid">
-					<div class="span6 offset3 well">
-						<form class="form-horizontal" name="f" action="checkEditUserForm?username=${user.username}&r=${r}" accept-charset="UTF-8" method="POST">
-							<h3>
-								<s:message code="ui.editUser" text="ui.editUser" />
-							</h3>
-							<c:if test="${adminEdit}">
-								<div class="<%=usernameControlGroup%>">
-									<label class="control-label"> <s:message
-											code="user.username" text="user.username" />
-									</label>
-									<div class="controls">
-										<input type="text" name="edit_user_username" value="${edit_user_username_value}" />
-									</div>
-								</div>
-							</c:if>
-							<div class="<%=firstnameControlGroup%>">
+				<div class="well" style="width: 550px; margin: 0 auto;">
+					<form class="form-horizontal" name="f" action="checkEditUserForm?username=${user.username}&r=${r}" accept-charset="UTF-8" method="POST">
+						<h3>
+							<s:message code="ui.editUser" text="ui.editUser" />
+						</h3>
+						<c:if test="${adminEdit}">
+							<div class="<%=usernameControlGroup%>">
 								<label class="control-label"> <s:message
-										code="user.firstname" text="user.firstname" />
+										code="user.username" text="user.username" />
 								</label>
 								<div class="controls">
-									<input type="text" name="edit_user_firstname" value="${edit_user_firstname_value}" />
+									<input type="text" name="edit_user_username" value="${edit_user_username_value}" />
 								</div>
 							</div>
-							<div class="<%=lastnameControlGroup%>">
+						</c:if>
+						<div class="<%=firstnameControlGroup%>">
+							<label class="control-label"> <s:message
+									code="user.firstname" text="user.firstname" />
+							</label>
+							<div class="controls">
+								<input type="text" name="edit_user_firstname" value="${edit_user_firstname_value}" />
+							</div>
+						</div>
+						<div class="<%=lastnameControlGroup%>">
+							<label class="control-label"> <s:message
+									code="user.lastname" text="user.lastname" />
+							</label>
+							<div class="controls">
+								<input type="text" name="edit_user_lastname" value="${edit_user_lastname_value}" />
+							</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label"> <s:message
+									code="user.institution" text="user.institution" />
+							</label>
+							<div class="controls">
+								<input type="text" name="edit_user_institution" value="${edit_user_institution_value}" />
+							</div>
+						</div>
+						<div class="<%=emailControlGroup%>">
+							<label class="control-label"> <s:message
+									code="user.email" text="user.email" />
+							</label>
+							<div class="controls">
+								<input type="text" name="edit_user_email" value="${edit_user_email_value}" />
+							</div>
+						</div>
+						
+						<c:if test="${userEdit}">
+							<div class="<%=passwordControlGroup%>">
 								<label class="control-label"> <s:message
-										code="user.lastname" text="user.lastname" />
+										code="ui.editUser.newPassword" text="ui.editUser.newPassword" />
 								</label>
 								<div class="controls">
-									<input type="text" name="edit_user_lastname" value="${edit_user_lastname_value}" />
+									<input type="password" name="edit_user_new_password" value="${edit_user_new_password}" />
+								</div>
+							</div>					
+							<div class="<%=passwordControlGroup%>">
+								<label class="control-label"> <s:message
+										code="ui.editUser.newPasswordConfirmation" text="ui.editUser.newPasswordConfirmation" />
+								</label>
+								<div class="controls">
+									<input type="password" name="edit_user_new_password_confirmation" value="${edit_user_new_password_confirmation}" />
 								</div>
 							</div>
+						</c:if>
+						
+						<c:if test="${adminEdit}">
 							<div class="control-group">
-								<label class="control-label"> <s:message
-										code="user.institution" text="user.institution" />
-								</label>
 								<div class="controls">
-									<input type="text" name="edit_user_institution" value="${edit_user_institution_value}" />
-								</div>
-							</div>
-							<div class="<%=emailControlGroup%>">
-								<label class="control-label"> <s:message
-										code="user.email" text="user.email" />
-								</label>
-								<div class="controls">
-									<input type="text" name="edit_user_email" value="${edit_user_email_value}" />
-								</div>
-							</div>
-							
-							<c:if test="${userEdit}">
-								<div class="<%=passwordControlGroup%>">
-									<label class="control-label"> <s:message
-											code="ui.editUser.newPassword" text="ui.editUser.newPassword" />
+									<label>
+										<c:choose>
+											<c:when test="${edit_user_activated_value}">
+												<input type="checkbox" class="edit-user-checkbox" name="edit_user_activated" checked />
+											</c:when>
+											<c:otherwise>
+												<input type="checkbox" class="edit-user-checkbox" name="edit_user_activated" />
+											</c:otherwise>
+										</c:choose>
+										<s:message code="ui.editUser.activated" text="ui.editUser.activated" />
 									</label>
-									<div class="controls">
-										<input type="password" name="edit_user_new_password" value="${edit_user_new_password}" />
-									</div>
-								</div>					
-								<div class="<%=passwordControlGroup%>">
-									<label class="control-label"> <s:message
-											code="ui.editUser.newPasswordConfirmation" text="ui.editUser.newPasswordConfirmation" />
+								
+									<label>
+										<c:choose>
+											<c:when test="${edit_user_role_admin_value}">
+												<input type="checkbox" class="edit-user-checkbox" name="edit_user_role_admin" checked />
+											</c:when>
+											<c:otherwise>
+												<input type="checkbox" class="edit-user-checkbox" name="edit_user_role_admin" />
+											</c:otherwise>
+										</c:choose>
+								
+										<s:message code="ui.editUser.roleAdmin" text="ui.editUser.roleAdmin" />
 									</label>
-									<div class="controls">
-										<input type="password" name="edit_user_new_password_confirmation" value="${edit_user_new_password_confirmation}" />
-									</div>
+									
+									<label>
+										<c:choose>
+											<c:when test="${edit_user_role_editor_value}">
+												<input type="checkbox" class="edit-user-checkbox" name="edit_user_role_editor" checked />
+											</c:when>
+											<c:otherwise>
+												<input type="checkbox" class="edit-user-checkbox" name="edit_user_role_editor" />
+											</c:otherwise>
+										</c:choose>
+								
+										<s:message code="ui.editUser.roleEditor" text="ui.editUser.roleEditor" />
+									</label>
+								
+									<label>
+										<c:choose>
+											<c:when test="${edit_user_role_reisestipendium_value}">
+												<input type="checkbox" class="edit-user-checkbox" name="edit_user_role_reisestipendium" checked />
+											</c:when>
+											<c:otherwise>
+												<input type="checkbox" class="edit-user-checkbox" name="edit_user_role_reisestipendium" />
+											</c:otherwise>
+										</c:choose>
+								
+										<s:message code="ui.editUser.roleReisestipendium" text="ui.editUser.roleReisestipendium" />
+									</label>
 								</div>
-							</c:if>
-							
-							<c:if test="${adminEdit}">
 								<div class="control-group">
-									<div class="controls">
-										<label>
-											<c:choose>
-												<c:when test="${edit_user_activated_value}">
-													<input type="checkbox" class="edit-user-checkbox" name="edit_user_activated" checked />
-												</c:when>
-												<c:otherwise>
-													<input type="checkbox" class="edit-user-checkbox" name="edit_user_activated" />
-												</c:otherwise>
-											</c:choose>
-											<s:message code="ui.editUser.activated" text="ui.editUser.activated" />
-										</label>
-									
-										<label>
-											<c:choose>
-												<c:when test="${edit_user_role_admin_value}">
-													<input type="checkbox" class="edit-user-checkbox" name="edit_user_role_admin" checked />
-												</c:when>
-												<c:otherwise>
-													<input type="checkbox" class="edit-user-checkbox" name="edit_user_role_admin" />
-												</c:otherwise>
-											</c:choose>
-									
-											<s:message code="ui.editUser.roleAdmin" text="ui.editUser.roleAdmin" />
-										</label>
-										
-										<label>
-											<c:choose>
-												<c:when test="${edit_user_role_editor_value}">
-													<input type="checkbox" class="edit-user-checkbox" name="edit_user_role_editor" checked />
-												</c:when>
-												<c:otherwise>
-													<input type="checkbox" class="edit-user-checkbox" name="edit_user_role_editor" />
-												</c:otherwise>
-											</c:choose>
-									
-											<s:message code="ui.editUser.roleEditor" text="ui.editUser.roleEditor" />
-										</label>
-									
-										<label>
-											<c:choose>
-												<c:when test="${edit_user_role_reisestipendium_value}">
-													<input type="checkbox" class="edit-user-checkbox" name="edit_user_role_reisestipendium" checked />
-												</c:when>
-												<c:otherwise>
-													<input type="checkbox" class="edit-user-checkbox" name="edit_user_role_reisestipendium" />
-												</c:otherwise>
-											</c:choose>
-									
-											<s:message code="ui.editUser.roleReisestipendium" text="ui.editUser.roleReisestipendium" />
-										</label>
+									<label class="control-label"> <s:message code="ui.editUser.groupAdminRights" text="ui.editUser.groupAdminRights" /></label>
+									<div class="controls">	
+										<select name="edit_group_admins" size="${recordGroupsSize}" multiple>
+											<c:forEach var="recordGroup" items="${recordGroups}">
+												<c:choose>
+													<c:when test="${recordGroupValues[recordGroup.id]}">
+														<option value="${recordGroup.id}" selected>${recordGroup.name}</option>
+													</c:when>
+													<c:otherwise>
+														<option value="${recordGroup.id}">${recordGroup.name}</option>
+													</c:otherwise>
+												</c:choose>
+											</c:forEach>
+										</select>
 									</div>
-									<div class="control-group">
-										<label class="control-label"> <s:message code="ui.editUser.groupAdminRights" text="ui.editUser.groupAdminRights" /></label>
-										<div class="controls">	
-											<select name="edit_group_admins" size="${recordGroupsSize}" multiple>
-												<c:forEach var="recordGroup" items="${recordGroups}">
-													<c:choose>
-														<c:when test="${recordGroupValues[recordGroup.id]}">
-															<option value="${recordGroup.id}" selected>${recordGroup.name}</option>
-														</c:when>
-														<c:otherwise>
-															<option value="${recordGroup.id}">${recordGroup.name}</option>
-														</c:otherwise>
-													</c:choose>
-												</c:forEach>
-											</select>
-										</div>
-									</div>
-								</div>
-							</c:if>
-							
-							<div class="control-group">
-								<label class="control-label">
-									&nbsp;
-								</label>
-								<div class="controls">
-									<c:choose>
-										<c:when test="${r eq 'userManagement' }">
-											<a href="userManagement" class="btn" data-dismiss="modal" aria-hidden="true"><s:message
-												code="ui.cancel" text="ui.cancel" /></a>
-										</c:when>
-										<c:otherwise>
-											<a href="redirect?r=${r}" class="btn" data-dismiss="modal" aria-hidden="true"><s:message
-												code="ui.cancel" text="ui.cancel" /></a>
-										</c:otherwise>
-									</c:choose>
-									<s:message code="ui.ok" text="ui.ok" var="submitValue" />
-									<input type="submit" class="btn btn-primary" value="${submitValue}" />
 								</div>
 							</div>
-						</form>
-					</div>
+						</c:if>
+						
+						<div class="control-group">
+							<label class="control-label">
+								&nbsp;
+							</label>
+							<div class="controls">
+								<c:choose>
+									<c:when test="${r eq 'userManagement' }">
+										<a href="userManagement" class="btn" data-dismiss="modal" aria-hidden="true"><s:message
+											code="ui.cancel" text="ui.cancel" /></a>
+									</c:when>
+									<c:otherwise>
+										<a href="redirect?r=${r}" class="btn" data-dismiss="modal" aria-hidden="true"><s:message
+											code="ui.cancel" text="ui.cancel" /></a>
+									</c:otherwise>
+								</c:choose>
+								<s:message code="ui.ok" text="ui.ok" var="submitValue" />
+								<input type="submit" class="btn btn-primary" value="${submitValue}" />
+							</div>
+						</div>
+					</form>
 				</div>		
 		
 				<!-- Footer -->

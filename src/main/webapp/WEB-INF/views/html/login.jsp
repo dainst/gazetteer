@@ -98,52 +98,50 @@
 					</div>
 				</c:if>
 		
-				<div class="row-fluid">
-					<div class="span6 offset3 well">
-						<form class="form-horizontal" name="f" action="j_spring_security_check" method="POST">
-							<c:if test="${not empty r}">
-								<input type="hidden" name="spring-security-redirect" value="/app/#!/<c:out value="${r}" />">
-							</c:if>
-							<h3>
-								<s:message code="ui.login" text="ui.login" />
-							</h3>
-							<div class="control-group">
-								<label class="control-label" for="inputUsername"> <s:message
-										code="ui.username" text="ui.username" />
-								</label>
-								<div class="controls">
-									<input type="text" name="j_username">
-								</div>
+				<div class="well" style="width: 550px; margin: 0 auto;">
+					<form name="f" class="form-horizontal" action="j_spring_security_check" method="POST">
+						<c:if test="${not empty r}">
+							<input type="hidden" name="spring-security-redirect" value="/app/#!/<c:out value="${r}" />">
+						</c:if>
+						<h3>
+							<s:message code="ui.login" text="ui.login" />
+						</h3>
+						<div class="control-group">
+							<label class="control-label" for="inputUsername"> <s:message
+									code="ui.username" text="ui.username" />
+							</label>
+							<div class="controls">
+								<input type="text" name="j_username">
 							</div>
-							<div class="control-group">
-								<label class="control-label" for="inputPassword"> <s:message
-										code="ui.password" text="ui.password" />
-								</label>
-								<div class="controls">
-									<input type="password" name="j_password">
-								</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label" for="inputPassword"> <s:message
+									code="ui.password" text="ui.password" />
+							</label>
+							<div class="controls">
+								<input type="password" name="j_password">
 							</div>
-							<div class="control-group">
-								<label class="control-label">
-									&nbsp;
-								</label>
-								<div class="controls">
-									<a href="redirect?r=${r}" class="btn" data-dismiss="modal" aria-hidden="true"><s:message
-											code="ui.cancel" text="ui.cancel" /></a>
-									<s:message code="ui.login" text="ui.login" var="submitValue" />
-									<input type="submit" class="btn btn-primary" value="${submitValue}" />
-								</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">
+								&nbsp;
+							</label>
+							<div class="controls">
+								<a href="redirect?r=${r}" class="btn" data-dismiss="modal" aria-hidden="true"><s:message
+										code="ui.cancel" text="ui.cancel" /></a>
+								<s:message code="ui.login" text="ui.login" var="submitValue" />
+								<input type="submit" class="btn btn-primary" value="${submitValue}" />
 							</div>
-							<div class="control-group">
-								<label class="control-label">
-									&nbsp;
-								</label>
-								<div class="controls">
-									<a href="passwordChangeRequest?r=${r}"><s:message code="ui.forgotPassword" text="ui.forgotPassword"/></a>
-								</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">
+								&nbsp;
+							</label>
+							<div class="controls">
+								<a href="passwordChangeRequest?r=${r}"><s:message code="ui.forgotPassword" text="ui.forgotPassword"/></a>
 							</div>
-						</form>
-					</div>
+						</div>
+					</form>
 				</div>
 		
 				<!-- Footer -->

@@ -147,81 +147,79 @@
 					</div>
 				</c:if>
 		
-				<div class="row-fluid">
-					<div class="span6 offset3 well">
-						<form class="form-horizontal" name="f" action="checkRegisterForm?r=${r}" accept-charset="UTF-8" method="POST">
-							<h3>
-								<s:message code="ui.register" text="ui.register" />
-							</h3>
-							<div class="<%=usernameControlGroup%>">
-								<label class="control-label"> <s:message
-										code="user.username" text="user.username" />
-								</label>
-								<div class="controls">
-									<input type="text" name="register_username" value="${register_username_value}">
-								</div>
+				<div class="well" style="width: 550px; margin: 0 auto;">
+					<form class="form-horizontal" name="f" action="checkRegisterForm?r=${r}" accept-charset="UTF-8" method="POST">
+						<h3>
+							<s:message code="ui.register" text="ui.register" />
+						</h3>
+						<div class="<%=usernameControlGroup%>">
+							<label class="control-label"> <s:message
+									code="user.username" text="user.username" />
+							</label>
+							<div class="controls">
+								<input type="text" name="register_username" value="${register_username_value}">
 							</div>
-							<div class="<%=firstnameControlGroup%>">
-								<label class="control-label"> <s:message
-										code="user.firstname" text="user.firstname" />
-								</label>
-								<div class="controls">
-									<input type="text" name="register_firstname" value="${register_firstname_value}">
-								</div>
+						</div>
+						<div class="<%=firstnameControlGroup%>">
+							<label class="control-label"> <s:message
+									code="user.firstname" text="user.firstname" />
+							</label>
+							<div class="controls">
+								<input type="text" name="register_firstname" value="${register_firstname_value}">
 							</div>
-							<div class="<%=lastnameControlGroup%>">
-								<label class="control-label"> <s:message
-										code="user.lastname" text="user.lastname" />
-								</label>
-								<div class="controls">
-									<input type="text" name="register_lastname" value="${register_lastname_value}">
-								</div>
+						</div>
+						<div class="<%=lastnameControlGroup%>">
+							<label class="control-label"> <s:message
+									code="user.lastname" text="user.lastname" />
+							</label>
+							<div class="controls">
+								<input type="text" name="register_lastname" value="${register_lastname_value}">
 							</div>
-							<div class="control-group">
-								<label class="control-label"> <s:message
-										code="user.institution" text="user.institution" />
-								</label>
-								<div class="controls">
-									<input type="text" name="register_institution" value="${register_institution_value}">
-								</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label"> <s:message
+									code="user.institution" text="user.institution" />
+							</label>
+							<div class="controls">
+								<input type="text" name="register_institution" value="${register_institution_value}">
 							</div>
-							<div class="<%=emailControlGroup%>">
-								<label class="control-label"> <s:message
-										code="user.email" text="user.email" />
-								</label>
-								<div class="controls">
-									<input type="text" name="register_email" value="${register_email_value}">
-								</div>
+						</div>
+						<div class="<%=emailControlGroup%>">
+							<label class="control-label"> <s:message
+									code="user.email" text="user.email" />
+							</label>
+							<div class="controls">
+								<input type="text" name="register_email" value="${register_email_value}">
 							</div>
-							<div class="<%=passwordControlGroup%>">
-								<label class="control-label"> <s:message
-										code="ui.password" text="ui.password" />
-								</label>
-								<div class="controls">
-									<input type="password" name="register_password">
-								</div>
+						</div>
+						<div class="<%=passwordControlGroup%>">
+							<label class="control-label"> <s:message
+									code="ui.password" text="ui.password" />
+							</label>
+							<div class="controls">
+								<input type="password" name="register_password">
 							</div>
-							<div class="<%=passwordControlGroup%>">
-								<label class="control-label"> <s:message
-										code="ui.passwordConfirmation" text="ui.passwordConfirmation" />
-								</label>
-								<div class="controls">
-									<input type="password" name="register_password_confirmation">
-								</div>
+						</div>
+						<div class="<%=passwordControlGroup%>">
+							<label class="control-label"> <s:message
+									code="ui.passwordConfirmation" text="ui.passwordConfirmation" />
+							</label>
+							<div class="controls">
+								<input type="password" name="register_password_confirmation">
 							</div>
-							<div class="control-group">
-								<label class="control-label">
-									&nbsp;
-								</label>
-								<div class="controls">
-									<a href="redirect?r=${r}" class="btn" data-dismiss="modal" aria-hidden="true"><s:message
-											code="ui.cancel" text="ui.cancel" /></a>
-									<s:message code="ui.register" text="ui.register" var="submitValue" />
-									<input type="submit" class="btn btn-primary" value="${submitValue}" />
-								</div>
+						</div>
+						<div class="control-group">
+							<label class="control-label">
+								&nbsp;
+							</label>
+							<div class="controls">
+								<a href="redirect?r=${r}" class="btn" data-dismiss="modal" aria-hidden="true"><s:message
+										code="ui.cancel" text="ui.cancel" /></a>
+								<s:message code="ui.register" text="ui.register" var="submitValue" />
+								<input type="submit" class="btn btn-primary" value="${submitValue}" />
 							</div>
-						</form>
-					</div>
+						</div>
+					</form>
 				</div>
 		
 				<!-- Footer -->

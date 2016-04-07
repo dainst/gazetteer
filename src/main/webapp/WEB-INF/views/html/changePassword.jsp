@@ -102,43 +102,41 @@
 					</div>
 				</c:if>
 		
-				<div class="row-fluid">
-					<div class="span6 offset3 well">
-						<form class="form-horizontal" name="f" action="checkChangePasswordForm?userid=${user.id}" accept-charset="UTF-8" method="POST">
-							<h3>
-								<s:message code="ui.changePassword" text="ui.changePassword" />
-							</h3>
-							<div class="control-group">
-									<label class="control-label"> <s:message
-											code="ui.password" text="ui.password" />
-									</label>
-									<div class="controls">
-										<input type="password" name="change_password_password" value="${change_password_password_value}" />
-									</div>
+				<div class="well" style="width: 550px; margin: 0 auto;">
+					<form class="form-horizontal" name="f" action="checkChangePasswordForm?userid=${user.id}" accept-charset="UTF-8" method="POST">
+						<h3>
+							<s:message code="ui.changePassword" text="ui.changePassword" />
+						</h3>
+						<div class="control-group">
+							<label class="control-label"> <s:message
+									code="ui.password" text="ui.password" />
+							</label>
+							<div class="controls">
+								<input type="password" name="change_password_password" value="${change_password_password_value}" />
 							</div>
-							
-							<div class="control-group">
-									<label class="control-label"> <s:message
-											code="ui.passwordConfirmation" text="ui.passwordConfirmation" />
-									</label>
-									<div class="controls">
-										<input type="password" name="change_password_password_confirmation" value="${change_password_password_confirmation_value}" />
-									</div>
+						</div>
+						
+						<div class="control-group">
+							<label class="control-label"> <s:message
+									code="ui.passwordConfirmation" text="ui.passwordConfirmation" />
+							</label>
+							<div class="controls">
+								<input type="password" name="change_password_password_confirmation" value="${change_password_password_confirmation_value}" />
 							</div>
-							
-							<div class="control-group">
-								<label class="control-label">
-									&nbsp;
-								</label>
-								<div class="controls">
-									<a href="./" class="btn" data-dismiss="modal" aria-hidden="true"><s:message
-												code="ui.cancel" text="ui.cancel" /></a>
-									<s:message code="ui.ok" text="ui.ok" var="submitValue" />
-									<input type="submit" class="btn btn-primary" value="${submitValue}" />
-								</div>
+						</div>
+						
+						<div class="control-group">
+							<label class="control-label">
+								&nbsp;
+							</label>
+							<div class="controls">
+								<a href="./" class="btn" data-dismiss="modal" aria-hidden="true"><s:message
+											code="ui.cancel" text="ui.cancel" /></a>
+								<s:message code="ui.ok" text="ui.ok" var="submitValue" />
+								<input type="submit" class="btn btn-primary" value="${submitValue}" />
 							</div>
-						</form>
-					</div>
+						</div>
+					</form>
 				</div>
 		
 				<!-- Footer -->
