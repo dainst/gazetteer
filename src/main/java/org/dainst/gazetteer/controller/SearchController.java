@@ -187,7 +187,7 @@ public class SearchController {
 			protectLocationsService.protectLocations(user, place, accessStatus);
 			accessStatusMap.put(place.getId(), accessStatus);
 
-			if (add != null && add.contains("parents")) {
+			if (add != null && add.contains("parents") && !place.isDeleted()) {
 				List<Place> placeParents = new ArrayList<Place>();
 				createParentsList(place, placeParents, false);
 			
