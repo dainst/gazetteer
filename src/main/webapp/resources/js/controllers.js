@@ -248,9 +248,8 @@ function HomeCtrl($scope, $location, $rootScope, Place, EscapingService) {
 	};
 	
 	$scope.submit = function() {
-		if ($scope.selectedSuggestionIndex != -1)
+		if ($scope.selectedSuggestionIndex != -1 && $scope.homeSearchSuggestions.length > 0)
 			$scope.searchFieldInput = $scope.homeSearchSuggestions[$scope.selectedSuggestionIndex];
-		
 		$scope.zoom = 2;
 		$location.path('/search').search({q: EscapingService.escape($scope.searchFieldInput), type: $scope.type});
 		$scope.searchFieldInput = null;
