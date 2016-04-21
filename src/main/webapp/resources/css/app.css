@@ -272,10 +272,13 @@ footer {
   background-image: url('../img/polygon_icon.png');
   background-size: 14px 14px;
   background-repeat: no-repeat;
-  height: 14px;
   width: 14px;
-  margin-top: 3px;
+  height: 14px;
   margin-left: -3px;
+  margin-right: -5px;
+  padding-top: 3px;
   -webkit-filter: drop-shadow(1px 1px 1px #333);
   filter: drop-shadow(1px 1px 1px #333);
+  display: inline-block;
+  vertical-align: middle;
 }
