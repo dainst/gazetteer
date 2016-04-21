@@ -26,7 +26,6 @@
 		<link href="resources/bootstrap/css/daterangepicker-bs2.css" rel="stylesheet">
 		<script	src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>	
 		<script	src="//arachne.uni-koeln.de/archaeostrap/assets/js/bootstrap.js"></script>	
-		<script src='//maps.google.com/maps/api/js?key=${googleMapsApiKey}&amp;sensor=false&libraries=visualization'></script>
 		<script src="resources/js/custom.js"></script>
 		<script src="resources/bootstrap/js/moment.js"></script>
 		<script src="resources/bootstrap/js/daterangepicker.js"></script>	

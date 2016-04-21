@@ -217,7 +217,7 @@
 		
 	</div>
 	
-	<script src='//maps.google.com/maps/api/js?key=${googleMapsApiKey}&amp;sensor=false&libraries=visualization,drawing'></script>
+	<script src='//maps.google.com/maps/api/js?key=${googleMapsApiKey}&amp;libraries=visualization,drawing'></script>
 	
 	<script src="../resources/bootstrap/js/bootstrap.min.js"></script>
 	

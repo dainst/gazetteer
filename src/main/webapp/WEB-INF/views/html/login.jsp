@@ -25,7 +25,6 @@
 		<link href="resources/css/app.css" rel="stylesheet">
 		<script	src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>	
 		<script	src="//arachne.uni-koeln.de/archaeostrap/assets/js/bootstrap.js"></script>	
-		<script src='//maps.google.com/maps/api/js?key=${googleMapsApiKey}&amp;sensor=false&libraries=visualization'></script>
 		<script src="resources/js/custom.js"></script>
 	</head>
 	<body>

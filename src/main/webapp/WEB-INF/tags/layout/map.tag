@@ -31,7 +31,7 @@ function requireGoogleMaps(callback, apiKey) {
 		mapsApiCallback = callback;
 	    var script_tag = document.createElement('script');
 	    script_tag.setAttribute("type","text/javascript");
-	    var src = "https://maps.google.com/maps/api/js?sensor=false&callback=mapsApiCallback&key=" + apiKey;
+	    var src = "https://maps.google.com/maps/api/js?callback=mapsApiCallback&key=" + apiKey;
 	    script_tag.setAttribute("src", src);
 	    // Try to find the head, otherwise default to the documentElement
 	    (document.getElementsByTagName("head")[0] || document.documentElement).appendChild(script_tag);

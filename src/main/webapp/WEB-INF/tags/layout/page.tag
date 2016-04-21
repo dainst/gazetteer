@@ -19,7 +19,7 @@
 <link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome-ie7.css" rel="stylesheet">
 <link href="resources/css/app.css" rel="stylesheet">
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-<script src='//maps.google.com/maps/api/js?key=${googleMapsApiKey}&amp;sensor=false'></script>
+<script src='//maps.google.com/maps/api/js?key=${googleMapsApiKey}'></script>
 <script src="resources/js/custom.js"></script>
 <script src='resources/js/lib/jquery.jstree.js'></script>
 <script src='resources/bootstrap/js/bootstrap.min.js'></script>
