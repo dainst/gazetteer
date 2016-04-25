@@ -264,6 +264,42 @@
 						}
 					}
 				},
+				"comments": {
+					"properties": {
+						"text": {
+							"type": "string",
+							"include_in_all": false
+						},
+						"language": {
+							"type": "string",
+							"include_in_all": false
+						},
+						"user": {
+							"type": "string",
+							"include_in_all": false
+						}
+					}
+				},
+				"commentsReisestipendium": {
+					"properties": {
+						"text": {
+							"type": "string",
+							"include_in_all": false
+						},
+						"language": {
+							"type": "string",
+							"include_in_all": false
+						},
+						"user": {
+							"type": "string",
+							"include_in_all": false
+						}
+					}
+				},
+				"noteReisestipendium": {
+					"type": "string",
+					"include_in_all": false
+				},
 				"groupInternalData": {
 					"type": "nested",
 					"properties": {

@@ -302,9 +302,27 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages, PolygonVali
 		// all fields
 		if ($scope.meta !== null) {
 			if ($scope.fuzzy)
-				queries.push({ fuzzy: { "_all": $scope.meta } });
+				queries.push({
+					bool: {
+						should: [
+						    { fuzzy: { "_all": $scope.meta } },
+						    { fuzzy: { "comments.text": $scope.meta } },
+						    { fuzzy: { "commentsReisestipendium.text": $scope.meta } },
+						    { fuzzy: { "noteReisestipendium": $scope.meta } }
+						]
+					}
+				});
 			else
-				queries.push({ match: { "_all": $scope.meta } });
+				queries.push({
+					bool: {
+						should: [
+						    { match: { "_all": $scope.meta } },
+						    { match: { "comments.text": $scope.meta } },
+						    { match: { "commentsReisestipendium.text": $scope.meta } },
+						    { match: { "noteReisestipendium": $scope.meta } }
+						]
+					}
+				});
 		}
 		
 		// names
