@@ -30,9 +30,6 @@ public class ImageController {
 	public byte[] numberedMarkerImage(@PathVariable String color, @PathVariable int number) throws Exception {
 		String fileName;
 		switch (color) {
-		case "blue":
-			fileName = "marker_blue.png";
-			break;
 		case "lightred":
 			fileName = "marker_lightred.png";
 			break;
