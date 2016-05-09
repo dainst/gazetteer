@@ -216,7 +216,8 @@ public class JsonPlaceDeserializer {
 						shape.setCoordinates(shapeCoordinates);
 						prefLocation.setShape(shape);
 					}
-				}
+				} else
+					prefLocation.setShape(null);
 				
 				if (prefLocation.getCoordinates() != null || prefLocation.getShape() != null) {
 					if (prefLocationNode.has("publicSite"))
@@ -228,7 +229,9 @@ public class JsonPlaceDeserializer {
 					logger.debug("updated location: {}", prefLocation);
 				} else
 					place.setPrefLocation(null);
-			}
+			} else
+				place.setPrefLocation(null);
+			
 			Set<Location> locations = new HashSet<Location>();
 			JsonNode locationsNode = objectNode.get("locations");
 			if (locationsNode != null) for (JsonNode locationNode : locationsNode) {

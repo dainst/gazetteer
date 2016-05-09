@@ -160,7 +160,6 @@
 				</li>
 			</ul>
 		</dd>
-		<br/>
 	</span>
 	
 	<span ng-hide="!place.unlocatable && (!place.prefLocation || !((place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0) || place.prefLocation.shape))">

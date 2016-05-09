@@ -1185,7 +1185,8 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, $http,
 			$scope.place.prefLocation = {};
 			$scope.place.locations = [];
 		}
-		else if ($scope.place.prefLocation && !$scope.place.prefLocation.coordinates && !$scope.place.prefLocation.shape)
+		else if ($scope.place.prefLocation && (!$scope.place.prefLocation.coordinates || $scope.place.prefLocation.coordinates.length == 0)
+				&& !$scope.place.prefLocation.shape)
 			$scope.place.prefLocation = undefined;
 		if ($scope.comment) $scope.addComment();
 		if ($scope.groupInternalData) $scope.addGroupInternalData();
