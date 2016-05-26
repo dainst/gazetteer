@@ -1343,8 +1343,15 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, $http,
 	$scope.getZenonSearchQuery = function() {
 		var zenonIds = $scope.getIdsByContext("zenon-thesaurus");
 		for (var i in zenonIds) {
-			zenonIds[i] = "%22" + zenonIds[i] + "%22";
-		}		
+			var tokens = zenonIds[i].split(" ");
+			if (tokens.length > 1) {
+				for (var j in tokens) {
+					tokens[j] = "%22"+ tokens[j] + "%22";
+				}
+				zenonIds[i] = "(" + tokens.join(" ") + ")";
+			} else
+				zenonIds[i] = "%22" + zenonIds[i] + "%22";
+		}
 		return zenonIds.join(" OR ");
 	};
 	
