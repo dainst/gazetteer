@@ -104,6 +104,11 @@ opts = OptionParser.new do |opts|
     options.keepAsAlternative = k
   end
 
+  options.replaceLists = false
+  opts.on("-l", "--replace-lists", "Replace existing lists with new values when merging with activated replace option") do |l|
+    options.replaceLists = true
+  end
+
   options.updatedCSV = false
   opts.on("-C", "--updated-csv FILE", "Create an updated version of the CSV input file which includes newly generated Gazetteer IDs") do |f|
     options.updateCSV = f
@@ -147,7 +152,11 @@ end
 # merge helper
 merger = lambda do |key, oldval, newval|
   if oldval.is_a? Array
-    newval | oldval
+    if options.replaceLists
+      newval
+    else
+      newval | oldval
+    end
   elsif oldval.is_a? Hash
     oldval.merge(newval)
   else
