@@ -151,7 +151,11 @@
   							<li class="dropdown">
     							<a href="#" class="dropdown-toggle" data-toggle="dropdown">iDAI.welt <b class="caret"></b></a>
     							<ul class="dropdown-menu">
-      								<li><a href="http://www.dainst.org/de/forschung/forschung-digital/idai.welt" target="_blank">Übersicht</a></li>
+      								<li>
+      									<a href="http://www.dainst.org/de/forschung/forschung-digital/idai.welt" target="_blank">
+      										<s:message code="ui.idaiwelt.overview" text="ui.idaiwelt.overview" />
+      									</a>
+      								</li>
 									<li class="divider"></li>
 	   								<li><a href="http://zenon.dainst.org/" target="_blank">iDAI.bibliography / Zenon 2.0</a></li>
       								<li><a href="http://geoserver.dainst.org/" target="_blank">iDAI.geoserver</a></li>
@@ -161,12 +165,23 @@
       								<li><a href="http://hellespont.dainst.org" target="_blank">Hellespont</a></li>
     							</ul>
   							</li>
+  							<li class="dropdown">
+    							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+    								<s:message code="ui.language.current" text="ui.language.current" />
+    								<b class="caret"></b>
+    							</a>
+    							<ul class="dropdown-menu">
+      								<li><a href="?lang=en#!{{getCurrentRoute()}}">English</a></li>
+      								<li><a href="?lang=de#!{{getCurrentRoute()}}">Deutsch</a></li>
+      								<li><a href="?lang=ar#!{{getCurrentRoute()}}">العربية</a></li>
+    							</ul>
+  							</li>
 						</ul>
 					</div>
 				</div>
 			</div>
 		</div>
-		
+				
 		<div class="gaz-container" name="container">
 		
 			<c:if test="${successMessage eq 'register'}">

@@ -124,6 +124,10 @@ function AppCtrl($scope, $location, $rootScope, $timeout, Place, GeoSearch, Esca
 		else
 			$scope.highlight = { id: id, type: type, index: index };
 	};
+	
+	$scope.getCurrentRoute = function() {
+		return $location.path();
+	}
 }
 
 function HomeCtrl($scope, $location, $rootScope, Place, EscapingService) {
