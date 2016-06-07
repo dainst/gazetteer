@@ -96,7 +96,7 @@ public class SearchController {
 			@RequestParam(required=false) double[] bbox,
 			@RequestParam(required=false) double[] polygonFilterCoordinates,
 			@RequestParam(required=false) boolean showHiddenPlaces,
-			@RequestParam(required=false) List<String> add,
+			@RequestParam(required=false) String add,
 			@RequestParam(required=false) boolean noPolygons,
 			@RequestParam(required=false) String queryId,
 			@RequestParam(required=false) boolean pretty,

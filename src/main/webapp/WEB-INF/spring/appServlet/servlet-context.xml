@@ -13,9 +13,9 @@
 	<context:property-placeholder location="/WEB-INF/*.properties" />
 	
 	<bean name="handlerAdapter" class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
-	    <!-- <property name="webBindingInitializer">
+	    <property name="webBindingInitializer">
 	        <bean class="org.springframework.web.bind.support.ConfigurableWebBindingInitializer"></bean>
-	    </property> -->
+	    </property>
 	    <property name="messageConverters">
 	        <list>
 	            <bean class="org.dainst.gazetteer.converter.KmlPlaceMessageConverter"/>

@@ -91,7 +91,7 @@ public class DocumentController {
 			@RequestParam(required=false) String q,
 			@RequestParam(required=false) String fuzzy,
 			@RequestParam(required=false, defaultValue="map,table") String view,
-			@RequestParam(required=false) List<String> add,
+			@RequestParam(required=false) String add,
 			@RequestParam(required=false) boolean pretty,
 			@RequestParam(required=false) String replacing,
 			@RequestHeader(value="User-Agent", required=false) String userAgent,
@@ -131,7 +131,7 @@ public class DocumentController {
 		
 		logger.debug("findOne: {}", System.currentTimeMillis() - time);
 		time = System.currentTimeMillis();
-		
+				
 		if (place == null) {
 			
 			throw new ResourceNotFoundException();
@@ -174,6 +174,7 @@ public class DocumentController {
 			Map<String, PlaceAccessService.AccessStatus> parentAccessStatusMap = new HashMap<String, PlaceAccessService.AccessStatus>();
 			
 			List<Place> parents = new ArrayList<Place>();
+			
 			if (add != null && add.contains("parents")) {
 				createParentsList(place, parents);
 				
