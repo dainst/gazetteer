@@ -82,7 +82,7 @@
 										</div>
 									</div>
 									<div style="text-align: center;">						
-										<a ng-class="{disabled: facet.length <= 5 || facetOffsets[facetName] > facet.length -5}"
+										<a ng-class="{disabled: facet.length <= 5 || facetOffsets[facetName] >= facet.length - 5}"
 												ng-click="nextFacetEntries(facetName)"
 												class="btn btn-default btn-mini btn-block btn-facet-scroll">
 											<i class="icon-caret-down"></i>
