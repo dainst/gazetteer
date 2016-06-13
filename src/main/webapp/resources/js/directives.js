@@ -1127,3 +1127,142 @@ directives.directive('scrollPosition', function($window) {
 	    }
 	  };
 	});
+
+directives.directive('markdownTextEditor', function($timeout) {
+    return {
+        restrict: 'A',
+        scope: {
+            markdownText: '=',
+            placeholder: '@'
+        },
+        templateUrl: 'partials/markdownTextEditor.html',
+        link: function(scope, element) {
+            var textField = angular.element(element.children()[0]).children()[1].children[0];
+
+            if (!scope.markdownText)
+                scope.markdownText = "";
+
+            scope.formatText = function(formatOption) {
+            	if (document.selection != undefined) {
+                    textField.focus();
+                    scope.selectionRange = document.selection.createRange().duplicate();
+                    scope.selectedText = scope.selectionRange.text;
+
+                    var textFieldRange = textField.createTextRange();
+                    var bookmark = scope.selectionRange.getBookmark();
+
+                    textFieldRange.moveToBookmark(bookmark);
+                } else if (textField.selectionStart != undefined) {
+                    scope.selectedTextStart = textField.selectionStart;
+                    scope.selectedTextEnd = textField.selectionEnd;
+                    scope.selectedText = scope.markdownText.substring(scope.selectedTextStart, scope.selectedTextEnd);
+                }
+
+                scope.modifiedText = "";
+                scope.additionalCharacters = 0;
+
+                if (formatOption == "link") {
+                    scope.link = { description: scope.selectedText };
+                } else {
+                    var blankSpaceSelection = false;
+
+                    switch (formatOption) {
+                        case "bold":
+                            if (scope.selectedText == "") {
+                                scope.selectedText = " ";
+                                scope.additionalCharacters = 2;
+                                blankSpaceSelection = true;
+                            } else
+                                scope.additionalCharacters = 4;
+                            scope.modifiedText = "**" + scope.selectedText + "**";
+                            break;
+
+                        case "italic":
+                            if (scope.selectedText == "") {
+                                scope.selectedText = " ";
+                                scope.additionalCharacters = 1;
+                                blankSpaceSelection = true;
+                            } else
+                                scope.additionalCharacters = 2;
+                                ;
+                            scope.modifiedText = "*" + scope.selectedText + "*";       
+                            break;
+
+                        case "heading1":
+                            scope.modifiedText = "# " + scope.selectedText;
+                            scope.additionalCharacters = 2;
+                            break;
+
+                        case "heading2":
+                            scope.modifiedText = "## " + scope.selectedText;
+                            scope.additionalCharacters = 3;
+                            break;
+
+                        case "heading3":
+                            scope.modifiedText = "### " + scope.selectedText;
+                            scope.additionalCharacters = 4;
+                            break;
+
+                        case "listBullets":
+                            var lines = scope.selectedText.split("\n");
+                            for (var i = 0; i < lines.length; i++) {
+                                scope.modifiedText += "* " + lines[i];
+                                if (i != lines.length - 1)
+                                    scope.modifiedText += "\n"
+                                scope.additionalCharacters += 2;
+                            }
+                            break;
+
+                        case "listNumbers":
+                            var lines = scope.selectedText.split("\n");
+                            for (var i = 0; i < lines.length; i++) {
+                                scope.modifiedText += (i + 1).toString() + ". " + lines[i];
+                                if (i != lines.length - 1)
+                                    scope.modifiedText += "\n"
+                                if (i < 9)
+                                    scope.additionalCharacters += 3;
+                                else
+                                    scope.additionalCharacters += 4;
+                            }
+                            break;
+                    }
+
+                    updateSelection(blankSpaceSelection);
+                }            
+                
+                textField.focus();
+
+            };
+
+            var updateSelection = function(blankSpaceSelection) { 
+                if (scope.selectionRange) {
+                    $timeout(function() {
+                        scope.selectionRange.text = scope.modifiedText;
+                        scope.selectionRange.collapse(true);
+                        if (blankSpaceSelection)
+                            scope.selectionRange.moveEnd('character', scope.selectedTextEnd + scope.additionalCharacters + 1);
+                        else
+                            scope.selectionRange.moveEnd('character', scope.selectedTextEnd + scope.additionalCharacters);
+                        scope.selectionRange.moveStart('character', scope.selectedTextEnd + scope.additionalCharacters);
+                        scope.selectionRange.select();
+                    });
+                } else {
+                    scope.markdownText = scope.markdownText.substring(0, scope.selectedTextStart) + scope.modifiedText + scope.markdownText.substring(scope.selectedTextEnd);
+                    $timeout(function() {
+                        if (blankSpaceSelection)
+                            textField.setSelectionRange(scope.selectedTextEnd + scope.additionalCharacters, scope.selectedTextEnd + scope.additionalCharacters + 1);
+                        else
+                            textField.setSelectionRange(scope.selectedTextEnd + scope.additionalCharacters, scope.selectedTextEnd + scope.additionalCharacters);
+                    });
+                }
+            };
+            
+            scope.createLink = function() {
+            	 scope.modifiedText = "[" + scope.link.description + "](" + scope.link.url + ")";
+                 scope.additionalCharacters = (scope.link.description.length - scope.selectedText.length) + scope.link.url.length + 4;
+                 updateSelection(scope.modifiedText, scope.selectionRange, scope.selectedTextStart, scope.selectedTextEnd, scope.additionalCharacters, false);
+            };
+
+        }
+    }
+});

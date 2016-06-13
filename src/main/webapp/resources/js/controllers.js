@@ -1680,3 +1680,73 @@ function ThesaurusCtrl($scope, $rootScope, $location, Place, messages, $route) {
 		return null;
 	};
 }
+
+function HelpCtrl($scope, $rootScope, $location, $http, $showdown) {
+	$rootScope.showMap = false;
+	$rootScope.showHeader = false;
+	$rootScope.showNavbarSearch = true;
+	$rootScope.viewClass = "";
+	$rootScope.pageTitle = "iDAI.gazetteer";
+	$rootScope.title = "";
+	$rootScope.subtitle = "";
+	$rootScope.isFocused = false;
+	$rootScope.geoSearch = false;
+	
+	$scope.editMode = false;
+	$scope.shownHelpText = "";
+	$scope.helpTexts = {};	
+	$scope.baseUri = $location.absUrl().substring(0, $location.absUrl().indexOf("app"));
+	
+	$http.get($scope.baseUri + "help/").then(function(result) {
+		$scope.shownHelpText = $showdown.makeHtml(result.data);
+	});
+	
+	$scope.edit = function() {
+		loadHelpTexts();
+		$scope.editMode = true;
+	};
+	
+	$scope.changeText = function(language, loginNeeded) {
+		 $http({
+	            method: 'PUT',
+	            url: ($scope.baseUri + "help/" + language + "/" + loginNeeded),
+	            data: $scope.helpTexts[language][loginNeeded],
+	            headers: {
+	                'Content-Type': 'text/plain'
+	            }
+	        }).
+	        success(function(result) {
+	            // TODO Feedback
+	        });
+	};
+	
+	var loadHelpTexts = function() {
+		$scope.helpTexts = {
+				"eng": {
+					"false": "",
+					"true": ""
+				},
+				"deu": {
+					"false": "",
+					"true": ""
+				},
+				"ara": {
+					"false": "",
+					"true": ""
+				}
+		};
+		
+		loadHelpText("eng", "false");
+		loadHelpText("eng", "true");
+		loadHelpText("deu", "false");
+		loadHelpText("deu", "true");
+		loadHelpText("ara", "false");
+		loadHelpText("ara", "true");
+	};
+	
+	var loadHelpText = function(language, loginNeeded) {
+		$http.get($scope.baseUri + "help/" + language + "/" + loginNeeded).then(function(result) {
+			$scope.helpTexts[language][loginNeeded] = result.data;
+		});
+	};
+}

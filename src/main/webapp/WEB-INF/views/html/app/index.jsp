@@ -19,8 +19,7 @@
 <link rel="apple-touch-icon" href="../resources/ico/apple-touch-icon-57.png">
 <link href="//arachne.uni-koeln.de/archaeostrap/assets/css/bootstrap.css" rel="stylesheet">
 <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet">
-<link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet">
-<link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome-ie7.css" rel="stylesheet">
+<link href="../resources/font-awesome/css/font-awesome.min.css" rel="stylesheet">
 <link href="../resources/css/angular-ui.css" rel="stylesheet">
 <link href="../resources/css/app.css" rel="stylesheet">
 <script	src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
@@ -28,8 +27,11 @@
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-resource.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-cookies.min.js"></script>
 <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-route.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-sanitize.min.js"></script>
 <script src="../resources/js/lib/angular/angular-ui.js"></script>
 <script src="../resources/js/lib/angular/ui-bootstrap-custom-0.4.0.min.js"></script>
+<script src="../resources/js/lib/showdown/showdown.min.js"></script>
+<script src="../resources/js/lib/ngShowdown/ng-showdown.min.js"></script>
 </head>
 <body class="ng-cloak">
 
@@ -148,6 +150,8 @@
 							</div>
 						</div>
 						<ul class="nav pull-right">
+							<li><a href="#!/help/"><s:message
+											code="ui.help" text="ui.help" /></a></li>
   							<li class="dropdown">
     							<a href="#" class="dropdown-toggle" data-toggle="dropdown">iDAI.welt <b class="caret"></b></a>
     							<ul class="dropdown-menu">

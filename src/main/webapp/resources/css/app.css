@@ -282,3 +282,27 @@ footer {
   display: inline-block;
   vertical-align: middle;
 }
+
+.markdown-editor-button-group {
+  margin-bottom: 3px;
+}
+
+.markdown-editor-button-group .btn {
+  width: 40px;
+  height: 32px;
+}
+
+.markdown-editor-button-group .btn span {
+  text-align: center;
+}
+
+.markdown-editor-button-group .heading-button span {
+  font-size: 11px;
+  margin-left: -2px;
+}
+
+.markdown-editor-button-group .heading-button .heading-button-number {
+  font-weight: bold;
+  vertical-align: -1px;
+  margin-left: 0px;
+}
