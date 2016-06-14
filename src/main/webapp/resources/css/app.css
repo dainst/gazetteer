@@ -306,3 +306,15 @@ footer {
   vertical-align: -1px;
   margin-left: 0px;
 }
+
+.markdown h3 {
+	font-size: 22px;
+}
+
+.markdown h2 {
+	font-size: 25px;
+}
+
+.markdown h1 {
+	font-size: 30px;
+}

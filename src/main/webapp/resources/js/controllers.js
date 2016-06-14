@@ -1681,7 +1681,7 @@ function ThesaurusCtrl($scope, $rootScope, $location, Place, messages, $route) {
 	};
 }
 
-function HelpCtrl($scope, $rootScope, $location, $http, $showdown) {
+function HelpCtrl($scope, $rootScope, $location, $http, $showdown, messages) {
 	$rootScope.showMap = false;
 	$rootScope.showHeader = false;
 	$rootScope.showNavbarSearch = true;
@@ -1694,7 +1694,9 @@ function HelpCtrl($scope, $rootScope, $location, $http, $showdown) {
 	
 	$scope.editMode = false;
 	$scope.shownHelpText = "";
-	$scope.helpTexts = {};	
+	$scope.helpTexts = {};
+	$scope.editorLanguage = "eng";
+	$scope.editorLoginNeeded = "false";
 	$scope.baseUri = $location.absUrl().substring(0, $location.absUrl().indexOf("app"));
 	
 	$http.get($scope.baseUri + "help/").then(function(result) {
@@ -1707,6 +1709,8 @@ function HelpCtrl($scope, $rootScope, $location, $http, $showdown) {
 	};
 	
 	$scope.changeText = function(language, loginNeeded) {
+		$rootScope.loading++;
+		scope.resetPreview();
 		 $http({
 	            method: 'PUT',
 	            url: ($scope.baseUri + "help/" + language + "/" + loginNeeded),
@@ -1716,9 +1720,27 @@ function HelpCtrl($scope, $rootScope, $location, $http, $showdown) {
 	            }
 	        }).
 	        success(function(result) {
-	            // TODO Feedback
+	        	$rootScope.loading--;
+	            $rootScope.addAlert(messages["ui.help.editor.success"], null, "success");
+	        }).
+	        error(function() {
+	        	$rootScope.loading--;
+	        	$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
 	        });
 	};
+	
+	$scope.restoreText = function(language, loginNeeded) {
+		scope.resetPreview();
+		loadHelpText(language, loginNeeded, true);	
+	};
+	
+	$scope.showPreview = function(language, loginNeeded) {
+		$scope.previewText = $showdown.makeHtml($scope.helpTexts[language][loginNeeded]);
+	};
+	
+	$scope.resetPreview = function() {
+		$scope.previewText = undefined;
+	}
 	
 	var loadHelpTexts = function() {
 		$scope.helpTexts = {
@@ -1736,17 +1758,19 @@ function HelpCtrl($scope, $rootScope, $location, $http, $showdown) {
 				}
 		};
 		
-		loadHelpText("eng", "false");
-		loadHelpText("eng", "true");
-		loadHelpText("deu", "false");
-		loadHelpText("deu", "true");
-		loadHelpText("ara", "false");
-		loadHelpText("ara", "true");
+		loadHelpText("eng", "false", false);
+		loadHelpText("eng", "true", false);
+		loadHelpText("deu", "false", false);
+		loadHelpText("deu", "true", false);
+		loadHelpText("ara", "false", false);
+		loadHelpText("ara", "true", false);
 	};
 	
-	var loadHelpText = function(language, loginNeeded) {
+	var loadHelpText = function(language, loginNeeded, showRestoreMessage) {
 		$http.get($scope.baseUri + "help/" + language + "/" + loginNeeded).then(function(result) {
 			$scope.helpTexts[language][loginNeeded] = result.data;
+			if (showRestoreMessage)
+				$rootScope.addAlert(messages["ui.help.editor.restored"], null, "alert");
 		});
 	};
 }

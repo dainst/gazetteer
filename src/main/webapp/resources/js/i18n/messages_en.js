@@ -61,6 +61,8 @@ messages.factory('messages', function(){
 		"ui.change-history.change-type.replace-with": "Replaced with",
 		"ui.change-history.change-type.duplicate": "Duplicated",
 		"ui.change-history.change-type.unknown": "Unknown",
+		"ui.help.editor.success": "The text has been saved successfully.",
+		"ui.help.editor.restored": "The text has been restored successfully.",
 		"place.name.ancient": "Ancient",
 		"place.name.transliterated": "Transliterated",
 		"place.types.no-type": "<No type>",
