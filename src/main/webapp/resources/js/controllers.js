@@ -1699,18 +1699,23 @@ function HelpCtrl($scope, $rootScope, $location, $http, $showdown, messages) {
 	$scope.editorLoginNeeded = "false";
 	$scope.baseUri = $location.absUrl().substring(0, $location.absUrl().indexOf("app"));
 	
-	$http.get($scope.baseUri + "help/").then(function(result) {
-		$scope.shownHelpText = $showdown.makeHtml(result.data);
-	});
-	
 	$scope.edit = function() {
 		loadHelpTexts();
 		$scope.editMode = true;
 	};
 	
+	$scope.show = function() {
+		$scope.editMode = false;
+		$http.get($scope.baseUri + "help/").then(function(result) {
+			$scope.shownHelpText = $showdown.makeHtml(result.data);
+		});
+	};
+	
+	$scope.show();
+	
 	$scope.changeText = function(language, loginNeeded) {
 		$rootScope.loading++;
-		scope.resetPreview();
+		$scope.resetPreview();
 		 $http({
 	            method: 'PUT',
 	            url: ($scope.baseUri + "help/" + language + "/" + loginNeeded),
@@ -1730,7 +1735,7 @@ function HelpCtrl($scope, $rootScope, $location, $http, $showdown, messages) {
 	};
 	
 	$scope.restoreText = function(language, loginNeeded) {
-		scope.resetPreview();
+		$scope.resetPreview();
 		loadHelpText(language, loginNeeded, true);	
 	};
 	

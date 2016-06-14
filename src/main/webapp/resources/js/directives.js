@@ -1257,12 +1257,16 @@ directives.directive('markdownTextEditor', function($timeout) {
                 }
             };
             
-            scope.createLink = function() {
-            	 scope.modifiedText = "[" + scope.link.description + "](" + scope.link.url + ")";
+            scope.createLink = function(isImageLink) {
+            	if (isImageLink)
+            		scope.modifiedText = "!";
+            	else
+            		scope.modifiedText = "";            	
+            	 scope.modifiedText += "[" + scope.link.description + "](" + scope.link.url + ")";
+            	 
                  scope.additionalCharacters = (scope.link.description.length - scope.selectedText.length) + scope.link.url.length + 4;
                  updateSelection(scope.modifiedText, scope.selectionRange, scope.selectedTextStart, scope.selectedTextEnd, scope.additionalCharacters, false);
             };
-
         }
     }
 });

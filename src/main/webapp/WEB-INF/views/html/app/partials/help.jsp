@@ -5,11 +5,12 @@
 <div>
 	<div ng-if="!editMode">
 		<sec:authorize access="hasRole('ROLE_ADMIN')">
-			<button ng-click="edit()" class="btn btn-primary"><s:message code="ui.edit" text="ui.edit"/></button>
+			<button ng-click="edit()" class="pull-right btn btn-primary"><s:message code="ui.edit" text="ui.edit"/></button>
 		</sec:authorize>
 		<span class="markdown" ng-bind-html="shownHelpText"></span>
 	</div>
 	<div ng-if="editMode">
+		<button ng-click="show()" class="pull-right btn btn-primary"><s:message code="ui.back" text="ui.back"/></button>
 		<select ng-model="editorLanguage" ng-change="resetPreview()" class="input-medium">
 			<option value="eng"><s:message code="ui.language.english" text="ui.language.english"/></button></option>
 			<option value="deu"><s:message code="ui.language.german" text="ui.language.german"/></option>
