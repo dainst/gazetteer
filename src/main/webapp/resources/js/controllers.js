@@ -1683,11 +1683,11 @@ function ThesaurusCtrl($scope, $rootScope, $location, Place, messages, $route) {
 
 function HelpCtrl($scope, $rootScope, $location, $http, $showdown, messages) {
 	$rootScope.showMap = false;
-	$rootScope.showHeader = false;
+	$rootScope.showHeader = true;
 	$rootScope.showNavbarSearch = true;
 	$rootScope.viewClass = "";
-	$rootScope.pageTitle = "iDAI.gazetteer";
-	$rootScope.title = "";
+	$rootScope.pageTitle = messages["ui.help"] + " | iDAI.gazetteer";
+	$rootScope.title = messages["ui.help"];
 	$rootScope.subtitle = "";
 	$rootScope.isFocused = false;
 	$rootScope.geoSearch = false;
@@ -1778,4 +1778,16 @@ function HelpCtrl($scope, $rootScope, $location, $http, $showdown, messages) {
 				$rootScope.addAlert(messages["ui.help.editor.restored"], null, "alert");
 		});
 	};
+}
+
+function AboutCtrl($scope, $rootScope, messages) {
+	$rootScope.showMap = false;
+	$rootScope.showHeader = true;
+	$rootScope.showNavbarSearch = true;
+	$rootScope.viewClass = "";
+	$rootScope.pageTitle = messages["ui.about"] + " | iDAI.gazetteer";
+	$rootScope.title = messages["ui.about"];
+	$rootScope.subtitle = "";
+	$rootScope.isFocused = false;
+	$rootScope.geoSearch = false;
 }

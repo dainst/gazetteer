@@ -52,16 +52,13 @@
 		
 <div class="row-fluid" style="margin-top:-220px">
 	<div class="span12">
-		 <p class="lead">Der DAI-Gazetteer ist ein Webservice, der Ortsnamen mit Koordinaten verbindet und in zwei Richtungen wirken soll. Nach innen dient er als Normdatenvokabular für sämtliche ortsbezogenen Informationen und Informationssysteme des DAI. Nach außen soll er diese mit den weltweiten Gazetteer-Systemen verbinden. Weitere Funktionen sind in einem <a href="http://youtu.be/mISUGMFkQvU" target="_blank">Screencast</a> zusammengefasst.</p>
+		 <p class="lead"><s:message code="home.info1" text="home.info1" /></p>
 	</div>
 </div>
 		
 <div class="row-fluid">
-	<div class="span6">
-    	<p>Der DAI-Gazetteer ist außerdem ein Werkzeug, um die Ortsdaten-Struktur innerhalb des DAI sukzessive zu optimieren, d. h. sowohl die Zahl der mit Ortsdaten versehenen Informationsobjekte zu erhöhen, diese dann in die weltweiten Ortsdatensysteme einzubinden, und auch die im DAI schon vorhandenen Informationsobjekte mit Ortsdaten zu vereinheitlichen. Der DAI-Gazetteer ist somit der Auftakt zu einem großen, neuen Querschnitts-Arbeitsfeld.</p>
-     	<p>Geodaten sind ein hinreichend vereinbarungsfähiges, aber auch umfassend genug anwendbares Kontextualisierungskriterium. Ihre Bedeutung für die Kontextualisierung nimmt zu, wenn über die bidirektionale Verknüpfung hinaus eine Drei- oder Vielecksverknküpfung zustande kommt. Daher ist der Gazetteer u. a. auch eine Kontextualisierungsmaschine, die ortsbasierte Suchen über mehrere Informationssysteme hinweg erlaubt, etwa über <a href="http://arachne.uni-koeln.de" target="_blank">Arachne</a> und <a href="http://opac.dainst.org" target="_blank">ZENON</a>.</p>
-    	<p>Nähere Informationen zur Benutzung des Gazetteers finden Sie im <a href="https://wiki.uni-koeln.de/idai.welt/index.php/Wiki_iDAI.welt">Wiki</a>.</p>
-    	<p>Inhaltliche Ergänzungen und Korrekturvorschläge senden Sie bitte an: <a href="mailto:idai.gazetteer@dainst.de">idai.gazetteer@dainst.de</a>.</p>
+	<div class="span12">
+    	<p><s:message code="home.info2" text="home.info2" /></p>
+    	<p><s:message code="home.info3" text="home.info3" /></p>
 	</div>
-	<iframe height="315" class="span6" src="//www.youtube.com/embed/KYDC9qsIH0o" frameborder="0" allowfullscreen></iframe>
 </div>

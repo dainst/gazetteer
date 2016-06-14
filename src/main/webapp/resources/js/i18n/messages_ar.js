@@ -54,6 +54,8 @@ messages.factory('messages', function(){
 		"ui.change-history.change-type.replace": "تمّ الاستبدال",
 		"ui.change-history.change-type.duplicate": "تمّ الاستنساخ",
 		"ui.change-history.change-type.unknown": "مجهول",
+		"ui.about": "عن",
+		"ui.help": "Help",
 		"place.name.ancient": "قديم",
 		"place.name.transliterated": "منقول حرفياً",
 		"place.types.no-type": ">لا يوجد نوع<",

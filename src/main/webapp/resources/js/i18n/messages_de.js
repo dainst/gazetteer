@@ -61,6 +61,8 @@ messages.factory('messages', function(){
 		"ui.change-history.change-type.replace-with": "Ersetzt durch",
 		"ui.change-history.change-type.duplicate": "Dupliziert",
 		"ui.change-history.change-type.unknown": "Unbekannt",
+		"ui.about": "Über den Gazetteer",
+		"ui.help": "Hilfe",
 		"ui.help.editor.success": "Der Text wurde erfolgreich gespeichert.",
 		"ui.help.editor.restored": "Der Text wurde erfolgreich wiederhergestellt.",
 		"place.name.ancient": "Antik",
