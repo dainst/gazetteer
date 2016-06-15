@@ -174,7 +174,7 @@ public class UserManagementController {
 	public String getUserManagement(@RequestParam(required=false) String sort, @RequestParam(required=false) boolean isDescending,
 									@RequestParam(required=false) Integer page, @RequestParam(required=false) String showUser,
 									@RequestParam(required=false) boolean deleteUser, @RequestParam(required=false) String deleteUserId,
-									ModelMap model) {
+									ModelMap model, HttpServletRequest request) {
 		
 		if (deleteUser) {			
 			User user = userDao.findById(deleteUserId);
@@ -322,18 +322,22 @@ public class UserManagementController {
 			users = users.subList(page * usersPerPage, toIndex);
 		}
 		
+		Locale locale = new RequestContext(request).getLocale();
+		
 		model.addAttribute("page", page);
 		model.addAttribute("pages", pages);
 		model.addAttribute("users", users);		
 		model.addAttribute("isDescending", isDescending);
 		model.addAttribute("lastSorting", sort);
 		model.addAttribute("version", version);
+		model.addAttribute("language", locale.getLanguage());
 		
 		return "userManagement";
 	}
 	
 	@RequestMapping(value="/editUser")
-	public String getEditUser(@RequestParam(required=true) String username, @RequestParam(required=false) String r, ModelMap model) {
+	public String getEditUser(@RequestParam(required=true) String username, @RequestParam(required=false) String r,
+				ModelMap model, HttpServletRequest request) {
 		
 		boolean adminEdit = isAdminEdit();		
 		boolean userEdit = isUserEdit(username);
@@ -372,6 +376,8 @@ public class UserManagementController {
 			model.addAttribute("edit_user_role_reisestipendium_value", user.hasRole("ROLE_REISESTIPENDIUM"));
 		}
 		
+		Locale locale = new RequestContext(request).getLocale();
+		
 		model.addAttribute("recordGroups", recordGroups);
 		model.addAttribute("user", user);
 		model.addAttribute("edit_user_username_value", user.getUsername());
@@ -383,6 +389,7 @@ public class UserManagementController {
 		model.addAttribute("userEdit", userEdit);
 		model.addAttribute("r", r);
 		model.addAttribute("version", version);
+		model.addAttribute("language", locale.getLanguage());
 		
 		return "editUser";
 	}
@@ -521,7 +528,7 @@ public class UserManagementController {
 		model.addAttribute("version", version);
 	
 		if (r != null && r.equals("userManagement") && adminEdit)
-			return getUserManagement(null, false, 0, null, false, null, model);
+			return getUserManagement(null, false, 0, null, false, null, model, request);
 		else if (r != null && !r.equals(""))
 			return "redirect:app/#!/" + r;
 		else
@@ -638,6 +645,8 @@ public class UserManagementController {
 
 	private String returnRegisterFailure(String failureType, HttpServletRequest request, String r, ModelMap model) {
 		
+		Locale locale = new RequestContext(request).getLocale();
+		
 		model.addAttribute("register_username_value", request.getParameter("register_username"));
 		model.addAttribute("register_firstname_value", request.getParameter("register_firstname"));
 		model.addAttribute("register_lastname_value", request.getParameter("register_lastname"));
@@ -646,6 +655,7 @@ public class UserManagementController {
 		model.addAttribute("r", r);
 		model.addAttribute("failure", failureType);
 		model.addAttribute("version", version);
+		model.addAttribute("language", locale.getLanguage());
 		
 		return "register";
 	}
@@ -653,6 +663,8 @@ public class UserManagementController {
 	private String returnEditUserFailure(String failureType, User user, String r, boolean adminEdit, boolean userEdit,
 										 List<RecordGroup> recordGroups, Map<String, Boolean> recordGroupValues,
 										 HttpServletRequest request, ModelMap model) {
+		
+		Locale locale = new RequestContext(request).getLocale();
 		
 		model.addAttribute("recordGroups", recordGroups);
 		model.addAttribute("recordGroupsSize", recordGroups.size());
@@ -671,6 +683,7 @@ public class UserManagementController {
 		model.addAttribute("r", r);
 		model.addAttribute("adminEdit", adminEdit);
 		model.addAttribute("userEdit", userEdit);
+		model.addAttribute("language", locale.getLanguage());
 		
 		return "editUser";
 	}

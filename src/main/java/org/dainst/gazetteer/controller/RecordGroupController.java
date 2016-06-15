@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.mail.MessagingException;
@@ -62,7 +63,8 @@ public class RecordGroupController {
 	
 	
 	@RequestMapping(value="/recordGroupManagement")
-	public String getRecordGroupManagement(@RequestParam(required=false) String deleteRecordGroupId, ModelMap model) {
+	public String getRecordGroupManagement(@RequestParam(required=false) String deleteRecordGroupId,
+			ModelMap model, HttpServletRequest request) {
 		
 		List<RecordGroup> recordGroups = null;
 		Map<String, String> groupRights = new HashMap<String, String>();
@@ -108,11 +110,14 @@ public class RecordGroupController {
 			recordGroupPlaces.put(recordGroup.getId(), placeCount);
 		}
 		
+		Locale locale = new RequestContext(request).getLocale();
+		
 		model.addAttribute("recordGroups", recordGroups);
 		model.addAttribute("recordGroupMembers", recordGroupMembers);
 		model.addAttribute("recordGroupPlaces", recordGroupPlaces);
 		model.addAttribute("groupRights", groupRights);
 		model.addAttribute("version", version);
+		model.addAttribute("language", locale.getLanguage());
 		
 		return "recordGroupManagement";
 	}
@@ -134,12 +139,13 @@ public class RecordGroupController {
 			}
 		}
 		
-		return getRecordGroupManagement(null, model);
+		return getRecordGroupManagement(null, model, request);
 	}
 	
 	@RequestMapping(value="/recordGroupUserManagement")
 	public String getRecordGroupUserManagement(@RequestParam(required=true) String groupId, @RequestParam(required=false) String sort,
-			@RequestParam(required=false) boolean isDescending, @RequestParam(required=false) Integer page, ModelMap model) {
+			@RequestParam(required=false) boolean isDescending, @RequestParam(required=false) Integer page,
+			ModelMap model, HttpServletRequest request) {
 
 		if (!checkGroupUserManagementAccess(groupId))
 			return "redirect:app/#!/home";
@@ -210,6 +216,8 @@ public class RecordGroupController {
 	
 		users = users.subList(page * usersPerPage, toIndex);
 		
+		Locale locale = new RequestContext(request).getLocale();
+		
 		model.addAttribute("recordGroup", group);
 		model.addAttribute("users", users);
 		model.addAttribute("roles", roleMap);
@@ -218,6 +226,7 @@ public class RecordGroupController {
 		model.addAttribute("page", page);
 		model.addAttribute("pages", pages);
 		model.addAttribute("version", version);
+		model.addAttribute("language", locale.getLanguage());
 		
 		return "recordGroupUserManagement";
 	}
@@ -243,7 +252,7 @@ public class RecordGroupController {
 		
 		model.addAttribute("changedUserStatus", user.getUsername());
 		
-		return getRecordGroupUserManagement(groupId, sort, isDescending, page, model);
+		return getRecordGroupUserManagement(groupId, sort, isDescending, page, model, request);
 	}
 	
 	@RequestMapping(value="/checkAddUserToGroupForm")
@@ -258,7 +267,7 @@ public class RecordGroupController {
 		if (emailOrUsername.isEmpty()) {
 			model.addAttribute("failure", "noInput");
 		
-			return getRecordGroupUserManagement(groupId, sort, isDescending, page, model);
+			return getRecordGroupUserManagement(groupId, sort, isDescending, page, model, request);
 		}
 		
 		User user = userDao.findByUsername(emailOrUsername);
@@ -268,14 +277,14 @@ public class RecordGroupController {
 			model.addAttribute("emailOrUsername", emailOrUsername);
 			model.addAttribute("failure", "notFound");
 		
-			return getRecordGroupUserManagement(groupId, sort, isDescending, page, model);
+			return getRecordGroupUserManagement(groupId, sort, isDescending, page, model, request);
 		}
 		
 		if (groupRoleDao.findByGroupIdAndUserId(groupId, user.getId()) != null) {
 			model.addAttribute("emailOrUsername", emailOrUsername);
 			model.addAttribute("failure", "alreadyInGroup");
 		
-			return getRecordGroupUserManagement(groupId, sort, isDescending, page, model);
+			return getRecordGroupUserManagement(groupId, sort, isDescending, page, model, request);
 		}
 		
 		GroupRole role = new GroupRole();
@@ -286,12 +295,13 @@ public class RecordGroupController {
 		
 		model.addAttribute("addedUser", user.getUsername());
 		
-		return getRecordGroupUserManagement(groupId, sort, isDescending, page, model);
+		return getRecordGroupUserManagement(groupId, sort, isDescending, page, model, request);
 	}
 	
 	@RequestMapping(value="/removeUserFromGroup")
 	public String removeUserFromGroup(@RequestParam(required=true) String groupId, @RequestParam(required=true) String userId, @RequestParam(required=false) String sort,
-			@RequestParam(required=false) boolean isDescending, @RequestParam(required=false) Integer page, ModelMap model) {
+			@RequestParam(required=false) boolean isDescending, @RequestParam(required=false) Integer page, ModelMap model,
+			HttpServletRequest request) {
 		
 		if (!checkGroupUserManagementAccess(groupId))
 			return "redirect:app/#!/home";
@@ -306,12 +316,13 @@ public class RecordGroupController {
 		
 		model.addAttribute("removedUser", user.getUsername());
 		
-		return getRecordGroupUserManagement(groupId, sort, isDescending, page, model);
+		return getRecordGroupUserManagement(groupId, sort, isDescending, page, model, request);
 	}
 	
 	@RequestMapping(value="/changeGroupPlaceVisibilityMode")
 	public String changeGroupPlaceVisibilityMode(@RequestParam(required=true) String groupId, @RequestParam(required=true) boolean showPlaces, @RequestParam(required=false) String sort,
-			@RequestParam(required=false) boolean isDescending, @RequestParam(required=false) Integer page, ModelMap model) {
+			@RequestParam(required=false) boolean isDescending, @RequestParam(required=false) Integer page, ModelMap model,
+			HttpServletRequest request) {
 		
 		if (!checkGroupUserManagementAccess(groupId))
 			return "redirect:app/#!/home";
@@ -324,7 +335,7 @@ public class RecordGroupController {
 		group.setShowPlaces(showPlaces);
 		recordGroupDao.save(group);
 		
-		return getRecordGroupUserManagement(groupId, sort, isDescending, page, model);
+		return getRecordGroupUserManagement(groupId, sort, isDescending, page, model, request);
 	}
 	
 	@RequestMapping(value="/sendRecordGroupContactMail", method=RequestMethod.POST)

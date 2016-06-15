@@ -52,13 +52,26 @@
 		
 <div class="row-fluid" style="margin-top:-220px">
 	<div class="span12">
-		 <p class="lead"><s:message code="home.info1" text="home.info1" /></p>
+		<c:choose>
+			<c:when test="${language eq 'ar'}">
+		 		<p dir="rtl" lang="ar" class="lead"><s:message code="home.info1" text="home.info1" /></p>
+		 	</c:when>
+		 	<c:otherwise>
+		 		<p class="lead"><s:message code="home.info1" text="home.info1" /></p>
+		 	</c:otherwise>
+		 </c:choose>
 	</div>
 </div>
 		
 <div class="row-fluid">
 	<div class="span12">
-    	<p><s:message code="home.info2" text="home.info2" /></p>
-    	<p><s:message code="home.info3" text="home.info3" /></p>
+		<c:choose>
+			<c:when test="${language eq 'ar'}">
+				<p dir="rtl" lang="ar"><s:message code="home.info2" text="home.info2" /></p>
+			</c:when>
+			<c:otherwise>
+				<p><s:message code="home.info2" text="home.info2" /></p>
+			</c:otherwise>
+		</c:choose>
 	</div>
 </div>

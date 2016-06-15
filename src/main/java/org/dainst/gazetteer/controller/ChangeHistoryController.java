@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -195,6 +196,8 @@ public class ChangeHistoryController {
 		if (pages == 0)
 			pages = 1;
 		
+		Locale locale = new RequestContext(request).getLocale();
+		
 		model.addAttribute("page", page);
 		model.addAttribute("pages", pages);
 		model.addAttribute("changes", presChangeHistory);		
@@ -205,6 +208,7 @@ public class ChangeHistoryController {
 		model.addAttribute("startDatePres", presFormat.format(start));
 		model.addAttribute("endDatePres", presFormat.format(end));
 		model.addAttribute("version", version);
+		model.addAttribute("language", locale.getLanguage());
 		
 		return "globalChangeHistory";
 	}

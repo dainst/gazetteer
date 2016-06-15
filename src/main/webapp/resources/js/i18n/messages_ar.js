@@ -21,7 +21,7 @@ messages.factory('messages', function(){
 		"ui.search.filter.polygon": "مع مضلّع",
 		"ui.search.filter.no-polygon": "بدون مضلّع",
 		"ui.search.filter.unlocatable": "الموقع غير قابل للتحديد",
-		"ui.search.filter.no-tags": "بدون بطاقات",
+		"ui.search.filter.no-tags": "بلا وسوم",
 		"ui.search.filter.no-provenance": "بدون ذكر المصدر",
 		"ui.search.grandchildren-search": "جميع الأماكن الفرعية",
 		"ui.place.names.more": "أكثر",
@@ -43,6 +43,8 @@ messages.factory('messages', function(){
 		"ui.place.deleted": "تمّ حذف هذا المكان",
 		"ui.place.hiddenPlace": "مكان محجوب",
 		"ui.place.provenance-info": "يحتوي هذا المكان بيانات من المصادر المُدخلة.",
+		"ui.place.replacing.first": "الموقع الذي له رقم معرّف",
+		"ui.place.replacing.second": "تمّ الاستبدال. تمّ تحويلك إلى الإدخال الخاصّ بالموقع الجديد",
 		"ui.merge.tooltip": "ادمج هذا المكان مع المكان الحالي",
 		"ui.merge.success.head": "تمّ الدمج بنجاح",
 		"ui.merge.success.body": "يرجى التحقّق من معلومات المكان المُنشأ حديثاً الواردة أدناه",
@@ -51,11 +53,15 @@ messages.factory('messages', function(){
 		"ui.change-history.change-type.edit": "تمّ التعديل",
 		"ui.change-history.change-type.delete": "تمّ الحذف",
 		"ui.change-history.change-type.merge": "تمّ الدمج",
+		"ui.change-history.change-type.merge-with": "دُمِج مع",
+		"ui.change-history.change-type.replace-with": "استُبدل بـ",
 		"ui.change-history.change-type.replace": "تمّ الاستبدال",
 		"ui.change-history.change-type.duplicate": "تمّ الاستنساخ",
 		"ui.change-history.change-type.unknown": "مجهول",
 		"ui.about": "عن",
 		"ui.help": "Help",
+		"ui.recordGroupContact.success": "أُرسِلَت رسالتك بنجاح",
+		"ui.recordGroupContact.error": "حصل خطأ عند إرسال رسالتك",
 		"place.name.ancient": "قديم",
 		"place.name.transliterated": "منقول حرفياً",
 		"place.types.no-type": ">لا يوجد نوع<",
@@ -92,6 +98,6 @@ messages.factory('messages', function(){
 		"location.public": "إحداثيات مفتوحة للعموم",
 		"domain.place.parent": "يقع ضمن",
 		"domain.place.types": "النوع",
-		"domain.place.tags": "البطاقات"
+		"domain.place.tags": "الوسوم"
 	};
 });
