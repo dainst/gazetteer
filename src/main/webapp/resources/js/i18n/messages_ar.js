@@ -59,7 +59,7 @@ messages.factory('messages', function(){
 		"ui.change-history.change-type.duplicate": "تمّ الاستنساخ",
 		"ui.change-history.change-type.unknown": "مجهول",
 		"ui.about": "عن",
-		"ui.help": "Help",
+		"ui.help": "مساعدة",
 		"ui.recordGroupContact.success": "أُرسِلَت رسالتك بنجاح",
 		"ui.recordGroupContact.error": "حصل خطأ عند إرسال رسالتك",
 		"place.name.ancient": "قديم",
