@@ -1681,7 +1681,7 @@ function ThesaurusCtrl($scope, $rootScope, $location, Place, messages, $route) {
 	};
 }
 
-function HelpCtrl($scope, $rootScope, $location, $http, $showdown, messages) {
+function HelpCtrl($scope, $rootScope, $location, $http, $showdown, $sce, messages) {
 	$rootScope.showMap = false;
 	$rootScope.showHeader = true;
 	$rootScope.showNavbarSearch = true;
@@ -1707,7 +1707,7 @@ function HelpCtrl($scope, $rootScope, $location, $http, $showdown, messages) {
 	$scope.show = function() {
 		$scope.editMode = false;
 		$http.get($scope.baseUri + "help/").then(function(result) {
-			$scope.shownHelpText = $showdown.makeHtml(result.data);
+			$scope.shownHelpText = markdownToHtml(result.data);
 		});
 	};
 	
@@ -1740,7 +1740,7 @@ function HelpCtrl($scope, $rootScope, $location, $http, $showdown, messages) {
 	};
 	
 	$scope.showPreview = function(language, loginNeeded) {
-		$scope.previewText = $showdown.makeHtml($scope.helpTexts[language][loginNeeded]);
+		$scope.previewText = markdownToHtml($scope.helpTexts[language][loginNeeded]);
 	};
 	
 	$scope.resetPreview = function() {
@@ -1778,6 +1778,13 @@ function HelpCtrl($scope, $rootScope, $location, $http, $showdown, messages) {
 				$rootScope.addAlert(messages["ui.help.editor.restored"], null, "alert");
 		});
 	};
+	
+	var markdownToHtml = function(markdown) {
+		var html = $showdown.makeHtml(markdown);
+		html = html.split("%YOUTUBE=").join("<iframe height=\"315\" width=\"600\" src=\"");
+		html = html.split("%!").join("\" frameborder=\"0\" allowfullscreen>Youtube-Video</iframe>");
+		return $sce.trustAsHtml(html);
+	}
 }
 
 function AboutCtrl($scope, $rootScope, messages) {
