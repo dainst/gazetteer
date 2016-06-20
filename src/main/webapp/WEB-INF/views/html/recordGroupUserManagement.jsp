@@ -133,9 +133,9 @@
 	    								<b class="caret"></b>
 	    							</a>
 	    							<ul class="dropdown-menu">
-	      								<li><a href="?lang=en">English</a></li>
-	      								<li><a href="?lang=de">Deutsch</a></li>
-	      								<li><a href="?lang=ar">العربية</a></li>
+	      								<li><a href="?groupId=${recordGroup.id}&lang=en">English</a></li>
+	      								<li><a href="?groupId=${recordGroup.id}&lang=de">Deutsch</a></li>
+	      								<li><a href="?groupId=${recordGroup.id}&lang=ar">العربية</a></li>
 	    							</ul>
 	  							</li>
 							</ul>
@@ -199,9 +199,22 @@
 				</h3>
 				
 				<div class="well">
-					<s:message code="ui.recordGroupUserManagement.placeVisibilityStatus.first" text="ui.recordGroupUserManagement.placeVisibilityStatus.first" />
-					<c:choose><c:when test="${recordGroup.showPlaces}"><b><s:message code="ui.recordGroupUserManagement.placeVisibilityStatus.visible" text="ui.recordGroupUserManagement.placeVisibilityStatus.visible" /></b></c:when><c:otherwise><b><s:message code="ui.recordGroupUserManagement.placeVisibilityStatus.invisible" text="ui.recordGroupUserManagement.placeVisibilityStatus.invisible" /></b></c:otherwise></c:choose><s:message code="ui.recordGroupUserManagement.placeVisibilityStatus.last" text="ui.recordGroupUserManagement.placeVisibilityStatus.last" />
-					<a href="#changePlaceVisibilityModal" class="btn btn-primary group-place-visibility-button" data-toggle="modal"><s:message code="ui.recordGroupUserManagement.changePlaceVisibility.button" text="ui.recordGroupUserManagement.changePlaceVisibility.button" /></a>
+					<c:choose>
+						<c:when test="${language eq 'ar'}">
+							<p dir="rtl" lang="ar">
+								<s:message code="ui.recordGroupUserManagement.placeVisibilityStatus.first" text="ui.recordGroupUserManagement.placeVisibilityStatus.first" />
+								<c:choose><c:when test="${recordGroup.showPlaces}"><b><s:message code="ui.recordGroupUserManagement.placeVisibilityStatus.visible" text="ui.recordGroupUserManagement.placeVisibilityStatus.visible" /></b></c:when><c:otherwise><b><s:message code="ui.recordGroupUserManagement.placeVisibilityStatus.invisible" text="ui.recordGroupUserManagement.placeVisibilityStatus.invisible" /></b></c:otherwise></c:choose><s:message code="ui.recordGroupUserManagement.placeVisibilityStatus.last" text="ui.recordGroupUserManagement.placeVisibilityStatus.last" />
+							</p>
+							<p dir="rtl" lang="ar">
+								<a href="#changePlaceVisibilityModal" class="btn btn-primary group-place-visibility-button" data-toggle="modal"><s:message code="ui.recordGroupUserManagement.changePlaceVisibility.button" text="ui.recordGroupUserManagement.changePlaceVisibility.button" /></a>
+							</p>
+					 	</c:when>
+					 	<c:otherwise>
+							<s:message code="ui.recordGroupUserManagement.placeVisibilityStatus.first" text="ui.recordGroupUserManagement.placeVisibilityStatus.first" />
+							<c:choose><c:when test="${recordGroup.showPlaces}"><b><s:message code="ui.recordGroupUserManagement.placeVisibilityStatus.visible" text="ui.recordGroupUserManagement.placeVisibilityStatus.visible" /></b></c:when><c:otherwise><b><s:message code="ui.recordGroupUserManagement.placeVisibilityStatus.invisible" text="ui.recordGroupUserManagement.placeVisibilityStatus.invisible" /></b></c:otherwise></c:choose><s:message code="ui.recordGroupUserManagement.placeVisibilityStatus.last" text="ui.recordGroupUserManagement.placeVisibilityStatus.last" />
+					 		<a href="#changePlaceVisibilityModal" class="btn btn-primary group-place-visibility-button" data-toggle="modal"><s:message code="ui.recordGroupUserManagement.changePlaceVisibility.button" text="ui.recordGroupUserManagement.changePlaceVisibility.button" /></a>
+					 	</c:otherwise>
+					 </c:choose>
 				</div>
 				
 				<div class="modal hide fade" id="changePlaceVisibilityModal">
@@ -211,10 +224,24 @@
 					<div class="modal-body">
 						<c:choose>
 							<c:when test="${recordGroup.showPlaces}">
-								<s:message code="ui.recordGroupUserManagement.changePlaceVisibility.warning.invisible" text="ui.recordGroupUserManagement.changePlaceVisibility.warning.invisible"/>
+								<c:choose>
+									<c:when test="${language eq 'ar'}">
+										<p dir="rtl" lang="ar"><s:message code="ui.recordGroupUserManagement.changePlaceVisibility.warning.invisible" text="ui.recordGroupUserManagement.changePlaceVisibility.warning.invisible"/></p>
+					 				</c:when>
+					 				<c:otherwise>
+										<s:message code="ui.recordGroupUserManagement.changePlaceVisibility.warning.invisible" text="ui.recordGroupUserManagement.changePlaceVisibility.warning.invisible"/>
+					 				</c:otherwise>
+					 			</c:choose>								
 							</c:when>
 							<c:otherwise>
-								<s:message code="ui.recordGroupUserManagement.changePlaceVisibility.warning.visible" text="ui.recordGroupUserManagement.changePlaceVisibility.warning.visible"/>
+								<c:choose>
+									<c:when test="${language eq 'ar'}">
+										<p dir="rtl" lang="ar"><s:message code="ui.recordGroupUserManagement.changePlaceVisibility.warning.visible" text="ui.recordGroupUserManagement.changePlaceVisibility.warning.visible"/></p>
+					 				</c:when>
+					 				<c:otherwise>
+										<s:message code="ui.recordGroupUserManagement.changePlaceVisibility.warning.visible" text="ui.recordGroupUserManagement.changePlaceVisibility.warning.visible"/>
+					 				</c:otherwise>
+					 			</c:choose>								
 							</c:otherwise>
 						</c:choose>
 					</div>

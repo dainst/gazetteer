@@ -256,24 +256,61 @@
 			<h4>
 				<s:message code="ui.recordGroupModal.info.header" text="ui.recordGroupModal.info.header" />
 			</h4>
-			<div><s:message code="ui.recordGroupModal.info.main" text="ui.recordGroupModal.info" arguments="{{place.recordGroup.name}}" /></div>
+			<div>
+				<c:choose>
+					<c:when test="${language eq 'ar'}">
+				 		<p dir="rtl" lang="ar"><s:message code="ui.recordGroupModal.info.main" text="ui.recordGroupModal.info" arguments="{{place.recordGroup.name}}" /></p>
+				 	</c:when>
+				 	<c:otherwise>
+				 		<s:message code="ui.recordGroupModal.info.main" text="ui.recordGroupModal.info" arguments="{{place.recordGroup.name}}" />
+				 	</c:otherwise>
+				 </c:choose>
+			</div>
 			<div>
 				<span ng-show="place.accessDenied">
 					<sec:authorize access="hasRole('ROLE_USER')">
 						<s:message code="ui.recordGroupModal.info.noAccess" text="ui.recordGroupModal.info.noAccess" />
 					</sec:authorize>
 					<sec:authorize access="!hasRole('ROLE_USER')">
-						<s:message code="ui.recordGroupModal.info.notLoggedIn" text="ui.recordGroupModal.info.notLoggedIn" />
+						<c:choose>
+							<c:when test="${language eq 'ar'}">
+						 		<p dir="rtl" lang="ar"><s:message code="ui.recordGroupModal.info.notLoggedIn" text="ui.recordGroupModal.info.notLoggedIn" /></p>
+						 	</c:when>
+						 	<c:otherwise>
+						 		<s:message code="ui.recordGroupModal.info.notLoggedIn" text="ui.recordGroupModal.info.notLoggedIn" />
+						 	</c:otherwise>
+						 </c:choose>
 					</sec:authorize>
 				</span>
 				<span ng-show="place.limitedReadAccess">
-					<s:message code="ui.recordGroupModal.info.limitedReadAccess" text="ui.recordGroupModal.info.limitedReadAccess" />
+					<c:choose>
+						<c:when test="${language eq 'ar'}">
+					 		<p dir="rtl" lang="ar"><s:message code="ui.recordGroupModal.info.limitedReadAccess" text="ui.recordGroupModal.info.limitedReadAccess" /></p>
+					 	</c:when>
+					 	<c:otherwise>
+					 		<s:message code="ui.recordGroupModal.info.limitedReadAccess" text="ui.recordGroupModal.info.limitedReadAccess" />
+					 	</c:otherwise>
+					 </c:choose>
 				</span>
 				<span ng-show="!place.limitedReadAccess && place.editAccessDenied">
-					<s:message code="ui.recordGroupModal.info.readAccess" text="ui.recordGroupModal.info.readAccess" />
+					<c:choose>
+						<c:when test="${language eq 'ar'}">
+					 		<p dir="rtl" lang="ar"><s:message code="ui.recordGroupModal.info.readAccess" text="ui.recordGroupModal.info.readAccess" /></p>
+					 	</c:when>
+					 	<c:otherwise>
+					 		<s:message code="ui.recordGroupModal.info.readAccess" text="ui.recordGroupModal.info.readAccess" />
+					 	</c:otherwise>
+					 </c:choose>
 				</span>
 				<span ng-show="!place.accessDenied && !place.editAccessDenied">
-					<s:message code="ui.recordGroupModal.info.editAccess" text="ui.recordGroupModal.info.editAccess" />
+					<c:choose>
+						<c:when test="${language eq 'ar'}">
+					 		<p dir="rtl" lang="ar"><s:message code="ui.recordGroupModal.info.editAccess" text="ui.recordGroupModal.info.editAccess" /></p>
+					 	</c:when>
+					 	<c:otherwise>
+					 		<s:message code="ui.recordGroupModal.info.editAccess" text="ui.recordGroupModal.info.editAccess" />
+					 	</c:otherwise>
+					 </c:choose>
 				</span>
 			</div>
 			
@@ -291,14 +328,28 @@
 					<s:message code="ui.recordGroupModal.contact.header" text="ui.recordGroupModal.contact.header" />
 				</h4>
 				<sec:authorize access="!hasRole('ROLE_USER')">
-					<s:message code="ui.recordGroupModal.contact.loggedOutInfo" text="ui.recordGroupModal.contact.loggedOutInfo" />
+					<c:choose>
+						<c:when test="${language eq 'ar'}">
+					 		<p dir="rtl" lang="ar"><s:message code="ui.recordGroupModal.contact.loggedOutInfo" text="ui.recordGroupModal.contact.loggedOutInfo" /></p>
+					 	</c:when>
+					 	<c:otherwise>
+					 		<s:message code="ui.recordGroupModal.contact.loggedOutInfo" text="ui.recordGroupModal.contact.loggedOutInfo" />
+					 	</c:otherwise>
+					 </c:choose>
 					<textarea name="message" class="contact-form-textarea" disabled></textarea>
 					<a class="btn btn-primary" disabled>
 						<s:message code="ui.recordGroupModal.contact.submit" text="ui.recordGroupModal.contact.submit"/>
 					</a>
 				</sec:authorize>
 				<sec:authorize access="hasRole('ROLE_USER')">
-					<s:message code="ui.recordGroupModal.contact.info" text="ui.recordGroupModal.contact.info" />
+					<c:choose>
+						<c:when test="${language eq 'ar'}">
+					 		<p dir="rtl" lang="ar"><s:message code="ui.recordGroupModal.contact.info" text="ui.recordGroupModal.contact.info" /></p>
+					 	</c:when>
+					 	<c:otherwise>
+					 		<s:message code="ui.recordGroupModal.contact.info" text="ui.recordGroupModal.contact.info" />
+					 	</c:otherwise>
+					 </c:choose>
 					<textarea name="message" ng-model="contactMessage" class="contact-form-textarea"></textarea>
 					<a class="btn btn-primary" data-dismiss="modal" ng-click="sendRecordGroupContactMail()">
 						<s:message code="ui.recordGroupModal.contact.submit" text="ui.recordGroupModal.contact.submit"/>

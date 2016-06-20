@@ -210,9 +210,20 @@
 			<!-- Page title -->
 			<div ng-show="showHeader" class="page-header">
 				<h2>
-					<span ng-show="title">{{title}}</span>
-					<span ng-hide="title">&nbsp;</span>
-					<small ng-bind-html="subtitle | toTrusted"></small>
+					<c:choose>
+						<c:when test="${language eq 'ar'}">
+							<p dir="rtl" lang="ar">
+								<span ng-show="title">{{title}}</span>
+								<span ng-hide="title">&nbsp;</span>
+								<small ng-bind-html="subtitle | toTrusted"></small>
+							</p>
+					 	</c:when>
+					 	<c:otherwise>
+					 		<span ng-show="title">{{title}}</span>
+							<span ng-hide="title">&nbsp;</span>
+							<small ng-bind-html="subtitle | toTrusted"></small>
+					 	</c:otherwise>
+					 </c:choose>
 				</h2>
 			</div>
 			
