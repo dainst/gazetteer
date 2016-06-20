@@ -1302,6 +1302,7 @@ directives.directive('tableOfContents', function($timeout) {
             });
             
             scope.scrollTo = function(headline) {
+            	window.scrollTo(0, 0);
             	window.scrollTo(0, headline.element.getBoundingClientRect().top - 40);
             }
 
