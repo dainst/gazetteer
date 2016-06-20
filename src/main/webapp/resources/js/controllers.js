@@ -1698,6 +1698,7 @@ function HelpCtrl($scope, $rootScope, $location, $http, $showdown, $sce, message
 	$scope.editorLanguage = "eng";
 	$scope.editorLoginNeeded = "false";
 	$scope.baseUri = $location.absUrl().substring(0, $location.absUrl().indexOf("app"));
+	$scope.headlines = [];
 	
 	$scope.edit = function() {
 		loadHelpTexts();

@@ -1274,3 +1274,39 @@ directives.directive('markdownTextEditor', function($timeout) {
         }
     }
 });
+
+directives.directive('tableOfContents', function($timeout) {
+    return {
+        restrict:'A',
+        require:'?ngModel',
+        link: function(scope, element, attrs, ngModel) {
+        	var timeoutPromise;
+        	
+            var updateHeadlines = function() {
+            	if (!scope.headlines || scope.headlines.length == 0) {  
+	                scope.headlines = [];
+	                angular.forEach(element[0].querySelectorAll('h1,h2,h3,h4,h5,h6'), function(e) {
+	                    scope.headlines.push({ 
+	                        level: e.tagName[1], 
+	                        label: angular.element(e).text(),
+	                        element: e
+	                    });
+	                });
+	                if (timeoutPromise) $timeout.cancel(timeoutPromise);
+	                timeoutPromise = $timeout(updateHeadlines, 100);
+            	}
+            };
+
+            scope.$on('$destroy',function() {
+                scope.headlines = [];
+            });
+            
+            scope.scrollTo = function(headline) {
+            	window.scrollTo(0, headline.element.getBoundingClientRect().top - 40);
+            }
+
+            ngModel.$render = updateHeadlines;
+            updateHeadlines();
+        }
+    }
+});

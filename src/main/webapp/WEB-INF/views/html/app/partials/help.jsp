@@ -7,7 +7,16 @@
 		<sec:authorize access="hasRole('ROLE_ADMIN')">
 			<button ng-click="edit()" class="pull-right btn btn-primary"><s:message code="ui.edit" text="ui.edit"/></button>
 		</sec:authorize>
-		<span class="markdown" ng-bind-html="shownHelpText"></span>
+		<div class="markdown">
+			<div ng-if="headlines && headlines.length > 0">
+				<h1><s:message code="ui.help.tableOfContents" text="ui.help.tableOfContents"/></h3></h1>
+				<div ng-repeat="headline in headlines">
+					<a ng-click="scrollTo(headline)" style="cursor: pointer; margin-left: {{2 + (20 * (headline.level - 1))}}px">{{headline.label}}</a>
+				</div>
+				<br>
+			</div>			
+			<span table-of-contents ng-model="shownHelpText" ng-bind-html="shownHelpText"></span>
+		</div>
 	</div>
 	<div ng-if="editMode">
 		<button ng-click="show()" class="pull-right btn btn-primary"><s:message code="ui.back" text="ui.back"/></button>
