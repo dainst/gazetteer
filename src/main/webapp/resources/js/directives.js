@@ -1285,7 +1285,7 @@ directives.directive('tableOfContents', function($timeout) {
             var updateHeadlines = function() {
             	if (!scope.headlines || scope.headlines.length == 0) {  
 	                scope.headlines = [];
-	                angular.forEach(element[0].querySelectorAll('h1,h2,h3,h4,h5,h6'), function(e) {
+	                angular.forEach(element[0].querySelectorAll('h1,h2'), function(e) {
 	                    scope.headlines.push({ 
 	                        level: e.tagName[1], 
 	                        label: angular.element(e).text(),
