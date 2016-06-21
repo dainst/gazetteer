@@ -8,7 +8,7 @@
 			<button ng-click="edit()" class="pull-right btn btn-primary"><s:message code="ui.edit" text="ui.edit"/></button>
 		</sec:authorize>
 		<div class="markdown">
-			<div ng-if="headlines && headlines.length > 0">
+			<div ng-if="headlines && headlines.length >= 5">
 				<h1><s:message code="ui.help.tableOfContents" text="ui.help.tableOfContents"/></h3></h1>
 				<div ng-repeat="headline in headlines">
 					<a ng-click="scrollTo(headline)" style="cursor: pointer; margin-left: {{2 + (20 * (headline.level - 1))}}px">{{headline.label}}</a>
