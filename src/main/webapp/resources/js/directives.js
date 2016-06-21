@@ -1265,7 +1265,7 @@ directives.directive('markdownTextEditor', function($timeout) {
             	
             	if (type == "link" || type == "image")
             		scope.modifiedText += "[" + scope.link.description + "](" + scope.link.url + ")";
-            	else (type == "youtube")
+            	else
             		scope.modifiedText += "%YOUTUBE=" + scope.link.url + "%!";
             	 
                  scope.additionalCharacters = (scope.link.description.length - scope.selectedText.length) + scope.link.url.length + 4;
