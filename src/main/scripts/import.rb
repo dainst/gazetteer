@@ -11,7 +11,7 @@ require 'net/http'
 
 # Standard parameter values
 
-gaz_uri = "http://gazetteer.dainst.org"
+gaz_uri = "https://gazetteer.dainst.org"
 
 template = '{
   "prefName": {
