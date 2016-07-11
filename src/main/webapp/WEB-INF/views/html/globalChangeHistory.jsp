@@ -307,7 +307,7 @@
 											${changeRecord.placeId}
 										</c:when>
 										<c:otherwise>
-											<a href="place/${changeRecord.placeId}">${changeRecord.placeId}</a>
+											<a href="app/#!/show/${changeRecord.placeId}">${changeRecord.placeId}</a>
 										</c:otherwise>
 									</c:choose>
 								</td>
@@ -330,7 +330,7 @@
 										</c:when>
 										<c:otherwise>
 											<s:message code="ui.changeHistory.changeType.${changeRecord.changeType}" text="ui.changeHistory.changeType.${changeRecord.changeType}"/>
-										</c:otherwise>									
+										</c:otherwise>
 									</c:choose>
 								</td>								
 							</tr>
