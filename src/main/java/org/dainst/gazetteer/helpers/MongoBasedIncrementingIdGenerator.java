@@ -29,12 +29,11 @@ public class MongoBasedIncrementingIdGenerator implements IdGenerator {
 			counter.setValue(start);
 			mongoTemplate.save(counter);
 		}
-		nextId = counter.getValue();
 		allocateBlock();
 	}
 
 	@Override
-	public String generate(Place place) {
+	public synchronized String generate(Place place) {
 		if (nextId >= counter.getValue()) {
 			allocateBlock();
 		}
@@ -46,6 +45,7 @@ public class MongoBasedIncrementingIdGenerator implements IdGenerator {
 	private synchronized void allocateBlock() {
 		LOGGER.debug(Thread.currentThread().getName() + " - start allocateBlock()");
 		counter = mongoTemplate.findById(counter.getId(), Counter.class);
+		nextId = counter.getValue();
 		counter.inc(blockSize);
 		mongoTemplate.save(counter);
 		LOGGER.debug(Thread.currentThread().getName() + " - allocated IDs up to " + counter.getValue());
