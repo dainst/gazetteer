@@ -92,5 +92,48 @@ public class MongoBasedIncrementingIdGeneratorTests {
 		}
 			
 	}
+	
+	@Test
+	public void testMultipleInstances() {
+		
+		final Counter counter = new Counter();
+		counter.setId("test");
+		counter.setValue(1);
+		
+		final MongoTemplate mongoTemplate = mock(MongoTemplate.class);
+		when(mongoTemplate.findById("test",Counter.class)).then(new Answer<Counter>() {
+		    public Counter answer(InvocationOnMock invocation) {
+		    	System.out.println(Thread.currentThread().getName() + " - call of mocked findById()");
+		    	return new Counter(counter);
+		    }
+		});
+		doAnswer(new Answer<Counter>() {
+		    public Counter answer(InvocationOnMock invocation) {
+		        counter.setValue(((Counter) invocation.getArguments()[0]).getValue());
+		    	System.out.println(Thread.currentThread().getName() + " - call of mocked save(). Set local counter to " + counter.getValue());
+		        return null;
+		    }
+		}).when(mongoTemplate).save(any(Counter.class));		
+
+		final MongoBasedIncrementingIdGenerator idGenerator1 = new MongoBasedIncrementingIdGenerator(mongoTemplate, "test", 1);
+		final MongoBasedIncrementingIdGenerator idGenerator2 = new MongoBasedIncrementingIdGenerator(mongoTemplate, "test", 1);
+		
+		assertEquals("1", idGenerator1.generate(null));
+		assertEquals("101", idGenerator2.generate(null));
+		
+		for (int i = 0; i < 100; i++) {
+			idGenerator2.generate(null);
+		}
+		
+		assertEquals("2", idGenerator1.generate(null));
+		assertEquals("202", idGenerator2.generate(null));
+		
+		for (int i = 0; i < 100; i++) {
+			idGenerator1.generate(null);
+		}
+		
+		assertEquals("303", idGenerator1.generate(null));
+		assertEquals("203", idGenerator2.generate(null));		
+	}
 
 }
