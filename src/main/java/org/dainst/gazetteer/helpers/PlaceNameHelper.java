@@ -90,7 +90,7 @@ public class PlaceNameHelper {
 					originalLocaleIso3Language = originalLocale.getISO3Language();
 					placeName1Iso3Language = new Locale(placeName1.getLanguage()).getISO3Language();
 					placeName2Iso3Language = new Locale(placeName2.getLanguage()).getISO3Language();
-				} catch(MissingResourceException e) {
+				} catch (MissingResourceException e) {
 					logger.warn("Failed to get ISO 3 language code", e);
 				}
 				

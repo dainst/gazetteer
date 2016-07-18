@@ -11,7 +11,7 @@
 	</appender>
 
 	<appender name="file" class="org.apache.log4j.DailyRollingFileAppender">
-		<param name="file" value="/var/log/gazetteer/gazetteer-test.log" />
+		<param name="file" value="/var/log/gazetteer/gazetteer.log" />
 		<param name="DatePattern" value=".yyyy-MM-dd" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="%d - %-5p: %c - %m%n" />
