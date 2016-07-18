@@ -10,4 +10,8 @@ tmp/
 .kitchen
 .kitchen.local.yml
 .DS_Store
+src/main/webapp/WEB-INF/config.properties
+src/main/webapp/WEB-INF/elasticsearch.properties
 src/main/webapp/WEB-INF/mail.properties
+src/main/webapp/WEB-INF/web.xml
+src/main/resources/log4j.xml
