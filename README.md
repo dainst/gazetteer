@@ -31,6 +31,18 @@ mongoimport --db gazetteer --collection place --file src/test/resources/test_pla
 mongoimport --db gazetteer --collection user --file src/test/resources/test_users.json
 ```
 
+### Konfiguration
+
+Vor dem Start muss sichergestellt werden, dass die nötigen Konfigurationsdateien vorhanden sind:
+
+* src/main/resources/log4j.xml
+* src/main/webapp/WEB-INF/web.xml
+* src/main/webapp/WEB-INF/config.properties
+* src/main/webapp/WEB-INF/elasticsearch.properties
+* src/main/webapp/WEB-INF/mail.properties (optional, bei fehlender Mail-Konfiguration werden keine Mails versandt)
+
+In den entsprechenden Ordnern befinden sich Template-Files, die eine Grundkonfiguration bereitstellen. Vor dem Start sollten die Templates umbenannt bzw. kopiert und evtl. angepasst werden.
+
 ### STS
 
 Das Projekt kann über _File -> Import -> Maven -> Existing Maven Project_ in STS importiert werden und kann nach Auflösen der Dependencies mit _Run As -> Run on Server_ gestartet werden. Danach ist der Gazetteer unter http://localhost:8080/gazetteer erreichbar.
@@ -47,13 +59,12 @@ Backend (Java/SpringMVC) und Frontend (Javascript/AngularJS) werden im gleichen 
 
 ### i18n
 
-Übersetzung werden in den Dateien _src/main/resources/messages_<sprache>.properties_  und _src/main/webapps/resources/js/i18n/messages_<sprache>.js_ (Frontend) vorgenommen.
+Übersetzungen werden in den Dateien _src/main/resources/messages_<sprache>.properties_  und _src/main/webapps/resources/js/i18n/messages_<sprache>.js_ (Frontend) vorgenommen.
 
 ## Deployment
 
-Es gibt zwei Maven-Profile für das Deployment: _test_ und _prod_. Die WARs können dementsprechend mit folgenden befehlen erstellt werden:
+Das WAR-File kann mit folgendem Befehl erstellt werden:
 
-* `mvn -Ptest clean package`
-* `mvn -Pprod clean package`
+`mvn clean package`
 
 Das resultierende Web-Archiv kann dann in einem beliebigen Servlet-Container deployt werden.
