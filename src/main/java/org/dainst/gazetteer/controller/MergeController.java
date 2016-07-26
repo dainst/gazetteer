@@ -185,7 +185,6 @@ public class MergeController {
 		String link = baseUri + "place/" + place1.getId();
 		
 		RequestContext context = new RequestContext(request);
-		context.changeLocale(Locale.GERMAN);
 		String subject = context.getMessage("mail.mergeNotification.subject", new Object[] { });
 		String content = context.getMessage("mail.mergeNotification.content", new Object[] { place2Name, place2.getId(), link, place1Name, place1.getId() });
 		
