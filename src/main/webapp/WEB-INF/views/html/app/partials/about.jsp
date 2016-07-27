@@ -16,3 +16,8 @@
 		</c:otherwise>
 	</c:choose>
 </div>
+
+<div>
+	<iframe height="315" width="600" src="<s:message code="about.videoLink" text="about.videoLink" />"
+		frameborder="0" class="youtubeIframe" allowfullscreen>Connections</iframe>
+</div>

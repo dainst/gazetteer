@@ -75,3 +75,8 @@
 		</c:choose>
 	</div>
 </div>
+
+<div>
+	<iframe height="315" width="600" src="<s:message code="home.videoLink" text="home.videoLink" />"
+		frameborder="0" class="youtubeIframe" allowfullscreen>Introduction</iframe>
+</div>

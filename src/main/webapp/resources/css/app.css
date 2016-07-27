@@ -318,3 +318,8 @@ footer {
 .markdown h1 {
 	font-size: 30px;
 }
+
+.youtubeIframe {
+	margin: 0 auto;
+	display: block;
+}
