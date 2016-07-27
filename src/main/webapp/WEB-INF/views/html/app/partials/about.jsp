@@ -19,5 +19,5 @@
 
 <div>
 	<iframe height="315" width="600" src="<s:message code="about.videoLink" text="about.videoLink" />"
-		frameborder="0" class="youtubeIframe" allowfullscreen>Connections</iframe>
+		frameborder="0" class="youtubeIframe" style="margin-top: 30px;" allowfullscreen>Connections</iframe>
 </div>

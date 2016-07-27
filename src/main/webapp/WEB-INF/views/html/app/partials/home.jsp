@@ -62,21 +62,21 @@
 		 </c:choose>
 	</div>
 </div>
-		
-<div class="row-fluid">
-	<div class="span12">
-		<c:choose>
-			<c:when test="${language eq 'ar'}">
-				<p dir="rtl" lang="ar"><s:message code="home.info2" text="home.info2" /></p>
-			</c:when>
-			<c:otherwise>
-				<p><s:message code="home.info2" text="home.info2" /></p>
-			</c:otherwise>
-		</c:choose>
-	</div>
-</div>
 
 <div>
 	<iframe height="315" width="600" src="<s:message code="home.videoLink" text="home.videoLink" />"
 		frameborder="0" class="youtubeIframe" allowfullscreen>Introduction</iframe>
+</div>
+
+<div class="row-fluid" style="margin-top: 30px;">
+	<div class="span12">
+		<c:choose>
+			<c:when test="${language eq 'ar'}">
+				<p dir="rtl" lang="ar" style="max-width: 500px; margin: 0 auto; display: block;"><s:message code="home.info2" text="home.info2" /></p>
+			</c:when>
+			<c:otherwise>
+				<p style="max-width: 1000px; margin: 0 auto; display: block;"><s:message code="home.info2" text="home.info2" /></p>
+			</c:otherwise>
+		</c:choose>
+	</div>
 </div>
