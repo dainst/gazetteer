@@ -72,7 +72,7 @@
 	<div class="span12">
 		<c:choose>
 			<c:when test="${language eq 'ar'}">
-				<p dir="rtl" lang="ar" style="max-width: 500px; margin: 0 auto; display: block;"><s:message code="home.info2" text="home.info2" /></p>
+				<p dir="rtl" lang="ar" style="max-width: 1000px; margin: 0 auto; display: block;"><s:message code="home.info2" text="home.info2" /></p>
 			</c:when>
 			<c:otherwise>
 				<p style="max-width: 1000px; margin: 0 auto; display: block;"><s:message code="home.info2" text="home.info2" /></p>
