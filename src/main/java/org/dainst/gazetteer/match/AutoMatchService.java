@@ -1,6 +1,7 @@
 package org.dainst.gazetteer.match;
 
 import java.util.List;
+import java.util.Set;
 
 import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.domain.Place;
@@ -28,10 +29,12 @@ public class AutoMatchService {
 			List<Candidate> candidates = entityIdentifier.getCandidates(place);
 			if (!candidates.isEmpty()) {
 				if (candidates.get(0).getScore() == 1) {
-					Place mergedPlace = merger.merge(candidates.get(0).getCandidate(), candidates.get(0).getPlace());
+					Set<Place> updatedPlaces = merger.merge(candidates.get(0).getCandidate(), candidates.get(0).getPlace());
 					logger.debug("merging place in review {} with candidate {}",
 							candidates.get(0).getPlace(), candidates.get(0).getCandidate());
-					placeDao.save(mergedPlace);
+					for (Place updatedPlace : updatedPlaces) {
+						placeDao.save(updatedPlace);
+					}
 					placeDao.delete(place);
 				} else {
 					// TODO store uncertain candidates for manual check

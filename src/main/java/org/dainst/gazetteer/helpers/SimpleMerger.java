@@ -17,7 +17,9 @@ public class SimpleMerger implements Merger {
 	
 	
 	@Override
-	public Place merge(Place place1, Place place2) {
+	public Set<Place> merge(Place place1, Place place2) {
+		
+		Set<Place> changedPlaces = new HashSet<Place>();
 							
 		place1.getComments().addAll(place2.getComments());
 		place1.getCommentsReisestipendium().addAll(place2.getCommentsReisestipendium());
@@ -41,8 +43,13 @@ public class SimpleMerger implements Merger {
 				Place relatedPlace = placeRepository.findOne(relatedPlaceId);
 				if (relatedPlace != null && relatedPlace.getRelatedPlaces() != null
 						&& (relatedPlace.getRelatedPlaces().contains(place1.getId()) || relatedPlace.getRelatedPlaces().contains(place2.getId())
-						&& !relatedPlace.getId().equals(place1.getId()) && !relatedPlace.getId().equals(place2.getId())))
+						&& !relatedPlace.getId().equals(place1.getId()) && !relatedPlace.getId().equals(place2.getId()))) {
 					place1.getRelatedPlaces().add(relatedPlaceId);
+					relatedPlace.getRelatedPlaces().remove(place1.getId());
+					relatedPlace.getRelatedPlaces().remove(place2.getId());
+					relatedPlace.getRelatedPlaces().add(place1.getId());
+					changedPlaces.add(relatedPlace);
+				}
 			}
 		}
 		
@@ -60,18 +67,25 @@ public class SimpleMerger implements Merger {
 		List<Place> children = getPlaceRepository().findByParent(place2.getId());
 		logger.info("got {} children", children.size());
 		for (Place child : children) {
-			child.setParent(place1.getId());
-			placeRepository.save(child);
+			Place changedChild = getFromPlaceSet(child.getId(), changedPlaces);
+			if (changedChild != null)
+				changedChild.setParent(place1.getId());
+			else {
+				child.setParent(place1.getId());
+				changedPlaces.add(child);
+			}
 		}
 		
 		if (place1.getParent() == null || place1.getParent().isEmpty())
 			place1.setParent(place2.getParent());
-		else if (!place1.getParent().equals(place2.getParent())) {
-			Place otherParent = placeRepository.findOne(place2.getParent());
+		else if (place2.getParent() != null && !place1.getParent().equals(place2.getParent())) {
+			Place otherParent = getFromPlaceSet(place2.getParent(), changedPlaces);
+			if (otherParent == null)
+				otherParent = placeRepository.findOne(place2.getParent());
 			if (otherParent != null) {
 				place1.getRelatedPlaces().add(otherParent.getId());
 				otherParent.getRelatedPlaces().add(place1.getId());
-				placeRepository.save(otherParent);
+				changedPlaces.add(otherParent);
 			}
 		}
 		
@@ -86,7 +100,9 @@ public class SimpleMerger implements Merger {
 		if (!noteReisestipendium.isEmpty())
 			place1.setNoteReisestipendium(noteReisestipendium);
 		
-		return place1;
+		changedPlaces.add(place1);
+		
+		return changedPlaces;
 	}
 
 	public PlaceRepository getPlaceRepository() {
@@ -95,5 +111,15 @@ public class SimpleMerger implements Merger {
 
 	public void setPlaceRepository(PlaceRepository placeRepository) {
 		this.placeRepository = placeRepository;
+	}
+	
+	private Place getFromPlaceSet(String id, Set<Place> places) {
+		
+		for (Place place : places) {
+			if (place.getId().equals(id))
+				return place;
+		}
+		
+		return null;
 	}
 }

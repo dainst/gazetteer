@@ -1,8 +1,6 @@
 package org.dainst.gazetteer.controller;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
@@ -84,45 +82,32 @@ public class MergeController {
 			throw new IllegalStateException("Places may not be merged, as they belong to different record groups.");
 		
 		// merge places
-		merger.merge(place1, place2);
-
-		// update ancestor ids
-		AncestorsHelper helper = new AncestorsHelper(placeDao);
-		place1.setAncestors(helper.findAncestorIds(place1));
-		
-		Set<Place> updatedPlaces = new HashSet<Place>();
+		Set<Place> updatedPlaces;
 		try {
-			// update IDs in related places
-			for (String relatedPlaceId : place1.getRelatedPlaces()) {
-				Place relatedPlace = placeDao.findOne(relatedPlaceId);
-				if (relatedPlace != null && relatedPlace.getRelatedPlaces() != null) {
-					relatedPlace.getRelatedPlaces().remove(id1);
-					relatedPlace.getRelatedPlaces().remove(id2);
-					relatedPlace.getRelatedPlaces().add(place1.getId());
-					updatedPlaces.add(relatedPlace);
-				}
-			}
-		
-			// update IDs in children of place 2
-			List<Place> children = placeDao.findByParent(id2);
-			for (Place child : children) {
-				child.setParent(place1.getId());
-				updatedPlaces.add(child);
-			}
-		} catch (Exception e) {		
-			throw new RuntimeException("Could not merge places: Failed to update related places / children.", e);
+			updatedPlaces = merger.merge(place1, place2);
+		} catch(Exception e) {
+			throw new RuntimeException("Couldn't merge place " + place1.getId() + " with " + place2.getId(), e);
 		}
 		
-		for (Place place : updatedPlaces) {
-			placeDao.save(place);
+		AncestorsHelper helper = new AncestorsHelper(placeDao);
+		try {
+			// update ancestor ids
+			place1.setAncestors(helper.findAncestorIds(place1));
+		} catch(Exception e) {
+			throw new RuntimeException("Failed to set ancestors for merged place " + place1.getId(), e);
 		}
 		
-		// save merged place
-		placeDao.save(place1);
+		try {
+			for (Place place : updatedPlaces) {
+				placeDao.save(place);
+			}
+		} catch(Exception e) {
+			throw new RuntimeException("Failed to save places affected by merge", e);
+		}
 		
 		if (place1.getChildren() + place2.getChildren() < 10000)
 			helper.updateAncestors(place1);
-
+		
 		// Delete place 2
 		place2.setReplacedBy(place1.getId());
 		place2.setDeleted(true);

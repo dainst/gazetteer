@@ -3,13 +3,11 @@ package org.dainst.gazetteer.controller;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.dainst.gazetteer.dao.HelpTextRepository;
 import org.dainst.gazetteer.domain.HelpText;
 import org.dainst.gazetteer.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
