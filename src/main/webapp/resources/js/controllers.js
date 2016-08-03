@@ -920,11 +920,6 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, $http,
 	$rootScope.subtitle = "";
 	
 	$scope.namesDisplayed = 4;
-	
-	if ($routeParams.msg && $routeParams.msg == "merge") {
-		$rootScope.addAlert(messages["ui.merge.success.body"],
-				messages["ui.merge.success.head"], "success");
-	}
 
 	if ($routeParams.id) {
 		$rootScope.loading++;
@@ -1599,8 +1594,10 @@ function MergeCtrl($scope, $rootScope, $routeParams, $location, Place, EscapingS
 	$scope.merge = function(place1, place2) {
 		$rootScope.loading++;
 		place1.$merge({id2: place2.gazId}, function(result) {
+			$rootScope.addAlert(messages["ui.merge.success.body"],
+					messages["ui.merge.success.head"], "success");
 			$rootScope.loading--;
-			$location.path("/edit/" + result.gazId + "/merge");
+			$location.search("keepAlerts").path("edit/" + place1.gazId);
 		}, function() {
 			$rootScope.addAlert(messages["ui.place.save.failure"], place1.prefName.title, "error");
 			$rootScope.loading--;
