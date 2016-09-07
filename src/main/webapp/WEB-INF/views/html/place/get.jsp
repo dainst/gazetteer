@@ -9,31 +9,48 @@
 <!doctype html>
 <html>
 <head>
-<title>
-	<c:choose>
-		<c:when test="${accessStatus == 'READ' || accessStatus == 'LIMITED_READ' || accessStatus == 'EDIT'}">
-			iDAI.gazetteer - ${place.prefName.title}
-			<c:forEach var="placename" items="${place.names}"> / ${placename.title}</c:forEach>
-		</c:when>
-		<c:otherwise>
-			iDAI.gazetteer - <s:message code="domain.place.hiddenPlace" text="domain.place.hiddenPlace"/>
-		</c:otherwise>
-	</c:choose>
-</title>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="//arachne.uni-koeln.de/archaeostrap/assets/css/bootstrap.css" rel="stylesheet">
-<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet">
-<link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet">
-<link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome-ie7.css" rel="stylesheet">
-<link href="../resources/css/app.css" rel="stylesheet">
-<script	src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>	
-<script	src="//arachne.uni-koeln.de/archaeostrap/assets/js/bootstrap.js"></script>	
-<script src='//maps.google.com/maps/api/js?key=${googleMapsApiKey}&amp;libraries=visualization'></script>
-<script src="../resources/js/custom.js"></script>
-<link rel="alternate" type="application/rdf+xml" href="${baseUri}doc/${place.id}.rdf">
-<link rel="alternate" type="application/json" href="${baseUri}doc/${place.id}.json">
-<link rel="alternate" type="application/vnd.google-earth.kml+xml" href="${baseUri}doc/${place.id}.kml">
+	<title>
+		<c:choose>
+			<c:when test="${accessStatus == 'READ' || accessStatus == 'LIMITED_READ' || accessStatus == 'EDIT'}">
+				iDAI.gazetteer - ${place.prefName.title}
+				<c:forEach var="placename" items="${place.names}"> / ${placename.title}</c:forEach>
+			</c:when>
+			<c:otherwise>
+				iDAI.gazetteer - <s:message code="domain.place.hiddenPlace" text="domain.place.hiddenPlace"/>
+			</c:otherwise>
+		</c:choose>
+	</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="//arachne.uni-koeln.de/archaeostrap/assets/css/bootstrap.css" rel="stylesheet">
+	<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet">
+	<link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet">
+	<link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome-ie7.css" rel="stylesheet">
+	<link href="../resources/css/app.css" rel="stylesheet">
+	<script	src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>	
+	<script	src="//arachne.uni-koeln.de/archaeostrap/assets/js/bootstrap.js"></script>	
+	<script src='//maps.google.com/maps/api/js?key=${googleMapsApiKey}&amp;libraries=visualization'></script>
+	<script src="../resources/js/custom.js"></script>
+	<link rel="alternate" type="application/rdf+xml" href="${baseUri}doc/${place.id}.rdf">
+	<link rel="alternate" type="application/json" href="${baseUri}doc/${place.id}.json">
+	<link rel="alternate" type="application/vnd.google-earth.kml+xml" href="${baseUri}doc/${place.id}.kml">
+
+	<!-- Piwik -->
+	<script type="text/javascript">
+		var _paq = _paq || [];
+		_paq.push(["setDomains", ["*.gazetteer.dainst.org"]]);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function() {
+			var u="//piwik.dainst.org/";
+	    	_paq.push(['setTrackerUrl', u+'piwik.php']);
+	    	_paq.push(['setSiteId', 8]);
+	    	var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+	    	g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+		})();
+	</script>
+	<noscript><p><img src="//piwik.dainst.org/piwik.php?idsite=8" style="border:0;" alt="" /></p></noscript>
+	<!-- End Piwik Code -->
 </head>
 <body>
 

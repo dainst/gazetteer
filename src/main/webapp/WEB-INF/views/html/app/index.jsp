@@ -8,30 +8,47 @@
 <!doctype html>
 <html ng-app="gazetteer" ng-controller="AppCtrl">
 <head>
-<title ng-bind="pageTitle">iDAI.gazetteer</title>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="google-site-verification" content="zOT_eenwCwhER2bDdIgZY9RdXTunyQ-pHHHnZ8Ab5lw" />
-<link rel="icon" href="../resources/ico/favicon.ico" type="image/x-icon">
-<link rel="apple-touch-icon" sizes="144x144" href="../resources/ico/apple-touch-icon-144.png">
-<link rel="apple-touch-icon" sizes="114x114" href="../resources/ico/apple-touch-icon-114.png">
-<link rel="apple-touch-icon" sizes="72x72" href="../resources/ico/apple-touch-icon-72.png">
-<link rel="apple-touch-icon" href="../resources/ico/apple-touch-icon-57.png">
-<link href="//arachne.uni-koeln.de/archaeostrap/assets/css/bootstrap.css" rel="stylesheet">
-<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet">
-<link href="../resources/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-<link href="../resources/css/angular-ui.css" rel="stylesheet">
-<link href="../resources/css/app.css" rel="stylesheet">
-<script	src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-resource.min.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-cookies.min.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-route.min.js"></script>
-<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-sanitize.min.js"></script>
-<script src="../resources/js/lib/angular/angular-ui.js"></script>
-<script src="../resources/js/lib/angular/ui-bootstrap-custom-0.4.0.min.js"></script>
-<script src="../resources/js/lib/showdown/showdown.min.js"></script>
-<script src="../resources/js/lib/ngShowdown/ng-showdown.min.js"></script>
+	<title ng-bind="pageTitle">iDAI.gazetteer</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="google-site-verification" content="zOT_eenwCwhER2bDdIgZY9RdXTunyQ-pHHHnZ8Ab5lw" />
+	<link rel="icon" href="../resources/ico/favicon.ico" type="image/x-icon">
+	<link rel="apple-touch-icon" sizes="144x144" href="../resources/ico/apple-touch-icon-144.png">
+	<link rel="apple-touch-icon" sizes="114x114" href="../resources/ico/apple-touch-icon-114.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="../resources/ico/apple-touch-icon-72.png">
+	<link rel="apple-touch-icon" href="../resources/ico/apple-touch-icon-57.png">
+	<link href="//arachne.uni-koeln.de/archaeostrap/assets/css/bootstrap.css" rel="stylesheet">
+	<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet">
+	<link href="../resources/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+	<link href="../resources/css/angular-ui.css" rel="stylesheet">
+	<link href="../resources/css/app.css" rel="stylesheet">
+	<script	src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-resource.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-cookies.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-route.min.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-sanitize.min.js"></script>
+	<script src="../resources/js/lib/angular/angular-ui.js"></script>
+	<script src="../resources/js/lib/angular/ui-bootstrap-custom-0.4.0.min.js"></script>
+	<script src="../resources/js/lib/showdown/showdown.min.js"></script>
+	<script src="../resources/js/lib/ngShowdown/ng-showdown.min.js"></script>
+	
+	<!-- Piwik -->
+	<script type="text/javascript">
+		var _paq = _paq || [];
+		_paq.push(["setDomains", ["*.gazetteer.dainst.org"]]);
+		_paq.push(['trackPageView']);
+		_paq.push(['enableLinkTracking']);
+		(function() {
+			var u="//piwik.dainst.org/";
+	    	_paq.push(['setTrackerUrl', u+'piwik.php']);
+	    	_paq.push(['setSiteId', 8]);
+	    	var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+	    	g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+		})();
+	</script>
+	<noscript><p><img src="//piwik.dainst.org/piwik.php?idsite=8" style="border:0;" alt="" /></p></noscript>
+	<!-- End Piwik Code -->
 </head>
 <body class="ng-cloak">
 
