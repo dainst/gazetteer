@@ -7,7 +7,9 @@ angular.module('gazetteer', ['gazetteer.filters',
                              'ngRoute',
                              'ui',
                              'ngSanitize',
-                             'ng-showdown']).
+                             'ng-showdown',
+                             'angulartics',
+                             'angulartics.piwik']).
   config(['$routeProvider', function($routeProvider) {
 	$routeProvider.when('/home', { templateUrl: 'partials/home.html', controller: HomeCtrl });
     $routeProvider.when('/search', { templateUrl: 'partials/search.html', reloadOnSearch: false, controller: SearchCtrl });
