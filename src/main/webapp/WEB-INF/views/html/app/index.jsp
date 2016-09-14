@@ -32,8 +32,6 @@
 	<script src="../resources/js/lib/angular/ui-bootstrap-custom-0.4.0.min.js"></script>
 	<script src="../resources/js/lib/showdown/showdown.min.js"></script>
 	<script src="../resources/js/lib/ngShowdown/ng-showdown.min.js"></script>
-	<script src="../resources/js/lib/angulartics/angulartics.min.js"></script>
-	<script src="../resources/js/lib/angulartics/angulartics-piwik.min.js"></script>
 	
 	<!-- Piwik -->
 	<script type="text/javascript">

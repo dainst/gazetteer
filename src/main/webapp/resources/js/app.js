@@ -7,9 +7,8 @@ angular.module('gazetteer', ['gazetteer.filters',
                              'ngRoute',
                              'ui',
                              'ngSanitize',
-                             'ng-showdown',
-                             'angulartics',
-                             'angulartics.piwik']).
+                             'ng-showdown'
+                             ]).
   config(['$routeProvider', function($routeProvider) {
 	$routeProvider.when('/home', { templateUrl: 'partials/home.html', controller: HomeCtrl });
     $routeProvider.when('/search', { templateUrl: 'partials/search.html', reloadOnSearch: false, controller: SearchCtrl });
@@ -26,4 +25,22 @@ angular.module('gazetteer', ['gazetteer.filters',
   }]).
   config(['$locationProvider', function($locationProvider) {
 	$locationProvider.hashPrefix('!');
-  }]);
+  }])
+  .run(function($rootScope, $location, $document, $timeout) {
+
+	  // Piwik tracking code
+	  
+	    $rootScope.$on('$routeChangeSuccess', function(event, current) {
+	    	if (window._paq && $rootScope.lastUrl != $location.absUrl()) {
+	    		if ($rootScope.lastUrl)
+    				window._paq.push(['setReferrerUrl', $rootScope.lastUrl]);
+    			$rootScope.lastUrl = $location.absUrl();
+    			
+	    		$timeout(function() {
+	    			window._paq.push(['setDocumentTitle', $document[0].title]);
+		    		window._paq.push(['setCustomUrl', $location.absUrl()]);
+		    		window._paq.push(['trackPageView']);
+	    		}, 100);
+	    	}
+	    });
+	  });
