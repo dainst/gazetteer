@@ -347,6 +347,8 @@ public class DocumentController {
 	public ModelAndView updateOrCreatePlace(@RequestBody Place place, 
 			@PathVariable String placeId,
 			HttpServletResponse response) throws Exception {
+		
+		place.setId(placeId);
 
 		Place placeToCheck = place;
 		while (placeToCheck.getParent() != null && !placeToCheck.getParent().equals("")) {
