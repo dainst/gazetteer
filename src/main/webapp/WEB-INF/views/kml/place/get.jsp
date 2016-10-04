@@ -72,7 +72,7 @@
 				</c:if>
 				
 				<!-- locations -->
-				<c:if test="${place.prefLocation != null}">
+				<c:if test="${place.prefLocation != null && place.prefLocation.coordinates != null && fn:length(place.prefLocation.coordinates) > 0}">
 					<h2><s:message code="domain.place.locations" text="domain.place.locations" /></h2>
 					<ul>
 						<li>
@@ -169,10 +169,12 @@
 				]]>
 			</description>
 			<MultiGeometry>
-				<Point>
-					<coordinates><c:out value="${place.prefLocation.lng}" />,<c:out value="${place.prefLocation.lat}" /></coordinates>
-				</Point>
-				<c:if test="${place.prefLocation.shape != null && place.prefLocation.shape.coordinates != null && !empty(place.prefLocation.shape.coordinates)}">
+				<c:if test="${place.prefLocation != null && place.prefLocation.coordinates != null && fn:length(place.prefLocation.coordinates) > 0}">
+					<Point>
+						<coordinates><c:out value="${place.prefLocation.lng}" />,<c:out value="${place.prefLocation.lat}" /></coordinates>
+					</Point>
+				</c:if>
+				<c:if test="${place.prefLocation != null && place.prefLocation.shape != null && place.prefLocation.shape.coordinates != null && !empty(place.prefLocation.shape.coordinates)}">
 					<c:forEach var="polygon" items="${place.prefLocation.shape.coordinates}">
 						<Polygon>
 							<c:forEach var="ring" items="${polygon}" varStatus="ringStatus">
@@ -184,7 +186,7 @@
 													<c:forEach var="coordinates" items="${ring}">
 														${coordinates[0]},${coordinates[1]}
 													</c:forEach>
-													<c:if test="${ring[0] != ring[fn:length(ring) - 1]}">
+													<c:if test="${ring[0][0] != ring[fn:length(ring) - 1][0] || ring[0][1] != ring[fn:length(ring) - 1][1]}">
 														${ring[0][0]},${ring[0][1]}
 													</c:if>
 												</coordinates>
@@ -198,7 +200,7 @@
 													<c:forEach var="coordinates" items="${ring}">
 														${coordinates[0]},${coordinates[1]}
 													</c:forEach>
-													<c:if test="${ring[0] != ring[fn:length(ring) - 1]}">
+													<c:if test="${ring[0][0] != ring[fn:length(ring) - 1][0] || ring[0][1] != ring[fn:length(ring) - 1][1]}">
 														${ring[0][0]},${ring[0][1]}
 													</c:if>
 												</coordinates>
