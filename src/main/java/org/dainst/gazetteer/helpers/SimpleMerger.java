@@ -76,7 +76,7 @@ public class SimpleMerger implements Merger {
 			}
 		}
 		
-		if (place1.getParent() == null || place1.getParent().isEmpty())
+		if ((place1.getParent() == null || place1.getParent().isEmpty()) && !place2.getParent().equals(place1.getId()))
 			place1.setParent(place2.getParent());
 		else if (place2.getParent() != null && !place1.getParent().equals(place2.getParent())) {
 			Place otherParent = getFromPlaceSet(place2.getParent(), changedPlaces);

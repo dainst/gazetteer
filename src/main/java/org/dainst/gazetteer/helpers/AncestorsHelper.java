@@ -5,10 +5,14 @@ import java.util.List;
 
 import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.domain.Place;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AncestorsHelper {
 	
 	private PlaceRepository placeDao;
+	
+	private static Logger logger = LoggerFactory.getLogger(AncestorsHelper.class);
 	
 	public AncestorsHelper(PlaceRepository placeDao) {
 		this.placeDao = placeDao;
@@ -47,6 +51,11 @@ public class AncestorsHelper {
 	}
 	
 	private List<String> findAncestorIds(Place place, List<String> ancestorIds, boolean firstLevel) {
+		
+		if (place.getParent().equals(place.getId())) {
+			logger.warn("Place " + place.getId() + " is its own parent place!");
+			return ancestorIds;
+		}
 		
 		if (place.getParent() != null && !place.getParent().isEmpty()) {
 			Place parent = placeDao.findOne(place.getParent());
