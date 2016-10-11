@@ -52,7 +52,7 @@ public class AncestorsHelper {
 	
 	private List<String> findAncestorIds(Place place, List<String> ancestorIds, boolean firstLevel) {
 		
-		if (place.getParent().equals(place.getId())) {
+		if (place.getParent() != null && place.getParent().equals(place.getId())) {
 			logger.warn("Place " + place.getId() + " is its own parent place!");
 			return ancestorIds;
 		}
