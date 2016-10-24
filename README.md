@@ -11,7 +11,7 @@ Mongodb und Elasticsearch können mit Hilfe von [Test Kitchen](http://kitchen.ci
 Folgende Tools müssen dafür installiert sein:
 * [VirtualBox](https://www.virtualbox.org/)
 * [Vagrant](http://www.vagrantup.com/)
-* Bundler, installieren mit: `gem install bundler@`
+* Bundler, installieren mit: `gem install bundler`
 
 VM erstellen und starten:
 ```bash
