@@ -11,6 +11,7 @@ import java.util.Map;
 import org.apache.commons.io.FileUtils;
 import org.dainst.gazetteer.domain.Location;
 import org.dainst.gazetteer.domain.Place;
+import org.dainst.gazetteer.helpers.PlaceAccessService;
 import org.dainst.gazetteer.helpers.TempFolderService;
 import org.dainst.gazetteer.helpers.ZipArchiveBuilder;
 import org.geotools.data.DataStore;
@@ -56,10 +57,10 @@ public class ShapefileCreator {
 		List<Place> places = new ArrayList<Place>();
 		places.add(place);
 		
-		return createShapefiles(filename, places);
+		return createShapefiles(filename, places, null);
 	}
 	
-	public File createShapefiles(String filename, List<Place> places) throws Exception {
+	public File createShapefiles(String filename, List<Place> places, Map<String, PlaceAccessService.AccessStatus> placeAccessMap) throws Exception {
 		
 		if (pointType == null || multiPolygonType == null) {
 			createFeatureTypes();
@@ -71,8 +72,8 @@ public class ShapefileCreator {
 		File shapeFileFolder = new File(tempFolder.getAbsolutePath() + File.separator + filename);
 		shapeFileFolder.mkdir();
 		
-		createShapefile(places, shapeFileFolder, pointType);
-		createShapefile(places, shapeFileFolder, multiPolygonType);
+		createShapefile(places, placeAccessMap, shapeFileFolder, pointType);
+		createShapefile(places, placeAccessMap, shapeFileFolder, multiPolygonType);
 		
 		File zipFile = ZipArchiveBuilder.buildZipArchiveFromFolder(shapeFileFolder, tempFolder);
 		
@@ -98,12 +99,13 @@ public class ShapefileCreator {
 		}
 	}
 	
-	private void createShapefile(List<Place> places, File folder, SimpleFeatureType featureType) throws Exception {
+	private void createShapefile(List<Place> places, Map<String, PlaceAccessService.AccessStatus> placeAccessMap, File folder,
+			SimpleFeatureType featureType) throws Exception {
 			
 		String outputFilePath = folder.getAbsolutePath() + File.separator + featureType.getTypeName() + "s.shp";
 		File outputFile = new File(outputFilePath);
 		
-		MemoryDataStore memoryDataStore = createMemoryDataStore(places, featureType);		
+		MemoryDataStore memoryDataStore = createMemoryDataStore(places, placeAccessMap, featureType);
 		
 		if (memoryDataStore != null) {
 			logger.debug("Write shapefile for feature type " + featureType.getTypeName());
@@ -113,7 +115,8 @@ public class ShapefileCreator {
 		}
 	}
 	
-	private MemoryDataStore createMemoryDataStore(List<Place> places, SimpleFeatureType featureType) throws Exception {
+	private MemoryDataStore createMemoryDataStore(List<Place> places, Map<String, PlaceAccessService.AccessStatus> placeAccessMap,
+			SimpleFeatureType featureType) throws Exception {
 		
 		MemoryDataStore memoryDataStore = new MemoryDataStore();
 		memoryDataStore.createSchema(featureType);
@@ -125,6 +128,10 @@ public class ShapefileCreator {
 		boolean dataStoreEmpty = true;
 		
 		for (Place place : places) {
+			
+			if (placeAccessMap != null && !PlaceAccessService.hasReadAccess(placeAccessMap.get(place.getId()))) {
+				continue;
+			}
 									
 			SimpleFeatureBuilder featureBuilder = null;
 			

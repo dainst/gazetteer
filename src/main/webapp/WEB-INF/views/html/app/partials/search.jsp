@@ -21,6 +21,7 @@
 				<li><a ng-href="../search.kml?q={{search.q}}&fq={{search.fq}}{{polygonFilterCoordinatesString}}&limit=1000&type={{search.type}}" target="_blank">KML</a></li>
 				<li><a ng-href="../search.json?q={{search.q}}&fq={{search.fq}}{{polygonFilterCoordinatesString}}&limit=1000&type={{search.type}}&pretty=true" target="_blank">JSON</a></li>
 				<li><a ng-href="../search.geojson?q={{search.q}}&fq={{search.fq}}{{polygonFilterCoordinatesString}}&limit=1000&type={{search.type}}&pretty=true" target="_blank">GeoJSON</a></li>
+				<li><a ng-href="../search/shapefile?q={{search.q}}&fq={{search.fq}}{{polygonFilterCoordinatesString}}&limit=1000&type={{search.type}}" target="_blank">Shapefile</a></li>
 			</ul>
 		</li>
 	</ul>

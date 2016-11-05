@@ -1,5 +1,10 @@
 package org.dainst.gazetteer.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -12,7 +17,9 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.dainst.gazetteer.converter.JsonPlaceSerializer;
+import org.dainst.gazetteer.converter.ShapefileCreator;
 import org.dainst.gazetteer.dao.GroupRoleRepository;
 import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.dao.RecordGroupRepository;
@@ -63,6 +70,9 @@ public class SearchController {
 	
 	@Autowired
 	private JsonPlaceSerializer jsonPlaceSerializer;
+	
+	@Autowired
+	private ShapefileCreator shapefileCreator;
 	
 	@Autowired
 	private ProtectLocationsService protectLocationsService;
@@ -116,54 +126,8 @@ public class SearchController {
 		
 		logger.debug("Searching places with query: " + q + ", fq: " + fq + ", limit: " + limit + ", offset: " + offset + ", type: " + type);
 		
-		ElasticSearchPlaceQuery query = new ElasticSearchPlaceQuery(client);
-		
-		if (q != null) {			
-			if (checkQueryAuthorization(q, user)) {
-				if ("fuzzy".equals(type)) query.fuzzySearch(q);
-				else if ("queryString".equals(type)) query.queryStringSearch(q);
-				else if ("extended".equals(type)) query.extendedSearch(q);
-				else if ("prefix".equals(type)) query.prefixSearch(q);
-				else query.metaSearch(q);			
-			} else
-				query.listAll();
-		} else {
-			query.listAll();
-		}
-		
-		if (fq != null && !fq.isEmpty())
-			query.addFilter(fq);
-		
-		if (!showHiddenPlaces)
-			query.addFilter(buildRecordGroupFilter(user));
-		
-		query.addBoostForChildren();
-		query.limit(limit);
-		query.offset(offset);
-		if (sort != null && !sort.isEmpty()) {
-			query.addSort(sort, order);
-		}
-		if (add == null || !add.contains("deleted")) query.addFilter("deleted:false");
-		if (!"true".equals(showInReview)) query.addFilter("needsReview:false");		
-		query.addFacet("parent");
-		query.addFacet("types");
-		query.addFacet("tags");
-		
-		if (bbox != null && bbox.length > 0) {
-			query.addBBoxFilter(bbox[0], bbox[1], bbox[2], bbox[3]);
-		}
-		
-		if (polygonFilterCoordinates != null && polygonFilterCoordinates.length > 0) {
-			double[][] polygon = new double[polygonFilterCoordinates.length / 2][];
-			
-			for (int i = 0; i < polygonFilterCoordinates.length / 2; i++) {
-				polygon[i] = new double[2];
-				polygon[i][0] = polygonFilterCoordinates[i * 2];
-				polygon[i][1] = polygonFilterCoordinates[i * 2 + 1];
-			}
-			
-			query.addPolygonFilter(polygon);
-		}
+		ElasticSearchPlaceQuery query = getQuery(q, fq, type,  sort, order, add, bbox, polygonFilterCoordinates, limit, offset, showHiddenPlaces,
+				showInReview, user);
 		
 		// get ids from elastic search
 		String[] result = query.execute();
@@ -359,6 +323,86 @@ public class SearchController {
 		return mav;
 		
 	}
+	
+	@RequestMapping(value="/search/shapefile", method=RequestMethod.GET)
+	public void getShapefile(@RequestParam(defaultValue="10") int limit,
+			@RequestParam(defaultValue="0") int offset,
+			@RequestParam(required=false) String q,
+			@RequestParam(required=false) String fq,
+			@RequestParam(required=false) String sort,
+			@RequestParam(defaultValue="asc") String order,
+			@RequestParam(required=false) String type,
+			@RequestParam(required=false) double[] bbox,
+			@RequestParam(required=false) double[] polygonFilterCoordinates,
+			HttpServletRequest request,
+			HttpServletResponse response) {
+				
+		User user = null;
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal instanceof User)
+			user = (User) principal;
+		
+		logger.debug("Creating shapefile for query: " + q + ", fq: " + fq + ", limit: " + limit + ", offset: " + offset + ", type: " + type);
+		
+		ElasticSearchPlaceQuery query = getQuery(q, fq, type,  sort, order, null, bbox, polygonFilterCoordinates, limit, offset, false,
+				null, user);
+		
+		// get ids from elasticsearch
+		String[] result = query.execute();
+		
+		logger.debug("Querying index returned: " + result.length + " places");
+		logger.debug("Result: {}", Arrays.toString(result));
+		
+		// get places for the result ids from db
+		List<Place> places = placesForList(result, true);
+		logger.debug("Places: {}", places);
+		
+		Map<String, PlaceAccessService.AccessStatus> accessStatusMap = new HashMap<String, PlaceAccessService.AccessStatus>();
+		
+		PlaceAccessService placeAccessService = new PlaceAccessService(groupDao, groupRoleDao);
+		
+		for (Place place : places) {
+			PlaceAccessService.AccessStatus accessStatus = placeAccessService.getAccessStatus(place);
+			protectLocationsService.protectLocations(user, place, accessStatus);
+			accessStatusMap.put(place.getId(), accessStatus);
+		}
+		
+		File file = null;
+		try {
+			file = shapefileCreator.createShapefiles("search", places, accessStatusMap);
+		} catch (Exception e) {
+			throw new RuntimeException("Shapefile creation failed", e);
+		}
+		
+		InputStream inputStream = null;
+		try {
+			inputStream = new FileInputStream(file);
+		} catch (FileNotFoundException e) {
+			throw new RuntimeException("Shapefile could not be found", e);
+		}
+		
+		response.setContentType("application/zip");
+		response.setHeader("Content-Disposition", "attachment; filename=" + file.getName());
+
+		try {
+			IOUtils.copy(inputStream, response.getOutputStream());
+			response.flushBuffer();
+	    } catch (IOException e) {
+	    	throw new RuntimeException("Failed to copy zipped shapefile to output stream", e);
+	    } finally {
+	    	try {
+				inputStream.close();
+			} catch (IOException e) {
+				throw new RuntimeException("Failed to close input stream", e);
+			}
+	    }
+
+		try {
+			shapefileCreator.removeShapefileData(file);
+		} catch (IOException e) {
+			throw new RuntimeException("Failed to remove shapefile data", e);
+		}
+	}
 
 	@RequestMapping(value="/suggestions", method=RequestMethod.GET)
 	@ResponseBody
@@ -400,6 +444,61 @@ public class SearchController {
 		resultMap.put("coordinates", heatmapCoordinates);
 		
 		return resultMap;
+	}
+	
+	private ElasticSearchPlaceQuery getQuery(String q, String fq, String type, String sort, String order, String add,
+			double[] bbox, double[] polygonFilterCoordinates, int limit, int offset, boolean showHiddenPlaces, String showInReview, User user) {
+		
+		ElasticSearchPlaceQuery query = new ElasticSearchPlaceQuery(client);
+		
+		if (q != null) {
+			if (checkQueryAuthorization(q, user)) {
+				if ("fuzzy".equals(type)) query.fuzzySearch(q);
+				else if ("queryString".equals(type)) query.queryStringSearch(q);
+				else if ("extended".equals(type)) query.extendedSearch(q);
+				else if ("prefix".equals(type)) query.prefixSearch(q);
+				else query.metaSearch(q);
+			} else
+				query.listAll();
+		} else {
+			query.listAll();
+		}
+		
+		if (fq != null && !fq.isEmpty())
+			query.addFilter(fq);
+		
+		if (!showHiddenPlaces)
+			query.addFilter(buildRecordGroupFilter(user));
+		
+		query.addBoostForChildren();
+		query.limit(limit);
+		query.offset(offset);
+		if (sort != null && !sort.isEmpty()) {
+			query.addSort(sort, order);
+		}
+		if (add == null || !add.contains("deleted")) query.addFilter("deleted:false");
+		if (!"true".equals(showInReview)) query.addFilter("needsReview:false");
+		query.addFacet("parent");
+		query.addFacet("types");
+		query.addFacet("tags");
+		
+		if (bbox != null && bbox.length > 0) {
+			query.addBBoxFilter(bbox[0], bbox[1], bbox[2], bbox[3]);
+		}
+		
+		if (polygonFilterCoordinates != null && polygonFilterCoordinates.length > 0) {
+			double[][] polygon = new double[polygonFilterCoordinates.length / 2][];
+			
+			for (int i = 0; i < polygonFilterCoordinates.length / 2; i++) {
+				polygon[i] = new double[2];
+				polygon[i][0] = polygonFilterCoordinates[i * 2];
+				polygon[i][1] = polygonFilterCoordinates[i * 2 + 1];
+			}
+			
+			query.addPolygonFilter(polygon);
+		}
+		
+		return query;
 	}
 	
 	// get places for the result ids from db
