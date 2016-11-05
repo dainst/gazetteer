@@ -13,6 +13,7 @@
 		<org.aspectj-version>1.6.11</org.aspectj-version>
 		<org.slf4j-version>1.5.10</org.slf4j-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<geotools.version>14.5</geotools.version>
 	</properties>
 	<dependencies>
 
@@ -222,6 +223,29 @@
 			<scope>test</scope>
 		</dependency>
 		
+		<!-- Geotools -->
+        <dependency>
+            <groupId>org.geotools</groupId>
+            <artifactId>gt-shapefile</artifactId>
+            <version>${geotools.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.geotools</groupId>
+            <artifactId>gt-epsg-hsql</artifactId>
+            <version>${geotools.version}</version>
+        </dependency>
+        
+        <dependency>
+  			<groupId>se.jiderhamn.classloader-leak-prevention</groupId>
+  			<artifactId>classloader-leak-prevention-servlet</artifactId>
+  			<version>2.1.0</version>
+		</dependency>
+		
+		<dependency>
+    		<groupId>commons-io</groupId>
+    		<artifactId>commons-io</artifactId>
+    		<version>2.5</version>
+		</dependency>
 
 	</dependencies>
 
@@ -242,6 +266,14 @@
 			<id>Nuxeo</id>
 			<url>https://maven-eu.nuxeo.org/nexus/content/groups/public/</url>
 		</repository>
+      	<repository>
+            <id>maven2-repository.dev.java.net</id>
+            <url>http://download.java.net/maven/2</url>
+        </repository>
+        <repository>
+            <id>osgeo</id>
+            <url>http://download.osgeo.org/webdav/geotools/</url>
+        </repository>
 	</repositories>
 
 	<build>

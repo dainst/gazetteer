@@ -1,5 +1,10 @@
 package org.dainst.gazetteer.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -12,7 +17,9 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.IOUtils;
 import org.dainst.gazetteer.converter.JsonPlaceSerializer;
+import org.dainst.gazetteer.converter.ShapefileCreator;
 import org.dainst.gazetteer.dao.GroupRoleRepository;
 import org.dainst.gazetteer.dao.PlaceChangeRecordRepository;
 import org.dainst.gazetteer.dao.PlaceRepository;
@@ -69,6 +76,9 @@ public class DocumentController {
 	private JsonPlaceSerializer jsonPlaceSerializer;
 	
 	@Autowired
+	private ShapefileCreator shapefileCreator;
+	
+	@Autowired
 	private ProtectLocationsService protectLocationsService;
 	
 	@Autowired
@@ -102,7 +112,7 @@ public class DocumentController {
 		RequestContext requestContext = new RequestContext(request);
 		Locale locale = requestContext.getLocale();
 		Locale originalLocale = request.getLocale();
-		
+
 		ModelAndView mav;
 		
 		String suffix = "";
@@ -125,13 +135,8 @@ public class DocumentController {
 			}
 		}
 		
-		long time = System.currentTimeMillis();
-		
 		Place place = placeDao.findOne(placeId);
 		
-		logger.debug("findOne: {}", System.currentTimeMillis() - time);
-		time = System.currentTimeMillis();
-				
 		if (place == null) {
 			
 			throw new ResourceNotFoundException();
@@ -153,14 +158,8 @@ public class DocumentController {
 			
 		} else {
 			
-			logger.debug("findByParent: {}", System.currentTimeMillis() - time);
-			time = System.currentTimeMillis();
-			
 			List<Place> relatedPlaces = placeDao.findByIdIn(place.getRelatedPlaces());
-			
-			logger.debug("findByIdIn: {}", System.currentTimeMillis() - time);
-			time = System.currentTimeMillis();
-			
+					
 			PlaceAccessService placeAccessService = new PlaceAccessService(groupDao, groupRoleDao);			
 			PlaceAccessService.AccessStatus accessStatus = placeAccessService.getAccessStatus(place);
 			
@@ -186,7 +185,7 @@ public class DocumentController {
 			
 			if (!placeAccessService.hasReadAccess(place))
 				response.setStatus(403);
-			
+						
 			jsonPlaceSerializer.setBaseUri(baseUri);
 			jsonPlaceSerializer.setPretty(pretty);
 			jsonPlaceSerializer.setIncludeAccessInfo(add != null && add.contains("access"));
@@ -225,6 +224,70 @@ public class DocumentController {
 		
 		return mav;
 
+	}
+	
+	@RequestMapping(value="/doc/shapefile/{placeId}", method=RequestMethod.GET)
+	public void getShapefile(@PathVariable String placeId,
+			HttpServletRequest request,
+			HttpServletResponse response) {
+		
+		Place place = placeDao.findOne(placeId);
+		
+		if (place == null || place.isDeleted() || place.isNeedsReview()) {
+			throw new ResourceNotFoundException();
+		}
+				
+		PlaceAccessService placeAccessService = new PlaceAccessService(groupDao, groupRoleDao);
+		PlaceAccessService.AccessStatus accessStatus = placeAccessService.getAccessStatus(place);
+		
+		User user = null;
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal instanceof User)
+			user = (User) principal;
+		
+		protectLocationsService.protectLocations(user, place, accessStatus);
+	
+		if (!placeAccessService.hasReadAccess(place)) {
+			response.setStatus(403);
+			return;
+		}
+		
+		File file = null;
+		try {
+			file = shapefileCreator.createShapefiles(place.getId(), place);
+		} catch (Exception e) {
+			throw new RuntimeException("Shapefile creation failed", e);
+		}
+		
+		InputStream inputStream = null;
+		try {
+			inputStream = new FileInputStream(file);
+		} catch (FileNotFoundException e) {
+			throw new RuntimeException("Shapefile could not be found", e);
+		}
+		
+		response.setContentType("application/zip");
+		response.setHeader("Content-Disposition", "attachment; filename=" + file.getName()); 
+
+		try {
+			IOUtils.copy(inputStream, response.getOutputStream());
+			response.flushBuffer();
+	    } catch (IOException e) {
+	    	throw new RuntimeException("Failed to copy zipped shapefile to output stream", e);
+	    } finally {
+	    	try {
+				inputStream.close();
+			} catch (IOException e) {
+				throw new RuntimeException("Failed to close input stream", e);
+			}
+	    }
+
+		try {
+			shapefileCreator.removeShapefileData(file);
+		} catch (IOException e) {
+			throw new RuntimeException("Failed to remove shapefile data", e);
+		}
+		
 	}
 	
 	@RequestMapping(value="/doc", method={RequestMethod.POST, RequestMethod.PUT})
