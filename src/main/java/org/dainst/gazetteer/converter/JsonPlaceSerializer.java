@@ -82,10 +82,8 @@ public class JsonPlaceSerializer {
 	
 	public String serialize(Place place, HttpServletRequest request, List<Place> parents, PlaceAccessService.AccessStatus accessStatus, 
 			Map<String, PlaceAccessService.AccessStatus> parentAccessStatusMap, String replacing) {
-		mapper = new ObjectMapper();
 		
-		if (pretty)
-			mapper.enable(SerializationFeature.INDENT_OUTPUT);
+		resetMapper();
 		
 		ObjectNode placeNode = createJsonNodes(place, request, parents, accessStatus, parentAccessStatusMap, replacing);
 		
@@ -99,6 +97,8 @@ public class JsonPlaceSerializer {
 	
 	public String serializeGeoJson(Place place, HttpServletRequest request,
 			PlaceAccessService.AccessStatus accessStatus) {
+		
+		resetMapper();
 		
 		ObjectNode geoJsonPlaceNode = createGeoJsonNodes(place, accessStatus);		
 		ObjectNode placeNode = createJsonNodes(place, request, null, accessStatus, null, null);
@@ -544,6 +544,14 @@ public class JsonPlaceSerializer {
 		}
 		
 		return coordinatesNode;
+	}
+	
+	private void resetMapper() {
+		
+		mapper = new ObjectMapper();
+		
+		if (pretty)
+			mapper.enable(SerializationFeature.INDENT_OUTPUT);
 	}
 	
 	public String getBaseUri() {
