@@ -15,11 +15,17 @@
 				<i class="icon-file"></i> <b class="caret"></b>
 			</a>
 			<ul class="dropdown-menu">
-				<li><a href="../doc/{{place.gazId}}.kml" target="_blank">KML</a></li>
-				<li><a href="../doc/{{place.gazId}}.json?pretty=true" target="_blank">JSON</a></li>
-				<li><a href="../doc/{{place.gazId}}.geojson?pretty=true" target="_blank">GeoJSON</a></li>
 				<li><a href="../doc/{{place.gazId}}.rdf" target="_blank">RDF/XML</a></li>
-				<li><a href="../doc/shapefile/{{place.gazId}}" target="_blank">Shapefile</a></li>
+				<li><a href="../doc/{{place.gazId}}.json?pretty=true" target="_blank">JSON</a></li>
+				<li ng-if="place.prefLocation && (place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0) || place.prefLocation.shape">
+					<a href="../doc/{{place.gazId}}.geojson?pretty=true" target="_blank">GeoJSON</a>
+				</li>
+				<li ng-if="place.prefLocation && (place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0) || place.prefLocation.shape">
+					<a href="../doc/{{place.gazId}}.kml" target="_blank">KML</a>
+				</li>
+				<li ng-if="place.prefLocation && (place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0) || place.prefLocation.shape">
+					<a href="../doc/shapefile/{{place.gazId}}" target="_blank">Shapefile</a>
+				</li>
 			</ul>
 		</li>
 		<sec:authorize access="hasRole('ROLE_EDITOR')">
