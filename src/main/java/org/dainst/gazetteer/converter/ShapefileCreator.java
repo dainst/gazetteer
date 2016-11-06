@@ -2,6 +2,7 @@ package org.dainst.gazetteer.converter;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -22,13 +23,13 @@ import org.dainst.gazetteer.domain.RecordGroup;
 import org.dainst.gazetteer.helpers.PlaceAccessService;
 import org.dainst.gazetteer.helpers.TempFolderService;
 import org.dainst.gazetteer.helpers.ZipArchiveBuilder;
-import org.geotools.data.DataStore;
 import org.geotools.data.DataUtilities;
 import org.geotools.data.DefaultTransaction;
-import org.geotools.data.FileDataStoreFactorySpi;
 import org.geotools.data.FileDataStoreFinder;
 import org.geotools.data.Transaction;
 import org.geotools.data.memory.MemoryDataStore;
+import org.geotools.data.shapefile.ShapefileDataStore;
+import org.geotools.data.shapefile.ShapefileDataStoreFactory;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.data.simple.SimpleFeatureStore;
@@ -65,38 +66,36 @@ public class ShapefileCreator {
 	
 	private static final String dataSchema =
 				"gazId:String,"
-			+   "pNameTitl:String,"
+			+   "pNameTitle:String,"
 			+   "pNameLang:String,"
 			+   "pNameAnc:Boolean,"
-			+   "pNameTrns:Boolean,"
-			+   "name1Titl:String,"
+			+   "pNameTrnsl:Boolean,"
+			+   "name1Title:String,"
 			+   "name1Lang:String,"
 			+   "name1Anc:Boolean,"
-			+   "name1Trns:Boolean,"
-			+   "name2Titl:String,"
+			+   "name1Trnsl:Boolean,"
+			+   "name2Title:String,"
 			+   "name2Lang:String,"
 			+   "name2Anc:Boolean,"
-			+   "name2Trns:Boolean,"
-			+   "name3Titl:String,"
+			+   "name2Trnsl:Boolean,"
+			+   "name3Title:String,"
 			+   "name3Lang:String,"
 			+   "name3Anc:Boolean,"
-			+   "name3Trns:Boolean,"
-			+   "name4Titl:String,"
+			+   "name3Trnsl:Boolean,"
+			+   "name4Title:String,"
 			+   "name4Lang:String,"
 			+   "name4Anc:Boolean,"
-			+   "name4Trns:Boolean,"
-			+   "name5Titl:String,"
+			+   "name4Trnsl:Boolean,"
+			+   "name5Title:String,"
 			+   "name5Lang:String,"
 			+   "name5Anc:Boolean,"
-			+   "name5Trns:Boolean,"
+			+   "name5Trnsl:Boolean,"
 			+	"type1:String,"
 			+	"type2:String,"
 			+	"type3:String,"
-			+	"type4:String,"
-			+	"type5:String,"
-			+	"altitude:Double,"
 			+	"locConfid:Integer,"
 			+	"publicSite:Boolean,"
+			+	"altitude:Double,"
 			+	"parent:Integer,"
 			+	"related1:String,"
 			+	"related2:String,"
@@ -113,21 +112,11 @@ public class ShapefileCreator {
 			+	"tag3:String,"
 			+	"tag4:String,"
 			+	"tag5:String,"
-			+	"tag6:String,"
-			+	"tag7:String,"
-			+	"tag8:String,"
-			+	"tag9:String,"
-			+	"tag10:String,"
 			+	"prov1:String,"
 			+	"prov2:String,"
 			+	"prov3:String,"
 			+	"prov4:String,"
 			+	"prov5:String,"
-			+	"prov6:String,"
-			+	"prov7:String,"
-			+	"prov8:String,"
-			+	"prov9:String,"
-			+	"prov10:String,"
 			+	"id1Contxt:String,"
 			+	"id1Value:String,"
 			+	"id2Contxt:String,"
@@ -148,31 +137,14 @@ public class ShapefileCreator {
 			+	"id9Value:String,"
 			+	"id10Contxt:String,"
 			+	"id10Value:String,"
-			+	"link1Pred:String,"
-			+	"link1Obj:String,"
-			+	"link2Pred:String,"
-			+	"link2Obj:String,"
-			+	"link3Pred:String,"
-			+	"link3Obj:String,"
-			+	"link4Pred:String,"
-			+	"link4Obj:String,"
-			+	"link5Pred:String,"
-			+	"link5Obj:String,"
-			+	"link6Pred:String,"
-			+	"link6Obj:String,"
-			+	"link7Pred:String,"
-			+	"link7Obj:String,"
-			+	"link8Pred:String,"
-			+	"link8Obj:String,"
-			+	"link9Pred:String,"
-			+	"link9Obj:String,"
-			+	"link10Pred:String,"
-			+	"link10Obj:String,"
+			+	"link1:String,"
+			+	"link2:String,"
+			+	"link3:String,"
+			+	"link4:String,"
+			+	"link5:String,"
 			+	"comment1:String,"
 			+	"comment2:String,"
 			+	"comment3:String,"
-			+	"comment4:String,"
-			+	"comment5:String,"
 			+	"recGroup:String,"
 			+	"changeDate:Date";
 	
@@ -347,16 +319,16 @@ public class ShapefileCreator {
 		}
 		
 		// Types
-		addFeatureEntries(featureBuilder, place.getTypes(), 5);
-		
+		addFeatureEntries(featureBuilder, place.getTypes(), 3);
+
 		// Location
+		featureBuilder.add(location.getConfidence());
+		featureBuilder.add(location.isPublicSite());
 		if (location.getAltitude() != null) {
 			featureBuilder.add(location.getAltitude());
 		} else {
 			featureBuilder.add(Double.NaN);
 		}
-		featureBuilder.add(location.getConfidence());
-		featureBuilder.add(location.isPublicSite());
 		
 		// Parent
 		if (place.getParent() != null) {
@@ -369,10 +341,10 @@ public class ShapefileCreator {
 		addFeatureEntries(featureBuilder, place.getRelatedPlaces(), 10);
 		
 		// Tags
-		addFeatureEntries(featureBuilder, place.getTags(), 10);
+		addFeatureEntries(featureBuilder, place.getTags(), 5);
 		
 		// Provenance tags
-		addFeatureEntries(featureBuilder, place.getProvenance(), 10);
+		addFeatureEntries(featureBuilder, place.getProvenance(), 5);
 		
 		// Identifiers
 		if (place.getIdentifiers() != null) {
@@ -392,21 +364,20 @@ public class ShapefileCreator {
 		// Links
 		if (place.getLinks() != null) {
 			List<Link> links = new ArrayList<Link>(place.getLinks());
-			for (int i = 0; i < 10; i++) {
+			for (int i = 0; i < 5; i++) {
 				if (i >= links.size()) {
-					for (int j = 0; j < 2; j++) featureBuilder.add("");
+					featureBuilder.add("");
 				} else {
-					featureBuilder.add(links.get(i).getPredicate());
-					featureBuilder.add(links.get(i).getObject());
+					featureBuilder.add(links.get(i).getPredicate() + " " + links.get(i).getObject());
 				}
 			}
 		} else {
-			for (int i = 0; i < 20; i++) featureBuilder.add("");
+			for (int i = 0; i < 5; i++) featureBuilder.add("");
 		}
 		
 		// Comments
 		if (place.getComments() != null) {
-			for (int i = 0; i < 5; i++) {
+			for (int i = 0; i < 3; i++) {
 				if (i >= place.getComments().size()) {
 					featureBuilder.add("");
 				} else {
@@ -414,7 +385,7 @@ public class ShapefileCreator {
 				}
 			}
 		} else {
-			for (int i = 0; i < 5; i++) featureBuilder.add("");
+			for (int i = 0; i < 3; i++) featureBuilder.add("");
 		}
 		
 		// Record group
@@ -464,9 +435,9 @@ public class ShapefileCreator {
 		Map<String, java.io.Serializable> creationParams = new HashMap<String, java.io.Serializable>();
 		creationParams.put("url", DataUtilities.fileToURL(outputFile));
 
-		FileDataStoreFactorySpi factory = FileDataStoreFinder.getDataStoreFactory("shp");
-		DataStore dataStore = factory.createNewDataStore(creationParams);
-
+		ShapefileDataStoreFactory factory = (ShapefileDataStoreFactory) FileDataStoreFinder.getDataStoreFactory("shp");
+		ShapefileDataStore dataStore = (ShapefileDataStore) factory.createNewDataStore(creationParams);
+		dataStore.setCharset(Charset.forName("UTF-8"));
 		dataStore.createSchema(featureType);
 
 		SimpleFeatureStore featureStore = (SimpleFeatureStore) dataStore.getFeatureSource(dataStore.getTypeNames()[0]);
