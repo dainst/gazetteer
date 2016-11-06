@@ -93,6 +93,7 @@ public class ShapefileCreator {
 			+	"type1:String,"
 			+	"type2:String,"
 			+	"type3:String,"
+			+	"locType:String,"
 			+	"locConfid:Integer,"
 			+	"publicSite:Boolean,"
 			+	"altitude:Double,"
@@ -228,47 +229,20 @@ public class ShapefileCreator {
 			if (placeAccessMap != null && !PlaceAccessService.hasReadAccess(placeAccessMap.get(place.getId()))) {
 				continue;
 			}
-									
-			SimpleFeatureBuilder featureBuilder = null;
 			
-			if (featureType.equals(pointType)) {
-				
-				if (place.getPrefLocation() == null || (place.getPrefLocation().getCoordinates()) == null || place.getPrefLocation().getCoordinates().length < 2) {
-					continue;
-				}
-				
-				featureBuilder = new SimpleFeatureBuilder(pointType);	
-				featureBuilder.add(createPointGeometry(place.getPrefLocation(), geometryFactory));
-			} else if (featureType.equals(multiPolygonType)) {
-								
-				if (place.getPrefLocation() == null || (place.getPrefLocation().getShape() == null)) {
-					continue;
-				}				
-				
-				featureBuilder = new SimpleFeatureBuilder(multiPolygonType);
-				MultiPolygon multiPolygon = createMultiPolygonGeometry(place.getPrefLocation(), geometryFactory);
-				if (multiPolygon != null) {
-					featureBuilder.add(multiPolygon);
-				} else {
-					continue;
+			if (containsGeometryOfFeatureType(place.getPrefLocation(), featureType)) {
+				if (addFeature(place, place.getPrefLocation(), "preferred location", featureType, geometryFactory, memoryDataStore, transaction)) {
+					dataStoreEmpty = false;
 				}
 			}
-			
-			fillFeatureFields(place, place.getPrefLocation(), featureBuilder);
-			
-			SimpleFeature feature = featureBuilder.buildFeature(null);
-			memoryDataStore.addFeature(feature);
-			dataStoreEmpty = false;
-			
-			try {
-				transaction.commit();
-			} catch (Exception e) {
-				transaction.rollback();
-				transaction.close();
-				throw new Exception("Could not write feature for place " + place.getId() + " and featureType " + featureType.getTypeName(), e);
+
+			for (Location location : place.getLocations()) {
+				if (containsGeometryOfFeatureType(location, featureType)) {
+					if (addFeature(place, location, "alternative location", featureType, geometryFactory, memoryDataStore, transaction)) {
+						dataStoreEmpty = false;
+					}
+				}
 			}
-			
-			featureBuilder = null;
 		}
 		
 		transaction.close();
@@ -281,7 +255,55 @@ public class ShapefileCreator {
 		}
 	}
 	
-	private void fillFeatureFields(Place place, Location location, SimpleFeatureBuilder featureBuilder) {
+	private boolean containsGeometryOfFeatureType(Location location, SimpleFeatureType featureType) {
+		
+		if (featureType.equals(pointType)) {
+			return (location != null && location.getCoordinates() != null && location.getCoordinates().length == 2);
+		} else if (featureType.equals(multiPolygonType)) {
+			return (location != null && location.getShape() != null && location.getShape().getCoordinates() != null
+					&& location.getShape().getCoordinates().length > 0);
+		} else {
+			return false;
+		}
+	}
+	
+	private boolean addFeature(Place place, Location location, String locationType, SimpleFeatureType featureType, GeometryFactory geometryFactory,
+			MemoryDataStore memoryDataStore, Transaction transaction) throws Exception {
+		
+		SimpleFeatureBuilder featureBuilder = null;
+		
+		if (featureType.equals(pointType)) {
+			featureBuilder = new SimpleFeatureBuilder(pointType);
+			featureBuilder.add(createPointGeometry(location, geometryFactory));
+		} else if (featureType.equals(multiPolygonType)) {
+			featureBuilder = new SimpleFeatureBuilder(multiPolygonType);
+			MultiPolygon multiPolygon = createMultiPolygonGeometry(location, geometryFactory);
+			if (multiPolygon != null) {
+				featureBuilder.add(multiPolygon);
+			} else {
+				return false;
+			}
+		}
+		
+		fillFeatureFields(place, location, locationType, featureBuilder);
+		
+		SimpleFeature feature = featureBuilder.buildFeature(null);
+		featureBuilder = null;
+		
+		memoryDataStore.addFeature(feature);
+				
+		try {
+			transaction.commit();
+		} catch (Exception e) {
+			transaction.rollback();
+			transaction.close();
+			throw new Exception("Could not write feature for place " + place.getId() + " and featureType " + featureType.getTypeName(), e);
+		}
+		
+		return true;
+	}
+	
+	private void fillFeatureFields(Place place, Location location, String locationType, SimpleFeatureBuilder featureBuilder) {
 		
 		// Gazetteer ID
 		featureBuilder.add(Integer.parseInt(place.getId()));
@@ -322,6 +344,7 @@ public class ShapefileCreator {
 		addFeatureEntries(featureBuilder, place.getTypes(), 3);
 
 		// Location
+		featureBuilder.add(locationType);
 		featureBuilder.add(location.getConfidence());
 		featureBuilder.add(location.isPublicSite());
 		if (location.getAltitude() != null) {
