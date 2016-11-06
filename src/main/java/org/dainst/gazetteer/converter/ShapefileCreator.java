@@ -4,13 +4,21 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
+import org.dainst.gazetteer.dao.RecordGroupRepository;
+import org.dainst.gazetteer.domain.Identifier;
+import org.dainst.gazetteer.domain.Link;
 import org.dainst.gazetteer.domain.Location;
 import org.dainst.gazetteer.domain.Place;
+import org.dainst.gazetteer.domain.PlaceName;
+import org.dainst.gazetteer.domain.RecordGroup;
 import org.dainst.gazetteer.helpers.PlaceAccessService;
 import org.dainst.gazetteer.helpers.TempFolderService;
 import org.dainst.gazetteer.helpers.ZipArchiveBuilder;
@@ -49,8 +57,124 @@ public class ShapefileCreator {
 	@Autowired
 	private TempFolderService tempFolderHelper;
 	
+	@Autowired
+	private RecordGroupRepository recordGroupRepository;
+	
 	private SimpleFeatureType pointType;
 	private SimpleFeatureType multiPolygonType;
+	
+	private static final String dataSchema =
+				"gazId:String,"
+			+   "pNameTitl:String,"
+			+   "pNameLang:String,"
+			+   "pNameAnc:Boolean,"
+			+   "pNameTrns:Boolean,"
+			+   "name1Titl:String,"
+			+   "name1Lang:String,"
+			+   "name1Anc:Boolean,"
+			+   "name1Trns:Boolean,"
+			+   "name2Titl:String,"
+			+   "name2Lang:String,"
+			+   "name2Anc:Boolean,"
+			+   "name2Trns:Boolean,"
+			+   "name3Titl:String,"
+			+   "name3Lang:String,"
+			+   "name3Anc:Boolean,"
+			+   "name3Trns:Boolean,"
+			+   "name4Titl:String,"
+			+   "name4Lang:String,"
+			+   "name4Anc:Boolean,"
+			+   "name4Trns:Boolean,"
+			+   "name5Titl:String,"
+			+   "name5Lang:String,"
+			+   "name5Anc:Boolean,"
+			+   "name5Trns:Boolean,"
+			+	"type1:String,"
+			+	"type2:String,"
+			+	"type3:String,"
+			+	"type4:String,"
+			+	"type5:String,"
+			+	"altitude:Double,"
+			+	"locConfid:Integer,"
+			+	"publicSite:Boolean,"
+			+	"parent:Integer,"
+			+	"related1:String,"
+			+	"related2:String,"
+			+	"related3:String,"
+			+	"related4:String,"
+			+	"related5:String,"
+			+	"related6:String,"
+			+	"related7:String,"
+			+	"related8:String,"
+			+	"related9:String,"
+			+	"related10:String,"
+			+	"tag1:String,"
+			+	"tag2:String,"
+			+	"tag3:String,"
+			+	"tag4:String,"
+			+	"tag5:String,"
+			+	"tag6:String,"
+			+	"tag7:String,"
+			+	"tag8:String,"
+			+	"tag9:String,"
+			+	"tag10:String,"
+			+	"prov1:String,"
+			+	"prov2:String,"
+			+	"prov3:String,"
+			+	"prov4:String,"
+			+	"prov5:String,"
+			+	"prov6:String,"
+			+	"prov7:String,"
+			+	"prov8:String,"
+			+	"prov9:String,"
+			+	"prov10:String,"
+			+	"id1Contxt:String,"
+			+	"id1Value:String,"
+			+	"id2Contxt:String,"
+			+	"id2Value:String,"
+			+	"id3Contxt:String,"
+			+	"id3Value:String,"
+			+	"id4Contxt:String,"
+			+	"id4Value:String,"
+			+	"id5Contxt:String,"
+			+	"id5Value:String,"
+			+	"id6Contxt:String,"
+			+	"id6Value:String,"
+			+	"id7Contxt:String,"
+			+	"id7Value:String,"
+			+	"id8Contxt:String,"
+			+	"id8Value:String,"
+			+	"id9Contxt:String,"
+			+	"id9Value:String,"
+			+	"id10Contxt:String,"
+			+	"id10Value:String,"
+			+	"link1Pred:String,"
+			+	"link1Obj:String,"
+			+	"link2Pred:String,"
+			+	"link2Obj:String,"
+			+	"link3Pred:String,"
+			+	"link3Obj:String,"
+			+	"link4Pred:String,"
+			+	"link4Obj:String,"
+			+	"link5Pred:String,"
+			+	"link5Obj:String,"
+			+	"link6Pred:String,"
+			+	"link6Obj:String,"
+			+	"link7Pred:String,"
+			+	"link7Obj:String,"
+			+	"link8Pred:String,"
+			+	"link8Obj:String,"
+			+	"link9Pred:String,"
+			+	"link9Obj:String,"
+			+	"link10Pred:String,"
+			+	"link10Obj:String,"
+			+	"comment1:String,"
+			+	"comment2:String,"
+			+	"comment3:String,"
+			+	"comment4:String,"
+			+	"comment5:String,"
+			+	"recGroup:String,"
+			+	"changeDate:Date";
 	
 	public File createShapefiles(String filename, Place place) throws Exception {
 		
@@ -88,8 +212,8 @@ public class ShapefileCreator {
 	
 	private void createFeatureTypes() throws Exception {
 		
-		String pointSchema = "the_geom:Point:srid=4326,gaz_id:Integer";
-		String multiPolygonSchema = "the_geom:MultiPolygon:srid=4326,gaz_id:Integer";
+		String pointSchema = "the_geom:Point:srid=4326," + dataSchema;
+		String multiPolygonSchema = "the_geom:MultiPolygon:srid=4326," + dataSchema;
 
 		try {
 			pointType = DataUtilities.createType("point", pointSchema);
@@ -158,7 +282,7 @@ public class ShapefileCreator {
 				}
 			}
 			
-			featureBuilder.add(Integer.parseInt(place.getId()));
+			fillFeatureFields(place, place.getPrefLocation(), featureBuilder);
 			
 			SimpleFeature feature = featureBuilder.buildFeature(null);
 			memoryDataStore.addFeature(feature);
@@ -172,7 +296,7 @@ public class ShapefileCreator {
 				throw new Exception("Could not write feature for place " + place.getId() + " and featureType " + featureType.getTypeName(), e);
 			}
 			
-			featureBuilder = null;				
+			featureBuilder = null;
 		}
 		
 		transaction.close();
@@ -182,6 +306,153 @@ public class ShapefileCreator {
 			return memoryDataStore;
 		} else {
 			return null;
+		}
+	}
+	
+	private void fillFeatureFields(Place place, Location location, SimpleFeatureBuilder featureBuilder) {
+		
+		// Gazetteer ID
+		featureBuilder.add(Integer.parseInt(place.getId()));
+		
+		// Prefered name
+		if (place.getPrefName() != null) {
+			featureBuilder.add(place.getPrefName().getTitle());
+			featureBuilder.add(place.getPrefName().getLanguage());
+			featureBuilder.add(place.getPrefName().isAncient());
+			featureBuilder.add(place.getPrefName().isTransliterated());
+		} else {
+			for (int i = 0; i < 2; i++) featureBuilder.add("");
+			for (int i = 0; i < 2; i++) featureBuilder.add(false);
+		}
+		
+		// Alternative names
+		if (place.getNames() != null) {
+			List<PlaceName> alternativeNames = new ArrayList<PlaceName>(place.getNames());
+			for (int i = 0; i < 5; i++) {
+				if (i >= alternativeNames.size()) {
+					for (int j = 0; j < 2; j++) featureBuilder.add("");
+					for (int j = 0; j < 2; j++) featureBuilder.add(false);
+				} else {
+					featureBuilder.add(alternativeNames.get(i).getTitle());
+					featureBuilder.add(alternativeNames.get(i).getLanguage());
+					featureBuilder.add(alternativeNames.get(i).isAncient());
+					featureBuilder.add(alternativeNames.get(i).isTransliterated());
+				}
+			}
+		} else {
+			for (int i = 0; i < 5; i++) {
+				for (int j = 0; j < 2; j++) featureBuilder.add("");
+				for (int j = 0; j < 2; j++) featureBuilder.add(false);
+			}
+		}
+		
+		// Types
+		addFeatureEntries(featureBuilder, place.getTypes(), 5);
+		
+		// Location
+		if (location.getAltitude() != null) {
+			featureBuilder.add(location.getAltitude());
+		} else {
+			featureBuilder.add(Double.NaN);
+		}
+		featureBuilder.add(location.getConfidence());
+		featureBuilder.add(location.isPublicSite());
+		
+		// Parent
+		if (place.getParent() != null) {
+			featureBuilder.add(place.getParent());
+		} else {
+			featureBuilder.add("");
+		}
+		
+		// Related places
+		addFeatureEntries(featureBuilder, place.getRelatedPlaces(), 10);
+		
+		// Tags
+		addFeatureEntries(featureBuilder, place.getTags(), 10);
+		
+		// Provenance tags
+		addFeatureEntries(featureBuilder, place.getProvenance(), 10);
+		
+		// Identifiers
+		if (place.getIdentifiers() != null) {
+			List<Identifier> identifiers = new ArrayList<Identifier>(place.getIdentifiers());
+			for (int i = 0; i < 10; i++) {
+				if (i >= identifiers.size()) {
+					for (int j = 0; j < 2; j++) featureBuilder.add("");
+				} else {
+					featureBuilder.add(identifiers.get(i).getContext());
+					featureBuilder.add(identifiers.get(i).getValue());
+				}
+			}
+		} else {
+			for (int i = 0; i < 20; i++) featureBuilder.add("");
+		}
+		
+		// Links
+		if (place.getLinks() != null) {
+			List<Link> links = new ArrayList<Link>(place.getLinks());
+			for (int i = 0; i < 10; i++) {
+				if (i >= links.size()) {
+					for (int j = 0; j < 2; j++) featureBuilder.add("");
+				} else {
+					featureBuilder.add(links.get(i).getPredicate());
+					featureBuilder.add(links.get(i).getObject());
+				}
+			}
+		} else {
+			for (int i = 0; i < 20; i++) featureBuilder.add("");
+		}
+		
+		// Comments
+		if (place.getComments() != null) {
+			for (int i = 0; i < 5; i++) {
+				if (i >= place.getComments().size()) {
+					featureBuilder.add("");
+				} else {
+					featureBuilder.add(place.getComments().get(i).getText());
+				}
+			}
+		} else {
+			for (int i = 0; i < 5; i++) featureBuilder.add("");
+		}
+		
+		// Record group
+		if (place.getRecordGroupId() != null) {
+			RecordGroup recordGroup = recordGroupRepository.findOne(place.getRecordGroupId());
+			if (recordGroup != null) {
+				featureBuilder.add(recordGroup.getName());
+			} else {
+				featureBuilder.add("");
+			}
+		} else {
+			featureBuilder.add("");
+		}
+		
+		// Last change date
+		if (place.getLastChangeDate() != null) {
+			featureBuilder.add(place.getLastChangeDate());
+		} else {
+			Calendar calendar = new GregorianCalendar();
+			calendar.setTimeInMillis(0);
+			featureBuilder.add(calendar.getTime());
+		}
+		
+	}
+	
+	private void addFeatureEntries(SimpleFeatureBuilder featureBuilder, Set<String> set, int size) {
+		
+		if (set != null) {
+			List<String> entries = new ArrayList<String>(set);
+			for (int i = 0; i < size; i++) {
+				if (i >= entries.size()) {
+					featureBuilder.add("");
+				} else {
+					featureBuilder.add(entries.get(i));
+				}
+			}
+		} else {
+			for (int i = 0; i < size; i++) featureBuilder.add("");
 		}
 	}
 		
