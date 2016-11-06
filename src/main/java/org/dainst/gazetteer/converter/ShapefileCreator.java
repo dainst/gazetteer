@@ -514,9 +514,21 @@ public class ShapefileCreator {
 			
 			LinearRing shell = linearRings[0];
 			
+			if (!shell.isClosed() || !shell.isValid()) {
+				logger.warn("Shell is invalid or not closed");
+				return null;
+			}
+			
 			LinearRing[] holes = null;			
 			if (linearRings.length > 1) {
 				holes = Arrays.copyOfRange(linearRings, 1, linearRings.length);
+				
+				for (int j = 0; j < holes.length; j++) {
+					if (!holes[j].isClosed() || !holes[j].isValid()) {
+						logger.warn("Hole " + j + " is invalid or not closed");
+						return null;
+					}
+				}
 			}
 			
 			polygons[i] = geometryFactory.createPolygon(shell, holes);
