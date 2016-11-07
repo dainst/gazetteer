@@ -351,11 +351,9 @@ public class SearchController {
 		String[] result = query.execute();
 		
 		logger.debug("Querying index returned: " + result.length + " places");
-		logger.debug("Result: {}", Arrays.toString(result));
 		
 		// get places for the result ids from db
 		List<Place> places = placesForList(result, true);
-		logger.debug("Places: {}", places);
 		
 		Map<String, PlaceAccessService.AccessStatus> accessStatusMap = new HashMap<String, PlaceAccessService.AccessStatus>();
 		
