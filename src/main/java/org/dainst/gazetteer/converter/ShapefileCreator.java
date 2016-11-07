@@ -169,10 +169,17 @@ public class ShapefileCreator {
 		File shapeFileFolder = new File(tempFolder.getAbsolutePath() + File.separator + filename);
 		shapeFileFolder.mkdir();
 		
-		createShapefile(places, placeAccessMap, shapeFileFolder, pointType);
-		createShapefile(places, placeAccessMap, shapeFileFolder, multiPolygonType);
+		File zipFile;
 		
-		File zipFile = ZipArchiveBuilder.buildZipArchiveFromFolder(shapeFileFolder, tempFolder);
+		try {
+			createShapefile(places, placeAccessMap, shapeFileFolder, pointType);
+			createShapefile(places, placeAccessMap, shapeFileFolder, multiPolygonType);
+			
+			zipFile = ZipArchiveBuilder.buildZipArchiveFromFolder(shapeFileFolder, tempFolder);
+		} catch(Exception e) {
+			FileUtils.deleteDirectory(tempFolder);
+			throw new Exception("Error during shapefile creation. Deleted temp directory.", e);
+		}
 		
 		return zipFile;
 	}
