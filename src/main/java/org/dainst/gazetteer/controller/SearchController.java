@@ -353,7 +353,9 @@ public class SearchController {
 		logger.debug("Querying index returned: " + result.length + " places");
 		
 		// get places for the result ids from db
-		List<Place> places = placesForList(result, true);
+		List<Place> places = (List<Place>) placeDao.findAll(new ArrayList<String>(Arrays.asList(result)));
+		
+		logger.debug("Retrieved places from database");
 		
 		Map<String, PlaceAccessService.AccessStatus> accessStatusMap = new HashMap<String, PlaceAccessService.AccessStatus>();
 		
@@ -508,6 +510,7 @@ public class SearchController {
 			else
 				places.add(placeDao.findWithoutPolygon(result[i]));
 		}
+		
 		return places;
 	}
 
