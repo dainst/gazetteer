@@ -16,6 +16,11 @@ public class TempFolderService {
 		
 		DateFormat dateFormat = new SimpleDateFormat("MMddyyyyHHmmssSSS");
 		
+		File tempFolder = new File(tempDirectoryPath);
+		if (!tempFolder.exists() && !tempFolder.mkdir()) {
+			throw new Exception("Failed to create directory " + tempFolder.getAbsolutePath());
+		}
+		
 		File folder;
 		do {
 			folder = new File(tempDirectoryPath + File.separator + dateFormat.format(new Date()));
