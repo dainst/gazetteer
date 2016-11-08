@@ -13,6 +13,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
+import org.dainst.gazetteer.dao.GroupRoleRepository;
+import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.dao.RecordGroupRepository;
 import org.dainst.gazetteer.domain.Identifier;
 import org.dainst.gazetteer.domain.Link;
@@ -20,7 +22,10 @@ import org.dainst.gazetteer.domain.Location;
 import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.PlaceName;
 import org.dainst.gazetteer.domain.RecordGroup;
+import org.dainst.gazetteer.domain.User;
 import org.dainst.gazetteer.helpers.PlaceAccessService;
+import org.dainst.gazetteer.helpers.PlaceAccessService.AccessStatus;
+import org.dainst.gazetteer.helpers.ProtectLocationsService;
 import org.dainst.gazetteer.helpers.TempFolderService;
 import org.dainst.gazetteer.helpers.ZipArchiveBuilder;
 import org.geotools.data.DataUtilities;
@@ -41,6 +46,7 @@ import org.opengis.feature.simple.SimpleFeatureType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import com.vividsolutions.jts.geom.Coordinate;
@@ -59,11 +65,17 @@ public class ShapefileCreator {
 	private TempFolderService tempFolderHelper;
 	
 	@Autowired
+	private PlaceRepository placeRepository;
+	
+	@Autowired
 	private RecordGroupRepository recordGroupRepository;
 	
-	private SimpleFeatureType pointType;
-	private SimpleFeatureType multiPolygonType;
+	@Autowired
+	private GroupRoleRepository groupRoleRepository;
 	
+	@Autowired
+	private ProtectLocationsService protectLocationsService;
+		
 	private static final String dataSchema =
 				"gazId:String,"
 			+   "pNameTitle:String,"
@@ -149,21 +161,22 @@ public class ShapefileCreator {
 			+	"recGroup:String,"
 			+	"changeDate:Date";
 	
-	public File createShapefiles(String filename, Place place) throws Exception {
-		
-		List<Place> places = new ArrayList<Place>();
-		places.add(place);
-		
-		return createShapefiles(filename, places, null);
+	public enum GeometryType {
+		POINT,
+		MULTIPOLYGON
 	}
 	
-	public File createShapefiles(String filename, List<Place> places, Map<String, PlaceAccessService.AccessStatus> placeAccessMap) throws Exception {
+	public File createShapefile(String filename, String placeId, GeometryType geometryType) throws Exception {
 		
-		if (pointType == null || multiPolygonType == null) {
-			createFeatureTypes();
-		}
+		List<String> placeIds = new ArrayList<String>();
+		placeIds.add(placeId);
 		
-		logger.debug("Create shapefiles for " + places.size() + " places");
+		return createShapefile(filename, placeIds, geometryType);
+	}
+	
+	public File createShapefile(String filename, List<String> placeIds, GeometryType geometryType) throws Exception {
+		
+		logger.debug("Create shapefiles for " + placeIds.size() + " places");
 		
 		File tempFolder = tempFolderHelper.createFolder();		
 		File shapeFileFolder = new File(tempFolder.getAbsolutePath() + File.separator + filename);
@@ -172,9 +185,7 @@ public class ShapefileCreator {
 		File zipFile;
 		
 		try {
-			createShapefile(places, placeAccessMap, shapeFileFolder, pointType);
-			createShapefile(places, placeAccessMap, shapeFileFolder, multiPolygonType);
-			
+			createFiles(placeIds, shapeFileFolder, geometryType);			
 			zipFile = ZipArchiveBuilder.buildZipArchiveFromFolder(shapeFileFolder, tempFolder);
 		} catch(Exception e) {
 			FileUtils.deleteDirectory(tempFolder);
@@ -190,62 +201,49 @@ public class ShapefileCreator {
 		FileUtils.deleteDirectory(folder);
 	}
 	
-	private void createFeatureTypes() throws Exception {
+	private void createFiles(List<String> placeIds, File folder, GeometryType geometryType) throws Exception {
 		
-		String pointSchema = "the_geom:Point:srid=4326," + dataSchema;
-		String multiPolygonSchema = "the_geom:MultiPolygon:srid=4326," + dataSchema;
-
-		try {
-			pointType = DataUtilities.createType("point", pointSchema);
-			multiPolygonType = DataUtilities.createType("multipolygon", multiPolygonSchema);
-		} catch (SchemaException e) {
-			throw new Exception("Failed to create feature types for shapefile export", e);
-		}
-	}
-	
-	private void createShapefile(List<Place> places, Map<String, PlaceAccessService.AccessStatus> placeAccessMap, File folder,
-			SimpleFeatureType featureType) throws Exception {
-			
-		String outputFilePath = folder.getAbsolutePath() + File.separator + featureType.getTypeName() + "s.shp";
+		String outputFilePath = folder.getAbsolutePath() + File.separator + geometryType.name().toLowerCase() + "s.shp";
 		File outputFile = new File(outputFilePath);
 		
-		MemoryDataStore memoryDataStore = createMemoryDataStore(places, placeAccessMap, featureType);
+		MemoryDataStore memoryDataStore = createMemoryDataStore(placeIds, geometryType);
 		
 		if (memoryDataStore != null) {
-			logger.debug("Write shapefile for feature type " + featureType.getTypeName());
+			logger.debug("Write shapefile for feature type " + geometryType.name().toLowerCase());
 			writeShapefile(memoryDataStore, outputFile);
 		} else {
-			logger.debug("No features of feature type " + featureType.getTypeName());
+			logger.debug("No features of feature type " + geometryType.name().toLowerCase());
 		}
 	}
 	
-	private MemoryDataStore createMemoryDataStore(List<Place> places, Map<String, PlaceAccessService.AccessStatus> placeAccessMap,
-			SimpleFeatureType featureType) throws Exception {
+	private MemoryDataStore createMemoryDataStore(List<String> placeIds, GeometryType geometryType) throws Exception {
+		
+		SimpleFeatureType featureType = createFeatureType(geometryType);
 		
 		MemoryDataStore memoryDataStore = new MemoryDataStore();
 		memoryDataStore.createSchema(featureType);
 		
 		GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory();
 		
+		PlaceAccessService placeAccessService = new PlaceAccessService(recordGroupRepository, groupRoleRepository);
+		
 		Transaction transaction = Transaction.AUTO_COMMIT;
 		
 		boolean dataStoreEmpty = true;
 		
-		for (Place place : places) {
+		for (String placeId : placeIds) {
 			
-			if (placeAccessMap != null && !PlaceAccessService.hasReadAccess(placeAccessMap.get(place.getId()))) {
-				continue;
-			}
-			
-			if (containsGeometryOfFeatureType(place.getPrefLocation(), featureType)) {
-				if (addFeature(place, place.getPrefLocation(), "preferred location", featureType, geometryFactory, memoryDataStore, transaction)) {
+			Place place = getPlace(placeId, placeAccessService);
+
+			if (containsGeometryOfFeatureType(place.getPrefLocation(), geometryType)) {
+				if (addFeature(place, place.getPrefLocation(), "preferred location", featureType, geometryType, geometryFactory, memoryDataStore, transaction)) {
 					dataStoreEmpty = false;
 				}
 			}
 
 			for (Location location : place.getLocations()) {
-				if (containsGeometryOfFeatureType(location, featureType)) {
-					if (addFeature(place, location, "alternative location", featureType, geometryFactory, memoryDataStore, transaction)) {
+				if (containsGeometryOfFeatureType(location, geometryType)) {
+					if (addFeature(place, location, "alternative location", featureType, geometryType, geometryFactory, memoryDataStore, transaction)) {
 						dataStoreEmpty = false;
 					}
 				}
@@ -262,11 +260,56 @@ public class ShapefileCreator {
 		}
 	}
 	
-	private boolean containsGeometryOfFeatureType(Location location, SimpleFeatureType featureType) {
+	private SimpleFeatureType createFeatureType(GeometryType geometryType) throws Exception {
 		
-		if (featureType.equals(pointType)) {
+		String schema = null;
+		
+		switch(geometryType) {
+		case POINT:
+			schema = "the_geom:Point:srid=4326," + dataSchema;
+			break;
+		case MULTIPOLYGON:
+			schema = "the_geom:MultiPolygon:srid=4326," + dataSchema;
+			break;
+		}
+
+		try {
+			return DataUtilities.createType(geometryType.name().toLowerCase(), schema);
+		} catch (SchemaException e) {
+			throw new Exception("Failed to create feature types for shapefile export", e);
+		}
+	}
+	
+	private Place getPlace(String id, PlaceAccessService placeAccessService) {
+		
+		Place place = placeRepository.findOne(id);
+		
+		if (place == null) {
+			logger.warn("Place " + id + " not found");
+			return null;
+		}
+		
+		AccessStatus accessStatus = placeAccessService.getAccessStatus(place);
+		
+		if (!PlaceAccessService.hasReadAccess(accessStatus)) {
+			return null;
+		}
+		
+		User user = null;
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (principal instanceof User)
+			user = (User) principal;
+
+		protectLocationsService.protectLocations(user, place, accessStatus);
+		
+		return place;
+	}
+	
+	private boolean containsGeometryOfFeatureType(Location location, GeometryType geometryType) {
+		
+		if (geometryType == GeometryType.POINT) {
 			return (location != null && location.getCoordinates() != null && location.getCoordinates().length == 2);
-		} else if (featureType.equals(multiPolygonType)) {
+		} else if (geometryType == GeometryType.MULTIPOLYGON) {
 			return (location != null && location.getShape() != null && location.getShape().getCoordinates() != null
 					&& location.getShape().getCoordinates().length > 0);
 		} else {
@@ -274,16 +317,14 @@ public class ShapefileCreator {
 		}
 	}
 	
-	private boolean addFeature(Place place, Location location, String locationType, SimpleFeatureType featureType, GeometryFactory geometryFactory,
-			MemoryDataStore memoryDataStore, Transaction transaction) throws Exception {
+	private boolean addFeature(Place place, Location location, String locationType, SimpleFeatureType featureType, GeometryType geometryType,
+			GeometryFactory geometryFactory, MemoryDataStore memoryDataStore, Transaction transaction) throws Exception {
 		
-		SimpleFeatureBuilder featureBuilder = null;
-		
-		if (featureType.equals(pointType)) {
-			featureBuilder = new SimpleFeatureBuilder(pointType);
+		SimpleFeatureBuilder featureBuilder = new SimpleFeatureBuilder(featureType);
+				
+		if (geometryType == GeometryType.POINT) {			
 			featureBuilder.add(createPointGeometry(location, geometryFactory));
-		} else if (featureType.equals(multiPolygonType)) {
-			featureBuilder = new SimpleFeatureBuilder(multiPolygonType);
+		} else if (geometryType == GeometryType.MULTIPOLYGON) {
 			MultiPolygon multiPolygon = createMultiPolygonGeometry(location, geometryFactory);
 			if (multiPolygon != null) {
 				featureBuilder.add(multiPolygon);

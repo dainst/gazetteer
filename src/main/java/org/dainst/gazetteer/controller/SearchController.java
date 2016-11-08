@@ -325,7 +325,8 @@ public class SearchController {
 	}
 	
 	@RequestMapping(value="/search/shapefile", method=RequestMethod.GET)
-	public void getShapefile(@RequestParam(defaultValue="10") int limit,
+	public void getShapefile(@RequestParam(required=true) String geometry,
+			@RequestParam(defaultValue="10") int limit,
 			@RequestParam(defaultValue="0") int offset,
 			@RequestParam(required=false) String q,
 			@RequestParam(required=false) String fq,
@@ -352,24 +353,21 @@ public class SearchController {
 		
 		logger.debug("Querying index returned: " + result.length + " places");
 		
-		// get places for the result ids from db
-		List<Place> places = (List<Place>) placeDao.findAll(new ArrayList<String>(Arrays.asList(result)));
-		
-		logger.debug("Retrieved places from database");
-		
-		Map<String, PlaceAccessService.AccessStatus> accessStatusMap = new HashMap<String, PlaceAccessService.AccessStatus>();
-		
-		PlaceAccessService placeAccessService = new PlaceAccessService(groupDao, groupRoleDao);
-		
-		for (Place place : places) {
-			PlaceAccessService.AccessStatus accessStatus = placeAccessService.getAccessStatus(place);
-			protectLocationsService.protectLocations(user, place, accessStatus);
-			accessStatusMap.put(place.getId(), accessStatus);
+		ShapefileCreator.GeometryType geometryType;
+		switch (geometry) {
+			case "point":
+				geometryType = ShapefileCreator.GeometryType.POINT;
+				break;
+			case "multipolygon":
+				geometryType = ShapefileCreator.GeometryType.MULTIPOLYGON;
+				break;
+			default:
+				throw new RuntimeException("Invalid geometry type " + geometry);
 		}
 		
 		File file = null;
 		try {
-			file = shapefileCreator.createShapefiles("search", places, accessStatusMap);
+			file = shapefileCreator.createShapefile("search_" + geometryType.name().toLowerCase(), new ArrayList<String>(Arrays.asList(result)), geometryType);
 		} catch (Exception e) {
 			throw new RuntimeException("Shapefile creation failed", e);
 		}

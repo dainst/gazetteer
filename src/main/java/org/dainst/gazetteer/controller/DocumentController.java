@@ -227,7 +227,8 @@ public class DocumentController {
 	}
 	
 	@RequestMapping(value="/doc/shapefile/{placeId}", method=RequestMethod.GET)
-	public void getShapefile(@PathVariable String placeId,
+	public void getShapefile(@RequestParam(required=true) String geometry,
+			@PathVariable String placeId,
 			HttpServletRequest request,
 			HttpServletResponse response) {
 		
@@ -252,9 +253,21 @@ public class DocumentController {
 			return;
 		}
 		
+		ShapefileCreator.GeometryType geometryType;
+		switch (geometry) {
+			case "point":
+				geometryType = ShapefileCreator.GeometryType.POINT;
+				break;
+			case "multipolygon":
+				geometryType = ShapefileCreator.GeometryType.MULTIPOLYGON;
+				break;
+			default:
+				throw new RuntimeException("Invalid geometry type " + geometry);
+		}
+		
 		File file = null;
 		try {
-			file = shapefileCreator.createShapefiles(place.getId(), place);
+			file = shapefileCreator.createShapefile(place.getId() + "_" + geometryType.name().toLowerCase(), place.getId(), geometryType);
 		} catch (Exception e) {
 			throw new RuntimeException("Shapefile creation failed", e);
 		}
