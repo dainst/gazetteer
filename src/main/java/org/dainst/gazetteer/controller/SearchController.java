@@ -337,7 +337,28 @@ public class SearchController {
 			@RequestParam(required=false) double[] polygonFilterCoordinates,
 			HttpServletRequest request,
 			HttpServletResponse response) {
-				
+		
+		ShapefileCreator.GeometryType geometryType;
+		String geometryFilter;
+		switch (geometry) {
+			case "point":
+				geometryType = ShapefileCreator.GeometryType.POINT;
+				geometryFilter = "_exists_:prefLocation.coordinates";
+				break;
+			case "multipolygon":
+				geometryType = ShapefileCreator.GeometryType.MULTIPOLYGON;
+				geometryFilter = "_exists_:prefLocation.shape";
+				break;
+			default:
+				throw new RuntimeException("Invalid geometry type " + geometry);
+		}
+		
+		if (fq == null || fq.length() == 0) {
+			fq = geometryFilter;
+		} else if (fq.indexOf(geometryFilter) == -1) {
+			fq += " AND " + geometryFilter;
+		}
+		
 		User user = null;
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if (principal instanceof User)
@@ -352,18 +373,6 @@ public class SearchController {
 		String[] result = query.execute();
 		
 		logger.debug("Querying index returned: " + result.length + " places");
-		
-		ShapefileCreator.GeometryType geometryType;
-		switch (geometry) {
-			case "point":
-				geometryType = ShapefileCreator.GeometryType.POINT;
-				break;
-			case "multipolygon":
-				geometryType = ShapefileCreator.GeometryType.MULTIPOLYGON;
-				break;
-			default:
-				throw new RuntimeException("Invalid geometry type " + geometry);
-		}
 		
 		File file = null;
 		try {
