@@ -376,7 +376,7 @@ public class SearchController {
 		
 		File file = null;
 		try {
-			file = shapefileCreator.createShapefile("search_" + geometryType.name().toLowerCase(), new ArrayList<String>(Arrays.asList(result)), geometryType);
+			file = shapefileCreator.createShapefile("search_" + geometryType.name().toLowerCase() + "s", new ArrayList<String>(Arrays.asList(result)), geometryType);
 		} catch (Exception e) {
 			throw new RuntimeException("Shapefile creation failed", e);
 		}

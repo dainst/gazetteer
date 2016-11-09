@@ -267,7 +267,7 @@ public class DocumentController {
 		
 		File file = null;
 		try {
-			file = shapefileCreator.createShapefile(place.getId() + "_" + geometryType.name().toLowerCase(), place.getId(), geometryType);
+			file = shapefileCreator.createShapefile(place.getId() + "_" + geometryType.name().toLowerCase() + "s", place.getId(), geometryType);
 		} catch (Exception e) {
 			throw new RuntimeException("Shapefile creation failed", e);
 		}
