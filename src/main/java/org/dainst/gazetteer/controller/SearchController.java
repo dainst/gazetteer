@@ -5,8 +5,11 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -374,9 +377,11 @@ public class SearchController {
 		
 		logger.debug("Querying index returned: " + result.length + " places");
 		
+		DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy-HH-mm");
+		
 		File file = null;
 		try {
-			file = shapefileCreator.createShapefile("search_" + geometryType.name().toLowerCase() + "s", new ArrayList<String>(Arrays.asList(result)), geometryType);
+			file = shapefileCreator.createShapefile("search_" + dateFormat.format(new Date()) + "_" + geometryType.name().toLowerCase() + "s", new ArrayList<String>(Arrays.asList(result)), geometryType);
 		} catch (Exception e) {
 			throw new RuntimeException("Shapefile creation failed", e);
 		}
