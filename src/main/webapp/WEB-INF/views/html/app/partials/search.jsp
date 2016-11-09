@@ -28,12 +28,12 @@
 					<a ng-href="../search.kml?q={{search.q}}&fq={{search.fq}}{{polygonFilterCoordinatesString}}&limit=1000&type={{search.type}}" target="_blank">KML</a>
 				</li>
 				<li ng-if="!filters.noCoordinates && !filters.unlocatable">
-					<a ng-href="../search/shapefile?geometry=point&q={{search.q}}&fq={{search.fq}}{{polygonFilterCoordinatesString}}&limit=1000&type={{search.type}}" target="_blank">
+					<a ng-href="../search/shapefile?geometry=point&q={{search.q}}&fq={{search.fq}}{{polygonFilterCoordinatesString}}&type={{search.type}}" target="_blank">
 						Shapefile (<s:message code="domain.place.shapefile.points" text="domain.place.shapefile.points"/>)
 					</a>
 				</li>
 				<li ng-if="!filters.noPolygon && !filters.unlocatable">
-					<a ng-href="../search/shapefile?geometry=multipolygon&q={{search.q}}&fq={{search.fq}}{{polygonFilterCoordinatesString}}&limit=1000&type={{search.type}}" target="_blank">
+					<a ng-href="../search/shapefile?geometry=multipolygon&q={{search.q}}&fq={{search.fq}}{{polygonFilterCoordinatesString}}&type={{search.type}}" target="_blank">
 						Shapefile (<s:message code="domain.place.shapefile.multipolygons" text="domain.place.shapefile.multipolygons"/>)
 					</a>
 				</li>

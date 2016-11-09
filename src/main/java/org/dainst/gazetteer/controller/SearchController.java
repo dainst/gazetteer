@@ -326,7 +326,7 @@ public class SearchController {
 	
 	@RequestMapping(value="/search/shapefile", method=RequestMethod.GET)
 	public void getShapefile(@RequestParam(required=true) String geometry,
-			@RequestParam(defaultValue="10") int limit,
+			@RequestParam(defaultValue="1000000") int limit,
 			@RequestParam(defaultValue="0") int offset,
 			@RequestParam(required=false) String q,
 			@RequestParam(required=false) String fq,
