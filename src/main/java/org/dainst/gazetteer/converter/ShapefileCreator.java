@@ -166,17 +166,17 @@ public class ShapefileCreator {
 		MULTIPOLYGON
 	}
 	
-	public File createShapefile(String filename, String placeId, GeometryType geometryType) throws Exception {
+	public File createShapefile(String filename, String placeId) throws Exception {
 		
 		List<String> placeIds = new ArrayList<String>();
 		placeIds.add(placeId);
 		
-		return createShapefile(filename, placeIds, geometryType);
+		return createShapefile(filename, placeIds, placeIds);
 	}
 	
-	public File createShapefile(String filename, List<String> placeIds, GeometryType geometryType) throws Exception {
+	public File createShapefile(String filename, List<String> pointPlaceIds, List<String> multipolygonPlaceIds) throws Exception {
 		
-		logger.debug("Create shapefiles for " + placeIds.size() + " places");
+		logger.debug("Create shapefiles for " + pointPlaceIds.size() + " places with points and " + multipolygonPlaceIds.size() + " places with multipolygons");
 		
 		File tempFolder = tempFolderHelper.createFolder();		
 		File shapeFileFolder = new File(tempFolder.getAbsolutePath() + File.separator + filename);
@@ -185,7 +185,16 @@ public class ShapefileCreator {
 		File zipFile;
 		
 		try {
-			createFiles(placeIds, shapeFileFolder, geometryType);			
+			if (pointPlaceIds.size() > 0) {
+				createFiles(pointPlaceIds, shapeFileFolder, GeometryType.POINT);
+			} else {
+				logger.debug("No features of feature type point");
+			}
+			if (multipolygonPlaceIds.size() > 0) {
+				createFiles(multipolygonPlaceIds, shapeFileFolder, GeometryType.MULTIPOLYGON);
+			} else {
+				logger.debug("No features of feature type multipolygon");
+			}
 			zipFile = ZipArchiveBuilder.buildZipArchiveFromFolder(shapeFileFolder, tempFolder);
 		} catch(Exception e) {
 			FileUtils.deleteDirectory(tempFolder);
@@ -211,8 +220,6 @@ public class ShapefileCreator {
 		if (memoryDataStore != null) {
 			logger.debug("Write shapefile for feature type " + geometryType.name().toLowerCase());
 			writeShapefile(memoryDataStore, outputFile);
-		} else {
-			logger.debug("No features of feature type " + geometryType.name().toLowerCase());
 		}
 	}
 	

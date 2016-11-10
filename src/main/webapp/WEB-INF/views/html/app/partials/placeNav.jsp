@@ -23,15 +23,8 @@
 				<li ng-if="place.prefLocation && (place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0) || place.prefLocation.shape">
 					<a href="../doc/{{place.gazId}}.kml" target="_blank">KML</a>
 				</li>
-				<li ng-if="place.prefLocation && place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0">
-					<a href="../doc/shapefile/{{place.gazId}}?geometry=point" target="_blank">
-						Shapefile (<s:message code="domain.place.shapefile.points" text="domain.place.shapefile.points"/>)
-					</a>
-				</li>
-				<li ng-if="place.prefLocation && place.prefLocation.shape">
-					<a href="../doc/shapefile/{{place.gazId}}?geometry=multipolygon" target="_blank">
-						Shapefile (<s:message code="domain.place.shapefile.multipolygons" text="domain.place.shapefile.multipolygons"/>)
-					</a>
+				<li ng-if="place.prefLocation && (place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0) || place.prefLocation.shape">
+					<a href="../doc/shapefile/{{place.gazId}}" target="_blank">Shapefile</a>
 				</li>
 			</ul>
 		</li>

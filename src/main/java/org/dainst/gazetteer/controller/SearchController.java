@@ -328,8 +328,7 @@ public class SearchController {
 	}
 	
 	@RequestMapping(value="/search/shapefile", method=RequestMethod.GET)
-	public void getShapefile(@RequestParam(required=true) String geometry,
-			@RequestParam(defaultValue="1000000") int limit,
+	public void getShapefile(@RequestParam(defaultValue="1000000") int limit,
 			@RequestParam(defaultValue="0") int offset,
 			@RequestParam(required=false) String q,
 			@RequestParam(required=false) String fq,
@@ -340,26 +339,20 @@ public class SearchController {
 			@RequestParam(required=false) double[] polygonFilterCoordinates,
 			HttpServletRequest request,
 			HttpServletResponse response) {
-		
-		ShapefileCreator.GeometryType geometryType;
-		String geometryFilter;
-		switch (geometry) {
-			case "point":
-				geometryType = ShapefileCreator.GeometryType.POINT;
-				geometryFilter = "_exists_:prefLocation.coordinates";
-				break;
-			case "multipolygon":
-				geometryType = ShapefileCreator.GeometryType.MULTIPOLYGON;
-				geometryFilter = "_exists_:prefLocation.shape";
-				break;
-			default:
-				throw new RuntimeException("Invalid geometry type " + geometry);
-		}
+				
+		String pointsFq = fq;
+		String multipolygonsFq = fq;
 		
 		if (fq == null || fq.length() == 0) {
-			fq = geometryFilter;
-		} else if (fq.indexOf(geometryFilter) == -1) {
-			fq += " AND " + geometryFilter;
+			pointsFq = "_exists_:prefLocation.coordinates";
+			multipolygonsFq = "_exists_:prefLocation.shape";
+		} else {
+			if (fq.indexOf("_exists_:prefLocation.coordinates") == -1) {
+				pointsFq += " AND _exists_:prefLocation.coordinates";
+			}
+			if (fq.indexOf("_exists_:prefLocation.shape") == -1) {
+				multipolygonsFq += " AND _exists_:prefLocation.shape";
+			}
 		}
 		
 		User user = null;
@@ -369,19 +362,20 @@ public class SearchController {
 		
 		logger.debug("Creating shapefile for query: " + q + ", fq: " + fq + ", limit: " + limit + ", offset: " + offset + ", type: " + type);
 		
-		ElasticSearchPlaceQuery query = getQuery(q, fq, type,  sort, order, null, bbox, polygonFilterCoordinates, limit, offset, false,
-				null, user);
+		String[] pointsResult =
+				getQuery(q, pointsFq, type,  sort, order, null, bbox, polygonFilterCoordinates, limit, offset, false, null, user).execute();
+		String[] multipolygonsResult =
+				getQuery(q, multipolygonsFq, type,  sort, order, null, bbox, polygonFilterCoordinates, limit, offset, false, null, user).execute();
 		
-		// get ids from elasticsearch
-		String[] result = query.execute();
-		
-		logger.debug("Querying index returned: " + result.length + " places");
+		logger.debug("Querying index returned: " + pointsResult.length + " places with point coordinates");
+		logger.debug("Querying index returned: " + multipolygonsResult.length + " places with multipolygon coordinates");
 		
 		DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy-HH-mm");
 		
 		File file = null;
 		try {
-			file = shapefileCreator.createShapefile("search_" + dateFormat.format(new Date()) + "_" + geometryType.name().toLowerCase() + "s", new ArrayList<String>(Arrays.asList(result)), geometryType);
+			file = shapefileCreator.createShapefile("search_" + dateFormat.format(new Date()), new ArrayList<String>(Arrays.asList(pointsResult)),
+					new ArrayList<String>(Arrays.asList(multipolygonsResult)));
 		} catch (Exception e) {
 			throw new RuntimeException("Shapefile creation failed", e);
 		}
