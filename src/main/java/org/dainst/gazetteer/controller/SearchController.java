@@ -370,7 +370,7 @@ public class SearchController {
 		logger.debug("Querying index returned: " + pointsResult.length + " places with point coordinates");
 		logger.debug("Querying index returned: " + multipolygonsResult.length + " places with multipolygon coordinates");
 		
-		DateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy-HH-mm");
+		DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy-HH-mm");
 		
 		File file = null;
 		try {
