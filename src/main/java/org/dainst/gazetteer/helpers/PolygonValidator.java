@@ -6,7 +6,7 @@ import java.util.List;
 import org.dainst.gazetteer.domain.Shape;
 
 public class PolygonValidator {
-
+	
 	private class LatLng {
 		double lat;
 		double lng;
@@ -40,9 +40,35 @@ public class PolygonValidator {
 		for (int i = 0; i < shape.getCoordinates().length; i++) {			
 			for (int j = 0; j < shape.getCoordinates()[i].length; j++) {				
 				double[][] path = shape.getCoordinates()[i][j];
+				errors.addAll(validateCoordinates(path));
 				errors.addAll(checkForIntersections(shape, path));				
 			}
 		}
+		
+		return errors;
+	}
+	
+	private List<String> validateCoordinates(double[][] path) {
+		
+		List<String> errors = new ArrayList<String>();
+		
+		LatLng firstPoint = new LatLng(path[0][1], path[0][0]);
+		LatLng lastPoint = new LatLng(path[path.length - 1][1], path[path.length - 1][0]);
+		
+		if (!firstPoint.equals(lastPoint)) {
+			errors.add("ERROR: First point of path does not equal last point");
+		}
+
+        List<LatLng> points = new ArrayList<LatLng>();
+
+        for (int i = 0; i < path.length; i++) {
+            LatLng point = new LatLng(path[i][1], path[i][0]);
+            if (points.contains(point) && !(i == path.length - 1 && point.equals(firstPoint))) {
+                errors.add("ERROR: Duplicate point (" + point.lng + ", " + point.lat + ")");
+            } else {
+            	points.add(point);
+            }
+        }
 		
 		return errors;
 	}
