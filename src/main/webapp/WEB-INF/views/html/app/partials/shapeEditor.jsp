@@ -45,7 +45,8 @@
 	<div modal="showTextInputOverlay" close="closeTextInputOverlay()">
 		<span>
 			<div class="modal-header">
-				<button type="button" class="close" ng-click="closeTextInputOverlay()">&times;</button>
+				<button ng-if="loading == 0" type="button" class="close" ng-click="closeTextInputOverlay()">&times;</button>
+				<button ng-if="loading > 0" type="button" class="close disabled">&times;</button>
 				<h3><s:message code="ui.shapeEditor.insertShapeCoordinates" text="ui.shapeEditor.insertShapeCoordinates"/></h3>
 			</div>
 			<div class="modal-body">
@@ -61,6 +62,10 @@
 					</div>
 				</form>
 				<textarea type="text" rows="7" style="width: 100%; box-sizing: border-box" ng-model="coordinatesString" />
+				<div ng-if="loading > 0">
+					<i class="icon-spinner icon-spin icon-large" style="color: #6786ad; cursor: default;"></i>
+					<span style="font-style: italic; margin-left: 3px;"><s:message code="ui.shapeEditor.creatingPolygon" text="ui.shapeEditor.creatingPolygon" /></span>
+				</div>
 				<div ng-if="parsingError">
 					<div class="well" style="margin-top: 12px; margin-bottom: 10px;">
 						<div style="font-weight: bold; margin-bottom: 5px;"><s:message code="ui.shapeEditor.error" text="ui.shapeEditor.error"/>:</div>
@@ -74,8 +79,10 @@
 				</div>
 			</div>
 			<div class="modal-footer">
-				<a href="#" class="btn" ng-click="closeTextInputOverlay()"><s:message code="ui.cancel" text="ui.cancel"/></a>
-				<a ng-click="parseCoordinatesString()" class="btn btn-primary"><s:message code="ui.save" text="ui.save"/></a>
+				<a ng-if="loading == 0" ng-click="closeTextInputOverlay()" class="btn btn-default"><s:message code="ui.cancel" text="ui.cancel"/></a>
+				<a ng-if="loading == 0" ng-click="parseCoordinatesString()" class="btn btn-primary"><s:message code="ui.save" text="ui.save"/></a>
+				<a ng-if="loading > 0" class="btn btn-default disabled"><s:message code="ui.cancel" text="ui.cancel"/></a>
+				<a ng-if="loading > 0" class="btn btn-primary disabled"><s:message code="ui.save" text="ui.save"/></a>
 			</div>
 		</span>
 	</div>

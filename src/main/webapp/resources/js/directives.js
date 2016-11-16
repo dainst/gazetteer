@@ -409,6 +409,7 @@ directives.directive('gazShapeEditor', function($document, $timeout, $http, Poly
 			$scope.parsingError = undefined;
 			$scope.showMapOverlay = false;
 			$scope.showTextInputOverlay = false;
+			$scope.loading = 0;
 			
 			$scope.$watch("deactivated", function() {
 				if ($scope.deactivated)
@@ -444,11 +445,14 @@ directives.directive('gazShapeEditor', function($document, $timeout, $http, Poly
 			};
 			
 			$scope.openTextInputOverlay = function() {
+				$scope.parsingError = undefined;
 				$scope.showTextInputOverlay = true;
 			};
 			
 			$scope.closeTextInputOverlay = function() {
-				$scope.showTextInputOverlay = false;
+				if ($scope.loading == 0) {
+					$scope.showTextInputOverlay = false;
+				}	
 			};
 			
 			$scope.initialize = function() {
@@ -684,6 +688,9 @@ directives.directive('gazShapeEditor', function($document, $timeout, $http, Poly
 			};
 			
 			$scope.parseCoordinatesString = function() {
+				$scope.loading++;
+				$scope.parsingError = undefined;
+				
 				var shapeCoordinates;
 				
 				switch ($scope.coordinatesStringFormat) {
@@ -698,6 +705,7 @@ directives.directive('gazShapeEditor', function($document, $timeout, $http, Poly
 				if (shapeCoordinates) {
 					$http.post("../validation/multipolygon", shapeCoordinates)
 						.success(function(result) {
+							$scope.loading--;
 							if (result.success) {
 								$scope.shape = shapeCoordinates;
 								$scope.closeTextInputOverlay();
@@ -706,8 +714,11 @@ directives.directive('gazShapeEditor', function($document, $timeout, $http, Poly
 							}
 						})
 					.error(function() {
+						$scope.loading--;
 						$scope.parsingError = { msgKey: "validation.genericvalidationerror" };
 					});
+				} else {
+					$scope.loading--;
 				}
 			};
 			
@@ -809,7 +820,7 @@ directives.directive('gazShapeEditor', function($document, $timeout, $http, Poly
 					return null;
 				}
 				
-				var geometry;	
+				var geometry;
 				if (geoJson.geometry.type == "GeometryCollection") {
 					for (var i in geoJson.geometry.geometries) {
 						if (geoJson.geometry.geometries[i].type == "Polygon"
