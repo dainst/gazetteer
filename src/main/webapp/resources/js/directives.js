@@ -416,7 +416,7 @@ directives.directive('gazShapeEditor', function($document, $timeout, $http, Poly
 					$scope.backgroundColor = "#e6e6e6";
 				else
 					$scope.backgroundColor = "#fcfcfc";
-			})
+			});
 			
 			$scope.mapOptions = {
 				center: new google.maps.LatLng(0, 0),
@@ -445,6 +445,7 @@ directives.directive('gazShapeEditor', function($document, $timeout, $http, Poly
 			};
 			
 			$scope.openTextInputOverlay = function() {
+				$scope.reloadCoordinatesString();
 				$scope.parsingError = undefined;
 				$scope.showTextInputOverlay = true;
 			};
@@ -722,6 +723,19 @@ directives.directive('gazShapeEditor', function($document, $timeout, $http, Poly
 				}
 			};
 			
+			$scope.reloadCoordinatesString = function() {
+				$scope.parsingError = undefined;
+				
+				switch ($scope.coordinatesStringFormat) {
+				case "wkt":
+					$scope.coordinatesString = getShapeCoordinatesAsWkt();
+					break;
+				case "geojson":
+					$scope.coordinatesString = getShapeCoordinatesAsGeoJson();
+					break;
+				}
+			}
+			
 			var parseWkt = function() {
 				var tempString = $scope.coordinatesString.toLowerCase();
 				
@@ -854,6 +868,43 @@ directives.directive('gazShapeEditor', function($document, $timeout, $http, Poly
 			    	$scope.parsingError = { msgKey: "geojson.emptycoordinates" };
 			    	return null;
 			    }
+			};
+			
+			var getShapeCoordinatesAsWkt = function() {
+				var wkt = "MULTIPOLYGON(";
+				
+				for (var i = 0; i < $scope.shape.length; i++) {
+					wkt += "(";
+					
+					for (var j = 0; j < $scope.shape[i].length; j++) {
+						wkt += "(";
+						
+						for (var k = 0; k < $scope.shape[i][j].length; k++) {
+							if (k > 0) wkt += ",";
+							wkt += $scope.shape[i][j][k][0] + " " + $scope.shape[i][j][k][1];
+						}
+						
+						wkt += ")";
+					}
+					
+					wkt += ")";
+				}
+				
+				wkt += ")";
+				
+				return wkt;
+			}
+			
+			var getShapeCoordinatesAsGeoJson = function() {
+				var geoJson = {
+					"type": "Feature",
+					"geometry": {
+					"type": "MultiPolygon",
+					"coordinates": $scope.shape
+					}
+				};
+				
+				return JSON.stringify(geoJson);
 			};
 		}
 	};

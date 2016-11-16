@@ -54,7 +54,12 @@
 					<div class="control-group" style="margin-top: 10px;">
 						<label class="control-label"><s:message code="ui.shapeEditor.coordinatesFormat" text="ui.shapeEditor.coordinatesFormat" /></label>
 						<div class="controls">
-							<select ng-model="coordinatesStringFormat">
+							<select ng-show="loading == 0" ng-model="coordinatesStringFormat" ng-change="reloadCoordinatesString()">
+								<option value="geojson">GeoJSON</option>
+								<option value="wkt">WKT</option>
+							</select>
+							
+							<select ng-show="loading > 0" ng-model="coordinatesStringFormat" disabled>
 								<option value="geojson">GeoJSON</option>
 								<option value="wkt">WKT</option>
 							</select>
