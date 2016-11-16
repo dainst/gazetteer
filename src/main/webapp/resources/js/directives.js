@@ -389,7 +389,7 @@ directives.directive('gazLocationPicker', function($document, $timeout, MapTypeS
 	};
 });
 
-directives.directive('gazShapeEditor', function($document, $timeout, PolygonValidator, MapTypeService) {
+directives.directive('gazShapeEditor', function($document, $timeout, $http, PolygonValidator, MapTypeService) {
 	return {
 		replace: true,
 		scope: {
@@ -696,8 +696,18 @@ directives.directive('gazShapeEditor', function($document, $timeout, PolygonVali
 				}
 				
 				if (shapeCoordinates) {
-					$scope.shape = shapeCoordinates;
-					$scope.closeTextInputOverlay();
+					$http.post("../validation/multipolygon", shapeCoordinates)
+						.success(function(result) {
+							if (result.success) {
+								$scope.shape = shapeCoordinates;
+								$scope.closeTextInputOverlay();
+							} else {
+								$scope.parsingError = { msgKey: "validation." + result.messageKey, data: result.messageData };
+							}
+						})
+					.error(function() {
+						$scope.parsingError = { msgKey: "validation.genericValidationError" };
+					});
 				}
 			};
 			

@@ -12,6 +12,7 @@
 		<intercept-url pattern="/doc/**" access="hasRole('ROLE_EDITOR')" method="DELETE" />
 		<intercept-url pattern="/merge/**" access="hasRole('ROLE_EDITOR')" method="POST" />
 		<intercept-url pattern="/duplicate/**" access="hasRole('ROLE_EDITOR')" method="POST" />
+		<intercept-url pattern="/validation/**" access="hasRole('ROLE_EDITOR')" method="POST" />
 		<intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')" />
 		<intercept-url pattern="/userManagement/**" access="hasRole('ROLE_ADMIN')" />
 		<intercept-url pattern="/recordGroupManagement/**" access="hasRole('ROLE_USER')" />

@@ -1,13 +1,13 @@
 package org.dainst.gazetteer.helpers;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.dainst.gazetteer.domain.Shape;
 import org.dainst.gazetteer.domain.ValidationResult;
 
 public class PolygonValidator {
-	
+
 	private class LatLng {
 		double lat;
 		double lng;
@@ -32,18 +32,31 @@ public class PolygonValidator {
 				return false;
 			return true;
 		}
+		
+		@Override
+		public int hashCode() {
+		    int hashCode = 17;
+		    int hashMultiplier = 59;
+		    
+		    hashCode = hashCode * hashMultiplier + Double.valueOf(lat).hashCode();
+		    hashCode = hashCode * hashMultiplier + Double.valueOf(lng).hashCode();
+		    
+		    return hashCode;
+		}
 	}
 	
 	public ValidationResult validate(Shape shape) {
-		
-		for (int i = 0; i < shape.getCoordinates().length; i++) {			
-			for (int j = 0; j < shape.getCoordinates()[i].length; j++) {				
-				double[][] path = shape.getCoordinates()[i][j];
-				ValidationResult ValidationResult = validateCoordinates(path);
-				if (!ValidationResult.isSuccess()) return ValidationResult;
+
+		for (int i = 0; i < shape.getCoordinates().length; i++) {
+			
+			for (int j = 0; j < shape.getCoordinates()[i].length; j++) {
 				
-				ValidationResult = checkForIntersections(shape, path);
-				if (!ValidationResult.isSuccess()) return ValidationResult;
+				double[][] path = shape.getCoordinates()[i][j];
+				ValidationResult result = validateCoordinates(path);
+				if (!result.isSuccess()) return result;
+				
+				result = checkForIntersections(shape, path);
+				if (!result.isSuccess()) return result;
 			}
 		}
 		
@@ -59,7 +72,7 @@ public class PolygonValidator {
 			return new ValidationResult(false, "Path not closed: First point of path does not equal last point", "pathNotClosed", "");
 		}
 
-        List<LatLng> points = new ArrayList<LatLng>();
+        Set<LatLng> points = new HashSet<LatLng>();
 
         for (int i = 0; i < path.length; i++) {
             LatLng point = new LatLng(path[i][1], path[i][0]);
@@ -86,8 +99,8 @@ public class PolygonValidator {
 				else
 					path2 = shape.getCoordinates()[i][j + 1];
 		
-				ValidationResult ValidationResult = checkForPathIntersection(path1, path2);
-				if (!ValidationResult.isSuccess()) return ValidationResult;
+				ValidationResult result = checkForPathIntersection(path1, path2);
+				if (!result.isSuccess()) return result;
 			}
 		}
 		
