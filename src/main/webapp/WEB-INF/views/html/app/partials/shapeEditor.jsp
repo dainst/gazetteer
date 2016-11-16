@@ -45,23 +45,37 @@
 	<div modal="showTextInputOverlay" close="closeTextInputOverlay()">
 		<span>
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"
-					aria-hidden="true">&times;</button>
-				<h3><s:message code="ui.inputShapeCoordinates" text="ui.inputShapeCoordinates"/></h3>
+				<button type="button" class="close" ng-click="closeTextInputOverlay()">&times;</button>
+				<h3><s:message code="ui.shapeEditor.insertShapeCoordinates" text="ui.shapeEditor.insertShapeCoordinates"/></h3>
 			</div>
 			<div class="modal-body">
-				<textarea type="text" rows="10" style="width: 100%; box-sizing: border-box" ng-model="coordinatesString" />
-				<select ng-model="coordinatesStringFormat" style="margin-top: 10px;">
-					<option value="geojson">GeoJSON</option>
-					<option value="wkt">WKT</option>
-				</select>
+				<form class="form-horizontal">
+					<div class="control-group" style="margin-top: 10px;">
+						<label class="control-label"><s:message code="ui.shapeEditor.coordinatesFormat" text="ui.shapeEditor.coordinatesFormat" /></label>
+						<div class="controls">
+							<select ng-model="coordinatesStringFormat">
+								<option value="geojson">GeoJSON</option>
+								<option value="wkt">WKT</option>
+							</select>
+						</div>
+					</div>
+				</form>
+				<textarea type="text" rows="7" style="width: 100%; box-sizing: border-box" ng-model="coordinatesString" />
+				<div ng-if="parsingError">
+					<div class="well" style="margin-top: 12px; margin-bottom: 10px;">
+						<div style="font-weight: bold; margin-bottom: 5px;"><s:message code="ui.shapeEditor.error" text="ui.shapeEditor.error"/>:</div>
+						<div ng-if="!parsingError.data">
+							<span gaz-translate="'ui.shape-editor.error.' + parsingError.msgKey"></span>
+						</div>
+						<div ng-if="parsingError.data">
+							<span gaz-translate="'ui.shape-editor.error.' + parsingError.msgKey + '.1'"></span>{{parsingError.data}}<span gaz-translate="'ui.shape-editor.error.' + parsingError.msgKey + '.2'"></span>
+						</div>
+					</div>
+				</div>
 			</div>
 			<div class="modal-footer">
 				<a href="#" class="btn" ng-click="closeTextInputOverlay()"><s:message code="ui.cancel" text="ui.cancel"/></a>
 				<a ng-click="parseCoordinatesString()" class="btn btn-primary"><s:message code="ui.save" text="ui.save"/></a>
-			</div>
-			<div ng-if="parsingError">
-				<s:message code="ui.shapeEditor.error.{{parsingError.msgKey}}" text="ui.shapeEditor.error.{{parsingError.msgKey}}"/>
 			</div>
 		</span>
 	</div>

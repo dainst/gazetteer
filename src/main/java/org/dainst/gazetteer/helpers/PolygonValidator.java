@@ -69,7 +69,8 @@ public class PolygonValidator {
 		LatLng lastPoint = new LatLng(path[path.length - 1][1], path[path.length - 1][0]);
 		
 		if (!firstPoint.equals(lastPoint)) {
-			return new ValidationResult(false, "Path not closed: First point of path does not equal last point", "pathNotClosed", "");
+			return new ValidationResult(false, "Path not closed: First point of path does not equal last point", "pathnotclosed",
+					"Lng: " + firstPoint.lng + ", " + "Lat: " + firstPoint.lat);
 		}
 
         Set<LatLng> points = new HashSet<LatLng>();
@@ -77,7 +78,7 @@ public class PolygonValidator {
         for (int i = 0; i < path.length; i++) {
             LatLng point = new LatLng(path[i][1], path[i][0]);
             if (points.contains(point) && !(i == path.length - 1 && point.equals(firstPoint))) {
-            	return new ValidationResult(false, "Duplicate point (" + point.lng + ", " + point.lat + ")", "duplicatePoint",
+            	return new ValidationResult(false, "Duplicate point (" + point.lng + ", " + point.lat + ")", "duplicatepoint",
             			"Lng: " + point.lng + ", Lat: " + point.lat);
             } else {
             	points.add(point);
@@ -133,7 +134,7 @@ public class PolygonValidator {
 					return new ValidationResult(false, "Lines (" + path1Point1.lng + ", " + path1Point1.lat + " / " +
 							path1Point2.lng + ", " + path1Point2.lat + ") and (" +
 							path2Point1.lng + ", " + path2Point1.lat + " / " +
-							path2Point2.lng + ", " + path2Point2.lat + " are intersecting!", "lineIntersection",
+							path2Point2.lng + ", " + path2Point2.lat + " are intersecting", "lineintersection",
 							"(Lng: " + path1Point1.lng + ", " + "Lat: " + path1Point1.lat + " / " +
 							"Lng: " + path1Point2.lng + ", " + "Lat: " + path1Point2.lat + "), (" +
 							"Lng: " + path2Point1.lng + ", " + "Lat: " + path2Point1.lat + " / " +

@@ -706,7 +706,7 @@ directives.directive('gazShapeEditor', function($document, $timeout, $http, Poly
 							}
 						})
 					.error(function() {
-						$scope.parsingError = { msgKey: "validation.genericValidationError" };
+						$scope.parsingError = { msgKey: "validation.genericvalidationerror" };
 					});
 				}
 			};
@@ -720,7 +720,7 @@ directives.directive('gazShapeEditor', function($document, $timeout, $http, Poly
 				} else if (tempString.indexOf("polygon((") > -1 || tempString.indexOf("polygon ((") > -1) {
 					tempString = tempString.replace("polygon", "");
 				} else {
-					$scope.parsingError = { msgKey: "wkt.invalidGeometryType" };
+					$scope.parsingError = { msgKey: "wkt.invalidgeometrytype" };
 					return null;
 				}
 				
@@ -757,7 +757,7 @@ directives.directive('gazShapeEditor', function($document, $timeout, $http, Poly
 			    	} else {
 			    		var index = tempString.indexOf(")");
 			    		if (index == -1) {
-			    			$scope.parsingError = { msgKey: "wkt.missingBracket" };
+			    			$scope.parsingError = { msgKey: "wkt.missingbracket" };
 			    			return null;
 			    		}
 			    		var substring = tempString.substring(0, index);
@@ -771,7 +771,7 @@ directives.directive('gazShapeEditor', function($document, $timeout, $http, Poly
 			    			for (var l in pointArray) {
 			    				var floatCoordinate = parseFloat(pointArray[l]);
 			    				if (floatCoordinate == NaN) {
-			    					$scope.parsingError = { msgKey: "wkt.notANumber", data: coordinate };
+			    					$scope.parsingError = { msgKey: "wkt.notanumber", data: pointArray[l] };
 			    					return null;
 			    				}
 			    				floatArray.push(floatCoordinate);
@@ -785,7 +785,7 @@ directives.directive('gazShapeEditor', function($document, $timeout, $http, Poly
 			    if (multipolygon.length > 0 && multipolygon[0].length > 0 && multipolygon[0][0].length > 0) {
 			    	return multipolygon;
 			    } else {
-			    	$scope.parsingError = { msgKey: "wkt.genericParsingError" };
+			    	$scope.parsingError = { msgKey: "wkt.genericparsingerror" };
 			    	return null;
 			    }	
 			};
@@ -795,17 +795,17 @@ directives.directive('gazShapeEditor', function($document, $timeout, $http, Poly
 				try {
 					geoJson = JSON.parse($scope.coordinatesString);
 				} catch (err) {
-					$scope.parsingError = { msgKey: "geojson.invalidJson" };
+					$scope.parsingError = { msgKey: "geojson.invalidjson" };
 					return null;
 				}	
 				
 				if (!geoJson.type || geoJson.type != "Feature") {
-					$scope.parsingError = { msgKey: "geojson.invalidType" };
+					$scope.parsingError = { msgKey: "geojson.invalidtype" };
 					return null;
 				}
 				
 				if (!geoJson.geometry) {
-					$scope.parsingError = { msgKey: "geojson.noGeometry" };
+					$scope.parsingError = { msgKey: "geojson.nogeometry" };
 					return null;
 				}
 				
@@ -821,12 +821,12 @@ directives.directive('gazShapeEditor', function($document, $timeout, $http, Poly
 				} else if (geoJson.geometry.type == "Polygon" || geoJson.geometry.type == "MultiPolygon") {
 					geometry = geoJson.geometry;
 				} else {
-					$scope.error = { msgKey: "geojson.invalidGeometryType", data: geoJson.geometry.type };
+					$scope.error = { msgKey: "geojson.invalidgeometrytype", data: geoJson.geometry.type };
 					return null;
 				}
 				
 				if (!geometry) {
-					$scope.error = { msgKey: "geojson.noGeometry" };
+					$scope.error = { msgKey: "geojson.nogeometry" };
 					return null;
 				}
 				
@@ -840,7 +840,7 @@ directives.directive('gazShapeEditor', function($document, $timeout, $http, Poly
 				if (multipolygon.length > 0 && multipolygon[0].length > 0 && multipolygon[0][0].length > 0) {
 			    	return multipolygon;
 			    } else {
-			    	$scope.parsingError = { msgKey: "geojson.emptyCoordinates" };
+			    	$scope.parsingError = { msgKey: "geojson.emptycoordinates" };
 			    	return null;
 			    }
 			};
