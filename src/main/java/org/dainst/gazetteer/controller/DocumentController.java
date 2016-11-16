@@ -302,9 +302,7 @@ public class DocumentController {
 		if (!placeAccessService.hasEditAccess(place)) {
 			logger.debug("No edit access");
 			ModelAndView mav = new ModelAndView("place/validation");
-			ValidationResult result = new ValidationResult();
-			result.setSuccess(false);
-			result.setMessage("accessDeniedError");
+			ValidationResult result = new ValidationResult(false, "accessDeniedError");
 			response.setStatus(403);
 			mav.addObject("result", result);
 			return mav;
@@ -312,17 +310,9 @@ public class DocumentController {
 		
 		if (place.getPrefLocation() != null && place.getPrefLocation().getShape() != null && place.getPrefLocation().getShape().getCoordinates() != null) {
 			PolygonValidator validator = new PolygonValidator();
-			List<String> validationErrors = validator.validate(place.getPrefLocation().getShape());
-			if (validationErrors.size() > 0) {
+			ValidationResult result = validator.validate(place.getPrefLocation().getShape());
+			if (!result.isSuccess()) {
 				ModelAndView mav = new ModelAndView("place/validation");
-				ValidationResult result = new ValidationResult();
-				result.setSuccess(false);
-				String message = "polygonValidationError: ";
-				for (String validationError : validationErrors) {
-					message += "\n";
-					message += validationError;
-				}
-				result.setMessage(message);
 				response.setStatus(422);
 				mav.addObject("result", result);
 				return mav;
@@ -371,9 +361,7 @@ public class DocumentController {
 		
 		if (!placeAccessService.hasEditAccess(place)) {
 			ModelAndView mav = new ModelAndView("place/validation");
-			ValidationResult result = new ValidationResult();
-			result.setSuccess(false);
-			result.setMessage("accessDeniedError");
+			ValidationResult result = new ValidationResult(false, "accessDeniedError");
 			response.setStatus(403);
 			mav.addObject("result", result);
 			return mav;
@@ -419,9 +407,7 @@ public class DocumentController {
 			
 			if (placeToCheck.getId().equals(place.getId())) {
 				ModelAndView mav = new ModelAndView("place/validation");
-				ValidationResult result = new ValidationResult();
-				result.setSuccess(false);
-				result.setMessage("parentError");
+				ValidationResult result = new ValidationResult(false, "parentError");
 				response.setStatus(422);
 				mav.addObject("result", result);
 				return mav;
@@ -434,9 +420,7 @@ public class DocumentController {
 		
 		if (!placeAccessService.hasEditAccess(originalPlace)) {
 			ModelAndView mav = new ModelAndView("place/validation");
-			ValidationResult result = new ValidationResult();
-			result.setSuccess(false);
-			result.setMessage("accessDeniedError");
+			ValidationResult result = new ValidationResult(false, "accessDeniedError");
 			response.setStatus(403);
 			mav.addObject("result", result);
 			return mav;
@@ -444,17 +428,9 @@ public class DocumentController {
 		
 		if (place.getPrefLocation() != null && place.getPrefLocation().getShape() != null && place.getPrefLocation().getShape().getCoordinates() != null) {
 			PolygonValidator validator = new PolygonValidator();
-			List<String> validationErrors = validator.validate(place.getPrefLocation().getShape());
-			if (validationErrors.size() > 0) {
+			ValidationResult result = validator.validate(place.getPrefLocation().getShape());
+			if (!result.isSuccess()) {
 				ModelAndView mav = new ModelAndView("place/validation");
-				ValidationResult result = new ValidationResult();
-				result.setSuccess(false);
-				String message = "polygonValidationError: ";
-				for (String validationError : validationErrors) {
-					message += "\n";
-					message += validationError;
-				}
-				result.setMessage(message);
 				response.setStatus(422);
 				mav.addObject("result", result);
 				return mav;
@@ -487,7 +463,7 @@ public class DocumentController {
 		response.setHeader("Location", baseUri + "place/" + place.getId());
 		
 		ModelAndView mav = new ModelAndView("place/validation");
-		mav.addObject("result", new ValidationResult());
+		mav.addObject("result", new ValidationResult(true));
 		
 		return mav;
 		
@@ -497,9 +473,7 @@ public class DocumentController {
 	public ModelAndView handleValidationException(HttpMessageNotReadableException e,
 			HttpServletResponse response) {
 		
-		ValidationResult result = new ValidationResult();
-		result.setSuccess(false);
-		result.setMessage(e.getCause().getMessage());
+		ValidationResult result = new ValidationResult(false, e.getCause().getMessage(), "", "");
 		
 		response.setStatus(400);
 		

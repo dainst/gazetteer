@@ -1,40 +1,41 @@
 package org.dainst.gazetteer.domain;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class ValidationResult {
 	
-	private boolean success = true;
-	private String message;
-	private Map<String,String> messages = new HashMap<String,String>();
+	private boolean success = false;
+	private String message = "";
+	private String messageKey = "";
+	private String messageData = "";
+	
+	public ValidationResult(boolean success) {
+		this(success, "", "", "");
+	}
+	
+	public ValidationResult(boolean success, String message) {
+		this(success, message, "", "");
+	}
+	
+	public ValidationResult(boolean success, String message, String messageKey, String messageData) {
+		this.success = success;
+		this.message = message;
+		this.messageKey = messageKey;
+		this.messageData = messageData;
+	}
 
 	public boolean isSuccess() {
 		return success;
 	}
 
-	public void setSuccess(boolean success) {
-		this.success = success;
-	}
-	
-	public Map<String, String> getMessages() {
-		return messages;
-	}
-
 	public String getMessage() {
 		return message;
 	}
+	
+	public String getMessageKey() {
+		return messageKey;
+	}
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
-	
-	public void setMessages(Map<String, String> messages) {
-		this.messages = messages;
-	}
-	
-	public void addMessage(String key, String message) {
-		this.messages.put(key, message);
+	public String getMessageData() {
+		return messageData;
 	}
 
 }
