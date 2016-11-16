@@ -404,6 +404,11 @@ directives.directive('gazShapeEditor', function($document, $timeout, PolygonVali
 			$scope.gmapsShapes = [];
 			$scope.initialized = false;
 			$scope.backgroundColor = "#fcfcfc";
+			$scope.coordinatesString = "";
+			$scope.coordinatesStringFormat = "geojson";
+			$scope.parsingError = undefined;
+			$scope.showMapOverlay = false;
+			$scope.showTextInputOverlay = false;
 			
 			$scope.$watch("deactivated", function() {
 				if ($scope.deactivated)
@@ -426,18 +431,24 @@ directives.directive('gazShapeEditor', function($document, $timeout, PolygonVali
 			$scope.updateMapProperties = function() {
 				MapTypeService.setMapTypeId($scope.map.getMapTypeId());
 			};
-	
-			$scope.showOverlay = false;
 			
-			$scope.openOverlay = function() {
+			$scope.openMapOverlay = function() {
 				$scope.mapOptions.mapTypeId = MapTypeService.getMapTypeId();
-				$scope.showOverlay = true;
+				$scope.showMapOverlay = true;
 				window.setTimeout(function() { $scope.initialize(); }, 20);
 			};
 			
-			$scope.closeOverlay = function() {
-				$scope.showOverlay = false;
+			$scope.closeMapOverlay = function() {
+				$scope.showMapOverlay = false;
 				$scope.initialized = false;
+			};
+			
+			$scope.openTextInputOverlay = function() {
+				$scope.showTextInputOverlay = true;
+			};
+			
+			$scope.closeTextInputOverlay = function() {
+				$scope.showTextInputOverlay = false;
 			};
 			
 			$scope.initialize = function() {
@@ -628,7 +639,7 @@ directives.directive('gazShapeEditor', function($document, $timeout, PolygonVali
 				else
 					$scope.shape = shapeCoordinates;
 				
-				$scope.closeOverlay();
+				$scope.closeMapOverlay();
 			};
 			
 			$scope.isClockwise = function(path) {
@@ -670,6 +681,158 @@ directives.directive('gazShapeEditor', function($document, $timeout, PolygonVali
 			
 			$scope.deleteShape = function() {
 				$scope.shape = null;
+			};
+			
+			$scope.parseCoordinatesString = function() {
+				var shapeCoordinates;
+				
+				switch ($scope.coordinatesStringFormat) {
+				case "wkt":
+					shapeCoordinates = parseWkt();
+					break;
+				case "geojson":
+					shapeCoordinates = parseGeoJson();
+					break;
+				}
+				
+				if (shapeCoordinates) {
+					$scope.shape = shapeCoordinates;
+					$scope.closeTextInputOverlay();
+				}
+			};
+			
+			var parseWkt = function() {
+				var tempString = $scope.coordinatesString.toLowerCase();
+				
+				if (tempString.indexOf("multipolygon(((") > -1 || tempString.indexOf("multipolygon (((") > -1) { 
+				    tempString = tempString.replace("multipolygon", "");
+				    tempString = tempString.substring(1);
+				} else if (tempString.indexOf("polygon((") > -1 || tempString.indexOf("polygon ((") > -1) {
+					tempString = tempString.replace("polygon", "");
+				} else {
+					$scope.parsingError = { msgKey: "wkt.invalidGeometryType" };
+					return null;
+				}
+				
+				tempString = tempString.replace(/^\s+|\s+$/g, '');
+				
+				var multipolygon = [];				
+			    var level = "multipolygon";
+			    var i = 0;
+			    var j = 0;
+
+			    while (tempString.length > 0) {
+			    	if (tempString[0] == "(") {
+			    		tempString = tempString.substring(1);
+			    		if (level == "multipolygon") {
+			    			multipolygon[i] = [];
+			    			level = "polygon";
+			    		} else if (level == "polygon") {
+			    			level = "path";
+			    		} 
+			    	} else if (tempString[0] == ")") {
+			    		tempString = tempString.substring(1);
+			    		if (level == "multipolygon") {
+			    			break;
+			    		} else if (level == "polygon") {
+			    			level = "multipolygon";
+			    			i++;
+			    			j = 0;
+			    		} else if (level == "path") {
+			    			level = "polygon";
+			    			j++;
+			    		}
+			    	} else if (tempString[0] == "," || tempString[0] == " ") {
+			    		tempString = tempString.substring(1);
+			    	} else {
+			    		var index = tempString.indexOf(")");
+			    		if (index == -1) {
+			    			$scope.parsingError = { msgKey: "wkt.missingBracket" };
+			    			return null;
+			    		}
+			    		var substring = tempString.substring(0, index);
+			    		tempString = tempString.substring(index);
+			    		var points = substring.split(",");
+			    		var pointsArray = [];
+			    		for (var k in points) {
+			    			points[k] = points[k].replace(/^\s+|\s+$/g, '');
+			    			var pointArray = points[k].split(' ');
+			    			var floatArray = [];
+			    			for (var l in pointArray) {
+			    				var floatCoordinate = parseFloat(pointArray[l]);
+			    				if (floatCoordinate == NaN) {
+			    					$scope.parsingError = { msgKey: "wkt.notANumber", data: coordinate };
+			    					return null;
+			    				}
+			    				floatArray.push(floatCoordinate);
+			    			}
+			    			pointsArray.push(floatArray);
+			    		}
+			    		multipolygon[i][j] = pointsArray;
+			    	}
+			    }
+
+			    if (multipolygon.length > 0 && multipolygon[0].length > 0 && multipolygon[0][0].length > 0) {
+			    	return multipolygon;
+			    } else {
+			    	$scope.parsingError = { msgKey: "wkt.genericParsingError" };
+			    	return null;
+			    }	
+			};
+			
+			var parseGeoJson = function() {
+				var geoJson;
+				try {
+					geoJson = JSON.parse($scope.coordinatesString);
+				} catch (err) {
+					$scope.parsingError = { msgKey: "geojson.invalidJson" };
+					return null;
+				}	
+				
+				if (!geoJson.type || geoJson.type != "Feature") {
+					$scope.parsingError = { msgKey: "geojson.invalidType" };
+					return null;
+				}
+				
+				if (!geoJson.geometry) {
+					$scope.parsingError = { msgKey: "geojson.noGeometry" };
+					return null;
+				}
+				
+				var geometry;	
+				if (geoJson.geometry.type == "GeometryCollection") {
+					for (var i in geoJson.geometry.geometries) {
+						if (geoJson.geometry.geometries[i].type == "Polygon"
+								|| geoJson.geometry.geometries[i].type == "MultiPolygon") {
+							geometry = geoJson.geometry.geometries[i];
+							break;
+						}
+					}
+				} else if (geoJson.geometry.type == "Polygon" || geoJson.geometry.type == "MultiPolygon") {
+					geometry = geoJson.geometry;
+				} else {
+					$scope.error = { msgKey: "geojson.invalidGeometryType", data: geoJson.geometry.type };
+					return null;
+				}
+				
+				if (!geometry) {
+					$scope.error = { msgKey: "geojson.noGeometry" };
+					return null;
+				}
+				
+				var multipolygon;
+				if (geometry.type == "Polygon") {
+					multipolygon = [ geometry.coordinates ];
+				} else {
+					multipolygon = geometry.coordinates;
+				}
+				
+				if (multipolygon.length > 0 && multipolygon[0].length > 0 && multipolygon[0][0].length > 0) {
+			    	return multipolygon;
+			    } else {
+			    	$scope.parsingError = { msgKey: "geojson.emptyCoordinates" };
+			    	return null;
+			    }
 			};
 		}
 	};
