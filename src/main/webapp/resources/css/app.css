@@ -236,6 +236,31 @@ footer {
 	padding: 4px 9px 4px 10px;
 }
 
+.shape-coordinates-edit-btn {
+	margin-left: -3px;
+	border-radius: 0 0 0 0;
+	border-top: 1px solid #cccccc;
+	border-bottom: 1px solid #cccccc;
+	border-right: 1px solid #cccccc;
+	vertical-align: top;
+	text-align: center;
+	display: inline-block;
+	padding: 4px 11px 4px 13px;
+}
+
+.shape-deletion-btn {
+	margin-left: -3px;
+	border-radius: 0 0 0 0;
+	border-top: 1px solid #cccccc;
+	border-bottom: 1px solid #cccccc;
+	border-right: 1px solid #cccccc;
+	border-left: 1px solid #cccccc;
+	vertical-align: top;
+	text-align: center;
+	display: inline-block;
+	padding: 4px 10px 4px 10px;
+}
+
 .archaeo-fixed-menu-header #gaz-logo {
   background-image: url('../img/iDAI_gazetteer.png');
   background-size: 118px 116px;

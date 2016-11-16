@@ -7,22 +7,22 @@
 			<em ng-show="shape"><s:message code="ui.shapeEditor.editPolygon" text="ui.shapeEditor.editPolygon" /></em>
 			<em ng-hide="shape"><s:message code="ui.shapeEditor.createPolygon" text="ui.shapeEditor.createPolygon" /></em>
 		</div>
-		<button ng-hide="deactivated" class="btn gaz-pick-button location-edit-btn" type="button" ng-click="openMapOverlay()">
+		<button ng-hide="deactivated" class="btn location-edit-btn" type="button" ng-click="openMapOverlay()">
 			<i class="icon-pencil"></i>
 		</button>
-		<button ng-show="deactivated" class="btn gaz-pick-button location-edit-btn disabled" type="button">
+		<button ng-show="deactivated" class="btn location-edit-btn disabled" type="button">
 			<i class="icon-pencil"></i>
 		</button>
-		<button ng-hide="deactivated" class="btn gaz-pick-button location-edit-btn" ng-click="openTextInputOverlay()">
+		<button ng-hide="deactivated" class="btn shape-coordinates-edit-btn" ng-click="openTextInputOverlay()">
 			<span class="fa fa-i-cursor"></span>
 		</button>
-		<button ng-show="deactivated" class="btn gaz-pick-button location-edit-btn disabled">
+		<button ng-show="deactivated" class="btn shape-coordinates-edit-btn disabled">
 			<span class="fa fa-i-cursor"></span>
 		</button>
-		<button ng-show="shape && !deactivated" class="btn location-edit-btn" href="#deleteShapeModal_{{editorName}}" data-toggle="modal">
+		<button ng-show="shape && !deactivated" class="btn shape-deletion-btn" href="#deleteShapeModal_{{editorName}}" data-toggle="modal">
 			<i class="icon-remove"></i>
 		</button>
-		<button ng-hide="shape && !deactivated" class="btn location-edit-btn disabled">
+		<button ng-hide="shape && !deactivated" class="btn shape-deletion-btn disabled">
 			<i class="icon-remove"></i>
 		</button>
 	</span>
