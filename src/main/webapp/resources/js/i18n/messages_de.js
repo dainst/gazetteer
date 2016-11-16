@@ -83,6 +83,7 @@ messages.factory('messages', function(){
 		"ui.shape-editor.error.validation.lineintersection.1": "Schnittpunkt bei ",
 		"ui.shape-editor.error.validation.lineintersection.2": ". Bitte stellen Sie sicher, dass die Geometrie keine einander schneidenden Linien enthält.",
 		"ui.shape-editor.error.validation.incompletecoordinates": "Unvollständige Koordinaten.",
+		"ui.shape-editor.error.validation.genericvalidationerror": "Validierung fehlgeschlagen.",
 		"place.name.ancient": "Antik",
 		"place.name.transliterated": "Transliteriert",
 		"place.types.no-type": "<Keine Art>",

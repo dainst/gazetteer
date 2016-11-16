@@ -82,6 +82,7 @@ messages.factory('messages', function(){
 		"ui.shape-editor.error.validation.lineintersection.1": "Line intersection at ",
 		"ui.shape-editor.error.validation.lineintersection.2": ". Please ensure the geometry does not contain any intersecting lines.",
 		"ui.shape-editor.error.validation.incompletecoordinates": "Incomplete coordinates.",
+		"ui.shape-editor.error.validation.genericvalidationerror": "Validation failed.",
 		"place.name.ancient": "قديم",
 		"place.name.transliterated": "منقول حرفياً",
 		"place.types.no-type": ">لا يوجد نوع<",
