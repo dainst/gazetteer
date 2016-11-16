@@ -885,9 +885,15 @@ directives.directive('gazShapeEditor', function($document, $timeout, $http, Poly
 						}
 						
 						wkt += ")";
+						if (j < $scope.shape[i].length - 1) {
+							wkt += ",";
+						}
 					}
 					
 					wkt += ")";
+					if (i < $scope.shape.length - 1) {
+						wkt += ",";
+					}
 				}
 				
 				wkt += ")";
