@@ -82,6 +82,7 @@ messages.factory('messages', function(){
 		"ui.shape-editor.error.validation.duplicatepoint.2": "). Please ensure there are no duplicates except the first and last point of each path.",
 		"ui.shape-editor.error.validation.lineintersection.1": "Line intersection at ",
 		"ui.shape-editor.error.validation.lineintersection.2": ". Please ensure the geometry does not contain any intersecting lines.",
+		"ui.shape-editor.error.validation.incompletecoordinates": "Incomplete coordinates.",
 		"place.name.ancient": "Ancient",
 		"place.name.transliterated": "Transliterated",
 		"place.types.no-type": "<No type>",

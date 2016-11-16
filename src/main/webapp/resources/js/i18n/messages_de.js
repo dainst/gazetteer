@@ -82,6 +82,7 @@ messages.factory('messages', function(){
 		"ui.shape-editor.error.validation.duplicatepoint.2": "). Bitte stellen Sie sicher, dass keine doppelten Punkte außer dem jeweils ersten und letzten Punkt eines Pfades existieren.",
 		"ui.shape-editor.error.validation.lineintersection.1": "Schnittpunkt bei ",
 		"ui.shape-editor.error.validation.lineintersection.2": ". Bitte stellen Sie sicher, dass die Geometrie keine einander schneidenden Linien enthält.",
+		"ui.shape-editor.error.validation.incompletecoordinates": "Unvollständige Koordinaten.",
 		"place.name.ancient": "Antik",
 		"place.name.transliterated": "Transliteriert",
 		"place.types.no-type": "<Keine Art>",

@@ -821,12 +821,12 @@ directives.directive('gazShapeEditor', function($document, $timeout, $http, Poly
 				} else if (geoJson.geometry.type == "Polygon" || geoJson.geometry.type == "MultiPolygon") {
 					geometry = geoJson.geometry;
 				} else {
-					$scope.error = { msgKey: "geojson.invalidgeometrytype", data: geoJson.geometry.type };
+					$scope.parsingError = { msgKey: "geojson.invalidgeometrytype", data: geoJson.geometry.type };
 					return null;
 				}
 				
 				if (!geometry) {
-					$scope.error = { msgKey: "geojson.nogeometry" };
+					$scope.parsingError = { msgKey: "geojson.nogeometry" };
 					return null;
 				}
 				

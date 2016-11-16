@@ -65,6 +65,10 @@ public class PolygonValidator {
 	
 	private ValidationResult validateCoordinates(double[][] path) {
 		
+		if (path.length < 3 || path[0].length < 2 || path[path.length - 1].length < 2) {
+			return new ValidationResult(false, "Incomplete coordinates", "incompletecoordinates", "");
+		}
+		
 		LatLng firstPoint = new LatLng(path[0][1], path[0][0]);
 		LatLng lastPoint = new LatLng(path[path.length - 1][1], path[path.length - 1][0]);
 		
@@ -76,6 +80,10 @@ public class PolygonValidator {
         Set<LatLng> points = new HashSet<LatLng>();
 
         for (int i = 0; i < path.length; i++) {
+        	if (path[i].length < 2) {
+        		return new ValidationResult(false, "Incomplete coordinates", "incompletecoordinates", "");
+        	}
+        	
             LatLng point = new LatLng(path[i][1], path[i][0]);
             if (points.contains(point) && !(i == path.length - 1 && point.equals(firstPoint))) {
             	return new ValidationResult(false, "Duplicate point (" + point.lng + ", " + point.lat + ")", "duplicatepoint",
