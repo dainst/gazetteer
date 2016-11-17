@@ -13,7 +13,7 @@ Folgende Tools müssen dafür installiert sein:
 * [Vagrant](http://www.vagrantup.com/)
 * Bundler, installieren mit: `gem install bundler`
 
-Gazetteer repository klonen, anschließend im Wurzelnordner VM erstellen und starten:
+Gazetteer-Repository klonen, anschließend im Wurzelordner VM erstellen und starten:
 ```bash
 bundle install
 kitchen create
