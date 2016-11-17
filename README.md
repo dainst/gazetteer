@@ -13,10 +13,10 @@ Folgende Tools müssen dafür installiert sein:
 * [Vagrant](http://www.vagrantup.com/)
 * Bundler, installieren mit: `gem install bundler`
 
-Gazetteer-Repository klonen, anschließend im Wurzelordner VM erstellen und starten:
+Gazetteer-Repository klonen, anschließend im Wurzelordner VM erstellen<sup>1</sup> und starten:
 ```bash
 bundle install
-kitchen create <sup>1</sup>
+kitchen create
 kitchen converge
 ```
 
