@@ -5,12 +5,14 @@ driver:
   - ["forwarded_port", {guest: 27017, host: 27017}]
   - ["forwarded_port", {guest: 9200, host: 9200}]
   - ["forwarded_port", {guest: 9300, host: 9300}]
+  synced_folders:
+  - ["./src/test/resources", "/home/vagrant/synced_folders/src/test/resources"]
 
 provisioner:
   name: chef_solo
 
 platforms:
-  - name: ubuntu-12.04
+  - name: ubuntu-14.04
 
 suites:
   - name: default
@@ -36,6 +38,6 @@ suites:
         cluster:
           name: "gazetteer.dainst.org"
         version: "1.3.4"
-        plugins: 
+        plugins:
           elasticsearch/elasticsearch-analysis-icu: { version: 2.0.0 }
           com.github.richardwilly98.elasticsearch/elasticsearch-river-mongodb: { version: 2.0.1 }
