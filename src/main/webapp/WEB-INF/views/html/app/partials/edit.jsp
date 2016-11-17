@@ -214,7 +214,7 @@
 												</td>										
 											</c:if>
 										</c:forEach>
-										</tr>								
+										</tr>				
 									</c:forEach>
 								</tbody>
 							</table>
@@ -224,6 +224,8 @@
 					<!-- tags -->
 					<div class="control-group">
 						<label class="control-label">
+							<i class="icon-info-sign" style="color: #5572a1; cursor: pointer; margin-right: 3px;"
+								gaz-tooltip="'ui.place.tags.info'"></i>
 							<s:message code="domain.place.tags" text="domain.place.tags" />
 						</label>
 						<div class="controls">
