@@ -1,31 +1,54 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s"%>
 <%@ page contentType="text/html; charset=utf-8" session="false"%>
 
-<span>
-	<span>
-		<div class="shape-editor-field" ng-style="{ 'background-color': backgroundColor }">
-			<em ng-show="shape"><s:message code="ui.shapeEditor.editPolygon" text="ui.shapeEditor.editPolygon" /></em>
-			<em ng-hide="shape"><s:message code="ui.shapeEditor.createPolygon" text="ui.shapeEditor.createPolygon" /></em>
+<div>
+	<div style="margin-top: 3px;">
+		<div ng-show="shape && !deactivated" class="label" style="margin-right: 5px; background-color: #6786ad;">
+			<s:message code="ui.shapeEditor.polygonPresent" text="ui.shapeEditor.polygonPresent"/>
 		</div>
-		<button ng-hide="deactivated" class="btn location-edit-btn" type="button" ng-click="openMapOverlay()">
-			<i class="icon-pencil"></i>
-		</button>
-		<button ng-show="deactivated" class="btn location-edit-btn disabled" type="button">
-			<i class="icon-pencil"></i>
-		</button>
-		<button ng-hide="deactivated" class="btn shape-coordinates-edit-btn" ng-click="openTextInputOverlay()">
-			<span class="fa fa-i-cursor"></span>
-		</button>
-		<button ng-show="deactivated" class="btn shape-coordinates-edit-btn disabled">
-			<span class="fa fa-i-cursor"></span>
-		</button>
-		<button ng-show="shape && !deactivated" class="btn shape-deletion-btn" href="#deleteShapeModal_{{editorName}}" data-toggle="modal">
-			<i class="icon-remove"></i>
-		</button>
-		<button ng-hide="shape && !deactivated" class="btn shape-deletion-btn disabled">
-			<i class="icon-remove"></i>
-		</button>
-	</span>
+		<div ng-show="shape && deactivated" class="label" style="margin-right: 5px;">
+			<s:message code="ui.shapeEditor.polygonPresent" text="ui.shapeEditor.polygonPresent"/>
+		</div>
+		<div ng-hide="shape" class="label" style="margin-right: 5px;">
+			<s:message code="ui.shapeEditor.polygonNotPresent" text="ui.shapeEditor.polygonNotPresent"/>
+		</div>
+		
+		<div ng-if="!deactivated && !shape" class="btn-group" role="group">
+			<button class="btn btn-default shape-edit-btn" type="button" ng-click="openMapOverlay()">
+				<span class="fa fa-pencil"></span>
+			</button>
+			<button class="btn btn-default shape-edit-btn" type="button" ng-click="openTextInputOverlay()">
+				<span class="fa fa-i-cursor" style="padding-left: 1px;"></span>
+			</button>
+			<button class="btn btn-default shape-edit-btn disabled" type="button">
+				<span class="fa fa-remove"></span>
+			</button>
+		</div>
+		
+		<div ng-if="!deactivated && shape" class="btn-group" role="group">
+			<button class="btn btn-default shape-edit-btn" type="button" ng-click="openMapOverlay()">
+				<span class="fa fa-pencil"></span>
+			</button>
+			<button class="btn btn-default shape-edit-btn" type="button" ng-click="openTextInputOverlay()">
+				<span class="fa fa-i-cursor" style="padding-left: 1px;"></span>
+			</button>
+			<button class="btn btn-default shape-edit-btn" type="button" href="#deleteShapeModal_{{editorName}}" data-toggle="modal">
+				<span class="fa fa-remove"></span>
+			</button>
+		</div>
+		
+		<div ng-if="deactivated" class="btn-group" role="group">
+			<button class="btn btn-default shape-edit-btn disabled" type="button">
+				<span class="fa fa-pencil"></span>
+			</button>
+			<button class="btn btn-default shape-edit-btn disabled" type="button">
+				<span class="fa fa-i-cursor" style="padding-left: 1px;"></span>
+			</button>
+			<button class="btn btn-default shape-edit-btn disabled" type="button">
+				<span class="fa fa-remove"></span>
+			</button>
+		</div>
+	</div>
 	
 	<div modal="showMapOverlay" close="closeMapOverlay()">
 		<div class="modal-header">
@@ -108,4 +131,4 @@
 			</div>
 		</span>
 	</div>
-</span>
+</div>

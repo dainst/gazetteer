@@ -403,20 +403,12 @@ directives.directive('gazShapeEditor', function($document, $timeout, $http, Poly
 			
 			$scope.gmapsShapes = [];
 			$scope.initialized = false;
-			$scope.backgroundColor = "#fcfcfc";
 			$scope.coordinatesString = "";
 			$scope.coordinatesStringFormat = "geojson";
 			$scope.parsingError = undefined;
 			$scope.showMapOverlay = false;
 			$scope.showTextInputOverlay = false;
 			$scope.loading = 0;
-			
-			$scope.$watch("deactivated", function() {
-				if ($scope.deactivated)
-					$scope.backgroundColor = "#e6e6e6";
-				else
-					$scope.backgroundColor = "#fcfcfc";
-			});
 			
 			$scope.mapOptions = {
 				center: new google.maps.LatLng(0, 0),
