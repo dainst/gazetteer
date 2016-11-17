@@ -211,6 +211,11 @@ footer {
 	color: #d9e8ef;
 }
 
+.remove-button {
+	cursor: pointer;
+	text-decoration: none !important;
+}
+
 .location-edit-btn {
 	margin-left: -3px;
 	border-radius: 0 0 0 0;
@@ -230,7 +235,6 @@ footer {
 	display: inline-block;
 	width: 40px;
 }
-
 
 .archaeo-fixed-menu-header #gaz-logo {
   background-image: url('../img/iDAI_gazetteer.png');
