@@ -16,19 +16,21 @@ Folgende Tools müssen dafür installiert sein:
 Gazetteer repository klonen, anschließend im Wurzelnordner VM erstellen und starten:
 ```bash
 bundle install
-kitchen create
+kitchen create <sup>1</sup>
 kitchen converge
 ```
 
-Ein Replica Set für die Synchronisierung von MongoDB und Elasticsearch in der MongoDB anlegen:
+Login auf dem virtuellen Server mit `kitchen login`.
+
+Auf dem Server ein Replica Set für die Synchronisierung von MongoDB und Elasticsearch in der MongoDB anlegen:
 ```bash
 mongo gazetteer --eval 'rs.initiate({ _id : "rs0", members : [ { _id : 0, host : "localhost:27017" } ] })'
 ```
 
-Ggf. Testdaten laden:
+Auf dem Server ggf. Testdaten laden:
 ```bash
-mongoimport --db gazetteer --collection place --file src/test/resources/test_places.json
-mongoimport --db gazetteer --collection user --file src/test/resources/test_users.json
+mongoimport --db gazetteer --collection place --file synced_folders/src/test/resources/test_places.jsonl
+mongoimport --db gazetteer --collection place --file synced_folders/src/test/resources/test_users.jsonl
 ```
 
 ### Konfiguration
@@ -68,3 +70,36 @@ Das WAR-File kann mit folgendem Befehl erstellt werden:
 `mvn clean package`
 
 Das resultierende Web-Archiv kann dann in einem beliebigen Servlet-Container deployt werden.
+
+## Troubleshooting
+
+##### <sup>1</sup> `kitchen create` Error
+
+Fehlermeldung:
+
+```
+>>>>>> ------Exception-------
+>>>>>> Class: Kitchen::ActionFailed
+>>>>>> Message: 1 actions failed.
+>>>>>>     Failed to complete #create action: [Expected process to exit with [0], but received '1'
+---- Begin output of vagrant up --no-provision --provider virtualbox ----
+STDOUT: Bringing machine 'default' up with 'virtualbox' provider...
+==> default: Box 'bento/ubuntu-14.04' could not be found. Attempting to find and install...
+    default: Box Provider: virtualbox
+    default: Box Version: >= 0
+STDERR: The box 'bento/ubuntu-14.04' could not be found or
+could not be accessed in the remote catalog. If this is a private
+box on HashiCorp's Atlas, please verify you're logged in via
+'vagrant login'. Also, please double-check the name. The expanded
+URL and error message are shown below:
+
+URL: ["https://atlas.hashicorp.com/bento/ubuntu-14.04"]
+Error:
+---- End output of vagrant up --no-provision --provider virtualbox ----
+Ran vagrant up --no-provision --provider virtualbox returned 1] on default-ubuntu-1404
+>>>>>> ----------------------
+>>>>>> Please see .kitchen/logs/kitchen.log for more details
+>>>>>> Also try running 'kitchen diagnose --all' for configuration
+```
+
+Lösung: Die von Vagrant mitgelieferte curl Version löschen (bzw. umbenennen): `sudo mv /opt/vagrant/embedded/bin/curl /opt/vagrant/embedded/bin/curl_backup`
