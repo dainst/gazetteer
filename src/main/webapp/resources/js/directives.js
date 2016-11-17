@@ -718,13 +718,16 @@ directives.directive('gazShapeEditor', function($document, $timeout, $http, Poly
 			$scope.reloadCoordinatesString = function() {
 				$scope.parsingError = undefined;
 				
-				switch ($scope.coordinatesStringFormat) {
-				case "wkt":
-					$scope.coordinatesString = getShapeCoordinatesAsWkt();
-					break;
-				case "geojson":
-					$scope.coordinatesString = getShapeCoordinatesAsGeoJson();
-					break;
+				if ($scope.shape && $scope.shape.length > 0) {
+				
+					switch ($scope.coordinatesStringFormat) {
+					case "wkt":
+						$scope.coordinatesString = getShapeCoordinatesAsWkt();
+						break;
+					case "geojson":
+						$scope.coordinatesString = getShapeCoordinatesAsGeoJson();
+						break;
+					}
 				}
 			}
 			
