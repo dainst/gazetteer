@@ -5,6 +5,8 @@ driver:
   - ["forwarded_port", {guest: 27017, host: 27017}]
   - ["forwarded_port", {guest: 9200, host: 9200}]
   - ["forwarded_port", {guest: 9300, host: 9300}]
+  synced_folders:
+  - ["./src/test/resources", "/home/vagrant/synced_folders/src/test/resources"]
 
 provisioner:
   name: chef_solo
