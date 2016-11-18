@@ -30,7 +30,7 @@ mongo gazetteer --eval 'rs.initiate({ _id : "rs0", members : [ { _id : 0, host :
 Auf dem Server ggf. Testdaten laden:
 ```bash
 mongoimport --db gazetteer --collection place --file synced_folders/src/test/resources/test_places.jsonl
-mongoimport --db gazetteer --collection place --file synced_folders/src/test/resources/test_users.jsonl
+mongoimport --db gazetteer --collection user --file synced_folders/src/test/resources/test_users.jsonl
 ```
 
 ### Konfiguration
