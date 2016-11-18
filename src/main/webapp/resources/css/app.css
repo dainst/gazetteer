@@ -211,17 +211,9 @@ footer {
 	color: #d9e8ef;
 }
 
-.shape-editor-field {
-	background-colour: #fff;
-	border-radius: 0 0 0 0;
-	border: 1px solid #CCC;
-	height: 20px;
-	padding: 4px 6px;
-	font-size: 14px;
-	line-height: 20px;
-	width: 206px;
-	display: inline-block;
-	overflow: hidden;
+.remove-button {
+	cursor: pointer;
+	text-decoration: none !important;
 }
 
 .location-edit-btn {
@@ -236,29 +228,12 @@ footer {
 	padding: 4px 9px 4px 10px;
 }
 
-.shape-coordinates-edit-btn {
-	margin-left: -3px;
+.shape-edit-btn {
 	border-radius: 0 0 0 0;
-	border-top: 1px solid #cccccc;
-	border-bottom: 1px solid #cccccc;
-	border-right: 1px solid #cccccc;
+	border: 1px solid #cccccc;
 	vertical-align: top;
-	text-align: center;
 	display: inline-block;
-	padding: 4px 11px 4px 13px;
-}
-
-.shape-deletion-btn {
-	margin-left: -3px;
-	border-radius: 0 0 0 0;
-	border-top: 1px solid #cccccc;
-	border-bottom: 1px solid #cccccc;
-	border-right: 1px solid #cccccc;
-	border-left: 1px solid #cccccc;
-	vertical-align: top;
-	text-align: center;
-	display: inline-block;
-	padding: 4px 10px 4px 10px;
+	width: 40px;
 }
 
 .archaeo-fixed-menu-header #gaz-logo {

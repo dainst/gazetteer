@@ -39,6 +39,7 @@ messages.factory('messages', function(){
 		"ui.place.protected-site-group-info": "ليس لديك السماحيات الضرورية الخاصّة بهذه المجموعة للتمكّن من الوصول إلى الإحداثيات الدقيقة. الرجاء الاتصال بمديري مجموعة البيانات.",
 		"ui.place.protected-site-info": "الرجاء تسجيل الدخول من أجل الحصول على الإحداثيّات الدقيقة.",
 		"ui.place.user-group-info": "عندما يتمّ تحديد مجموعة بيانات فإنّ هذا المكان يصبح مرئيّاً لأعضاء هذه المجموعة فقط. لا يمكن تغيير هذا الإعداد لاحقاً.",
+		"ui.place.tags.info": "Please use existing tags, if possible. For new tags use english terms, capitalized and singular: \"Castle\"",
 		"ui.thesaurus": "المكنز",
 		"ui.create": "إنشاء مكان",
 		"ui.link.tooltip": "اربط مع المكان الحالي",

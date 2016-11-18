@@ -152,7 +152,7 @@
 								</table>
 							</div>
 							<div ng-repeat="placename in place.names | orderBy:['sort']">
-								<a ng-click="removeName(placename)"><i class="icon-remove-sign"></i></a> {{placename.title}}
+								<a ng-click="removeName(placename)" class="remove-button"><i class="icon-remove-sign"></i></a> {{placename.title}}
 								<em ng-show="placename.ancient && !placename.transliterated">
 									(<small gaz-translate="'place.name.ancient'"></small>)
 								</em>
@@ -214,7 +214,7 @@
 												</td>										
 											</c:if>
 										</c:forEach>
-										</tr>								
+										</tr>				
 									</c:forEach>
 								</tbody>
 							</table>
@@ -224,6 +224,8 @@
 					<!-- tags -->
 					<div class="control-group">
 						<label class="control-label">
+							<i class="icon-info-sign" style="color: #5572a1; cursor: pointer; margin-right: 3px;"
+								gaz-tooltip="'ui.place.tags.info'"></i>
 							<s:message code="domain.place.tags" text="domain.place.tags" />
 						</label>
 						<div class="controls">
@@ -259,7 +261,7 @@
 							</div>
 							<div ng-hide="!place.comments" style="margin-top: 1em">
 								<blockquote ng-repeat="comment in place.comments">
-									<a ng-click="place.comments.splice($index,1)"><i class="icon-remove-sign"></i></a>
+									<a ng-click="place.comments.splice($index,1)" class="remove-button"><i class="icon-remove-sign"></i></a>
 									<p>{{comment.text}}</p>
 									<small ng-hide="!comment.language" gaz-translate="'languages.' + comment.language"></small>
 								</blockquote>
@@ -286,7 +288,7 @@
 								</div>
 								<div ng-hide="!place.groupInternalData" style="margin-top: 1em">
 									<div ng-repeat="data in place.groupInternalData">
-										<a ng-click="place.groupInternalData.splice($index,1)"><i class="icon-remove-sign"></i></a>
+										<a ng-click="place.groupInternalData.splice($index,1)" class="remove-button"><i class="icon-remove-sign"></i></a>
 										<div style="white-space: pre;">{{data.text}}</div>
 										<small><em>{{data.recordGroup.name}}</em></small>
 										<br/><br/>
@@ -335,7 +337,7 @@
 							</div>
 							<div type="text" ng.hide="!place.identifiers">
 								<div ng-repeat="identifier in place.identifiers">
-									<a ng-click="place.identifiers.splice($index,1)"><i class="icon-remove-sign"></i></a>
+									<a ng-click="place.identifiers.splice($index,1)" class="remove-button"><i class="icon-remove-sign"></i></a>
 									<em>{{identifier.context}}:</em> {{identifier.value}}
 								</div>
 							</div>
@@ -369,7 +371,7 @@
 							<input type="text" name="link-description" ng-model="link.description">
 							<div type="text" ng.hide="!place.links">
 								<div ng-repeat="link in place.links">
-									<a ng-click="place.links.splice($index,1)"><i class="icon-remove-sign"></i></a>
+									<a ng-click="place.links.splice($index,1)" class="remove-button"><i class="icon-remove-sign"></i></a>
 									<span ng-hide="link.description">
 										<em>{{link.predicate}}:</em>
 										<a ng-href="{{link.object}}" target="_blank">{{decodeUri(link.object)}}</a>
@@ -497,7 +499,7 @@
 						</div>
 					</div>
 					<div ng-repeat="location in place.locations">
-						<br /><a ng-click="place.locations.splice($index,1)"><i class="icon-remove-sign"></i></a>
+						<br /><a ng-click="place.locations.splice($index,1)" class="remove-button"><i class="icon-remove-sign"></i></a>
 						<span>
 							<span ng-show="location.coordinates"><em><s:message code="domain.location.latitude" text="domain.location.latitude" />:</em> {{location.coordinates[1]}},</span>
 							<span ng-show="location.coordinates"><em><s:message code="domain.location.longitude" text="domain.location.longitude" />:</em> {{location.coordinates[0]}}</span><span ng-show="location.coordinates && location.altitude">,</span>
@@ -537,7 +539,7 @@
 								<i class="icon-plus icon-white"></i>
 							</div>
 							<div ng-repeat="relatedPlace in allRelatedPlaces">
-								<a ng-click="allRelatedPlaces.splice($index,1)"><i class="icon-remove-sign"></i></a>
+								<a ng-click="allRelatedPlaces.splice($index,1)" class="remove-button"><i class="icon-remove-sign"></i></a>
 								<div gaz-place-title place="relatedPlace"></div>
 							</div>
 						</div>
@@ -572,7 +574,7 @@
 								</div>
 								<div ng-hide="!place.commentsReisestipendium" style="margin-top: 1em">
 									<blockquote style="white-space: pre;" ng-repeat="comment in place.commentsReisestipendium">
-										<a ng-click="place.commentsReisestipendium.splice($index,1)"><i class="icon-remove-sign"></i></a>
+										<a ng-click="place.commentsReisestipendium.splice($index,1)" class="remove-button"><i class="icon-remove-sign"></i></a>
 										{{comment.text}}
 										<small ng-hide="!comment.user">{{comment.user}}</small>
 									</blockquote>
