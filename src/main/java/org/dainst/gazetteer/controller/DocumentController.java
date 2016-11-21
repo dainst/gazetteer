@@ -400,19 +400,6 @@ public class DocumentController {
 			HttpServletResponse response) throws Exception {
 		
 		place.setId(placeId);
-
-		Place placeToCheck = place;
-		while (placeToCheck.getParent() != null && !placeToCheck.getParent().equals("")) {
-			placeToCheck = placeDao.findOne(placeToCheck.getParent());
-			
-			if (placeToCheck.getId().equals(place.getId())) {
-				ModelAndView mav = new ModelAndView("place/validation");
-				ValidationResult result = new ValidationResult(false, "parentError");
-				response.setStatus(422);
-				mav.addObject("result", result);
-				return mav;
-			}
-		}
 		
 		Place originalPlace = placeDao.findOne(place.getId());
 		
@@ -422,6 +409,22 @@ public class DocumentController {
 			ModelAndView mav = new ModelAndView("place/validation");
 			ValidationResult result = new ValidationResult(false, "accessDeniedError");
 			response.setStatus(403);
+			mav.addObject("result", result);
+			return mav;
+		}
+		
+		if (!hasValidParent(place)) {
+			ModelAndView mav = new ModelAndView("place/validation");
+			ValidationResult result = new ValidationResult(false, "parentError");
+			response.setStatus(422);
+			mav.addObject("result", result);
+			return mav;
+		}
+		
+		if (!hasValidRelatedPlaces(place)) {
+			ModelAndView mav = new ModelAndView("place/validation");
+			ValidationResult result = new ValidationResult(false, "relatedPlaceError");
+			response.setStatus(422);
 			mav.addObject("result", result);
 			return mav;
 		}
@@ -581,6 +584,7 @@ public class DocumentController {
 	}
 	
 	private void createParentsList(Place place, List<Place> parents) {
+		
 		if (place.getParent() != null && !place.getParent().isEmpty()) {
 			Place parent = placeDao.findOne(place.getParent());
 			if (parent != null) {
@@ -588,5 +592,31 @@ public class DocumentController {
 				createParentsList(parent, parents);
 			}
 		}
-	}	
+	}
+	
+	private boolean hasValidParent(Place place) {
+		
+		Place placeToCheck = place;
+		
+		while (placeToCheck.getParent() != null && !placeToCheck.getParent().equals("")) {
+			placeToCheck = placeDao.findOne(placeToCheck.getParent());
+			
+			if (placeToCheck.getId().equals(place.getId())) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	private boolean hasValidRelatedPlaces(Place place) {
+		
+		for (String relatedPlaceId : place.getRelatedPlaces()) {
+			if (relatedPlaceId.equals(place.getId())) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
 }
