@@ -524,7 +524,7 @@
 							<s:message code="domain.place.parent" text="domain.place.parent" />
 						</label>
 						<div class="controls">
-							<div gaz-place-picker place="parent" id="place.parent"></div>
+							<div gaz-place-picker place="parent" id="place.parent" exclude-id="place.gazId"></div>
 						</div>
 					</div>
 					
@@ -534,7 +534,7 @@
 							<s:message code="domain.place.relatedPlaces" text="domain.place.relatedPlaces" />
 						</label>
 						<div class="controls">
-							<div gaz-place-picker place="relatedPlace" id="relatedPlace['@id']"></div>
+							<div gaz-place-picker place="relatedPlace" id="relatedPlace['@id']" exclude-id="place.gazId"></div>
 							<div class="btn btn-primary plus" style="vertical-align:top" ng-click="addRelatedPlace()" ng-disabled="!relatedPlace['@id']">
 								<i class="icon-plus icon-white"></i>
 							</div>

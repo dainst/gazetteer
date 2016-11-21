@@ -83,7 +83,7 @@ directives.directive('gazPlaceTitle', function() {
 directives.directive('gazPlacePicker', function($document, $timeout) {
 	return {
 		replace: true,
-		scope: { place: '=', id: '=' },
+		scope: { place: '=', id: '=', excludeId: '=' },
 		templateUrl: 'partials/placePicker.html',
 		controller: function($scope, $element, Place) {
 			
@@ -94,6 +94,7 @@ directives.directive('gazPlacePicker', function($document, $timeout) {
 				limit: 30,
 				type: "prefix",
 				q: "",
+				fq: "",
 				noPolygons: true,
 				add: "sort"
 			};
@@ -118,6 +119,15 @@ directives.directive('gazPlacePicker', function($document, $timeout) {
 			$scope.pickFirst = function() {
 				$scope.selectPlace($scope.places[0]);		
 			};
+			
+			$scope.$watch("excludeId", function() {
+				
+				if (!$scope.excludeId || $scope.excludeId == "") {
+					$scope.search.fq = "";
+				} else {
+					$scope.search.fq = "NOT _id:" + $scope.excludeId;
+				}
+			});
 			
 			$scope.$watch("search.q", function() {
 				$scope.queryId++;
