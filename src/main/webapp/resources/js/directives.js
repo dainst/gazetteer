@@ -111,9 +111,11 @@ directives.directive('gazPlacePicker', function($document, $timeout) {
 			};
 			
 			$scope.selectPlace = function(place) {
-				$scope.place = place;
-				$scope.id = place["@id"];
-				$scope.showOverlay = false;
+				if (place) {
+					$scope.place = place;
+					$scope.id = place["@id"];
+					$scope.showOverlay = false;
+				}
 			};
 			
 			$scope.pickFirst = function() {
