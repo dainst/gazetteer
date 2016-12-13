@@ -167,7 +167,6 @@
 						</div>
 						<ul class="nav pull-right">
 							<li><a href="#!/about/"><s:message code="ui.about" text="ui.about" /></a></li>
-							<li><a href="#!/help/"><s:message code="ui.help" text="ui.help" /></a></li>
   							<li class="dropdown">
     							<a href="#" class="dropdown-toggle" data-toggle="dropdown">iDAI.welt <b class="caret"></b></a>
     							<ul class="dropdown-menu">
@@ -196,6 +195,7 @@
       								<li><a href="?lang=ar#!{{getCurrentRoute()}}">العربية</a></li>
     							</ul>
   							</li>
+							<li><a href="#!/help/"><s:message code="ui.help" text="ui.help" /></a></li>
 						</ul>
 					</div>
 				</div>
