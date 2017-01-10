@@ -195,7 +195,8 @@
       								<li><a href="?lang=ar#!{{getCurrentRoute()}}">العربية</a></li>
     							</ul>
   							</li>
-							<li><a href="#!/help/"><s:message code="ui.help" text="ui.help" /></a></li>
+							<li><a href="#!/help/"><s:message code="ui.help" text="ui.help" /><i class="icon-question-sign" style="color:white; margin:0px 0px 5px 3px;"></i></a>
+							</li>
 						</ul>
 					</div>
 				</div>
