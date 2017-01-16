@@ -362,7 +362,7 @@
 	<span ng-show="place.gazId && !place.accessDenied">
 		<dt><s:message code="ui.contexts" text="ui.contexts"/></dt>
 		<dd>
-			<a ng-href="http://arachne.uni-koeln.de/arachne/index.php?view[layout]=search_result_overview&view[category]=overview&search[constraints]=Gazetteerid:%22{{place.gazId}}%22" target="_blank">
+			<a ng-href="https://arachne.dainst.org/search?q=places.gazetteerId:{{place.gazId}}" target="_blank">
 				<s:message code="ui.link.arachne" text="ui.link.arachne"/>
 				<i class="icon-external-link"></i>
 			</a>
