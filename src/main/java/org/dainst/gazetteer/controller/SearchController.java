@@ -361,7 +361,7 @@ public class SearchController {
 			user = (User) principal;
 		
 		logger.debug("Creating shapefile for query: " + q + ", fq: " + fq + ", limit: " + limit + ", offset: " + offset + ", type: " + type);
-		
+
 		String[] pointsResult =
 				getQuery(q, pointsFq, type,  sort, order, null, bbox, polygonFilterCoordinates, limit, offset, false, null, user).execute();
 		String[] multipolygonsResult =
@@ -375,7 +375,7 @@ public class SearchController {
 		File file = null;
 		try {
 			file = shapefileCreator.createShapefile("search_" + dateFormat.format(new Date()), new ArrayList<String>(Arrays.asList(pointsResult)),
-					new ArrayList<String>(Arrays.asList(multipolygonsResult)));
+					new ArrayList<String>(Arrays.asList(multipolygonsResult)), q);
 		} catch (Exception e) {
 			throw new RuntimeException("Shapefile creation failed", e);
 		}
