@@ -199,7 +199,11 @@ public class ShapefileCreator {
 			} else {
 				logger.debug("No features of feature type multipolygon");
 			}
-			createReadmeFile(shapeFileFolder, query);
+			if (pointPlaceIds.size() > 0 || multipolygonPlaceIds.size() > 0) {
+				createReadmeFile(shapeFileFolder, query);
+			} else {
+				logger.debug("No point or multipolygon features.");
+			}
 			zipFile = ZipArchiveBuilder.buildZipArchiveFromFolder(shapeFileFolder, tempFolder);
 		} catch(Exception e) {
 			FileUtils.deleteDirectory(tempFolder);
