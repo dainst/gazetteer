@@ -374,7 +374,7 @@ public class SearchController {
 		
 		File file = null;
 		try {
-			file = shapefileCreator.createShapefile("search_" + dateFormat.format(new Date()), new ArrayList<String>(Arrays.asList(pointsResult)),
+			file = shapefileCreator.createShapefile("iDAIgazetteer_" + dateFormat.format(new Date()), new ArrayList<String>(Arrays.asList(pointsResult)),
 					new ArrayList<String>(Arrays.asList(multipolygonsResult)), q);
 		} catch (Exception e) {
 			throw new RuntimeException("Shapefile creation failed", e);
