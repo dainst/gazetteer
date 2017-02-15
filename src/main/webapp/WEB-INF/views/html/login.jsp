@@ -18,13 +18,13 @@
 		<link rel="apple-touch-icon" sizes="114x114" href="resources/ico/apple-touch-icon-114.png">
 		<link rel="apple-touch-icon" sizes="72x72" href="resources/ico/apple-touch-icon-72.png">
 		<link rel="apple-touch-icon" href="resources/ico/apple-touch-icon-57.png">
-		<link href="//arachne.uni-koeln.de/archaeostrap/assets/css/bootstrap.css" rel="stylesheet">
+		<link href="../resources/archaeostrap/css/bootstrap.css" rel="stylesheet">
 		<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-responsive.min.css" rel="stylesheet">
 		<link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css" rel="stylesheet">
 		<link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome-ie7.css" rel="stylesheet">
 		<link href="resources/css/app.css" rel="stylesheet">
 		<script	src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>	
-		<script	src="//arachne.uni-koeln.de/archaeostrap/assets/js/bootstrap.js"></script>	
+		<script	src="../resources/archaeostrap/css/bootstrap.cssassets/js/bootstrap.js"></script>
 		<script src="resources/js/custom.js"></script>
 		
 		<!-- Piwik -->
