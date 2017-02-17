@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -253,8 +255,10 @@ public class DocumentController {
 		}
 		
 		File file = null;
+		DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy-HH-mm");
+
 		try {
-			file = shapefileCreator.createShapefile(place.getId(), place.getId());
+			file = shapefileCreator.createShapefile("iDAIgazetteer_" + "id" + place.getId() + "_" + dateFormat.format(new Date()), place.getId());
 		} catch (Exception e) {
 			throw new RuntimeException("Shapefile creation failed", e);
 		}
