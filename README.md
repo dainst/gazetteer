@@ -68,7 +68,7 @@ Vor dem Start muss sichergestellt werden, dass die nötigen Konfigurationsdateie
 * src/main/webapp/WEB-INF/mail.properties (optional, bei fehlender Mail-Konfiguration werden keine Mails versandt)
 
 In den entsprechenden Ordnern befinden sich Template-Files, die eine Grundkonfiguration bereitstellen. Vor dem Start sollten die Templates umbenannt bzw. kopiert und evtl. angepasst werden. 
-z.B. Anpassen des Speicherpfades der Logdatei, da ggfs. in template Pfad keine Schreibrechte vorliegen.
+z.B. Anpassen des Speicherpfades der Logdatei, da ggfs. in template Pfad keine Schreibrechte vorliegen. In src/main/resources/log4j.xml:
 ```bash
 <appender name="file" class="org.apache.log4j.DailyRollingFileAppender">
    <param name="file" value="/Users/[USERNAME]/gazetteer.log" />
