@@ -10,6 +10,7 @@ tmp/
 .kitchen
 .kitchen.local.yml
 .DS_Store
+gazetteer.iml
 src/main/webapp/WEB-INF/config.properties
 src/main/webapp/WEB-INF/elasticsearch.properties
 src/main/webapp/WEB-INF/mail.properties
