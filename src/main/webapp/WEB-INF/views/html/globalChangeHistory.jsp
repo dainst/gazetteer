@@ -25,7 +25,7 @@
 		<link href="resources/css/app.css" rel="stylesheet">
 		<link href="resources/bootstrap/css/daterangepicker-bs2.css" rel="stylesheet">
 		<script	src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>	
-		<script	src="../resources/archaeostrap/css/bootstrap.cssassets/js/bootstrap.js"></script>
+		<script	src="../resources/archaeostrap/js/bootstrap.js"></script>
 		<script src="resources/js/custom.js"></script>
 		<script src="resources/bootstrap/js/moment.js"></script>
 		<script src="resources/bootstrap/js/daterangepicker.js"></script>

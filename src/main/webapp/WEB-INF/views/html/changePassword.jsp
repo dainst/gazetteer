@@ -24,7 +24,7 @@
 		<link href="//netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome-ie7.css" rel="stylesheet">
 		<link href="resources/css/app.css" rel="stylesheet">
 		<script	src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>	
-		<script	src="../resources/archaeostrap/css/bootstrap.cssassets/js/bootstrap.js"></script>
+		<script	src="../resources/archaeostrap/js/bootstrap.js"></script>
 		<script src="resources/js/custom.js"></script>
 		
 		<!-- Piwik -->
