@@ -4,14 +4,20 @@
 <%@ page session="false" import="org.dainst.gazetteer.domain.*" %>
 <%@ page trimDirectiveWhitespaces="true"%>
 <%@ page contentType="text/xml" %>
-<% response.setHeader("Content-Type", "application/vnd.google-earth.kml+xml; charset=utf-8"); %>
+<% response.setHeader("Content-Type", "application/rdf+xml; charset=utf-8"); %>
 <?xml version="1.0" encoding="UTF-8"?>
-<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-	xmlns:crm="http://www.cidoc-crm.org/rdfs/cidoc-crm#"
-	xmlns:wgs84_pos="http://www.w3.org/2003/01/geo/wgs84_pos#"
-	xmlns:dcterms="http://purl.org/dc/terms/"
-	xmlns:skos="http://www.w3.org/2004/02/skos/core#"
-	xmlns:dc="http://purl.org/dc/elements/1.1/"
+<rdf:RDF
+		xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+		xmlns:crm="http://www.cidoc-crm.org/rdfs/cidoc-crm#"
+		xmlns:wgs84_pos="http://www.w3.org/2003/01/geo/wgs84_pos#"
+		xmlns:sf="http://www.opengis.net/ont/sf#"
+		xmlns:geo="http://www.opengis.net/ont/geosparql#"
+		xmlns:dcterms="http://purl.org/dc/terms/"
+		xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+		xmlns:dc="http://purl.org/dc/elements/1.1/"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:owl ="http://www.w3.org/2002/07/owl#"
+		xmlns:gaz_id="http://gazetteer.dainst.org/types/id#"
 >
 <c:if test="${accessStatus == 'READ' || accessStatus == 'LIMITED_READ' || accessStatus == 'EDIT'}">
 <crm:E53_Place rdf:about="${baseUri}place/${place.id}">
@@ -36,6 +42,11 @@
 	<c:if test="${place.prefLocation != null}">
 	<wgs84_pos:lat>${place.prefLocation.lat}</wgs84_pos:lat>
 	<wgs84_pos:long>${place.prefLocation.lng}</wgs84_pos:long>
+	<geo:hasGeometry>
+		<sf:Point>
+			<geo:asWKT rdf:datatype="http://www.opengis.net/ont/geosparql#wktLiteral">Point(${place.prefLocation.lng} ${" "} ${place.prefLocation.lat})</geo:asWKT>
+		</sf:Point>
+	</geo:hasGeometry>
 	</c:if>
 	<c:forEach var="identifier" items="${place.identifiers}">
 	<dc:identifier>${identifier.context}:${identifier.value}</dc:identifier>
