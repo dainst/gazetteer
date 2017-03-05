@@ -41,21 +41,23 @@
 		</c:choose>
 	</c:forEach>
 	<c:if test="${place.prefLocation != null}">
+		<c:if test="${place.prefLocation.getLat() != 0}">
 	<wgs84_pos:lat>${place.prefLocation.lat}</wgs84_pos:lat>
 	<wgs84_pos:long>${place.prefLocation.lng}</wgs84_pos:long>
-	</c:if>
+		</c:if>
 	<geo:hasGeometry>
-	<c:if test="${place.prefLocation != null}">
+		<c:if test="${place.prefLocation.getLat() != 0}">
 		<sf:Point>
 			<geo:asWKT rdf:datatype="http://www.opengis.net/ont/geosparql#wktLiteral">${place.prefLocation.toWKT()}</geo:asWKT>
 		</sf:Point>
-	</c:if>
-	<c:if test="${place.prefLocation.shape != null}">
+		</c:if>
+		<c:if test="${place.prefLocation.shape != null}">
 		<sf:Polygon>
 			<geo:asWKT rdf:datatype="http://www.opengis.net/ont/geosparql#wktLiteral">${place.prefLocation.shape.toWKT()}</geo:asWKT>
 		</sf:Polygon>
-	</c:if>
+		</c:if>
 	</geo:hasGeometry>
+	</c:if>
 	<c:forEach var="identifier" items="${place.identifiers}">
 	<dc:identifier>${identifier.context}:${identifier.value}</dc:identifier>
 	</c:forEach>
