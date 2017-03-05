@@ -75,6 +75,11 @@ public class Location {
 				+ ", confidence=" + confidence + ", publicSite=" + publicSite + "]";
 	}
 
+	public String toWKT() {
+		String wkt = "Point(" + this.getLat() + " " + this.getLng() + ")";
+		return wkt;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

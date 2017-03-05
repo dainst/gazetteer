@@ -20,6 +20,15 @@ public class Shape {
 		return coordinates;
 	}
 
+	public String toWKT() {
+		String wkt = "Polygon((" + Double.toString(coordinates[0][0][0][0]) + " " + Double.toString(coordinates[0][0][0][1]);
+		for (int i = 1; i < coordinates[0][0].length; i++) {
+			wkt = wkt + ", " + Double.toString(coordinates[0][0][i][0]) + " " + Double.toString(coordinates[0][0][i][1]);
+		}
+		wkt = wkt + "))";
+		return wkt;
+	}
+
 	public void setCoordinates(double[][][][] coordinates) {
 		this.coordinates = coordinates;
 	}

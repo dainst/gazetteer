@@ -42,12 +42,19 @@
 	<c:if test="${place.prefLocation != null}">
 	<wgs84_pos:lat>${place.prefLocation.lat}</wgs84_pos:lat>
 	<wgs84_pos:long>${place.prefLocation.lng}</wgs84_pos:long>
-	<geo:hasGeometry>
-		<sf:Point>
-			<geo:asWKT rdf:datatype="http://www.opengis.net/ont/geosparql#wktLiteral">Point(${place.prefLocation.lng} ${" "} ${place.prefLocation.lat})</geo:asWKT>
-		</sf:Point>
-	</geo:hasGeometry>
 	</c:if>
+	<geo:hasGeometry>
+	<c:if test="${place.prefLocation != null}">
+		<sf:Point>
+			<geo:asWKT rdf:datatype="http://www.opengis.net/ont/geosparql#wktLiteral">${place.prefLocation.toWKT()}</geo:asWKT>
+		</sf:Point>
+	</c:if>
+	<c:if test="${place.prefLocation.shape != null}">
+		<sf:Polygon>
+			<geo:asWKT rdf:datatype="http://www.opengis.net/ont/geosparql#wktLiteral">${place.prefLocation.shape.toWKT()}</geo:asWKT>
+		</sf:Polygon>
+	</c:if>
+	</geo:hasGeometry>
 	<c:forEach var="identifier" items="${place.identifiers}">
 	<dc:identifier>${identifier.context}:${identifier.value}</dc:identifier>
 	</c:forEach>
