@@ -66,7 +66,7 @@ public class ShapefileCreator {
 	private final static Logger logger = LoggerFactory.getLogger("org.dainst.gazetteer.converter.ShapefileCreator");
 
 	@Autowired
-	private TempFolderService tempFolderHelper;
+	private TempFolderService tempFolderService;
 
 	@Autowired
 	private PlaceRepository placeRepository;
@@ -182,7 +182,7 @@ public class ShapefileCreator {
 
 		logger.debug("Create shapefiles for " + pointPlaceIds.size() + " places with points and " + multipolygonPlaceIds.size() + " places with multipolygons");
 
-		File tempFolder = tempFolderHelper.createFolder();
+		File tempFolder = tempFolderService.createFolder();
 		File shapeFileFolder = new File(tempFolder.getAbsolutePath() + File.separator + filename);
 		shapeFileFolder.mkdir();
 

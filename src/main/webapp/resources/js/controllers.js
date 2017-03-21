@@ -744,6 +744,7 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 			offset: ($location.search().offset) ? parseInt($location.search().offset) : 0,
 			limit: ($location.search().limit) ? parseInt($location.search().limit) : 10,
 			q: ($location.search().q) ? ($location.search().q) : "",
+			encodedQ: ($location.search().q) ? (encodeURIComponent($location.search().q)) : "",
 			add: "parents,access,history,sort"
 		};
 		if ($location.search().fq) $scope.search.fq = $location.search().fq;
