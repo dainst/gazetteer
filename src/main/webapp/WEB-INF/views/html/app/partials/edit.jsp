@@ -178,7 +178,7 @@
 					<legend><s:message code="domain.place.general" text="domain.place.general"/></legend>
 				
 					<!-- types -->
-					<div class="control-group">
+					<div class="control-group" style="width: 590px;">
 						<label class="control-label">
 							<s:message code="domain.place.type" text="domain.place.type" />
 						</label>
@@ -205,10 +205,10 @@
 												</c:if>
 												<td>
 													<c:set var="placeTypeCounter" value="${placeTypeCounter + 1}"/>
-													<label class="checkbox inline">
+													<label class="checkbox inline" gaz-tooltip="'place.types.description.' + '${placeTypes[idStatus.index]}'">
 														<input type="checkbox" ng-click="addPlaceType('${placeTypes[idStatus.index]}')" ng-checked="hasType('${placeTypes[idStatus.index]}')"/>
 														<span gaz-translate="'place.types.' + '${placeTypes[idStatus.index]}'"/>
-														<i class="icon-info-sign" style="color: #5572a1;" gaz-tooltip="'place.types.description.' + '${placeTypes[idStatus.index]}'"></i>
+														<i class="icon-info-sign" style="color: #5572a1;"></i>
 														&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 													</label>
 												</td>										
@@ -224,12 +224,13 @@
 					<!-- tags -->
 					<div class="control-group">
 						<label class="control-label">
-							<i class="icon-info-sign" style="color: #5572a1; cursor: pointer; margin-right: 3px;"
-								gaz-tooltip="'ui.place.tags.info'"></i>
-							<s:message code="domain.place.tags" text="domain.place.tags" />
+							<span gaz-tooltip="'ui.place.tags.info'">
+								<i class="icon-info-sign" style="color: #5572a1; cursor: pointer; margin-right: 3px;"></i>
+								<s:message code="domain.place.tags" text="domain.place.tags"/>
+							</span>
 						</label>
 						<div class="controls">
-							<div gaz-tag-field tags="place.tags" fieldname="tags" fieldwidth="475px" number="0"></div>
+							<div gaz-tag-field tags="place.tags" fieldname="tags" fieldwidth="400px" number="0"></div>
 						</div>
 					</div>
 					
@@ -239,7 +240,7 @@
 							<s:message code="domain.place.provenance" text="domain.place.provenance" />
 						</label>
 						<div class="controls">
-							<div gaz-tag-field tags="place.provenance" fieldname="provenance" fieldwidth="475px" number="1"></div>	
+							<div gaz-tag-field tags="place.provenance" fieldname="provenance" fieldwidth="400px" number="1"></div>
 						</div>
 					</div>
 					
@@ -558,7 +559,7 @@
 								<s:message code="domain.place.noteReisestipendium" text="domain.place.noteReisestipendium" />
 							</label>
 							<div class="controls">
-								<textarea rows="6" class="span12" ng-model="place.noteReisestipendium"></textarea>
+								<textarea rows="6" class="span10" ng-model="place.noteReisestipendium"></textarea>
 							</div>
 						</div>
 						

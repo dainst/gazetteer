@@ -494,7 +494,6 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages, PolygonVali
 				geoSearchCoordinates[i * 2 + 1] = GeoSearch.getPolygon().getPath().getAt(i).lat();
 			}
 		}
-		
 		$location.path('/search').search({q:angular.toJson(query), polygonFilterCoordinates: geoSearchCoordinates, fq: filterQuery, type: "extended"});
 		
 	};
