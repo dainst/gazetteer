@@ -232,7 +232,10 @@
 		<dt><s:message code="domain.place.type" text="domain.place.type" /></dt>
 		<c:forEach var="placeType" items="${placeTypes}">
 			<dd ng-show="hasType('${placeType}')">
-				<span gaz-translate="'place.types.' + '${placeType}'"></span>
+				<span gaz-tooltip="'place.types.description.' + '${placeType}'" style="padding: 5px; cursor: pointer">
+					<span gaz-translate="'place.types.' + '${placeType}'"></span>
+					<i class="icon-info-sign" style="color: #5572a1;"></i>
+				</span>
 				<br/>
 			</dd>
 		</c:forEach>

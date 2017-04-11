@@ -224,7 +224,7 @@
 					<!-- tags -->
 					<div class="control-group">
 						<label class="control-label">
-							<span gaz-tooltip="'ui.place.tags.info'">
+							<span gaz-tooltip="'ui.place.tags.info'" style="padding: 8px">
 								<i class="icon-info-sign" style="color: #5572a1; cursor: pointer; margin-right: 3px;"></i>
 								<s:message code="domain.place.tags" text="domain.place.tags"/>
 							</span>
