@@ -87,7 +87,7 @@ messages.factory('messages', function(){
 		"ui.shape-editor.error.validation.genericvalidationerror": "Validierung fehlgeschlagen.",
 		"place.name.ancient": "Antik",
 		"place.name.transliterated": "Transliteriert",
-		"place.types.no-type": "<Keine Art>",
+		"place.types.no-type": " - Keine Art -",
 		"place.types.archaeological-site": "Archäologischer Ort",
 		"place.types.archaeological-area": "Archäologischer Bereich",
 		"place.types.continent": "Kontinent",

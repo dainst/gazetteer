@@ -86,7 +86,7 @@ messages.factory('messages', function(){
 		"ui.shape-editor.error.validation.genericvalidationerror": "Validation failed.",
 		"place.name.ancient": "قديم",
 		"place.name.transliterated": "منقول حرفياً",
-		"place.types.no-type": ">لا يوجد نوع<",
+		"place.types.no-type": "- لا يوجد نو -",
 		"place.types.archaeological-site": "موقع أثري",
 		"place.types.archaeological-area": "منطقة أثرية",
 		"place.types.continent": "قارّة",
