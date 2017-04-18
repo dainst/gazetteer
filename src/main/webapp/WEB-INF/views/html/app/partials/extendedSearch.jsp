@@ -3,7 +3,7 @@
 <%@ page contentType="text/html; charset=utf-8" session="false"%>
 
 <s:message code="ui.extendedSearch.namesLanguage" text="ui.extendedSearch.namesLanguage" var="namesLanguage" />
-<s:message code="ui.extendedSearch.namesLanguageTitle" text="ui.extendedSearch.namesLanguageTitle" var="namesLanguageTitle" />
+<s:message code="ui.language.title" text="ui.language.title" var="namesLanguageTitle" />
 <s:message code="ui.extendedSearch.typesSelect" text="ui.extendedSearch.typesSelect" var="typesSelect" />
 <s:message code="domain.identifier.context" text="domain.identifier.context" var="idContext" />
 <s:message code="ui.extendedSearch.idsNoType" text="ui.extendedSearch.idsNoType" var="idsNoType" />

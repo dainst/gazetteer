@@ -185,6 +185,11 @@
 						<h3>
 							<s:message code="ui.register" text="ui.register" />
 						</h3>
+						<div class="well">
+							<h5>
+								<s:message code="ui.register.expl" text="ui.register.expl" />
+							</h5>
+						</div>
 						<div class="<%=usernameControlGroup%>">
 							<label class="control-label"> <s:message
 									code="user.username" text="user.username" />

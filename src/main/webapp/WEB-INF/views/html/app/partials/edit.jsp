@@ -7,6 +7,7 @@
 <s:message code="ui.language.notSpecified" text="ui.language.notSpecified" var="langNotSpecified" />
 <s:message code="domain.place.recordGroup.noGroup" text="domain.place.recordGroup.noGroup" var="recordGroupNotSpecified"/>
 <s:message code="ui.copyToClipboard" text="ui.copyToClipboard" var="copyMsg"/>
+<s:message code="ui.language.title" text="ui.language.title" var="namesLanguageTitle" />
 
 <div gaz-place-nav active-tab="edit" place="place"></div>
 
@@ -84,6 +85,7 @@
 											<td>
 												<input type="text" ng-model="place.prefName.title" required />
 												<select ng-model="place.prefName.language" class="input-small">
+													<option label="${namesLanguageTitle}" selected disabled></option>
 													<option value="">${langNotSpecified}</option>
 													<c:forEach var="language" items="${languages}">
 														<option value="${language.key}">${language.value}</option>
@@ -124,6 +126,7 @@
 											</td>
 											<td>
 												<select ng-model="name.language" class="input-small">
+													<option label="${namesLanguageTitle}" selected disabled></option>
 													<option value="">${langNotSpecified}</option>
 													<c:forEach var="language" items="${languages}">
 														<option value="${language.key}">${language.value}</option>
@@ -326,7 +329,7 @@
 							<s:message code="domain.identifier.value" text="domain.identifier.value" />
 						</label>
 						<div class="controls">
-							<input type="text" ng-model="identifier.value" class="input-small">
+							<input type="text" ng-model="identifier.value" class="input-small" style=" margin-right: 15px;">
 							<s:message code="domain.identifier.context" text="domain.identifier.context" />
 							<select ng-model="identifier.context" class="input-medium">
 								<c:forEach var="idType" items="${idTypes}">
