@@ -88,7 +88,9 @@ public class UserManagementController {
 	}
 	
 	@RequestMapping(value="/register")
-	public String register(@RequestParam(required=false) String r, ModelMap model) {
+	public String register(@RequestParam(required=false) String r, ModelMap model, HttpServletRequest request) {
+		Locale locale = new RequestContext(request).getLocale();
+		model.addAttribute("language", locale.getLanguage());
 		if (r != null) model.addAttribute("r", r);
 		model.addAttribute("version", version);
 		return "register";

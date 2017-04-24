@@ -182,13 +182,23 @@
 		
 				<div class="well" style="width: 550px; margin: 0 auto;">
 					<form class="form-horizontal" name="f" action="checkRegisterForm?r=${r}" accept-charset="UTF-8" method="POST">
-						<h3>
-							<s:message code="ui.register" text="ui.register" />
-						</h3>
-						<div class="well">
-							<h5>
-								<s:message code="ui.register.expl" text="ui.register.expl" />
-							</h5>
+						<c:choose>
+							<c:when test="${language eq 'ar'}">
+								<p dir="rtl" lang="ar" class="lead" style="font-size: 1.8em; margin-bottom: 12px; margin-top: 15px;"><s:message code="ui.register" text="ui.register" /></p>
+							</c:when>
+							<c:otherwise>
+								<p class="lead" style="font-size: 1.8em; margin-bottom: 12px; margin-top: 15px;"><s:message code="ui.register" text="ui.register" /></p>
+							</c:otherwise>
+						</c:choose>
+						<div class="well" style="padding: 12px;">
+							<c:choose>
+								<c:when test="${language eq 'ar'}">
+									<p dir="rtl" lang="ar" class="lead" style="font-size: 15px; margin-bottom: 0px;"><s:message code="ui.register.expl" text="ui.register.expl" /></p>
+								</c:when>
+								<c:otherwise>
+									<p class="lead" style="font-size: 15px; margin-bottom: 0px;"><s:message code="ui.register.expl" text="ui.register.expl" /></p>
+								</c:otherwise>
+							</c:choose>
 						</div>
 						<div class="<%=usernameControlGroup%>">
 							<label class="control-label"> <s:message
