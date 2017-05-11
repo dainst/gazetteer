@@ -81,24 +81,106 @@
 		</dd>
 		<br/>
 	</span>
-	
-	<span ng-hide="!place.tags">
-		<dt><s:message code="domain.place.tags" text="domain.place.tags" /></dt>
+
+    <span ng-hide="!place.unlocatable && (!place.prefLocation || !((place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0) || place.prefLocation.shape))">
+		<dt><s:message code="domain.place.locations" text="domain.place.locations" /></dt>
 		<dd>
-			<span ng-repeat="tag in place.tags">
-				<a class="label label-info" href="#!/search?q=%7B%22bool%22%3A%7B%22must%22%3A%5B%7B%22match%22%3A%7B%22tags%22%3A%22{{tag}}%22%7D%7D%5D%7D%7D&type=extended">{{tag}}</a>&nbsp; 
+			<span ng-show="place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0" ng-show="location.coordinates" ng-mouseover="showPrefLocationMarker(); setHighlight(place.gazId, 'prefLocation', 0)" ng-mouseout="hidePrefLocationMarker(); setHighlight(null, null, null)">
+				<span class="icon-map-marker" style="margin-right: 5px; cursor: default; color: #FD7567; text-shadow: 1px 1px 1px #000000;"></span>
+				<span style="text-decoration:none; border-bottom: 1px dotted black; cursor: pointer;">
+					<em><s:message code="domain.location.latitude" text="domain.location.latitude" />: </em>{{place.prefLocation.coordinates[1]}},
+					<em><s:message code="domain.location.longitude" text="domain.location.longitude" />: </em>{{place.prefLocation.coordinates[0]}}</span>
+					<a data-toggle="modal" href="#copyCoordinatesModal" ng-click="setCopyCoordinates(place.prefLocation.coordinates)"><i class="icon-share" style="font-size:0.7em"></i></a>
+					<span ng-show="place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0 && place.prefLocation.altitude">,</span>
+					<span ng-show="place.prefLocation.altitude"><em><s:message code="domain.location.altitude" text="domain.location.altitude" />: </em>{{place.prefLocation.altitude}} m</span>
+					<span ng-show="place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0 && !place.prefLocation.publicSite">
+						<sec:authorize access="hasRole('ROLE_USER')">
+							<span ng-show="place.limitedReadAccess">
+								(<span><s:message code="domain.location.rounded" text="domain.location.rounded" /> <i class="icon-info-sign" style="color: #5572a1; cursor: pointer;" gaz-tooltip="'ui.place.protected-site-group-info'"></i></span>)
+							</span>
+                            <span ng-hide="place.limitedReadAccess">
+								(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />:</em>
+								<span gaz-translate="'location.confidence.'+place.prefLocation.confidence"></span>)
+							</span>
+                        </sec:authorize>
+						<sec:authorize access="!hasRole('ROLE_USER')">
+                            (<span><s:message code="domain.location.rounded" text="domain.location.rounded" /> <i class="icon-info-sign" style="color: #5572a1; cursor: pointer;" gaz-tooltip="'ui.place.protected-site-login-info'"></i></span>)
+                        </sec:authorize>
+					</span>
+					<span ng-hide="!place.prefLocation.publicSite">
+						(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />: </em>
+						<span gaz-translate="'location.confidence.'+place.prefLocation.confidence"></span>)
+					</span>
+					<br ng-show="(place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0) || place.prefLocation.altitude"/>
+				</span>
 			</span>
-		</dd>
+    <span ng-show="place.unlocatable" gaz-translate="'place.unlocatable'"></span>
+    <span ng-show="place.prefLocation.shape" ng-mouseover="setHighlight(place.gazId, 'polygon', -1)" ng-mouseout="setHighlight(null, null, null)"><span class="polygon-icon" style="margin-right: 5px;"></span><em style="text-decoration:none; border-bottom: 1px dotted black; cursor: pointer;"><s:message code="domain.location.polygonSpecified" text="domain.location.polygonSpecified" /></em></span>
+    </dd>
+    <span ng-hide="!place.locations">
+			<br />
+			<dt><s:message code="domain.place.otherLocations" text="domain.place.otherLocations" /></dt>
+			<dd>
+					<div ng-repeat="location in place.locations">
+						<span style="cursor: default;"><span class="icon-map-marker" style="color: #FFA9A1; text-shadow: 1px 1px 1px #000000; margin-right: 3px;"></span>{{$index + 1}}</span>
+						<span ng-show="location.coordinates" ng-mouseover="setHighlight(place.gazId, 'alternativeLocation', $index)" ng-mouseout="setHighlight(null, null, null)" style="text-decoration:none; border-bottom: 1px dotted black; cursor: pointer; margin-left: 3px;">
+							<em><s:message code="domain.location.latitude" text="domain.location.latitude" />: </em>{{location.coordinates[1]}},&nbsp;
+							<em><s:message code="domain.location.longitude" text="domain.location.longitude" />: </em>{{location.coordinates[0]}}</span>
+							<a data-toggle="modal" href="#copyCoordinatesModal" ng-click="setCopyCoordinates(location.coordinates)"><i class="icon-share" style="font-size:0.7em"></i></a><span ng-show="location.coordinates && location.altitude">,&nbsp;</span>
+						<span ng-show="location.altitude"><em><s:message code="domain.location.altitude" text="domain.location.altitude" />: </em>{{location.altitude}} m</span><span ng-show="(location.coordinates || location.altitude) && location.shape">,</span>
+						<em ng-show="location.shape" ng-mouseover="setHighlight(place.gazId, 'polygon', $index)" ng-mouseout="setHighlight(null, null, null)" style="text-decoration:none; border-bottom: 1px dotted black; cursor: pointer;"><s:message code="domain.location.polygonSpecified" text="domain.location.polygonSpecified" /></em>
+						<span ng-show="!location.publicSite">
+							<sec:authorize access="hasRole('ROLE_USER')">
+                                (<em><s:message code="domain.location.confidence" text="domain.location.confidence" />:</em>
+                                <span gaz-translate="'location.confidence.'+location.confidence"></span>)
+                            </sec:authorize>
+							<sec:authorize access="!hasRole('ROLE_USER')">
+                                (<span><s:message code="domain.location.rounded" text="domain.location.rounded" /> <i class="icon-info-sign" style="color: #5572a1; cursor: pointer;" gaz-tooltip="'ui.place.protected-site-info'"></i></span>)
+                            </sec:authorize>
+						</span>
+						<span ng-hide="!location.publicSite">
+							(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />:</em>
+							<span gaz-translate="'location.confidence.'+location.confidence"></span>)
+						</span>
+					</div>
+			</dd>
+		</span>
+    <br />
+    </span>
+
+    <span ng-hide="!place.types || place.types.length == 0">
+		<dt><s:message code="domain.place.type" text="domain.place.type" /></dt>
+		<c:forEach var="placeType" items="${placeTypes}">
+			<dd ng-show="hasType('${placeType}')">
+				<span gaz-tooltip="'place.types.description.' + '${placeType}'" style="padding: 5px; cursor: pointer">
+					<span gaz-translate="'place.types.' + '${placeType}'"></span>
+					<i class="icon-info-sign" style="color: #5572a1;"></i>
+				</span>
+				<br/>
+			</dd>
+        </c:forEach>
 		<br/>
 	</span>
-	
-	<span ng-hide="!place.provenance">
-		<dt><s:message code="domain.place.provenance" text="domain.place.provenance" /></dt>
+
+    <span ng-show="place.gazId && !place.accessDenied">
+		<dt><s:message code="ui.contexts" text="ui.contexts"/></dt>
 		<dd>
-			<span ng-repeat="provenanceEntry in place.provenance">
-				<a class="label label-info"  href="#!/search?q=%7B%22bool%22%3A%7B%22must%22%3A%5B%7B%22match%22%3A%7B%22provenance%22%3A%22{{provenanceEntry}}%22%7D%7D%5D%7D%7D&type=extended">{{provenanceEntry}}</a>&nbsp; 
-			</span>
-			<i class="icon-info-sign" style="color: #5572a1; cursor: pointer;" gaz-tooltip="'ui.place.provenance-info'"></i>
+			<a ng-href="https://arachne.dainst.org/search?q=places.gazetteerId:{{place.gazId}}" target="_blank">
+				<s:message code="ui.link.arachne" text="ui.link.arachne"/>
+				<i class="icon-external-link"></i>
+			</a>
+		</dd>
+		<dd ng-show="getIdsByContext('zenon-thesaurus') != false">
+			<a ng-href="http://zenon.dainst.org/Search/Results?lookfor={{getZenonSearchQuery()}}&type=Subject" target="_blank">
+				<s:message code="ui.link.zenon" text="ui.link.zenon"/>
+				<i class="icon-external-link"></i>
+			</a>
+		</dd>
+		<dd ng-show="getIdsByContext('pleiades') != false">
+			<a ng-href="http://pelagios.org/peripleo/map#places=http%3A%2F%2Fpleiades.stoa.org%2Fplaces%2F{{getIdsByContext('pleiades')[0]}}" target="_blank">
+				<s:message code="ui.link.pelagios" text="ui.link.pelagios"/>
+				<i class="icon-external-link"></i>
+			</a>
 		</dd>
 		<br/>
 	</span>
@@ -161,84 +243,25 @@
 			</ul>
 		</dd>
 	</span>
-	
-	<span ng-hide="!place.unlocatable && (!place.prefLocation || !((place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0) || place.prefLocation.shape))">
-		<dt><s:message code="domain.place.locations" text="domain.place.locations" /></dt>
+
+    <span ng-hide="!place.tags">
+		<dt><s:message code="domain.place.tags" text="domain.place.tags" /></dt>
 		<dd>
-			<span ng-show="place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0" ng-show="location.coordinates" ng-mouseover="showPrefLocationMarker(); setHighlight(place.gazId, 'prefLocation', 0)" ng-mouseout="hidePrefLocationMarker(); setHighlight(null, null, null)">
-				<span class="icon-map-marker" style="margin-right: 5px; cursor: default; color: #FD7567; text-shadow: 1px 1px 1px #000000;"></span>
-				<span style="text-decoration:none; border-bottom: 1px dotted black; cursor: pointer;">
-					<em><s:message code="domain.location.latitude" text="domain.location.latitude" />: </em>{{place.prefLocation.coordinates[1]}},
-					<em><s:message code="domain.location.longitude" text="domain.location.longitude" />: </em>{{place.prefLocation.coordinates[0]}}</span>
-					<a data-toggle="modal" href="#copyCoordinatesModal" ng-click="setCopyCoordinates(place.prefLocation.coordinates)"><i class="icon-share" style="font-size:0.7em"></i></a>
-					<span ng-show="place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0 && place.prefLocation.altitude">,</span>
-					<span ng-show="place.prefLocation.altitude"><em><s:message code="domain.location.altitude" text="domain.location.altitude" />: </em>{{place.prefLocation.altitude}} m</span>
-					<span ng-show="place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0 && !place.prefLocation.publicSite">
-						<sec:authorize access="hasRole('ROLE_USER')">
-							<span ng-show="place.limitedReadAccess">
-								(<span><s:message code="domain.location.rounded" text="domain.location.rounded" /> <i class="icon-info-sign" style="color: #5572a1; cursor: pointer;" gaz-tooltip="'ui.place.protected-site-group-info'"></i></span>)
-							</span>
-							<span ng-hide="place.limitedReadAccess">
-								(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />:</em>
-								<span gaz-translate="'location.confidence.'+place.prefLocation.confidence"></span>)
-							</span>
-						</sec:authorize>
-						<sec:authorize access="!hasRole('ROLE_USER')">
-							(<span><s:message code="domain.location.rounded" text="domain.location.rounded" /> <i class="icon-info-sign" style="color: #5572a1; cursor: pointer;" gaz-tooltip="'ui.place.protected-site-login-info'"></i></span>)
-						</sec:authorize>
-					</span>
-					<span ng-hide="!place.prefLocation.publicSite">
-						(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />: </em>
-						<span gaz-translate="'location.confidence.'+place.prefLocation.confidence"></span>)
-					</span>
-					<br ng-show="(place.prefLocation.coordinates && place.prefLocation.coordinates.length > 0) || place.prefLocation.altitude"/>
-				</span>
+			<span ng-repeat="tag in place.tags">
+				<a class="label label-info" href="#!/search?q=%7B%22bool%22%3A%7B%22must%22%3A%5B%7B%22match%22%3A%7B%22tags%22%3A%22{{tag}}%22%7D%7D%5D%7D%7D&type=extended">{{tag}}</a>&nbsp;
 			</span>
-			<span ng-show="place.unlocatable" gaz-translate="'place.unlocatable'"></span>
-			<span ng-show="place.prefLocation.shape" ng-mouseover="setHighlight(place.gazId, 'polygon', -1)" ng-mouseout="setHighlight(null, null, null)"><span class="polygon-icon" style="margin-right: 5px;"></span><em style="text-decoration:none; border-bottom: 1px dotted black; cursor: pointer;"><s:message code="domain.location.polygonSpecified" text="domain.location.polygonSpecified" /></em></span>
 		</dd>
-		<span ng-hide="!place.locations">
-			<br />
-			<dt><s:message code="domain.place.otherLocations" text="domain.place.otherLocations" /></dt>
-			<dd>
-					<div ng-repeat="location in place.locations">
-						<span style="cursor: default;"><span class="icon-map-marker" style="color: #FFA9A1; text-shadow: 1px 1px 1px #000000; margin-right: 3px;"></span>{{$index + 1}}</span>
-						<span ng-show="location.coordinates" ng-mouseover="setHighlight(place.gazId, 'alternativeLocation', $index)" ng-mouseout="setHighlight(null, null, null)" style="text-decoration:none; border-bottom: 1px dotted black; cursor: pointer; margin-left: 3px;">
-							<em><s:message code="domain.location.latitude" text="domain.location.latitude" />: </em>{{location.coordinates[1]}},&nbsp;
-							<em><s:message code="domain.location.longitude" text="domain.location.longitude" />: </em>{{location.coordinates[0]}}</span>
-							<a data-toggle="modal" href="#copyCoordinatesModal" ng-click="setCopyCoordinates(location.coordinates)"><i class="icon-share" style="font-size:0.7em"></i></a><span ng-show="location.coordinates && location.altitude">,&nbsp;</span>
-						<span ng-show="location.altitude"><em><s:message code="domain.location.altitude" text="domain.location.altitude" />: </em>{{location.altitude}} m</span><span ng-show="(location.coordinates || location.altitude) && location.shape">,</span>
-						<em ng-show="location.shape" ng-mouseover="setHighlight(place.gazId, 'polygon', $index)" ng-mouseout="setHighlight(null, null, null)" style="text-decoration:none; border-bottom: 1px dotted black; cursor: pointer;"><s:message code="domain.location.polygonSpecified" text="domain.location.polygonSpecified" /></em>
-						<span ng-show="!location.publicSite">
-							<sec:authorize access="hasRole('ROLE_USER')">
-								(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />:</em>
-								<span gaz-translate="'location.confidence.'+location.confidence"></span>)
-							</sec:authorize>
-							<sec:authorize access="!hasRole('ROLE_USER')">
-								(<span><s:message code="domain.location.rounded" text="domain.location.rounded" /> <i class="icon-info-sign" style="color: #5572a1; cursor: pointer;" gaz-tooltip="'ui.place.protected-site-info'"></i></span>)
-							</sec:authorize>
-						</span>
-						<span ng-hide="!location.publicSite">
-							(<em><s:message code="domain.location.confidence" text="domain.location.confidence" />:</em>
-							<span gaz-translate="'location.confidence.'+location.confidence"></span>)
-						</span>
-					</div>
-			</dd>
-		</span>
-		<br />
+		<br/>
 	</span>
-	
-	<span ng-hide="!place.types || place.types.length == 0">
-		<dt><s:message code="domain.place.type" text="domain.place.type" /></dt>
-		<c:forEach var="placeType" items="${placeTypes}">
-			<dd ng-show="hasType('${placeType}')">
-				<span gaz-tooltip="'place.types.description.' + '${placeType}'" style="padding: 5px; cursor: pointer">
-					<span gaz-translate="'place.types.' + '${placeType}'"></span>
-					<i class="icon-info-sign" style="color: #5572a1;"></i>
-				</span>
-				<br/>
-			</dd>
-		</c:forEach>
+
+    <span ng-hide="!place.provenance">
+		<dt><s:message code="domain.place.provenance" text="domain.place.provenance" /></dt>
+		<dd>
+			<span ng-repeat="provenanceEntry in place.provenance">
+				<a class="label label-info"  href="#!/search?q=%7B%22bool%22%3A%7B%22must%22%3A%5B%7B%22match%22%3A%7B%22provenance%22%3A%22{{provenanceEntry}}%22%7D%7D%5D%7D%7D&type=extended">{{provenanceEntry}}</a>&nbsp;
+			</span>
+			<i class="icon-info-sign" style="color: #5572a1; cursor: pointer;" gaz-tooltip="'ui.place.provenance-info'"></i>
+		</dd>
 		<br/>
 	</span>
 	
@@ -361,29 +384,6 @@
 			</div>
 		</div>
 	</div>
-	
-	<span ng-show="place.gazId && !place.accessDenied">
-		<dt><s:message code="ui.contexts" text="ui.contexts"/></dt>
-		<dd>
-			<a ng-href="https://arachne.dainst.org/search?q=places.gazetteerId:{{place.gazId}}" target="_blank">
-				<s:message code="ui.link.arachne" text="ui.link.arachne"/>
-				<i class="icon-external-link"></i>
-			</a>
-		</dd>
-		<dd ng-show="getIdsByContext('zenon-thesaurus') != false">
-			<a ng-href="http://zenon.dainst.org/Search/Results?lookfor={{getZenonSearchQuery()}}&type=Subject" target="_blank">
-				<s:message code="ui.link.zenon" text="ui.link.zenon"/>
-				<i class="icon-external-link"></i>
-			</a>
-		</dd>
-		<dd ng-show="getIdsByContext('pleiades') != false">
-			<a ng-href="http://pelagios.org/peripleo/map#places=http%3A%2F%2Fpleiades.stoa.org%2Fplaces%2F{{getIdsByContext('pleiades')[0]}}" target="_blank">
-				<s:message code="ui.link.pelagios" text="ui.link.pelagios"/>
-				<i class="icon-external-link"></i>
-			</a>
-		</dd>
-		<br/>
-	</span>
 	
 	<span ng-hide="!place.identifiers">
 		<dt><s:message code="domain.place.identifiers" text="domain.place.identifiers" /></dt>
