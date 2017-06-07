@@ -50,25 +50,24 @@
 	</form>
 </div>
 		
-<div class="row-fluid" style="margin-top:-220px">
-	<div class="span12">
+<div style="margin-top:-220px;">
+	<div class="span5" style="margin-left: 30px">
+		<iframe height="315" width="560"src="<s:message code="home.videoLink" text="home.videoLink" />"
+				frameborder="0" class="youtubeIframe" allowfullscreen>Introduction</iframe>
+	</div>
+	<div class="span6" style="margin-left: 80px">
 		<c:choose>
 			<c:when test="${language eq 'ar'}">
-		 		<p dir="rtl" lang="ar" class="lead"><s:message code="home.info1" text="home.info1" /></p>
-		 	</c:when>
-		 	<c:otherwise>
-		 		<p class="lead"><s:message code="home.info1" text="home.info1" /></p>
-		 	</c:otherwise>
-		 </c:choose>
+				<p dir="rtl" lang="ar" class="lead"><s:message code="home.info1" text="home.info1" /></p>
+			</c:when>
+			<c:otherwise>
+				<p class="lead"><s:message code="home.info1" text="home.info1" /></p>
+			</c:otherwise>
+		</c:choose>
 	</div>
 </div>
 
-<div>
-	<iframe height="315" width="600" src="<s:message code="home.videoLink" text="home.videoLink" />"
-		frameborder="0" class="youtubeIframe" allowfullscreen>Introduction</iframe>
-</div>
-
-<div class="row-fluid" style="margin-top: 30px;">
+<div class="row-fluid" style="padding-top:350px;">
 	<div class="span12">
 		<c:choose>
 			<c:when test="${language eq 'ar'}">
