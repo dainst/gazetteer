@@ -64,6 +64,19 @@
 	<listener>
 		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
 	</listener>
+	
+	<!-- Convert http messages to GET on FORWARD in order to prevent problems with PUT and
+		 DELETE requests on JSP pages -->
+	<filter>
+    	<filter-name>httpMethodConvertingFilter</filter-name>
+    	<filter-class>org.dainst.gazetteer.helpers.HttpMethodConvertingFilter</filter-class>
+	</filter>
+
+	<filter-mapping>
+    	<filter-name>httpMethodConvertingFilter</filter-name>
+    	<url-pattern>/*</url-pattern>
+    	<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
 
 	<!-- Processes application requests -->
 	<servlet>
