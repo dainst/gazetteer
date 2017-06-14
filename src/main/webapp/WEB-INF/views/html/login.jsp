@@ -144,7 +144,7 @@
 									code="ui.username" text="ui.username" />
 							</label>
 							<div class="controls">
-								<input type="text" name="j_username">
+								<input type="text" name="username">
 							</div>
 						</div>
 						<div class="control-group">
@@ -152,7 +152,7 @@
 									code="ui.password" text="ui.password" />
 							</label>
 							<div class="controls">
-								<input type="password" name="j_password">
+								<input type="password" name="password">
 							</div>
 						</div>
 						<div class="control-group">
