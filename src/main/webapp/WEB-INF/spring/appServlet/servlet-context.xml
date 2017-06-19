@@ -47,7 +47,7 @@
 	</bean>
 
 	<bean id="contentNegotiationManager"  class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
-
+		<property name="mediaTypes" ref="mediaTypes" />
 	</bean>
 
 	<!-- Handles HTTP GET requests for /resources/** by efficiently serving 
