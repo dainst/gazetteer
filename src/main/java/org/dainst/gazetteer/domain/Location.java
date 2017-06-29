@@ -76,7 +76,7 @@ public class Location {
 	}
 
 	public String toWKT() {
-		String wkt = "Point(" + this.getLat() + " " + this.getLng() + ")";
+		String wkt = "Point(" + this.getLng() + " " + this.getLat() + ")";
 		return wkt;
 	}
 
