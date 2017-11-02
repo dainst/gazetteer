@@ -112,7 +112,7 @@
 			<artifactId>javassist</artifactId>
 			<version>3.12.1.GA</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>javax.mail</groupId>
 			<artifactId>mail</artifactId>
@@ -200,7 +200,7 @@
 			<artifactId>spring-elasticsearch</artifactId>
 			<version>1.3.0</version>
 		</dependency>
-		
+
 		<!-- JTS -->
 		<dependency>
 			<groupId>com.vividsolutions</groupId>
@@ -214,7 +214,7 @@
 			<artifactId>json-taglib</artifactId>
 			<version>0.4.1</version>
 		</dependency>
-		
+
 		<!-- Mockito -->
 		<dependency>
 			<groupId>org.mockito</groupId>
@@ -222,7 +222,7 @@
 			<version>1.9.5</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<!-- Geotools -->
         <dependency>
             <groupId>org.geotools</groupId>
@@ -234,13 +234,13 @@
             <artifactId>gt-epsg-hsql</artifactId>
             <version>${geotools.version}</version>
         </dependency>
-        
+
         <dependency>
   			<groupId>se.jiderhamn.classloader-leak-prevention</groupId>
   			<artifactId>classloader-leak-prevention-servlet</artifactId>
   			<version>2.1.0</version>
 		</dependency>
-		
+
 		<dependency>
     		<groupId>commons-io</groupId>
     		<artifactId>commons-io</artifactId>
@@ -346,6 +346,15 @@
 					<includes>
 						<include>**/*Tests.java</include>
 					</includes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<uriEncoding>UTF-8</uriEncoding>
+          <path>/gazetteer</path>
 				</configuration>
 			</plugin>
 		</plugins>
