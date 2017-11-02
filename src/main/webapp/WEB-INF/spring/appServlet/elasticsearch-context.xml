@@ -14,9 +14,9 @@
           class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="location" value="WEB-INF/elasticsearch.properties" />
         <property name="localOverride" value="true" />
-    </bean>	
-	
-	<elasticsearch:client id="esClient" esNodes="localhost:9300"
+    </bean>
+
+	<elasticsearch:client id="esClient" esNodes="${esNodes}"
 		properties="elasticSearchConfiguration"	templates="place_template"
 		mappings="gazetteer/place" />
 
