@@ -163,7 +163,6 @@
 			</div>
 		
 			<div class="gaz-container">
-			
 				<c:if test="${userDeleted != null}">
 					<div class="alert alert-success">
 						<s:message code="ui.deleteUser.success" text="ui.deleteUser.success" arguments="${userDeleted}" />
@@ -173,7 +172,6 @@
 				<h3>
 					<s:message code="ui.userManagement" text="ui.userManagement" />
 				</h3>
-			
 				<table class="table table-condensed table-hover user-management-table">
 					<thead>
 						<tr>
