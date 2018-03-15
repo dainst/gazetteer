@@ -1,7 +1,7 @@
 baseUri=http://localhost:8080/gazetteer/
 googleMapsApiKey=
 languages=deu,eng,ita,fra,ell,lat,grc,sqi,pol,tur,ara,spa,por,zho,rus,vie,srp,egy,xmr,eus,nld,fas,cat,glg,bul,swe,hrv,srd,hun
-idTypes=arachne-entity,arachne-place,geonames,ISO 3166-1 alpha-2,zenon-thesaurus,zenon-systemnr,pleiades,AMS-Nr.,cadastral-id,GND-ID
+idTypes=arachne-entity,arachne-place,geonames,ISO 3166-1 alpha-2,zenon-thesaurus,zenon-systemnr,pleiades,AMS-Nr.,cadastral-id,GND-ID,Schn&auml;delbach-Catalognr.
 placeTypeGroups=physical-geographic,human-geographic,archaeological,building
 placeTypes=continent,island,landform,hydrography,landcover,administrative-unit,populated-place,archaeological-site,archaeological-area,building-institution
 placeTypeGroupIds=0,0,0,0,0,1,1,2,2,3
