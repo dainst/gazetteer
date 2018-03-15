@@ -1265,9 +1265,9 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, $http,
 			$scope.place.identifiers = [];
 		$scope.place.identifiers.push($scope.identifier);
 		
-		var contextValues = ["pleiades", "geonames"];
-		var baseUriValues = ["http://pleiades.stoa.org/places/", "http://sws.geonames.org/"];
-		var predicateValues = ["owl:sameAs", "owl:sameAs"];
+		var contextValues = ["pleiades", "geonames","GND-ID"];
+		var baseUriValues = ["http://pleiades.stoa.org/places/", "http://sws.geonames.org/","http://d-nb.info/gnd/"];
+		var predicateValues = ["owl:sameAs", "owl:sameAs", "owl:sameAs"];
 		
 		var contextIndex = contextValues.indexOf($scope.identifier.context);
 		if (contextIndex > -1) {
