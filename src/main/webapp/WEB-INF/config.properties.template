@@ -8,6 +8,6 @@ placeTypeGroupIds=0,0,0,0,0,1,1,2,2,3
 protectionDecimalPlaces=1
 geonamesSolrUri=
 tempDirectoryPath=
-version=${project.version}
+version=@project.version@
 mongoReplicaSet=localhost:27017
 esNodes=localhost:9300
