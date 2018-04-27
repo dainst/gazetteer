@@ -16,6 +16,12 @@
 	}
 }
 
+@media (min-width: 1440px) {
+	#idai-cookie-notice {
+		width: 98%;
+	}
+}
+
 .page-header {
 	margin-bottom: 20px;
 }
@@ -322,4 +328,12 @@ footer {
 .youtubeIframe {
 	margin: 0 auto;
 	display: block;
+}
+
+#idai-cookie-notice {
+	z-index: 10000; position:relative;
+}
+
+#cookieBtn {
+	margin-left: 20px;
 }
