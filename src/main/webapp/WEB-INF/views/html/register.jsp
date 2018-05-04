@@ -123,12 +123,14 @@
 			String lastnameControlGroup;
 			String emailControlGroup;
 			String passwordControlGroup;
+			String policyControlGroup;
 			
 			usernameControlGroup = "control-group";
 			firstnameControlGroup = "control-group";
 			lastnameControlGroup = "control-group";
 			emailControlGroup = "control-group";
-			passwordControlGroup = "control-group"; %>
+			passwordControlGroup = "control-group";
+			policyControlGroup = "control-group"; %>
 		
 			<div class="gaz-container">
 				<c:if test="${failure eq 'missingUsername'}">
@@ -179,7 +181,13 @@
 						<s:message code="ui.register.error.passwordInequality" text="ui.register.error.passwordInequality" />
 					</div>
 				</c:if>
-		
+				<c:if test="${failure eq 'policyUnconfirmed'}">
+					<% policyControlGroup = "control-group error"; %>
+					<div class="alert alert-error">
+						<s:message code="ui.register.error.policyUnconfirmed" text="ui.register.error.policyUnconfirmed" />
+					</div>
+				</c:if>
+
 				<div class="well" style="width: 550px; margin: 0 auto;">
 					<form class="form-horizontal" name="f" action="checkRegisterForm?r=${r}" accept-charset="UTF-8" method="POST">
 						<c:choose>
@@ -255,6 +263,12 @@
 							<div class="controls">
 								<input type="password" name="register_password_confirmation">
 							</div>
+						</div>
+						<div class="<%=policyControlGroup%>" id="policyConf">
+							<label class="controls checkbox inline">
+								<input type="checkbox" name="register_policy" value="Confirmed">
+								<s:message code="ui.register.policy" text="ui.register.policy" />
+							</label>
 						</div>
 						<div class="control-group">
 							<label class="control-label">

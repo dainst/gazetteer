@@ -107,6 +107,7 @@ public class UserManagementController {
 		String email = request.getParameter("register_email");
 		String password = request.getParameter("register_password");
 		String passwordConfirmation = request.getParameter("register_password_confirmation");
+		String policy = request.getParameter("register_policy");
 		
 		if (username.equals(""))
 			return returnRegisterFailure("missingUsername", request, r, model);
@@ -131,7 +132,10 @@ public class UserManagementController {
 		
 		if (!password.equals(passwordConfirmation))
 			return returnRegisterFailure("passwordInequality", request, r, model);
-		
+
+		if (policy == null)
+			return returnRegisterFailure("policyUnconfirmed", request, r, model);
+
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 		authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 
