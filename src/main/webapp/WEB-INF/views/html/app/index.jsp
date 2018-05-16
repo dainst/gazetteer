@@ -32,7 +32,6 @@
 	<script src="../resources/js/lib/angular/ui-bootstrap-custom-0.4.0.min.js"></script>
 	<script src="../resources/js/lib/showdown/showdown.min.js"></script>
 	<script src="../resources/js/lib/ngShowdown/ng-showdown.min.js"></script>
-	<script src="../resources/js/idai-cookie-notice.js"></script>
 	
 	<!-- Piwik -->
 	<script type="text/javascript">
@@ -277,6 +276,7 @@
 	<script src="../resources/js/filters.js"></script>
 	<script src="../resources/js/directives.js"></script>
 	<script src="../resources/js/i18n/messages_${language}.js"></script>
+	<script src="../resources/js/idai-cookie-notice.js"></script>
 	
 
 	
