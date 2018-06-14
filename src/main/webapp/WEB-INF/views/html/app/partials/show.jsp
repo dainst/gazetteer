@@ -384,18 +384,24 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<span ng-hide="!place.identifiers">
 		<dt><s:message code="domain.place.identifiers" text="domain.place.identifiers" /></dt>
-		<dd ng-repeat="identifier in place.identifiers | orderBy:['context','value']">
+		<dd ng-repeat="identifier in place.identifiers | orderBy:['context','value'] | limitTo: idsDisplayed">
 			<em>{{identifier.context}}:</em> {{identifier.value}}
+		</dd>
+		<dd ng-show="place.identifiers.length > 3">
+			<a href="" ng-click="changeNumberOfDisplayedIds()">
+				<small ng-show="idsDisplayed == 3">(<span gaz-translate="'ui.place.names.more'"></span>)</small>
+				<small ng-hide="idsDisplayed == 3">(<span gaz-translate="'ui.place.names.less'"></span>)</small>
+			</a>
 		</dd>
 		<br/>
 	</span>
-	
+
 	<span ng-hide="!place.links">
 		<dt><s:message code="domain.place.links" text="domain.place.links" /></dt>
-		<dd ng-repeat="link in place.links | orderBy:['predicate','object']">
+		<dd ng-repeat="link in place.links | orderBy:['predicate','object'] | limitTo: linksDisplayed">
 			<div ng-hide="link.description">
 				<em>{{link.predicate}}:</em>
 				<a ng-href="{{link.object}}" target="_blank">{{decodeUri(link.object)}}</a>
@@ -404,6 +410,12 @@
 				<a ng-href="{{link.object}}" target="_blank">{{link.description}}</a>
 				<i class="icon-info-sign" style="color: #5572a1; cursor: pointer;" gaz-text-tooltip="link.predicate + ': ' + decodeUri(link.object)"></i>
 			</div>
+		</dd>
+		<dd ng-show="place.links.length > 3">
+			<a href="" ng-click="changeNumberOfDisplayedLinks()">
+				<small ng-show="linksDisplayed == 3">(<span gaz-translate="'ui.place.names.more'"></span>)</small>
+				<small ng-hide="linksDisplayed == 3">(<span gaz-translate="'ui.place.names.less'"></span>)</small>
+			</a>
 		</dd>
 		<br/>
 	</span>

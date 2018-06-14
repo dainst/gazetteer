@@ -920,6 +920,8 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, $http,
 	$rootScope.subtitle = "";
 	
 	$scope.namesDisplayed = 4;
+	$scope.idsDisplayed = 3;
+	$scope.linksDisplayed = 3;
 
 	if ($routeParams.id) {
 		$rootScope.loading++;
@@ -1054,6 +1056,20 @@ function PlaceCtrl($scope, $rootScope, $routeParams, $location, $timeout, $http,
 			$scope.namesDisplayed = 10000;
 		else
 			$scope.namesDisplayed = 4;
+	};
+
+	$scope.changeNumberOfDisplayedIds = function() {
+		if ($scope.idsDisplayed == 3)
+			$scope.idsDisplayed = 10000;
+		else
+			$scope.idsDisplayed = 3;
+	};
+
+	$scope.changeNumberOfDisplayedLinks = function() {
+		if ($scope.linksDisplayed == 3)
+			$scope.linksDisplayed = 10000;
+		else
+			$scope.linksDisplayed = 3;
 	};
 
 	$scope.prevChildren = function() {
