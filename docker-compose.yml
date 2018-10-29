@@ -1,0 +1,50 @@
+version: '3.1'
+
+services:
+
+  mongodb:
+    container_name: gazetteer_mongodb
+    image: mongo:4.0
+    volumes:
+      - ./mongodb/docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/
+      - ./src/test/resources:/docker-entrypoint-initdb.d/data
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_INITDB_DATABASE: gazetteer
+    command: ["--replSet", "rs0"]
+    networks:
+    - gazetteer
+
+  mongo-connector:
+    container_name: gazetteer_mongo-connector
+    build:
+      context: ./mongo-connector
+    volumes:
+      - ./mongo-connector/docker-entrypoint.sh:/docker-entrypoint.sh
+    environment:
+      MONGO_USER: ${MONGO_USER}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_INITDB_DATABASE: gazetteer
+    networks:
+    - gazetteer
+
+  elasticsearch:
+    container_name: gazetteer_elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.4.2
+    environment:
+      - cluster.name="gazetteer.dainst.org"
+      - discovery.type=single-node
+    ports:
+      - 9200:9200
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    networks:
+      - gazetteer
+
+volumes:
+  esdata:
+    driver: local
+
+networks:
+  gazetteer:
