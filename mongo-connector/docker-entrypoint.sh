@@ -1,7 +1,7 @@
 #!/bin/sh
 
-mongo-connector -m gazetteer_mongodb:27017 \
-                -t gazetteer_elasticsearch:9200 \
+mongo-connector -m $MONGO_CONTAINER_NAME:27017 \
+                -t $ELASTICSEARCH_CONTAINER_NAME:9200 \
                 -d elastic2_doc_manager \
                 -a $MONGO_USER \
                 -p $MONGO_PASSWORD

@@ -2,17 +2,18 @@ version: '3.1'
 
 services:
 
-  mongodb:
-    container_name: gazetteer_mongodb
+  mongo:
+    container_name: gazetteer_mongo
     image: mongo:4.0
     volumes:
-      - ./mongodb/docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/
+      - ./mongodb/docker-entrypoint.sh:/docker-entrypoint.sh
+      - ./mongodb/docker-entrypoint-initdb.d/seed_data.sh:/docker-entrypoint-initdb.d/seed_data.sh
       - ./src/test/resources:/docker-entrypoint-initdb.d/data
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
       MONGO_INITDB_DATABASE: gazetteer
-    command: ["--replSet", "rs0"]
+    entrypoint: /docker-entrypoint.sh
     networks:
     - gazetteer
 
@@ -25,7 +26,8 @@ services:
     environment:
       MONGO_USER: ${MONGO_USER}
       MONGO_PASSWORD: ${MONGO_PASSWORD}
-      MONGO_INITDB_DATABASE: gazetteer
+      MONGO_CONTAINER_NAME: gazetteer_mongo
+      ELASTICSEARCH_CONTAINER_NAME: gazetteer_elasticsearch
     networks:
     - gazetteer
 
