@@ -21,8 +21,8 @@ if [ ! -f /data/db/.metadata/.replicaset ]; then
   touch /data/db/.metadata/.replicaset
 
   echo "Importing dummy data..."
-  mongoimport --db gazetteer --collection place --file /docker-entrypoint-initdb.d/data/test_places.jsonl
-  mongoimport --db gazetteer --collection user --file /docker-entrypoint-initdb.d/data/test_users.jsonl
+  mongoimport --db $MONGO_INITDB_DATABASE --collection place --file /docker-entrypoint-initdb.d/data/test_places.jsonl
+  mongoimport --db $MONGO_INITDB_DATABASE --collection user --file /docker-entrypoint-initdb.d/data/test_users.jsonl
 
   mongod --shutdown && mongod --replSet rs0 --dbpath /data/db --bind_ip_all
 else
