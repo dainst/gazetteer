@@ -63,6 +63,9 @@ Erstellte Container löschen (inklusive ElasticSearch Index und MongoDB Daten):
 docker-compose down -v
 ```
 
+Anschließend muss "127.0.0.1 gazetteer_mongo" noch als host auf dem System angelegt werden. Unter Linux/Mac OSX 
+findet sich die Konfigurationsdatei unter `/etc/hosts`. Siehe auch: https://de.wikipedia.org/wiki/Hosts_(Datei).
+
 ### Konfiguration: Hauptanwendung (Java/Tomcat)
 
 Vor dem Start muss sichergestellt werden, dass die nötigen Konfigurationsdateien vorhanden sind:
