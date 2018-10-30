@@ -39,11 +39,6 @@ services:
     container_name: gazetteer_elasticsearch
     build:
       context: ./elasticsearch
-    # image: elasticsearch:1
-    environment:
-      # - cluster.name=gazetteer.dainst.org             # only valid for official 5.x image
-      - discovery.type=single-node
-      - xpack.security.enabled=false
     ports:
       - 9200:9200
       - 9300:9300

@@ -175,6 +175,7 @@ cluster.name: gazetteer.dainst.org
 
 script.engine.groovy.inline.aggs: on
 script.engine.groovy.inline.search: on
+script.engine.groovy.inline.mapping: on
 
 ################################### Memory ####################################
 
