@@ -12,7 +12,7 @@ curl http://$ELASTICSEARCH_CONTAINER_NAME:9300/gazetteer/ -X PUT -H "Content-Typ
 echo "Starting connector..."
 mongo-connector -m $MONGO_CONTAINER_NAME:27017 \
                 -t $ELASTICSEARCH_CONTAINER_NAME:9200 \
-                -d elastic2_doc_manager \
+                -d elastic_doc_manager \
                 -a $MONGO_ROOT_USER \
                 -p $MONGO_ROOT_PASSWORD
 
