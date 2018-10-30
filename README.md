@@ -20,44 +20,50 @@ Einbinden von Tomcat:
 Unter "Preferences -> Build, Execution, Deployment -> Application Servers -> Add Apllication Server -> Tomcat Server"
 kann das Verzeichnis einer binären Distribution von Tomcat angegeben werden.  
 
-### Test VM
+### Konfiguration: MongoDB und Elasticsearch
 
-Mongodb und Elasticsearch können mit Hilfe von [Test Kitchen](http://kitchen.ci/) in einer lokalen VM angelegt werden. 
+MongoDB und Elasticsearch können mit Docker bzw. docker-compose automatisch erstellt werden.
 
-Folgende Tools müssen dafür installiert sein:
-* [VirtualBox](https://www.virtualbox.org/)
-* [Vagrant](http://www.vagrantup.com/)
-* [Bundler](http://bundler.io/)
+Vorraussetzungen
+* [Docker](https://www.docker.com/)
+* [docker-compose](https://docs.docker.com/compose/)
 
-Installation z.B. mit [Homebrew](http://brew.sh/index_de.html): 
+Das .env_template enthält die von docker-compose benötigten Variablen (Accountdaten für die MongoDB), um es nutzen zu 
+können muss es in .env umbenannt werden:
+
 ```bash
-brew cask install virtualbox
-brew cask install vagrant
-gem install bundler
-
+cp .env_template .env
 ```
 
-Gazetteer-Repository klonen bzw. den von STS oder IntelliJ Projekt Pfad verwendeten Pfad verwenden. Anschließend im Wurzelordner VM erstellen<sup>1</sup> und starten. Bundle erstellt die notwendigen Dependencies. Die Kitchen Config Datei liegt bereits im Github Repo vor, weswegen sie nicht weiter initiiert werden muss.
+Für ein permanent laufenden Testsystem sollten die Accountdaten entsprechend angepasst/geändert werden. Anschließend
+die Docker Images bauen mit:
+
 ```bash
-bundle install
-kitchen create
-kitchen converge
+docker-compose build
 ```
 
-Login auf dem virtuellen Server mit `sudo kitchen login`.
-
-Auf dem Server ein Replica Set für die Synchronisierung von MongoDB und Elasticsearch in der MongoDB anlegen:
+Um aus den gebauten Images dann Docker Container zu erstellen und zu starten:
 ```bash
-mongo gazetteer --eval 'rs.initiate({ _id : "rs0", members : [ { _id : 0, host : "localhost:27017" } ] })'
+docker-compose up
 ```
 
-Auf dem Server ggf. Testdaten laden:
+Um die Container zu stoppen:
+CTRL + C oder
 ```bash
-mongoimport --db gazetteer --collection place --file synced_folders/src/test/resources/test_places.jsonl
-mongoimport --db gazetteer --collection user --file synced_folders/src/test/resources/test_users.jsonl
+docker-compose stop
 ```
 
-### Konfiguration
+Wieder starten mit:
+```bash
+docker-compose start
+```
+
+Erstellte Container löschen (inklusive ElasticSearch Index und MongoDB Daten):
+```bash
+docker-compose down -v
+```
+
+### Konfiguration: Hauptanwendung (Java/Tomcat)
 
 Vor dem Start muss sichergestellt werden, dass die nötigen Konfigurationsdateien vorhanden sind:
 
@@ -73,11 +79,10 @@ z.B. Anpassen des Speicherpfades der Logdatei, da ggfs. in template Pfad keine S
 <appender name="file" class="org.apache.log4j.DailyRollingFileAppender">
    <param name="file" value="/Users/[USERNAME]/gazetteer.log" />
 ```
-Anschließend kann die erste Indizierung (und Einrichtung des MongoDB-Rivers) angestoßen werden:
-```bash
-curl -XPOST http://admin:adminpassword@localhost:8080/gazetteer/admin/reindex
-```
 
+ACHTUNG: Falls in der .env Datei von docker-compose (s.o.) Änderungen bei MONGO_USER bzw. MONGO_PASSWORD vorgenommen
+wurden, müssen diese Daten zusätzlich unter `./src/main/webapp/WEB-INF/spring/appServlet/persistence-context.xml` 
+angepasst werden.
 
 ## Architektur
 
@@ -94,36 +99,3 @@ Das WAR-File kann mit folgendem Befehl erstellt werden:
 `mvn clean package`
 
 Das resultierende Web-Archiv kann dann in einem beliebigen Servlet-Container deployt werden.
-
-## Troubleshooting
-
-##### <sup>1</sup> `kitchen create` Error
-
-Fehlermeldung:
-
-```
->>>>>> ------Exception-------
->>>>>> Class: Kitchen::ActionFailed
->>>>>> Message: 1 actions failed.
->>>>>>     Failed to complete #create action: [Expected process to exit with [0], but received '1'
----- Begin output of vagrant up --no-provision --provider virtualbox ----
-STDOUT: Bringing machine 'default' up with 'virtualbox' provider...
-==> default: Box 'bento/ubuntu-14.04' could not be found. Attempting to find and install...
-    default: Box Provider: virtualbox
-    default: Box Version: >= 0
-STDERR: The box 'bento/ubuntu-14.04' could not be found or
-could not be accessed in the remote catalog. If this is a private
-box on HashiCorp's Atlas, please verify you're logged in via
-'vagrant login'. Also, please double-check the name. The expanded
-URL and error message are shown below:
-
-URL: ["https://atlas.hashicorp.com/bento/ubuntu-14.04"]
-Error:
----- End output of vagrant up --no-provision --provider virtualbox ----
-Ran vagrant up --no-provision --provider virtualbox returned 1] on default-ubuntu-1404
->>>>>> ----------------------
->>>>>> Please see .kitchen/logs/kitchen.log for more details
->>>>>> Also try running 'kitchen diagnose --all' for configuration
-```
-
-Lösung: Die von Vagrant mitgelieferte curl Version löschen (bzw. umbenennen): `sudo mv /opt/vagrant/embedded/bin/curl /opt/vagrant/embedded/bin/curl_backup`
