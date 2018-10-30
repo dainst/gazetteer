@@ -9,8 +9,10 @@ services:
       - ./mongo/docker-entrypoint.sh:/docker-entrypoint.sh
       - ./src/test/resources:/docker-entrypoint-initdb.d/data
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+      MONGO_USER: ${MONGO_USER}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
       MONGO_INITDB_DATABASE: gazetteer
     ports:
       - 27017:27017
@@ -26,8 +28,8 @@ services:
       - ./mongo-connector/docker-entrypoint.sh:/docker-entrypoint.sh
       - ./src/main/resources/es/_template/place_template.json:/mappings/place_template.json
     environment:
-      MONGO_USER: ${MONGO_USER}
-      MONGO_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_ROOT_USER: ${MONGO_ROOT_USER}
+      MONGO_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
       MONGO_CONTAINER_NAME: gazetteer_mongo
       ELASTICSEARCH_CONTAINER_NAME: gazetteer_elasticsearch
     networks:
@@ -42,6 +44,7 @@ services:
       - xpack.security.enabled=false
     ports:
       - 9200:9200
+      - 9300:9300
     networks:
       - gazetteer
 

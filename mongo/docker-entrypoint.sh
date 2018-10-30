@@ -24,6 +24,8 @@ if [ ! -f /data/db/.metadata/.replicaset ]; then
   mongoimport --db $MONGO_INITDB_DATABASE --collection place --file /docker-entrypoint-initdb.d/data/test_places.jsonl
   mongoimport --db $MONGO_INITDB_DATABASE --collection user --file /docker-entrypoint-initdb.d/data/test_users.jsonl
 
+  mongo gazetteer --eval "db.createUser({user:'$MONGO_USER',pwd:'$MONGO_PASSWORD',roles:[{role:'dbOwner',db:'gazetteer'}]})"
+
   mongod --shutdown && mongod --replSet rs0 --dbpath /data/db --bind_ip_all
 else
   mongod --replSet rs0 --dbpath /data/db --bind_ip_all
