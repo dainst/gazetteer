@@ -12,8 +12,6 @@ echo ""
 echo "Starting connector..."
 mongo-connector -m $MONGO_CONTAINER_NAME:27017 \
                 -t $ELASTICSEARCH_CONTAINER_NAME:9200 \
-                -d elastic_doc_manager \
-                -a $MONGO_ROOT_USER \
-                -p $MONGO_ROOT_PASSWORD
+                -d elastic_doc_manager
 
-cat /mongo-connector.log # Only used for debugging
+cat /mongo-connector.log # Print log if mongo-connector should crash at some point

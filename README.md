@@ -83,10 +83,6 @@ z.B. Anpassen des Speicherpfades der Logdatei, da ggfs. in template Pfad keine S
    <param name="file" value="/Users/[USERNAME]/gazetteer.log" />
 ```
 
-ACHTUNG: Falls in der .env Datei von docker-compose (s.o.) Änderungen bei MONGO_USER bzw. MONGO_PASSWORD vorgenommen
-wurden, müssen diese Daten zusätzlich unter `./src/main/webapp/WEB-INF/spring/appServlet/persistence-context.xml` 
-angepasst werden.
-
 ## Architektur
 
 Backend (Java/SpringMVC) und Frontend (Javascript/AngularJS) werden im gleichen Projekt verwaltet. Der Quellcode des Backends liegt unter _src/main/java_, der des Frontends unter _src/main/webapp/resources/js_. Die AngularJS Views werden durch JSPs generiert und liegen unter _src/main/webapp/WEB-INF/views/html/partials_. Zusätzlich liegen unter _src/main/scripts_ einige in Ruby geschriebene Skripte für den Im- und Export für spezifische Projekte.

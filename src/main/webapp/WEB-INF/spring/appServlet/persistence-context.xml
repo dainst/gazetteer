@@ -21,12 +21,6 @@
 		<property name="writeResultChecking" value="EXCEPTION" />
 		<constructor-arg ref="mongo" />
 		<constructor-arg name="databaseName" value="gazetteer" />
-		<constructor-arg name="userCredentials" ref="mongoCredentials"/>
-	</bean>
-
-	<bean id="mongoCredentials" class="org.springframework.data.authentication.UserCredentials">
-		<constructor-arg value="gazetteer" /> <!-- set according to your Docker .env file's MONGO_USER -->
-		<constructor-arg value="gazetteer" /> <!-- set according to your Docker .env file's MONGO_PASSWORD -->
 	</bean>
 
 	<bean id="idGenerator" class="org.dainst.gazetteer.helpers.MongoBasedIncrementingIdGenerator">
