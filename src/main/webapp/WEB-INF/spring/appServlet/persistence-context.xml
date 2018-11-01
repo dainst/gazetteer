@@ -18,9 +18,9 @@
 	<mongo:mongo id="mongo" replica-set="${mongoReplicaSet}" />
 
 	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+		<property name="writeResultChecking" value="EXCEPTION" />
 		<constructor-arg ref="mongo" />
 		<constructor-arg name="databaseName" value="gazetteer" />
-		<property name="writeResultChecking" value="EXCEPTION" />
 	</bean>
 
 	<bean id="idGenerator" class="org.dainst.gazetteer.helpers.MongoBasedIncrementingIdGenerator">

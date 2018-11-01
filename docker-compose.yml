@@ -1,0 +1,47 @@
+version: '3.1'
+
+services:
+
+  mongo:
+    container_name: gazetteer_mongo
+    image: mongo:4.0
+    volumes:
+      - ./mongo/docker-entrypoint.sh:/docker-entrypoint.sh
+      - ./src/test/resources:/docker-entrypoint-initdb.d/data
+    environment:
+      MONGO_INITDB_DATABASE: gazetteer
+    ports:
+      - 27017:27017
+    entrypoint: /docker-entrypoint.sh
+    networks:
+    - gazetteer
+
+  mongo-connector:
+    container_name: gazetteer_mongo-connector
+    build:
+      context: ./mongo-connector
+    volumes:
+      - ./mongo-connector/docker-entrypoint.sh:/docker-entrypoint.sh
+      - ./src/main/resources/es/_template/place_template.json:/mappings/place_template.json
+    environment:
+      MONGO_CONTAINER_NAME: gazetteer_mongo
+      ELASTICSEARCH_CONTAINER_NAME: gazetteer_elasticsearch
+    networks:
+    - gazetteer
+
+  elasticsearch:
+    container_name: gazetteer_elasticsearch
+    build:
+      context: ./elasticsearch
+    ports:
+      - 9200:9200
+      - 9300:9300
+    networks:
+      - gazetteer
+
+volumes:
+  esdata:
+    driver: local
+
+networks:
+  gazetteer:
