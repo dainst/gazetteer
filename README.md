@@ -28,13 +28,6 @@ Vorraussetzungen
 * [Docker](https://www.docker.com/)
 * [docker-compose](https://docs.docker.com/compose/)
 
-Das .env_template enthält die von docker-compose benötigten Variablen (Accountdaten für die MongoDB), um es nutzen zu 
-können muss es in .env umbenannt werden:
-
-```bash
-cp .env_template .env
-```
-
 Für ein permanent laufenden Testsystem sollten die Accountdaten entsprechend angepasst/geändert werden. Anschließend
 die Docker Images bauen mit:
 
