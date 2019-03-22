@@ -28,8 +28,7 @@ Vorraussetzungen
 * [Docker](https://www.docker.com/)
 * [docker-compose](https://docs.docker.com/compose/)
 
-Für ein permanent laufenden Testsystem sollten die Accountdaten entsprechend angepasst/geändert werden. Anschließend
-die Docker Images bauen mit:
+Die Docker Images bauen mit:
 
 ```bash
 docker-compose build
