@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.domain.Place;
+import org.dainst.gazetteer.search.ElasticSearchClientProvider;
 import org.dainst.gazetteer.search.ElasticSearchPlaceQuery;
-import org.elasticsearch.client.Client;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public class WidgetController {
 	private PlaceRepository placeDao;
 	
 	@Autowired
-	private Client client;
+	private ElasticSearchClientProvider clientProvider;
 
 	@RequestMapping(value="/widget/lib.js")
 	public ModelAndView getLibJs() {
@@ -97,9 +97,9 @@ public class WidgetController {
 			@RequestParam(defaultValue="10") int limit,
 			@RequestParam(defaultValue="0") int offset) {
 		
-		ElasticSearchPlaceQuery query = new ElasticSearchPlaceQuery(client);
+		ElasticSearchPlaceQuery query = new ElasticSearchPlaceQuery(clientProvider.getClient());
 		if (q != null) {
-			query.fuzzyLikeThisSearch(q, "names.title");
+			query.queryStringSearch(q);
 		} else {
 			query.listAll();
 		}

@@ -1,45 +1,62 @@
 package org.dainst.gazetteer.search;
 
-import org.elasticsearch.action.search.SearchRequestBuilder;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.client.Client;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.common.geo.GeoPoint;
 import org.elasticsearch.common.geo.ShapeRelation;
-import org.elasticsearch.common.geo.builders.PolygonBuilder;
-import org.elasticsearch.common.geo.builders.ShapeBuilder;
-import org.elasticsearch.index.query.FilterBuilders;
-import org.elasticsearch.index.query.GeoBoundingBoxFilterBuilder;
-import org.elasticsearch.index.query.GeoDistanceFilterBuilder;
-import org.elasticsearch.index.query.GeoPolygonFilterBuilder;
-import org.elasticsearch.index.query.GeoShapeFilterBuilder;
-import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.common.geo.builders.ShapeBuilders;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.GeoBoundingBoxQueryBuilder;
+import org.elasticsearch.index.query.GeoDistanceQueryBuilder;
+import org.elasticsearch.index.query.GeoPolygonQueryBuilder;
+import org.elasticsearch.index.query.GeoShapeQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.index.query.QueryFilterBuilder;
-import org.elasticsearch.index.query.QueryStringQueryBuilder.Operator;
-import org.elasticsearch.index.query.functionscore.script.ScriptScoreFunctionBuilder;
+import org.elasticsearch.index.query.Operator;
+import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder;
+import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder.FilterFunctionBuilder;
+import org.elasticsearch.index.query.functionscore.ScriptScoreFunctionBuilder;
+import org.elasticsearch.script.Script;
+import org.elasticsearch.script.ScriptType;
 import org.elasticsearch.search.SearchHits;
-import org.elasticsearch.search.facet.FacetBuilders;
-import org.elasticsearch.search.facet.Facets;
+import org.elasticsearch.search.aggregations.AggregationBuilders;
+import org.elasticsearch.search.aggregations.Aggregations;
+import org.elasticsearch.search.aggregations.bucket.terms.TermsAggregationBuilder;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.GeoDistanceSortBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
 import org.elasticsearch.search.sort.SortOrder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ElasticSearchPlaceQuery {
-	
-	private static final Logger logger = LoggerFactory.getLogger(ElasticSearchPlaceQuery.class);
-	
-	private SearchRequestBuilder requestBuilder;
-	private QueryBuilder queryBuilder;
-	private long totalHits = -1;
-	private Facets facets;
+import com.vividsolutions.jts.geom.Coordinate;
 
-	public ElasticSearchPlaceQuery(Client client) {
-		requestBuilder = client.prepareSearch("gazetteer").addField("_id");
+public class ElasticSearchPlaceQuery {
+
+	private static final Logger logger = LoggerFactory.getLogger(ElasticSearchPlaceQuery.class);
+
+	private RestHighLevelClient client;
+	private SearchSourceBuilder searchSourceBuilder;
+	private BoolQueryBuilder queryBuilder;
+	private long totalHits = -1;
+	private Aggregations aggregations;
+
+	public ElasticSearchPlaceQuery(RestHighLevelClient client) {
+		this.client = client;
+		this.searchSourceBuilder = new SearchSourceBuilder();
+		this.queryBuilder = QueryBuilders.boolQuery();
+
+		// client.prepareSearch("gazetteer").addField("_id");
 	}
-	
+
 	public ElasticSearchPlaceQuery metaSearch(String query) {
-		if(query == null || "".equals(query) || "*".equals(query)) listAll();
+		if (query == null || "".equals(query) || "*".equals(query))
+			listAll();
 		// _id can't be added to _all, so it's appended here, titles are
 		// added in order to boost them and prevent their score from being
 		// diminished by norms when occurring together with other fields in _all
@@ -50,146 +67,169 @@ public class ElasticSearchPlaceQuery {
 				queryString += " OR prefName.title:\"" + query + "\"^2";
 				queryString += " OR names.title:\"" + query + "\"";
 			}
-			queryBuilder = QueryBuilders.queryString(queryString).defaultField("_all").defaultOperator(Operator.AND);
+			queryBuilder.must(QueryBuilders.queryStringQuery(queryString).defaultField("_all")
+					.defaultOperator(Operator.AND));
 		}
-				
+
 		return this;
-		
+
 	}
-	
+
 	public ElasticSearchPlaceQuery extendedSearch(String jsonQuery) {
-		queryBuilder = QueryBuilders.wrapperQuery(jsonQuery);
+		queryBuilder.must(QueryBuilders.wrapperQuery(jsonQuery));
 		return this;
 	}
-	
+
 	public ElasticSearchPlaceQuery queryStringSearch(String query) {
-		queryBuilder = QueryBuilders.queryString(query).defaultField("_all");
+		queryBuilder.must(QueryBuilders.queryStringQuery(query).defaultField("_all"));
 		return this;
 	}
 
 	public ElasticSearchPlaceQuery fuzzySearch(String query) {
-		queryBuilder = QueryBuilders.fuzzyQuery("_all", query);
+		queryBuilder.must(QueryBuilders.fuzzyQuery("_all", query));
 		return this;
-	}
-
-	public ElasticSearchPlaceQuery fuzzyLikeThisSearch(String query, String... fields) {
-		queryBuilder = QueryBuilders.fuzzyLikeThisQuery(fields).likeText(query);
-		return this;		
 	}
 
 	public ElasticSearchPlaceQuery prefixSearch(String query) {
 		query = query.toLowerCase();
-		queryBuilder = QueryBuilders.boolQuery()
-				.should(QueryBuilders.termQuery("prefName.title.autocomplete", query))
-				.should(QueryBuilders.termQuery("names.title.autocomplete", query));
+		queryBuilder.should(QueryBuilders.termQuery("prefName.title.autocomplete", query))
+			.should(QueryBuilders.termQuery("names.title.autocomplete", query));
 		return this;
 	}
-	
+
 	public ElasticSearchPlaceQuery geoDistanceSearch(double lon, double lat, int distance) {
-		queryBuilder = QueryBuilders.matchAllQuery();
-		GeoDistanceFilterBuilder filterBuilder = FilterBuilders.geoDistanceFilter("prefLocation.coordinates");
-		filterBuilder.distance(Integer.toString(distance) + "km");
-		filterBuilder.point(lat, lon);
-		requestBuilder.setPostFilter(filterBuilder);
+		GeoDistanceQueryBuilder geoDistanceQueryBuilder = QueryBuilders.geoDistanceQuery("prefLocation.coordinates");
+		geoDistanceQueryBuilder.distance(Integer.toString(distance) + "km");
+		geoDistanceQueryBuilder.point(lat, lon);
+		queryBuilder.must(geoDistanceQueryBuilder);
 		return this;
 	}
-	
+
 	public ElasticSearchPlaceQuery addBoostForChildren() {
 		// places with many children should get a higher score
 		
-		queryBuilder = QueryBuilders.functionScoreQuery(queryBuilder)
-				.add(new ScriptScoreFunctionBuilder().script("_score + (1.0 - 1.0 / ( 0.001 * doc['children'].value + 1.0 ) )").lang("groovy"));
+		// TODO Fix this
+		
+		
+		/*Script script = new Script(ScriptType.INLINE, "groovy",
+				"_score + (1.0 - 1.0 / ( 0.001 * doc['children'].value + 1.0 ) )",
+				new HashMap<String, Object>());
+		
+		FilterFunctionBuilder[] functions = {
+		        new FunctionScoreQueryBuilder.FilterFunctionBuilder(
+		                queryBuilder,                
+		                new ScriptScoreFunctionBuilder(script)
+                )
+		};
+		
+		queryBuilder = QueryBuilders.boolQuery().must(QueryBuilders.functionScoreQuery(functions));*/
 		return this;
 	}
-	
+
 	public ElasticSearchPlaceQuery addSort(String field, String order) {
 		if ("asc".equals(order))
-			requestBuilder.addSort(field, SortOrder.ASC);
+			searchSourceBuilder.sort(field, SortOrder.ASC);
 		else
-			requestBuilder.addSort(field, SortOrder.DESC);
+			searchSourceBuilder.sort(field, SortOrder.DESC);
 		return this;
 	}
-	
-	public ElasticSearchPlaceQuery addFacet(String field) {
-		requestBuilder.addFacet(FacetBuilders.termsFacet(field).field(field).size(50));
+
+	public ElasticSearchPlaceQuery addTermsAggregation(String field) {
+		TermsAggregationBuilder aggregation = AggregationBuilders.terms(field).field(field + ".keyword").size(50);
+		searchSourceBuilder.aggregation(aggregation);
 		return this;
 	}
-	
+
 	public ElasticSearchPlaceQuery addGeoDistanceSort(double lon, double lat) {
-		GeoDistanceSortBuilder sortBuilder = SortBuilders.geoDistanceSort("prefLocation.coordinates");
+		GeoDistanceSortBuilder sortBuilder = SortBuilders.geoDistanceSort("prefLocation.coordinates", new GeoPoint(lat, lon));
 		sortBuilder.order(SortOrder.ASC);
-		sortBuilder.point(lat, lon);
-		requestBuilder.addSort(sortBuilder);
+		searchSourceBuilder.sort(sortBuilder);
 		return this;
 	}
-	
+
 	public ElasticSearchPlaceQuery addFilter(String filterQuery) {
-		QueryFilterBuilder filterBuilder = FilterBuilders.queryFilter(QueryBuilders.queryString(filterQuery));
-		queryBuilder = QueryBuilders.filteredQuery(queryBuilder, filterBuilder);
+		queryBuilder.filter(QueryBuilders.queryStringQuery(filterQuery));
 		return this;
 	}
-	
-	public ElasticSearchPlaceQuery addBBoxFilter(
-			double northLat, double eastLon, 
-			double southLat, double westLon) {
-		GeoBoundingBoxFilterBuilder filterBuilder = FilterBuilders.geoBoundingBoxFilter("prefLocation.coordinates")
-				.topLeft(northLat, westLon).bottomRight(southLat, eastLon);
-		queryBuilder = QueryBuilders.filteredQuery(queryBuilder, filterBuilder);
+
+	public ElasticSearchPlaceQuery addBBoxFilter(double northLat, double eastLon, double southLat, double westLon) {
+		GeoBoundingBoxQueryBuilder boundingBoxQueryBuilder = QueryBuilders
+				.geoBoundingBoxQuery("prefLocation.coordinates")
+				.setCorners(northLat, westLon, southLat, eastLon);
+		queryBuilder.filter(boundingBoxQueryBuilder);
 		return this;
 	}
-	
+
 	public ElasticSearchPlaceQuery addPolygonFilter(double[][] coordinates) {
-		GeoPolygonFilterBuilder geoPolygonFilterBuilder = FilterBuilders.geoPolygonFilter("prefLocation.coordinates");
-		PolygonBuilder polygonBuilder = ShapeBuilder.newPolygon();
+		List<GeoPoint> points = new ArrayList<GeoPoint>();
+		List<Coordinate> coords = new ArrayList<Coordinate>();
 		
 		for (double[] lngLat : coordinates) {
-			geoPolygonFilterBuilder.addPoint(lngLat[1], lngLat[0]);
-			polygonBuilder.point(lngLat[0], lngLat[1]);
+			points.add(new GeoPoint(lngLat[1], lngLat[0]));
+			coords.add(new Coordinate(lngLat[0], lngLat[1]));
 		}
 		
-		GeoShapeFilterBuilder geoShapeFilterBuilder = FilterBuilders.geoShapeFilter("prefLocation.shape", polygonBuilder, ShapeRelation.INTERSECTS);
+		try {
+			GeoPolygonQueryBuilder geoPolygonQueryBuilder = QueryBuilders.geoPolygonQuery("prefLocation.coordinates", points);
+			GeoShapeQueryBuilder geoShapeQueryBuilder = QueryBuilders.geoShapeQuery("prefLocation.shape", ShapeBuilders.newPolygon(coords));
+			geoShapeQueryBuilder.relation(ShapeRelation.INTERSECTS);
+
+			BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+			boolQueryBuilder.should(geoPolygonQueryBuilder).should(geoShapeQueryBuilder);
+			
+			queryBuilder.filter(boolQueryBuilder);
+		} catch (IOException e) {
+			logger.error("Failed to create polygon filter query for coordinates: " + coordinates, e);
+		}
 		
-		queryBuilder = QueryBuilders.filteredQuery(queryBuilder, FilterBuilders.orFilter(geoPolygonFilterBuilder, geoShapeFilterBuilder));
 		return this;
 	};
 
 	public void listAll() {
-		queryBuilder = QueryBuilders.matchAllQuery();		
+		queryBuilder.must(QueryBuilders.matchAllQuery());
 	}
-	
+
 	public ElasticSearchPlaceQuery offset(int offset) {
-		requestBuilder.setFrom(offset);
+		searchSourceBuilder.from(offset);
 		return this;
 	}
-	
+
 	public ElasticSearchPlaceQuery limit(int limit) {
-		requestBuilder.setSize(limit);
+		searchSourceBuilder.size(limit);
 		return this;
 	}
-	
+
 	public long getHits() {
 		return totalHits;
 	}
-	
-	public String[] execute() {		
-		requestBuilder.setQuery(queryBuilder);
+
+	public String[] execute() {
+		searchSourceBuilder.query(queryBuilder);
+		SearchRequest request = new SearchRequest("gazetteer");
+		request.source(searchSourceBuilder);
+		request.types("place");
 		logger.debug("Query: {}", queryBuilder.toString());
-		SearchResponse response = requestBuilder.execute().actionGet();
-		facets = response.getFacets();
-		return responseAsList(response);	
+		try {
+			SearchResponse response = client.search(request);
+			aggregations = response.getAggregations();
+			return responseAsList(response);
+		} catch (IOException e) {
+			logger.error("Error while executing search query", e);
+			return new String[0];
+		}
 	}
-	
-	public Facets getFacets() {
-		return facets;
+
+	public Aggregations getTermsAggregations() {
+		return aggregations;
 	}
-	
+
 	private String[] responseAsList(SearchResponse response) {
 		SearchHits hits = response.getHits();
 		totalHits = hits.getTotalHits();
-		String[] result = new String[hits.hits().length];
+		String[] result = new String[hits.getHits().length];
 		for (int i = 0; i < result.length; i++) {
 			result[i] = hits.getAt(i).getId();
-		}		
+		}
 		return result;
 	}
 

@@ -139,13 +139,13 @@
 						"suggest" : {
 							"type": "completion",
 							"analyzer": "default",
-							"context": {
-								"recordGroupId": {
+							"contexts": [
+								{
+									"name": "recordGroupId",
 									"type": "category",
-									"path": "recordGroupId",
-									"default": "none"
+									"path": "recordGroupId"
 								}
-							}
+							]
 						}
 	            	},
 					"include_in_all": false
@@ -165,8 +165,7 @@
 	            			"include_in_all": false
 	            		},
 						"shape": {
-							"type": "geo_shape",
-							"include_in_all": false
+							"type": "geo_shape"
 						}
 	                }
 	            },
@@ -186,8 +185,7 @@
 	            			"include_in_all": false
 	            		},
 						"shape": {
-							"type": "geo_shape",
-							"include_in_all": false
+							"type": "geo_shape"
 						}
 	                }
 	            },
@@ -326,11 +324,7 @@
 	                "type": "string",
 					"include_in_all": false
 	            }
-	        },
-			"transform" : {
-				"script": "ctx._source.suggestionNames = []; if (ctx._source['deleted'] == true) { ctx._source['prefName'] = null; ctx._source['names'] = null; ctx._source['tags'] = []; ctx._source['provenance'] = []; } else { if (ctx._source['prefName']) ctx._source['suggestionNames'] += ctx._source['prefName'].title; if (ctx._source['names']) { ctx._source['names'].each { ctx._source['suggestionNames'] += it.title; } } }",
-				"lang": "groovy"
-    		}
+	        }
 	    }
     }
 }

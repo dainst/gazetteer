@@ -19,7 +19,6 @@ import org.dainst.gazetteer.helpers.AncestorsHelper;
 import org.dainst.gazetteer.helpers.LanguagesHelper;
 import org.dainst.gazetteer.helpers.Merger;
 import org.dainst.gazetteer.match.AutoMatchService;
-import org.dainst.gazetteer.search.ElasticSearchService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,9 +57,6 @@ public class AdminController {
 	private HarvesterDefinitionRepository harvesterDefinitionDao;
 	
 	@Autowired
-	private ElasticSearchService esService;
-	
-	@Autowired
 	private Merger merger;
 	
 	@Autowired
@@ -71,16 +67,6 @@ public class AdminController {
 	
 	@Autowired
 	private LanguagesHelper languagesHelper;
-	
-	@RequestMapping(value="/admin/reindex", method=RequestMethod.POST)
-	@ResponseBody
-	public String reindex() {
-		
-		esService.reindexAllPlaces();
-		
-		return "OK: reindexing started";
-		
-	}
 	
 	@RequestMapping(value="/admin/toggleHarvester/{name}", method=RequestMethod.POST)
 	@ResponseBody
