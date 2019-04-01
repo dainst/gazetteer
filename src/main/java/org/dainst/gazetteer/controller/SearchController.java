@@ -643,7 +643,7 @@ public class SearchController {
 
 	private String buildRecordGroupFilter(User user) {
 
-		String recordGroupFilter = "_missing_:recordGroupId";
+		String recordGroupFilter = "NOT _exists_:recordGroupId";
 
 		Set<String> groupIds = new HashSet<String>();
 		List<RecordGroup> showPlacesGroups = groupDao.findByShowPlaces(true);
