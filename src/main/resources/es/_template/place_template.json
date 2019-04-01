@@ -11,10 +11,6 @@
             		"tokenizer": "keyword",
             		"filter": ["lowercase"]
             	},
-                "collation" : {
-                    "tokenizer" : "keyword",
-                    "filter" : ["collation_filter"]
-                },
                 "autocomplete": {
           			"type": "custom",
           			"tokenizer": "ngramTokenizer",
@@ -30,11 +26,6 @@
 				}
 			},
             "filter" : {
-                "collation_filter" : {
-                    "type" : "icu_collation",
-                    "language" : "de",
-                    "numeric" : true
-                },
                 "lowercase" : {
                 	"type" : "lowercase"
                 },
@@ -54,27 +45,30 @@
 	            "prefName": {
 	                "properties": {
 	                    "language": {
-	                        "type": "string",
+	                        "type": "keyword",
 	                        "include_in_all": false
 	                    },
 	                    "title": {
-	                        "type": "string",
+	                        "type": "text",
 							"omit_norms": true,
 							"fields": {
 								"raw": {
-									"type": "string",
+									"type": "text",
 									"analyzer": "raw"
 								},
 	                    		"sort": {
-									"type": "string",
-									"analyzer": "collation"
+									"type": "icu_collation_keyword",
+									"index": "false",
+									"language": "de",
+									"country": "DE",
+									"numeric": true
 								},
 								"suggest": {
 									"type": "completion",
 									"analyzer": "default"
 								},
 								"autocomplete": {
-									"type": "string",
+									"type": "text",
 									"analyzer": "autocomplete"
 								}
 							}   
@@ -86,27 +80,30 @@
 					"include_in_parent": true,
 	                "properties": {
 	                    "language": {
-	                        "type": "string",
+	                        "type": "keyword",
 							"include_in_all": false
 	                    },
 	                    "title": {
-	                        "type": "string",
+	                        "type": "text",
 							"omit_norms": true,
 							"fields": {
 								"raw": {
-									"type": "string",
+									"type": "text",
 									"analyzer": "raw"
 								},
 	                    		"sort" : {
-									"type": "string",
-									"analyzer": "collation"
+									"type": "icu_collation_keyword",
+									"index": "false",
+									"language": "de",
+									"country": "DE",
+									"numeric": true
 								},
 								"suggest" : {
 									"type": "completion",
 									"analyzer": "default"
 								},
 								"autocomplete": {
-									"type": "string",
+									"type": "text",
 									"analyzer": "autocomplete"
 								}
 							}
@@ -114,10 +111,10 @@
 	                }
 	            },
 	            "suggestionNames": {
-					"type": "string",
+					"type": "text",
 					"fields": {
 						"raw": {
-							"type": "string",
+							"type": "text",
 							"analyzer": "raw"
 						},
 						"suggest" : {
@@ -184,12 +181,12 @@
 	            	"type": "nested",
 	                "properties": {
 	                    "context": {
-	                        "type": "string",
+	                        "type": "keyword",
 							"index": "not_analyzed",
 							"include_in_all": false
 	                    },
 	                    "value": {
-	                        "type": "string",
+	                        "type": "keyword",
 	                        "index": "not_analyzed"
 	                    }
 	                }
@@ -198,16 +195,16 @@
 	            	"type": "nested",
 	                "properties": {
 	                    "object": {
-	                        "type": "string",
+	                        "type": "keyword",
 							"index": "not_analyzed"
 	                    },
 	                    "predicate": {
-	                        "type": "string",
+	                        "type": "keyword",
 							"index": "not_analyzed",
 							"include_in_all": false
 	                    },
 	                    "description": {
-	                    	"type": "string",
+	                    	"type": "keyword",
 	                    	"index": "not_analyzed"
 	                    }
 	                }
@@ -216,22 +213,22 @@
 	                "type": "boolean"
 	            },
 	            "parent": {
-	                "type": "string",
+	                "type": "keyword",
 					"include_in_all": false
 	            },
 	            "ancestors": {
-					"type": "string",
+					"type": "keyword",
 					"include_in_all": false
 	            },
 	            "relatedPlaces": {
-	            	"type": "string"
+	            	"type": "keyword"
 	            },
 	            "types": {
-	                "type": "string",
+	                "type": "keyword",
 	                "index": "not_analyzed"
 				},
 				"tags": {
-					"type": "string",
+					"type": "keyword",
 					"index": "not_analyzed",
 					"fields": {
 	               		"suggest" : {
@@ -240,7 +237,7 @@
 					}
 				},
 				"provenance": {
-					"type": "string",
+					"type": "keyword",
 					"fields": {
 	               		"suggest" : {
 							"type": "completion"
@@ -250,15 +247,15 @@
 				"comments": {
 					"properties": {
 						"text": {
-							"type": "string",
+							"type": "text",
 							"include_in_all": false
 						},
 						"language": {
-							"type": "string",
+							"type": "keyword",
 							"include_in_all": false
 						},
 						"user": {
-							"type": "string",
+							"type": "keyword",
 							"include_in_all": false
 						}
 					}
@@ -266,38 +263,38 @@
 				"commentsReisestipendium": {
 					"properties": {
 						"text": {
-							"type": "string",
+							"type": "text",
 							"include_in_all": false
 						},
 						"language": {
-							"type": "string",
+							"type": "keyword",
 							"include_in_all": false
 						},
 						"user": {
-							"type": "string",
+							"type": "keyword",
 							"include_in_all": false
 						}
 					}
 				},
 				"noteReisestipendium": {
-					"type": "string",
+					"type": "text",
 					"include_in_all": false
 				},
 				"groupInternalData": {
 					"type": "nested",
 					"properties": {
 						"text": {
-							"type": "string",
+							"type": "text",
 							"include_in_all": false
 						},
 						"groupId": {
-							"type": "string",
+							"type": "keyword",
 							"include_in_all": false
 						}
 					}
 				},
 				"recordGroupId": {
-					"type": "string",
+					"type": "keyword",
 					"include_in_all": false
 				},
 				"lastChangeDate": {
@@ -305,7 +302,7 @@
 					"include_in_all": false
 				},
 	            "_class": {
-	                "type": "string",
+	                "type": "keyword",
 					"include_in_all": false
 	            }
 	        }
