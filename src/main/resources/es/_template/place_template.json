@@ -57,14 +57,6 @@
 	                        "type": "string",
 	                        "include_in_all": false
 	                    },
-	                    "modern": {
-	                        "type": "boolean",
-	                        "include_in_all": false
-	                    },
-	                    "ordering": {
-	                    	"type": "string",
-	                    	"include_in_all": false
-	                    },
 	                    "title": {
 	                        "type": "string",
 							"omit_norms": true,
@@ -96,14 +88,6 @@
 	                    "language": {
 	                        "type": "string",
 							"include_in_all": false
-	                    },
-	                    "modern": {
-	                        "type": "boolean",
-							"include_in_all": false
-	                    },
-	                    "ordering": {
-	                    	"type": "string",
-	                    	"include_in_all": false
 	                    },
 	                    "title": {
 	                        "type": "string",
