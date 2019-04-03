@@ -228,7 +228,7 @@ services.factory('EscapingService', function() {
 			if (!text)
 				return null;
 
-			return text.replace(/[\\\/\(\)\{\}\[\]\"\'\&\+\~\-\^]/g, "\\$&");
+			return text.replace(/[\\\/\(\)\{\}\[\]\"\'\&\+\~\-\^\!]/g, "\\$&");
 		}
 	};
 });
