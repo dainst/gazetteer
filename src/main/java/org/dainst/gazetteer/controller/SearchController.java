@@ -490,12 +490,23 @@ public class SearchController {
 		}
 
 		if (polygonFilterCoordinates != null && polygonFilterCoordinates.length > 0) {
-			double[][] polygon = new double[polygonFilterCoordinates.length / 2][];
+			boolean closed = polygonFilterCoordinates[0] == polygonFilterCoordinates.length - 2
+					&& polygonFilterCoordinates[1] == polygonFilterCoordinates.length - 1;
+			
+			double[][] polygon = new double[closed ?
+					polygonFilterCoordinates.length / 2 :
+					polygonFilterCoordinates.length / 2 + 1][];
 
 			for (int i = 0; i < polygonFilterCoordinates.length / 2; i++) {
 				polygon[i] = new double[2];
 				polygon[i][0] = polygonFilterCoordinates[i * 2];
 				polygon[i][1] = polygonFilterCoordinates[i * 2 + 1];
+			}
+			
+			if (!closed) {
+				polygon[polygon.length - 1] = new double[2];
+				polygon[polygon.length - 1][0] = polygonFilterCoordinates[0];
+				polygon[polygon.length - 1][1] = polygonFilterCoordinates[1];
 			}
 
 			query.addPolygonFilter(polygon);
