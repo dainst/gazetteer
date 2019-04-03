@@ -105,7 +105,6 @@
 	            "nameSuggestions": {
 	            	"type": "completion",
 					"analyzer": "default",
-					"include_in_all": false,
 					"contexts": [
 						{
 							"name": "recordGroupId",

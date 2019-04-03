@@ -280,8 +280,15 @@ public class JsonPlaceSerializer {
 				locationNode.put("coordinates", coordinatesNode);
 			}
 			if (place.getPrefLocation().getShape() != null) {
-				ArrayNode shapeNode = createPolygonCoordinatesNode(place.getPrefLocation().getShape().getCoordinates());
-				locationNode.put("shape", shapeNode);
+				ArrayNode shapeCoordinatesNode = createPolygonCoordinatesNode(place.getPrefLocation().getShape().getCoordinates());
+				if (asIndexSource) {
+					ObjectNode shapeNode = mapper.createObjectNode();
+					shapeNode.put("type", "multipolygon");
+					shapeNode.put("coordinates", shapeCoordinatesNode);
+					locationNode.put("shape", shapeNode);
+				} else {
+					locationNode.put("shape", shapeCoordinatesNode);
+				}
 			}
 			if (place.getPrefLocation().getAltitude() != null)
 				locationNode.put("altitude", place.getPrefLocation().getAltitude());
@@ -302,8 +309,15 @@ public class JsonPlaceSerializer {
 					locationNode.put("coordinates", coordinatesNode);
 				}
 				if (location.getShape() != null) {
-					ArrayNode shapeNode = createPolygonCoordinatesNode(location.getShape().getCoordinates());
-					locationNode.put("shape", shapeNode);
+					ArrayNode shapeCoordinatesNode = createPolygonCoordinatesNode(location.getShape().getCoordinates());
+					if (asIndexSource) {
+						ObjectNode shapeNode = mapper.createObjectNode();
+						shapeNode.put("type", "multipolygon");
+						shapeNode.put("coordinates", shapeCoordinatesNode);
+						locationNode.put("shape", shapeNode);
+					} else {
+						locationNode.put("shape", shapeCoordinatesNode);
+					}
 				}
 				if (location.getAltitude() != null)
 					locationNode.put("altitude", location.getAltitude());

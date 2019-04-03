@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,9 +44,6 @@ import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.client.filter.ClientFilter;
 
-/**
- * Handles requests for the application home page.
- */
 @Controller
 public class AdminController {
 
@@ -71,6 +69,26 @@ public class AdminController {
 	
 	@Autowired
 	private LanguagesHelper languagesHelper;
+	
+	@RequestMapping(value="/admin/reindex", method=RequestMethod.POST)
+	@ResponseBody
+	public String reindex() {
+		
+		int pageSize = 100;
+		int page = 0;
+		int pagesCount = (int) Math.ceil(placeDao.count() / pageSize);
+		
+		do {
+			List<Place> places = placeDao.findAll(new PageRequest(page, pageSize)).getContent();
+			for (Place place : places) {
+				indexer.index(place);
+			}
+			page++;
+		} while (page < pagesCount);
+		
+		return "OK: reindexing completed";
+	}
+	
 	
 	@RequestMapping(value="/admin/toggleHarvester/{name}", method=RequestMethod.POST)
 	@ResponseBody
@@ -99,7 +117,6 @@ public class AdminController {
 		
 		return String.format("OK: reset %s",
 				harvesterDefinition.getName());
-		
 	}
 	
 	@RequestMapping(value="/admin/importGeonames", method=RequestMethod.POST)
@@ -185,7 +202,6 @@ public class AdminController {
 		autoMatchService.runAutoMatch(placeDao, merger);
 		
 		return "auto matching started in separate thread.";
-		
 	}
 	
 	@RequestMapping(value="/admin/calculateChildren", method=RequestMethod.POST)

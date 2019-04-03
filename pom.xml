@@ -48,7 +48,12 @@
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-mongodb</artifactId>
-			<version>1.7.1.RELEASE</version>
+			<version>1.10.20.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-commons</artifactId>
+			<version>1.13.20.RELEASE</version>
 		</dependency>
 
 		<!-- Spring security -->
