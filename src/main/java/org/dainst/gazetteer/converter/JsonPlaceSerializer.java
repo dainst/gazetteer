@@ -262,7 +262,8 @@ public class JsonPlaceSerializer {
 			placeNode.put("names", namesNode);
 		}
 		
-		if (asIndexSource) {
+		// name suggestions
+		if (asIndexSource && !place.isDeleted() && !place.isNeedsReview()) {
 			ArrayNode nameSuggestionsNode = mapper.createArrayNode();
 			for (String name : nameSuggestions) {
 				nameSuggestionsNode.add(name);
