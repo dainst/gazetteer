@@ -45,6 +45,7 @@ public class ElasticSearchPlaceQuery {
 	private BoolQueryBuilder queryBuilder;
 	private long totalHits = -1;
 	private Aggregations aggregations;
+	private boolean childrenBoost = false;
 
 	public ElasticSearchPlaceQuery(RestHighLevelClient client) {
 		this.client = client;
@@ -105,25 +106,8 @@ public class ElasticSearchPlaceQuery {
 		return this;
 	}
 
-	public ElasticSearchPlaceQuery addBoostForChildren() {
-		// places with many children should get a higher score
-		
-		// TODO Fix this
-		
-		
-		/*Script script = new Script(ScriptType.INLINE, "groovy",
-				"_score + (1.0 - 1.0 / ( 0.001 * doc['children'].value + 1.0 ) )",
-				new HashMap<String, Object>());
-		
-		FilterFunctionBuilder[] functions = {
-		        new FunctionScoreQueryBuilder.FilterFunctionBuilder(
-		                queryBuilder,                
-		                new ScriptScoreFunctionBuilder(script)
-                )
-		};
-		
-		queryBuilder = QueryBuilders.boolQuery().must(QueryBuilders.functionScoreQuery(functions));*/
-		return this;
+	public void addBoostForChildren() {		
+		childrenBoost = true;
 	}
 
 	public ElasticSearchPlaceQuery addSort(String field, String order) {
@@ -204,7 +188,11 @@ public class ElasticSearchPlaceQuery {
 	}
 
 	public String[] execute() {
-		searchSourceBuilder.query(queryBuilder);
+		
+		if (childrenBoost)
+			searchSourceBuilder.query(addChildrenBoostScriptFunction(queryBuilder));
+		else
+			searchSourceBuilder.query(queryBuilder);
 		SearchRequest request = new SearchRequest("gazetteer");
 		request.source(searchSourceBuilder);
 		request.types("place");
@@ -232,5 +220,17 @@ public class ElasticSearchPlaceQuery {
 		}
 		return result;
 	}
-
+	
+	private FunctionScoreQueryBuilder addChildrenBoostScriptFunction(BoolQueryBuilder query) {
+		// places with many children should get a higher score
+		Script script = new Script(ScriptType.INLINE, "painless",
+				"_score + (1.0 - 1.0 / ( 0.001 * doc['children'].value + 1.0 ) )",
+				new HashMap<String, Object>());
+		
+		FilterFunctionBuilder[] functions = {
+		        new FunctionScoreQueryBuilder.FilterFunctionBuilder(new ScriptScoreFunctionBuilder(script))
+		};
+		
+		return QueryBuilders.functionScoreQuery(query, functions);
+	}
 }

@@ -214,7 +214,6 @@ public class SearchController {
 		query.extendedSearch(jsonQuery);
 		query.limit(limit);
 		query.offset(offset);
-		query.addBoostForChildren();
 		query.addFilter("deleted:false");
 		query.addFilter(buildRecordGroupFilter(user));
 
@@ -224,6 +223,8 @@ public class SearchController {
 		query.addTermsAggregation("parent");
 		query.addTermsAggregation("types");
 		query.addTermsAggregation("tags");
+		
+		query.addBoostForChildren();
 
 		logger.debug("executing extended search with query: {}", jsonQuery);
 
@@ -471,7 +472,6 @@ public class SearchController {
 		if (!showHiddenPlaces)
 			query.addFilter(buildRecordGroupFilter(user));
 
-		query.addBoostForChildren();
 		query.limit(limit);
 		query.offset(offset);
 		if (sort != null && !sort.isEmpty()) {
@@ -511,6 +511,8 @@ public class SearchController {
 
 			query.addPolygonFilter(polygon);
 		}
+		
+		query.addBoostForChildren();
 
 		return query;
 	}
