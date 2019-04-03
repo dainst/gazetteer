@@ -235,9 +235,6 @@ public class AdminController {
 		int size = children.size();
 		for (Place child : children)
 			size += calculatePlaceChildren(child);
-		place.setChildren(size);
-		placeDao.save(place);
-		indexer.index(place);
 		
 		return size;
 	}
