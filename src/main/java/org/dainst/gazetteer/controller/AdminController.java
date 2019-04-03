@@ -74,7 +74,7 @@ public class AdminController {
 	@ResponseBody
 	public String reindex() {
 		
-		int pageSize = 100;
+		int pageSize = 5000;
 		int page = 0;
 		int pagesCount = (int) Math.ceil(placeDao.count() / pageSize);
 		
