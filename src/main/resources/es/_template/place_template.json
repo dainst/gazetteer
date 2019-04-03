@@ -63,10 +63,6 @@
 									"country": "DE",
 									"numeric": true
 								},
-								"suggest": {
-									"type": "completion",
-									"analyzer": "default"
-								},
 								"autocomplete": {
 									"type": "text",
 									"analyzer": "autocomplete"
@@ -77,7 +73,7 @@
 	            },
 	            "names": {
 	            	"type": "nested",
-					"include_in_parent": true,
+                	"include_in_parent": true,
 	                "properties": {
 	                    "language": {
 	                        "type": "keyword",
@@ -98,10 +94,6 @@
 									"country": "DE",
 									"numeric": true
 								},
-								"suggest" : {
-									"type": "completion",
-									"analyzer": "default"
-								},
 								"autocomplete": {
 									"type": "text",
 									"analyzer": "autocomplete"
@@ -110,26 +102,17 @@
 	                    }
 	                }
 	            },
-	            "suggestionNames": {
-					"type": "text",
-					"fields": {
-						"raw": {
-							"type": "text",
-							"analyzer": "raw"
-						},
-						"suggest" : {
-							"type": "completion",
-							"analyzer": "default",
-							"contexts": [
-								{
-									"name": "recordGroupId",
-									"type": "category",
-									"path": "recordGroupId"
-								}
-							]
+	            "nameSuggestions": {
+	            	"type": "completion",
+					"analyzer": "default",
+					"include_in_all": false,
+					"contexts": [
+						{
+							"name": "recordGroupId",
+							"type": "category",
+							"path": "recordGroupId"
 						}
-	            	},
-					"include_in_all": false
+					]
 	            },
 	            "prefLocation": {
 	            	"properties": {

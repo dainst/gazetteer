@@ -47,22 +47,8 @@ public class ElasticSearchSuggestionQuery {
 	public List<String> getSuggestions(String field, String text, boolean checkRecordGroup) {
 		
 		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
-		CompletionSuggestionBuilder suggestionBuilder = SuggestBuilders.completionSuggestion(field).text(text).size(size);
-		
-		if (checkRecordGroup) {
-			List<CategoryQueryContext> contexts = new ArrayList<CategoryQueryContext>();
-			for (String recordGroup : getAccessibleRecordGroups()) {
-				contexts.add(CategoryQueryContext.builder().setCategory(recordGroup).build());
-			}
-			
-			Map<String, List<? extends ToXContent>> map = new HashMap<String, List<? extends ToXContent>>();
-			map.put("recordGroupId", contexts);
-			
-			suggestionBuilder.contexts(map);
-		}
-		
 		SuggestBuilder suggestBuilder = new SuggestBuilder();
-		suggestBuilder.addSuggestion("suggestions", suggestionBuilder); 
+		suggestBuilder.addSuggestion(field, createSuggestionBuilder(field, text, checkRecordGroup));
 		searchSourceBuilder.suggest(suggestBuilder);
 		
 		SearchRequest request = new SearchRequest("gazetteer");
@@ -79,14 +65,34 @@ public class ElasticSearchSuggestionQuery {
 			return suggestions;
 		}
 
-		CompletionSuggestion suggestion = suggest.getSuggestion("suggestions"); 
+		CompletionSuggestion suggestion = suggest.getSuggestion(field); 
 		for (CompletionSuggestion.Entry entry : suggestion.getEntries()) { 
-		    for (CompletionSuggestion.Entry.Option option : entry) { 
-		        suggestions.add(option.getText().string());
+		    for (CompletionSuggestion.Entry.Option option : entry) {
+		    	String suggestionText = option.getText().string();
+		        if (!suggestions.contains(suggestionText)) suggestions.add(suggestionText);
 		    }
 		}
 
 		return suggestions;
+	}
+	
+	private CompletionSuggestionBuilder createSuggestionBuilder(String field, String text, boolean checkRecordGroup) {
+		
+		CompletionSuggestionBuilder suggestionBuilder = SuggestBuilders.completionSuggestion(field).text(text).size(size);
+			
+		if (checkRecordGroup) {
+			List<CategoryQueryContext> contexts = new ArrayList<CategoryQueryContext>();
+			for (String recordGroup : getAccessibleRecordGroups()) {
+				contexts.add(CategoryQueryContext.builder().setCategory(recordGroup).build());
+			}
+			
+			Map<String, List<? extends ToXContent>> map = new HashMap<String, List<? extends ToXContent>>();
+			map.put("recordGroupId", contexts);
+			
+			suggestionBuilder.contexts(map);
+		}
+		
+		return suggestionBuilder;
 	}
 	
 	private Set<String> getAccessibleRecordGroups() {

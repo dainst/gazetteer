@@ -2,6 +2,7 @@ package org.dainst.gazetteer.converter;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -214,6 +215,8 @@ public class JsonPlaceSerializer {
 			placeNode.put("types", typesNode);
 		}
 		
+		List<String> nameSuggestions = new ArrayList<String>();
+		
 		// preferred name
 		if (place.getPrefName() != null) {
 			ObjectNode prefNameNode = mapper.createObjectNode();
@@ -225,6 +228,7 @@ public class JsonPlaceSerializer {
 			if (place.getPrefName().isTransliterated())
 				prefNameNode.put("transliterated", true);
 			placeNode.put("prefName", prefNameNode);
+			nameSuggestions.add(place.getPrefName().getTitle());
 		}
 
 		// get sorted place names if locale is set
@@ -252,8 +256,18 @@ public class JsonPlaceSerializer {
 				if (sortedPlaceNames != null)
 					nameNode.put("sort", sortedPlaceNames.indexOf(name));
 				namesNode.add(nameNode);
+				if (!nameSuggestions.contains(name.getTitle()))
+					nameSuggestions.add(name.getTitle());
 			}
 			placeNode.put("names", namesNode);
+		}
+		
+		if (asIndexSource) {
+			ArrayNode nameSuggestionsNode = mapper.createArrayNode();
+			for (String name : nameSuggestions) {
+				nameSuggestionsNode.add(name);
+			}
+			placeNode.put("nameSuggestions", nameSuggestionsNode);
 		}
 		
 		// preferred location

@@ -64,7 +64,7 @@ function AppCtrl($scope, $location, $rootScope, $timeout, Place, GeoSearch, Esca
 		$scope.queryId++;
 		
 		if ($scope.q && $scope.q.length > 0) {
-			Place.suggestions({ field: "suggestionNames.suggest", text: $scope.q, queryId: $scope.queryId }, function(result) {
+			Place.suggestions({ field: "nameSuggestions", text: $scope.q, queryId: $scope.queryId }, function(result) {
 				if (result.suggestions && result.suggestions.length > 0 && result.queryId[0] == $scope.queryId)
 					$scope.searchSuggestions = result.suggestions;
 			});
@@ -220,7 +220,7 @@ function HomeCtrl($scope, $location, $rootScope, Place, EscapingService) {
 		$scope.queryId++;
 		
 		if ($scope.searchFieldInput && $scope.searchFieldInput.length > 0) {
-			Place.suggestions({ field: "suggestionNames.suggest", text: $scope.searchFieldInput, queryId: $scope.queryId }, function(result) {
+			Place.suggestions({ field: "nameSuggestions", text: $scope.searchFieldInput, queryId: $scope.queryId }, function(result) {
 				if (result.suggestions && result.suggestions.length > 0 && result.queryId[0] == $scope.queryId)
 					$scope.homeSearchSuggestions = result.suggestions;
 			});

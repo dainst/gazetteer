@@ -403,10 +403,10 @@ public class SearchController {
 	@ResponseBody
 	public Map<String, List<String>> getSuggestions(@RequestParam String field, @RequestParam String text,
 			@RequestParam String queryId) {
-
+		
 		ElasticSearchSuggestionQuery query = new ElasticSearchSuggestionQuery(clientProvider.getClient(), groupDao,
 				groupRoleDao);
-		List<String> suggestions = query.getSuggestions(field, text, field.equals("suggestionNames.suggest"));
+		List<String> suggestions = query.getSuggestions(field, text, field.equals("nameSuggestions"));
 
 		List<String> queryIdList = new ArrayList<String>();
 		queryIdList.add(queryId);
@@ -643,7 +643,7 @@ public class SearchController {
 
 	private String buildRecordGroupFilter(User user) {
 
-		String recordGroupFilter = "NOT _exists_:recordGroupId";
+		String recordGroupFilter = "recordGroupId:(none";
 
 		Set<String> groupIds = new HashSet<String>();
 		List<RecordGroup> showPlacesGroups = groupDao.findByShowPlaces(true);
@@ -659,17 +659,12 @@ public class SearchController {
 		}
 
 		if (groupIds.size() > 0) {
-			boolean first = true;
-			recordGroupFilter += " OR recordGroupId:(";
 			for (String groupId : groupIds) {
-				if (first)
-					first = false;
-				else
-					recordGroupFilter += " OR ";
-				recordGroupFilter += groupId;
+				recordGroupFilter += " OR " + groupId;
 			}
-			recordGroupFilter += ")";
 		}
+		
+		recordGroupFilter += ")";
 
 		return recordGroupFilter;
 	}
