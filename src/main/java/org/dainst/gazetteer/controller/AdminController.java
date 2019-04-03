@@ -19,6 +19,7 @@ import org.dainst.gazetteer.helpers.AncestorsHelper;
 import org.dainst.gazetteer.helpers.LanguagesHelper;
 import org.dainst.gazetteer.helpers.Merger;
 import org.dainst.gazetteer.match.AutoMatchService;
+import org.dainst.gazetteer.search.ElasticSearchIndexer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +59,9 @@ public class AdminController {
 	
 	@Autowired
 	private Merger merger;
+	
+	@Autowired
+	private ElasticSearchIndexer indexer;
 	
 	@Autowired
 	private AutoMatchService autoMatchService;
@@ -165,6 +169,7 @@ public class AdminController {
 					count++;
 					place.addProvenance("geonames");
 					placeDao.save(place);
+					indexer.index(place);
 				}
 			}
 		}
@@ -196,6 +201,7 @@ public class AdminController {
 				int size = calculatePlaceChildren(place);
 				place.setChildren(size);
 				placeDao.save(place);
+				indexer.index(place);
 			} catch (NullPointerException e) {
 				logger.warn("Could not find parent {} for {}", place.getParent(), place);
 			}
@@ -215,6 +221,7 @@ public class AdminController {
 			size += calculatePlaceChildren(child);
 		place.setChildren(size);
 		placeDao.save(place);
+		indexer.index(place);
 		
 		return size;
 	}
@@ -262,6 +269,7 @@ public class AdminController {
 			newLink.setPredicate(predicate);
 			place.addLink(newLink);
 			placeDao.save(place);
+			indexer.index(place);
 			logger.debug("Generated Link: {}", newLink);
 		}
 	}

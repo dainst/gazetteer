@@ -36,6 +36,7 @@ import org.dainst.gazetteer.helpers.LanguagesHelper;
 import org.dainst.gazetteer.helpers.PlaceAccessService;
 import org.dainst.gazetteer.helpers.PolygonValidator;
 import org.dainst.gazetteer.helpers.ProtectLocationsService;
+import org.dainst.gazetteer.search.ElasticSearchIndexer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,6 +83,9 @@ public class DocumentController {
 	
 	@Autowired
 	private ProtectLocationsService protectLocationsService;
+	
+	@Autowired
+	private ElasticSearchIndexer indexer;
 	
 	@Autowired
 	private IdGenerator idGenerator;
@@ -339,6 +343,7 @@ public class DocumentController {
 		logger.debug("created place {}", place);
 		
 		increaseChildrenCount(place);
+		indexer.index(place);
 		
 		response.setStatus(201);
 		response.setHeader("Location", baseUri + "place/" + place.getId());
@@ -386,6 +391,7 @@ public class DocumentController {
 		logger.debug("duplicated place {}", place);
 		
 		increaseChildrenCount(place);
+		indexer.index(place);
 		
 		response.setStatus(201);
 		response.setHeader("Location", baseUri + "place/" + place.getId());
@@ -465,6 +471,7 @@ public class DocumentController {
 		logger.debug("saved place {}", place);
 		
 		increaseChildrenCount(place);
+		indexer.index(place);
 		
 		response.setStatus(201);
 		response.setHeader("Location", baseUri + "place/" + place.getId());
@@ -524,9 +531,10 @@ public class DocumentController {
 		} else {			
 			place.setDeleted(true);
 			place.setLastChangeDate(new Date());
+			
 			placeDao.save(place);
-		
 			changeRecordDao.save(createChangeRecord(place, "delete"));
+			indexer.index(place);
 			
 			logger.debug("successfully deleted place " + placeId);
 		
@@ -562,6 +570,7 @@ public class DocumentController {
 			Place relatedPlace = placeDao.findOne(relatedPlaceId.replace(baseUri + "place/", ""));
 			relatedPlace.addRelatedPlace(place.getId());
 			placeDao.save(relatedPlace);
+			indexer.index(relatedPlace);
 		}
 			
 		for (String currentRelatedPlaceId : currentRelatedPlaces) {
@@ -570,6 +579,7 @@ public class DocumentController {
 				Place currentRelatedPlace = placeDao.findOne(currentRelatedPlaceId.replace(baseUri + "place/", ""));
 				currentRelatedPlace.getRelatedPlaces().remove(place.getId());
 				placeDao.save(currentRelatedPlace);
+				indexer.index(currentRelatedPlace);
 			}
 		}	
 	}
