@@ -319,7 +319,7 @@ public class SearchController {
 	}
 
 	@RequestMapping(value = "/search/shapefile", method = RequestMethod.GET)
-	public void getShapefile(@RequestParam(defaultValue = "1000000") int limit,
+	public void getShapefile(@RequestParam(defaultValue = "10000") int limit,
 			@RequestParam(defaultValue = "0") int offset, @RequestParam(required = false) String q,
 			@RequestParam(required = false) String fq, @RequestParam(required = false) String sort,
 			@RequestParam(defaultValue = "asc") String order, @RequestParam(required = false) String type,

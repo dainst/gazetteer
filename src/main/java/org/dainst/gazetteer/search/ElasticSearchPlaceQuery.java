@@ -179,6 +179,7 @@ public class ElasticSearchPlaceQuery {
 	}
 
 	public ElasticSearchPlaceQuery limit(int limit) {
+		if (limit > 10000) limit = 10000;
 		searchSourceBuilder.size(limit);
 		return this;
 	}
