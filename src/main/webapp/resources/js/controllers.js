@@ -457,7 +457,7 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages, PolygonVali
 			if ($scope.filters.coordinates)
 				filterQuery += "_exists_:prefLocation.coordinates";
 			else if ($scope.filters.noCoordinates)
-				filterQuery += "_missing_:prefLocation.coordinates";
+				filterQuery += "NOT _exists_:prefLocation.coordinates";
 			if ($scope.filters.polygon) {
 				if (filterQuery != "")
 					filterQuery += " AND ";
@@ -466,23 +466,23 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages, PolygonVali
 			else if ($scope.filters.noPolygon) {
 				if (filterQuery != "")
 					filterQuery += " AND ";
-				filterQuery += "_missing_:prefLocation.shape";
+				filterQuery += "NOT _exists_:prefLocation.shape";
 			}
 		}
 		if ($scope.filters.noTags) {
 			if (filterQuery != "")
 				filterQuery += " AND ";
-			filterQuery += "_missing_:tags";
+			filterQuery += "NOT _exists_:tags";
 		}
 		if ($scope.filters.noProvenance) {
 			if (filterQuery != "")
 				filterQuery += " AND ";
-			filterQuery += "_missing_:provenance";
+			filterQuery += "NOT _exists_:provenance";
 		}		
 		if ($scope.type == "noType") {
 			if (filterQuery != "")
 				filterQuery += " AND ";
-			filterQuery += "_missing_:types";
+			filterQuery += "NOT _exists_:types";
 		}
 		
 		var query = { "bool": { "must": queries } };
@@ -672,7 +672,7 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 			if ($scope.filters.coordinates)
 				filterQuery += "_exists_:prefLocation.coordinates";
 			else if ($scope.filters.noCoordinates)
-				filterQuery += "_missing_:prefLocation.coordinates";
+				filterQuery += "NOT _exists_:prefLocation.coordinates";
 			if ($scope.filters.polygon) {
 				if (filterQuery != "")
 					filterQuery += " AND ";
@@ -681,19 +681,19 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 			else if ($scope.filters.noPolygon) {
 				if (filterQuery != "")
 					filterQuery += " AND ";
-				filterQuery += "_missing_:prefLocation.shape";
+				filterQuery += "NOT _exists_:prefLocation.shape";
 			}
 		}
 		
 		if ($scope.search.fq) {
+			$scope.search.fq = $scope.search.fq.replace(" AND NOT _exists_:prefLocation.coordinates", "");
 			$scope.search.fq = $scope.search.fq.replace(" AND _exists_:prefLocation.coordinates", "");
+			$scope.search.fq = $scope.search.fq.replace("NOT _exists_:prefLocation.coordinates", "");
 			$scope.search.fq = $scope.search.fq.replace("_exists_:prefLocation.coordinates", "");
-			$scope.search.fq = $scope.search.fq.replace(" AND _missing_:prefLocation.coordinates", "");
-			$scope.search.fq = $scope.search.fq.replace("_missing_:prefLocation.coordinates", "");
+			$scope.search.fq = $scope.search.fq.replace(" AND NOT _exists_:prefLocation.shape", "");
 			$scope.search.fq = $scope.search.fq.replace(" AND _exists_:prefLocation.shape", "");
+			$scope.search.fq = $scope.search.fq.replace("NOT _exists_:prefLocation.shape", "");
 			$scope.search.fq = $scope.search.fq.replace("_exists_:prefLocation.shape", "");
-			$scope.search.fq = $scope.search.fq.replace(" AND _missing_:prefLocation.shape", "");
-			$scope.search.fq = $scope.search.fq.replace("_missing_:prefLocation.shape", "");
 			$scope.search.fq = $scope.search.fq.replace("unlocatable: true", "");
 				
 			if ($scope.search.fq.slice(0, 5) == " AND ")
@@ -766,14 +766,18 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 			if ($scope.search.fq.indexOf("unlocatable: true") > -1)
 				$scope.filters.unlocatable = true;
 			else {
-				if ($scope.search.fq.indexOf("_exists_:prefLocation.coordinates") > -1)
-					$scope.filters.coordinates = true;
-				else if ($scope.search.fq.indexOf("_missing_:prefLocation.coordinates") > -1)
-					$scope.filters.noCoordinates = true;
-				if ($scope.search.fq.indexOf("_exists_:prefLocation.shape") > -1)
-					$scope.filters.polygon = true;
-				else if ($scope.search.fq.indexOf("_missing_:prefLocation.shape") > -1)
-					$scope.filters.noPolygon = true;
+				if ($scope.search.fq.indexOf("_exists_:prefLocation.coordinates") > -1) {
+					if ($scope.search.fq.indexOf("NOT _exists_:prefLocation.coordinates") > -1)
+						$scope.filters.noCoordinates = true;
+					else
+						$scope.filters.coordinates = true;
+				}
+				if ($scope.search.fq.indexOf("_exists_:prefLocation.shape") > -1) {
+					if ($scope.search.fq.indexOf("NOT _exists_:prefLocation.shape") > -1)
+						$scope.filters.noPolygon = true;
+					else
+						$scope.filters.polygon = true;
+				}
 			}
 		}
 		
