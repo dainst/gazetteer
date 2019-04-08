@@ -119,7 +119,7 @@ public class ElasticSearchPlaceQuery {
 	}
 
 	public ElasticSearchPlaceQuery addTermsAggregation(String field) {
-		TermsAggregationBuilder aggregation = AggregationBuilders.terms(field).field(field + ".keyword").size(50);
+		TermsAggregationBuilder aggregation = AggregationBuilders.terms(field).field(field).size(50);
 		searchSourceBuilder.aggregation(aggregation);
 		return this;
 	}
