@@ -36,6 +36,7 @@ import org.dainst.gazetteer.search.ElasticSearchClientProvider;
 import org.dainst.gazetteer.search.ElasticSearchPlaceQuery;
 import org.dainst.gazetteer.search.ElasticSearchSuggestionQuery;
 import org.elasticsearch.search.aggregations.Aggregation;
+import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms.Bucket;
 import org.slf4j.Logger;
@@ -533,9 +534,10 @@ public class SearchController {
 	private Map<String, List<String[]>> processAggregations(ElasticSearchPlaceQuery query, Locale locale) {
 
 		Map<String, List<String[]>> result = new HashMap<String, List<String[]>>();
-		List<Aggregation> aggregations = query.getTermsAggregations().asList();
+		Aggregations aggregations = query.getTermsAggregations(); 
+		if (aggregations == null) return result;
 
-		for (Aggregation aggregation : aggregations) {
+		for (Aggregation aggregation : aggregations.asList()) {
 			List<String[]> terms = new ArrayList<String[]>();
 
 			for (Bucket bucket : ((Terms) aggregation).getBuckets()) {
