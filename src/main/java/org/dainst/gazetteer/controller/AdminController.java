@@ -76,7 +76,7 @@ public class AdminController {
 		
 		int pageSize = 1000;
 		int page = 0;
-		int pagesCount = (int) Math.ceil(placeDao.count() / pageSize);
+		int pagesCount = (int) Math.ceil((float) placeDao.count() / pageSize);
 		
 		do {
 			List<Place> places = placeDao.findAll(new PageRequest(page, pageSize)).getContent();
