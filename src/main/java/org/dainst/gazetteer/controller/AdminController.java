@@ -74,15 +74,13 @@ public class AdminController {
 	@ResponseBody
 	public String reindex() {
 		
-		int pageSize = 5000;
+		int pageSize = 1000;
 		int page = 0;
 		int pagesCount = (int) Math.ceil(placeDao.count() / pageSize);
 		
 		do {
 			List<Place> places = placeDao.findAll(new PageRequest(page, pageSize)).getContent();
-			for (Place place : places) {
-				indexer.index(place);
-			}
+			indexer.index(places);
 			page++;
 		} while (page < pagesCount);
 		
