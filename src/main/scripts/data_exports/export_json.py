@@ -19,7 +19,7 @@ if __name__ == "__main__":
 
     harvester = Harvester()
 
-    places = harvester.start()
+    places = harvester.get_data()
 
     with open(options['target'], 'w') as outfile:
         json.dump(places, outfile)

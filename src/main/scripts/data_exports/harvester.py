@@ -1,8 +1,4 @@
-import gevent.monkey as monkey
-monkey.patch_all(thread=False, select=False)
-
 import requests
-import grequests  # used for asynchronous/parallel queries
 import logging
 import math
 
@@ -39,30 +35,6 @@ class Harvester:
         elif type(e) is requests.exceptions.ConnectionError:
             return self._retry_query(e.request.url, retries_left)
 
-    def _collect_places_data(self, batch):
-        self.logger.info(f"Retrieving place data for batch #{self._processed_batches_counter + 1}...")
-        url_list = []
-        for item in batch:
-            url_list.append(f"{self._base_url}/doc/{item['gazId']}.json")
-
-        places = []
-
-        try:
-            rs = [grequests.get(url) for url in url_list]
-            responses = grequests.map(rs)
-            for response in responses:
-                if response is None:
-                    continue
-
-                response.raise_for_status()
-                place = response.json()
-                places.append(place)
-        except requests.exceptions.HTTPError as e:
-            self._handle_query_exception(e, 5)
-
-        self._processed_batches_counter += 1
-        return places
-
     def _get_batch(self, offset):
         url = f"{self._base_url}/search.json?limit={self._batch_size}&offset={offset}"
         self.logger.debug(url)
@@ -73,20 +45,29 @@ class Harvester:
         except requests.exceptions.HTTPError as e:
             self._handle_query_exception(e, 5)
 
-    def start(self):
+    def get_data(self):
+
+        self.logger.info(f"Retrieving data for batch #{self._processed_batches_counter + 1}...")
         batch = self._get_batch(0)
+        self._processed_batches_counter += 1
+
         total = batch['total']
+        places = batch['result']
 
         self.logger.info(f"{total} places in query total.")
         self.logger.info(f"Number of batches: {math.ceil(total / self._batch_size)}")
-        places = self._collect_places_data(batch['result'])
 
         if total > self._batch_size:
+
             offset = self._batch_size
+
             while offset < total:
-                batch = self._get_batch(offset)
-                places += self._collect_places_data(batch['result'])
+                self.logger.info(f"Retrieving data for batch #{self._processed_batches_counter + 1}...")
+                places += self._get_batch(offset)['result']
                 offset += self._batch_size
+
+                self._processed_batches_counter += 1
+
 
         return places
 
@@ -94,3 +75,4 @@ class Harvester:
 
         self.logger = logging.getLogger(self.__class__.__name__)
         self.logger.setLevel(logging.INFO)
+
