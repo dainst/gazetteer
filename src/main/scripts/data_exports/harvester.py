@@ -37,6 +37,10 @@ class Harvester:
 
     def _get_batch(self, offset):
         url = f"{self._base_url}/search.json?limit={self._batch_size}&offset={offset}"
+
+        if not self.polygons:
+            url += "&noPolygons=true"
+
         self.logger.debug(url)
         try:
             response = requests.get(url=url)
@@ -68,11 +72,12 @@ class Harvester:
 
                 self._processed_batches_counter += 1
 
-
         return places
 
-    def __init__(self):
+    def __init__(self, include_polygons):
 
         self.logger = logging.getLogger(self.__class__.__name__)
         self.logger.setLevel(logging.INFO)
+
+        self.polygons = include_polygons
 

@@ -12,12 +12,14 @@ logging.basicConfig(format="%(asctime)s-%(levelname)s-%(name)s - %(message)s")
 
 parser = argparse.ArgumentParser(description="Export all publicly available Gazetteer data as one JSON file.")
 parser.add_argument('-t', '--target', type=is_writable_directory, nargs='?', default="./gazetteer_export.json",
-                    help="Specificy output directory.")
+                    help="Specificy output file.")
+parser.add_argument('-p', '--polygons', action='store_true',
+                    help="Return place shape polygons, polygon data will increase export size significantly.")
 
 if __name__ == "__main__":
     options = vars(parser.parse_args())
 
-    harvester = Harvester()
+    harvester = Harvester(options['polygons'])
 
     places = harvester.get_data()
 
