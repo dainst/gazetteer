@@ -214,7 +214,8 @@
 					"index": "not_analyzed",
 					"fields": {
 	               		"suggest" : {
-							"type": "completion"
+							"type": "completion",
+							"analyzer": "raw"
 						}
 					}
 				},
@@ -222,7 +223,8 @@
 					"type": "keyword",
 					"fields": {
 	               		"suggest" : {
-							"type": "completion"
+							"type": "completion",
+							"analyzer": "raw"
 						}
 					}
 				},
