@@ -51,16 +51,14 @@ public class ElasticSearchPlaceQuery {
 		this.client = client;
 		this.searchSourceBuilder = new SearchSourceBuilder();
 		this.queryBuilder = QueryBuilders.boolQuery();
-
-		// client.prepareSearch("gazetteer").addField("_id");
 	}
 
 	public ElasticSearchPlaceQuery metaSearch(String query) {
 		if (query == null || "".equals(query) || "*".equals(query))
 			listAll();
-		// _id can't be added to _all, so it's appended here, titles are
+		// _id can't be added to all, so it's appended here, titles are
 		// added in order to boost them and prevent their score from being
-		// diminished by norms when occurring together with other fields in _all
+		// diminished by norms when occurring together with other fields in all
 		else {
 			String queryString = "(" + query + ")";
 			queryString += " OR _id:\"" + query + "\"";
@@ -68,7 +66,7 @@ public class ElasticSearchPlaceQuery {
 				queryString += " OR prefName.title:\"" + query + "\"^2";
 				queryString += " OR names.title:\"" + query + "\"";
 			}
-			queryBuilder.must(QueryBuilders.queryStringQuery(queryString).defaultField("_all")
+			queryBuilder.must(QueryBuilders.queryStringQuery(queryString).defaultField("all")
 					.defaultOperator(Operator.AND));
 		}
 
@@ -82,12 +80,12 @@ public class ElasticSearchPlaceQuery {
 	}
 
 	public ElasticSearchPlaceQuery queryStringSearch(String query) {
-		queryBuilder.must(QueryBuilders.queryStringQuery(query).defaultField("_all"));
+		queryBuilder.must(QueryBuilders.queryStringQuery(query).defaultField("all"));
 		return this;
 	}
 
 	public ElasticSearchPlaceQuery fuzzySearch(String query) {
-		queryBuilder.must(QueryBuilders.fuzzyQuery("_all", query));
+		queryBuilder.must(QueryBuilders.fuzzyQuery("all", query));
 		return this;
 	}
 

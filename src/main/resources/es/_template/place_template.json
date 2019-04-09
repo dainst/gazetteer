@@ -39,18 +39,21 @@
     "mappings" : {
 	    "place": {
 	    	"_all": {
-	    		"omit_norms": true
+	    		"enabled": false
 	    	},
 	        "properties": {
+				"all": {
+					"type": "text"
+	    		},
 	            "prefName": {
 	                "properties": {
 	                    "language": {
-	                        "type": "keyword",
-	                        "include_in_all": false
+	                        "type": "keyword"
 	                    },
 	                    "title": {
 	                        "type": "text",
 							"omit_norms": true,
+							"copy_to": "all",
 							"fields": {
 								"raw": {
 									"type": "text",
@@ -76,12 +79,12 @@
                 	"include_in_parent": true,
 	                "properties": {
 	                    "language": {
-	                        "type": "keyword",
-							"include_in_all": false
+	                        "type": "keyword"
 	                    },
 	                    "title": {
 	                        "type": "text",
 							"omit_norms": true,
+							"copy_to": "all",
 							"fields": {
 								"raw": {
 									"type": "text",
@@ -116,16 +119,13 @@
 	            "prefLocation": {
 	            	"properties": {
 	                    "confidence": {
-	                        "type": "long",
-							"include_in_all": false
+	                        "type": "long"
 	                    },
 	                    "coordinates": {
-	                        "type": "geo_point",
-							"include_in_all": false
+	                        "type": "geo_point"
 						},
 						"altitude": {
-	            			"type": "double",
-	            			"include_in_all": false
+	            			"type": "double"
 	            		},
 						"shape": {
 							"type": "geo_shape"
@@ -136,16 +136,13 @@
 	            	"type": "nested",
 	                "properties": {
 	                    "confidence": {
-	                        "type": "long",
-							"include_in_all": false
+	                        "type": "long"
 	                    },
 	                    "coordinates": {
-	                        "type": "geo_point",
-							"include_in_all": false
+	                        "type": "geo_point"
 						},
 						"altitude": {
-	            			"type": "double",
-	            			"include_in_all": false
+	            			"type": "double"
 	            		},
 						"shape": {
 							"type": "geo_shape"
@@ -153,8 +150,7 @@
 	                }
 	            },
 	            "children": {
-	                "type": "integer",
-					"include_in_all": false
+	                "type": "integer"
 	            },
 	            "deleted": {
 	                "type": "boolean"
@@ -164,12 +160,12 @@
 	                "properties": {
 	                    "context": {
 	                        "type": "keyword",
-							"index": "not_analyzed",
-							"include_in_all": false
+							"index": "not_analyzed"
 	                    },
 	                    "value": {
 	                        "type": "keyword",
-	                        "index": "not_analyzed"
+	                        "index": "not_analyzed",
+	                        "copy_to": "all"
 	                    }
 	                }
 	            },
@@ -182,12 +178,12 @@
 	                    },
 	                    "predicate": {
 	                        "type": "keyword",
-							"index": "not_analyzed",
-							"include_in_all": false
+							"index": "not_analyzed"
 	                    },
 	                    "description": {
 	                    	"type": "keyword",
-	                    	"index": "not_analyzed"
+	                    	"index": "not_analyzed",
+	                    	"copy_to": "all"
 	                    }
 	                }
 	            },
@@ -195,12 +191,10 @@
 	                "type": "boolean"
 	            },
 	            "parent": {
-	                "type": "keyword",
-					"include_in_all": false
+	                "type": "keyword"
 	            },
 	            "ancestors": {
-					"type": "keyword",
-					"include_in_all": false
+					"type": "keyword"
 	            },
 	            "relatedPlaces": {
 	            	"type": "keyword"
@@ -211,7 +205,7 @@
 				},
 				"tags": {
 					"type": "keyword",
-					"index": "not_analyzed",
+					"copy_to": "all",
 					"fields": {
 	               		"suggest" : {
 							"type": "completion",
@@ -221,6 +215,7 @@
 				},
 				"provenance": {
 					"type": "keyword",
+					"copy_to": "all",
 					"fields": {
 	               		"suggest" : {
 							"type": "completion",
@@ -231,64 +226,46 @@
 				"comments": {
 					"properties": {
 						"text": {
-							"type": "text",
-							"include_in_all": false
+							"type": "text"
 						},
 						"language": {
-							"type": "keyword",
-							"include_in_all": false
+							"type": "keyword"
 						},
 						"user": {
-							"type": "keyword",
-							"include_in_all": false
+							"type": "keyword"
 						}
 					}
 				},
 				"commentsReisestipendium": {
 					"properties": {
 						"text": {
-							"type": "text",
-							"include_in_all": false
+							"type": "text"
 						},
 						"language": {
-							"type": "keyword",
-							"include_in_all": false
+							"type": "keyword"
 						},
 						"user": {
-							"type": "keyword",
-							"include_in_all": false
+							"type": "keyword"
 						}
 					}
 				},
 				"noteReisestipendium": {
-					"type": "text",
-					"include_in_all": false
+					"type": "text"
 				},
 				"groupInternalData": {
 					"type": "nested",
 					"properties": {
 						"text": {
-							"type": "text",
-							"include_in_all": false
+							"type": "text"
 						},
 						"groupId": {
-							"type": "keyword",
-							"include_in_all": false
+							"type": "keyword"
 						}
 					}
 				},
 				"recordGroupId": {
-					"type": "keyword",
-					"include_in_all": false
-				},
-				"lastChangeDate": {
-					"type": "date",
-					"include_in_all": false
-				},
-	            "_class": {
-	                "type": "keyword",
-					"include_in_all": false
-	            }
+					"type": "keyword"
+				}
 	        }
 	    }
     }
