@@ -1525,9 +1525,11 @@ function MergeCtrl($scope, $rootScope, $routeParams, $location, Place, EscapingS
 	}
 	
 	$scope.getCandidatesByName = function() {
-		var query = "(\"" + EscapingService.escape($scope.place.prefName.title) + "\"~0.5";
+		var query = "(prefName.title:\"" + EscapingService.escape($scope.place.prefName.title) + "\"~0.5"
+			+ " OR names.title:\"" + EscapingService.escape($scope.place.prefName.title) + "\"~0.5";
 		for(var i in $scope.place.names) {
-			query += " OR \"" + EscapingService.escape($scope.place.names[i].title) + "\"~0.5";
+			query += " OR prefName.title:\"" + EscapingService.escape($scope.place.names[i].title) + "\"~0.5"
+			+ " OR names.title:\"" + EscapingService.escape($scope.place.names[i].title) + "\"~0.5";
 		}
 		query += ") AND NOT _id:" + $scope.place.gazId;
 		$rootScope.loading++;
