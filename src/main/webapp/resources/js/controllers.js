@@ -310,9 +310,7 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages, PolygonVali
 					bool: {
 						should: [
 						    { fuzzy: { "all": $scope.meta } },
-						    { fuzzy: { "comments.text": $scope.meta } },
-						    { fuzzy: { "commentsReisestipendium.text": $scope.meta } },
-						    { fuzzy: { "noteReisestipendium": $scope.meta } }
+						    { fuzzy: { "_id": $scope.meta } }
 						]
 					}
 				});
@@ -321,9 +319,7 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages, PolygonVali
 					bool: {
 						should: [
 						    { match: { "all": $scope.meta } },
-						    { match: { "comments.text": $scope.meta } },
-						    { match: { "commentsReisestipendium.text": $scope.meta } },
-						    { match: { "noteReisestipendium": $scope.meta } }
+						    { match: { "_id": $scope.meta } }
 						]
 					}
 				});

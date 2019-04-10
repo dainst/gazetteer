@@ -226,7 +226,8 @@
 				"comments": {
 					"properties": {
 						"text": {
-							"type": "text"
+							"type": "text",
+							"copy_to": "all"
 						},
 						"language": {
 							"type": "keyword"
