@@ -52,7 +52,7 @@
 	                    },
 	                    "title": {
 	                        "type": "text",
-							"omit_norms": true,
+							"norms": false,
 							"copy_to": "all",
 							"fields": {
 								"raw": {
@@ -83,7 +83,7 @@
 	                    },
 	                    "title": {
 	                        "type": "text",
-							"omit_norms": true,
+							"norms": false,
 							"copy_to": "all",
 							"fields": {
 								"raw": {
