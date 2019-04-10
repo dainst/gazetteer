@@ -10,4 +10,3 @@ geonamesSolrUri=
 tempDirectoryPath=
 version=@project.version@
 mongoReplicaSet=localhost:27017
-esNodes=localhost:9300

@@ -10,9 +10,6 @@ public class ElasticSearchClientProvider {
 	@Value("${cluster.name}")
 	private String clusterName;
 	
-	@Value("${esNodes}")
-	private String esNodes;
-	
 	private RestHighLevelClient client;
 	
 	public RestHighLevelClient getClient() {
