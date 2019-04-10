@@ -90,7 +90,7 @@
 									"type": "text",
 									"analyzer": "raw"
 								},
-	                    		"sort" : {
+	                    		"sort": {
 									"type": "icu_collation_keyword",
 									"index": "false",
 									"language": "de",
@@ -159,12 +159,10 @@
 	            	"type": "nested",
 	                "properties": {
 	                    "context": {
-	                        "type": "keyword",
-							"index": "not_analyzed"
+	                        "type": "keyword"
 	                    },
 	                    "value": {
 	                        "type": "keyword",
-	                        "index": "not_analyzed",
 	                        "copy_to": "all"
 	                    }
 	                }
@@ -173,16 +171,13 @@
 	            	"type": "nested",
 	                "properties": {
 	                    "object": {
-	                        "type": "keyword",
-							"index": "not_analyzed"
+	                        "type": "keyword"
 	                    },
 	                    "predicate": {
-	                        "type": "keyword",
-							"index": "not_analyzed"
+	                        "type": "keyword"
 	                    },
 	                    "description": {
 	                    	"type": "keyword",
-	                    	"index": "not_analyzed",
 	                    	"copy_to": "all"
 	                    }
 	                }
@@ -200,8 +195,7 @@
 	            	"type": "keyword"
 	            },
 	            "types": {
-	                "type": "keyword",
-	                "index": "not_analyzed"
+	                "type": "keyword"
 				},
 				"tags": {
 					"type": "keyword",
