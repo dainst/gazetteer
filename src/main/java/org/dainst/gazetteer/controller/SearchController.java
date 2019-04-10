@@ -523,7 +523,7 @@ public class SearchController {
 		List<Place> places = new ArrayList<Place>();
 		for (int i = 0; i < result.length; i++) {
 			if (includePolygons)
-				places.add(placeDao.findOne(result[i]));
+				places.add(placeDao.findById(result[i]).orElse(null));
 			else
 				places.add(placeDao.findWithoutPolygon(result[i]));
 		}
@@ -543,7 +543,7 @@ public class SearchController {
 			for (Bucket bucket : ((Terms) aggregation).getBuckets()) {
 
 				if (aggregation.getName().equals("parent")) {
-					Place place = placeDao.findOne(bucket.getKeyAsString());
+					Place place = placeDao.findById(bucket.getKeyAsString()).orElse(null);
 					if (place == null)
 						continue;
 					String[] term = new String[3];
@@ -629,7 +629,7 @@ public class SearchController {
 		if (place.getParent() != null && !place.getParent().isEmpty()) {
 			Place parent = null;
 			if (includePolygons)
-				parent = placeDao.findOne(place.getParent());
+				parent = placeDao.findById(place.getParent()).orElse(null);
 			else
 				parent = placeDao.findWithoutPolygon(place.getParent());
 			if (parent != null) {

@@ -141,7 +141,7 @@ public class DocumentController {
 			}
 		}
 		
-		Place place = placeDao.findOne(placeId);
+		Place place = placeDao.findById(placeId).orElse(null);
 		
 		if (place == null) {
 			
@@ -237,7 +237,7 @@ public class DocumentController {
 			HttpServletRequest request,
 			HttpServletResponse response) {
 		
-		Place place = placeDao.findOne(placeId);
+		Place place = placeDao.findById(placeId).orElse(null);
 		
 		if (place == null || place.isDeleted() || place.isNeedsReview()) {
 			throw new ResourceNotFoundException();
@@ -331,7 +331,7 @@ public class DocumentController {
 		updateRelatedPlaces(place, null);
 		place.setLastChangeDate(new Date());
 		
-		Place existingPlace = placeDao.findOne(place.getId());
+		Place existingPlace = placeDao.findById(place.getId()).orElse(null);
 		
 		if (existingPlace == null)
 			place = placeDao.save(place);
@@ -379,7 +379,7 @@ public class DocumentController {
 		place.setId(idGenerator.generate(place));
 		place.setLastChangeDate(new Date());
 		
-		Place existingPlace = placeDao.findOne(place.getId());
+		Place existingPlace = placeDao.findById(place.getId()).orElse(null);
 		
 		if (existingPlace == null)
 			place = placeDao.save(place);
@@ -411,7 +411,7 @@ public class DocumentController {
 		
 		place.setId(placeId);
 		
-		Place originalPlace = placeDao.findOne(place.getId());
+		Place originalPlace = placeDao.findById(place.getId()).orElse(null);
 		
 		PlaceAccessService placeAccessService = new PlaceAccessService(groupDao, groupRoleDao);
 		
@@ -459,7 +459,7 @@ public class DocumentController {
 
 		place.setLastChangeDate(new Date());
 		
-		if (placeDao.exists(place.getId()))
+		if (placeDao.existsById(place.getId()))
 			changeRecordDao.save(createChangeRecord(place, "edit"));
 		else
 			changeRecordDao.save(createChangeRecord(place, "create"));
@@ -516,7 +516,7 @@ public class DocumentController {
 		
 		List<Place> children = placeDao.findByParent(placeId);
 		List<Place> relatedPlaces = placeDao.findByRelatedPlaces(placeId);
-		Place place = placeDao.findOne(placeId);
+		Place place = placeDao.findById(placeId).orElse(null);
 		
 		PlaceAccessService placeAccessService = new PlaceAccessService(groupDao, groupRoleDao);
 
@@ -546,13 +546,13 @@ public class DocumentController {
 	// add count for children (for scoring)
 	private void increaseChildrenCount(Place place) {
 		if (place.getParent() == null) return;
-		Place parent = placeDao.findOne(place.getParent());
+		Place parent = placeDao.findById(place.getParent()).orElse(null);
 		while (parent != null) {
 			parent.setChildren(parent.getChildren()+1);
 			placeDao.save(parent);				
 			logger.debug("updated children of {} count: {}", parent.getId(), parent.getChildren());
 			if (parent.getParent() != null) {
-				parent = placeDao.findOne(parent.getParent());
+				parent = placeDao.findById(parent.getParent()).orElse(null);
 			} else {
 				parent = null;
 			}
@@ -567,7 +567,7 @@ public class DocumentController {
 			currentRelatedPlaces = originalPlace.getRelatedPlaces();
 		
 		for (String relatedPlaceId : place.getRelatedPlaces()) {
-			Place relatedPlace = placeDao.findOne(relatedPlaceId.replace(baseUri + "place/", ""));
+			Place relatedPlace = placeDao.findById(relatedPlaceId.replace(baseUri + "place/", "")).orElse(null);
 			relatedPlace.addRelatedPlace(place.getId());
 			placeDao.save(relatedPlace);
 			indexer.index(relatedPlace);
@@ -576,7 +576,7 @@ public class DocumentController {
 		for (String currentRelatedPlaceId : currentRelatedPlaces) {
 			if (currentRelatedPlaceId != null && !"null".equals(currentRelatedPlaceId)
 					&& !place.getRelatedPlaces().contains(currentRelatedPlaceId)) {
-				Place currentRelatedPlace = placeDao.findOne(currentRelatedPlaceId.replace(baseUri + "place/", ""));
+				Place currentRelatedPlace = placeDao.findById(currentRelatedPlaceId.replace(baseUri + "place/", "")).orElse(null);
 				currentRelatedPlace.getRelatedPlaces().remove(place.getId());
 				placeDao.save(currentRelatedPlace);
 				indexer.index(currentRelatedPlace);
@@ -600,7 +600,7 @@ public class DocumentController {
 	private void createParentsList(Place place, List<Place> parents) {
 		
 		if (place.getParent() != null && !place.getParent().isEmpty()) {
-			Place parent = placeDao.findOne(place.getParent());
+			Place parent = placeDao.findById(place.getParent()).orElse(null);
 			if (parent != null) {
 				parents.add(parent);
 				createParentsList(parent, parents);
@@ -613,7 +613,7 @@ public class DocumentController {
 		Place placeToCheck = place;
 		
 		while (placeToCheck.getParent() != null && !placeToCheck.getParent().equals("")) {
-			placeToCheck = placeDao.findOne(placeToCheck.getParent());
+			placeToCheck = placeDao.findById(placeToCheck.getParent()).orElse(null);
 			
 			if (placeToCheck.getId().equals(place.getId())) {
 				return false;

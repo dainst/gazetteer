@@ -25,7 +25,7 @@ public class AutoMatchService {
 		for (Place placeInReview : places) {
 			logger.debug("checking place in review: {}", placeInReview);
 			// refresh place in review in case db has changed through merging after calling findByNeedsReview()
-			Place place = placeDao.findOne(placeInReview.getId());
+			Place place = placeDao.findById(placeInReview.getId()).orElse(null);
 			List<Candidate> candidates = entityIdentifier.getCandidates(place);
 			if (!candidates.isEmpty()) {
 				if (candidates.get(0).getScore() == 1) {

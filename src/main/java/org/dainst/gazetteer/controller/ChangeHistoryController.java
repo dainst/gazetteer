@@ -117,7 +117,7 @@ public class ChangeHistoryController {
 				PresentablePlaceChangeRecord presChangeRecord = new PresentablePlaceChangeRecord();
 				presChangeRecord.setChangeDate(changeRecord.getChangeDate());
 				
-				User changeRecordUser = userRepository.findById(changeRecord.getUserId());
+				User changeRecordUser = userRepository.findById(changeRecord.getUserId()).orElse(null);
 				if (changeRecordUser != null) {
 					presChangeRecord.setUserId(changeRecord.getUserId());
 					presChangeRecord.setUsername(changeRecordUser.getUsername());
@@ -128,7 +128,7 @@ public class ChangeHistoryController {
 				}
 				presChangeRecord.setPlaceId(changeRecord.getPlaceId());
 				
-				Place place = placeRepository.findOne(changeRecord.getPlaceId());
+				Place place = placeRepository.findById(changeRecord.getPlaceId()).orElse(null);
 				if (place == null) {
 					presChangeRecord.setPlacename(context.getMessage("ui.changeHistory.completelyDeletedPlace"));
 					presChangeRecord.setNotFound(true);

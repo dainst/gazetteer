@@ -93,7 +93,7 @@ public class JsonPlaceDeserializer {
 				Place parent = getPlaceForNode(parentNode);
 				if (parent != null && place.getParent() != parent.getId()) {
 					if (place.getParent() != null) {
-						Place oldParent = placeDao.findOne(place.getParent());
+						Place oldParent = placeDao.findById(place.getParent()).orElse(null);
 						oldParent.setChildren(oldParent.getChildren()-1);
 						placeDao.save(oldParent);
 					}
@@ -463,7 +463,7 @@ public class JsonPlaceDeserializer {
 		if (placeUri.startsWith(baseUri)) {
 			String placeIdString = placeUri.replace(baseUri + "place/", "");
 			try {
-				Place place = placeDao.findOne(placeIdString);
+				Place place = placeDao.findById(placeIdString).orElse(null);
 				return place;
 			} catch (NumberFormatException e) {
 				throw new InvalidIdException("Invalid id: " + placeIdString, e);

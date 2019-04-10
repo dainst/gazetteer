@@ -183,10 +183,10 @@ public class UserManagementController {
 									ModelMap model, HttpServletRequest request) {
 		
 		if (deleteUser) {			
-			User user = userDao.findById(deleteUserId);
+			User user = userDao.findById(deleteUserId).orElse(null);
 			if (user != null && !user.isEnabled()) {
 				List<GroupRole> roles = groupRoleDao.findByUserId(deleteUserId);
-				groupRoleDao.delete(roles);
+				groupRoleDao.deleteAll(roles);
 				userDao.delete(user);
 				
 				model.addAttribute("userDeleted", user.getUsername());
@@ -198,7 +198,7 @@ public class UserManagementController {
 
 		if (showUser != null && !showUser.equals("")) {
 			
-			User userToShow = userDao.findById(showUser);
+			User userToShow = userDao.findById(showUser).orElse(null);
 			
 			if (userToShow == null)
 				return "redirect:app/#!/home";
@@ -461,7 +461,7 @@ public class UserManagementController {
 					recordGroupValues.put(recordGroup.getId(), false);
 					GroupRole role = groupRoleDao.findByGroupIdAndUserId(recordGroup.getId(), user.getId());
 					if (role != null && role.getRoleType().equals("admin"))
-						groupRoleDao.delete(role.getId());
+						groupRoleDao.deleteById(role.getId());
 				}
 			}
 		}
@@ -606,7 +606,7 @@ public class UserManagementController {
 	public String getChangePassword(@RequestParam(required=true) String userid, @RequestParam(required=true) String key, ModelMap model) {
 		
 		UserPasswordChangeRequest changeRequest = userPasswordChangeRequestDao.findByUserId(userid);
-		User user = userDao.findById(userid);
+		User user = userDao.findById(userid).orElse(null);
 		
 		if (changeRequest == null || !passwordEncoder.matches(key, changeRequest.getResetKey()))
 			return "redirect:app/#!/home";
@@ -629,7 +629,7 @@ public class UserManagementController {
 		String newPassword = request.getParameter("change_password_password");
 		String newPasswordConfirmation = request.getParameter("change_password_password_confirmation");
 		
-		User user = userDao.findById(userid);
+		User user = userDao.findById(userid).orElse(null);
 		
 		if (newPassword.length() < 6 || newPassword.length() > 30)
 			return returnChangePasswordFailure("passwordLength", user, model);

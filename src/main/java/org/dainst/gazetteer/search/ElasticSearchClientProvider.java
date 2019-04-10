@@ -24,10 +24,8 @@ public class ElasticSearchClientProvider {
 	
 	private RestHighLevelClient createClient() {
 		
-		RestClient lowLevelRestClient = RestClient
-				.builder(new HttpHost("localhost", 9200, "http"))
-				.build();
-		
-		return new RestHighLevelClient(lowLevelRestClient);
+		return new RestHighLevelClient(
+			RestClient.builder(new HttpHost("localhost", 9200, "http"))
+		);
 	}
 }

@@ -487,7 +487,7 @@ public class ShapefileCreator {
 
 	private Place getPlace(String id, PlaceAccessService placeAccessService) {
 
-		Place place = placeRepository.findOne(id);
+		Place place = placeRepository.findById(id).orElse(null);
 
 		if (place == null) {
 			logger.warn("Place " + id + " not found");
@@ -666,7 +666,7 @@ public class ShapefileCreator {
 
 		// Record group
 		if (place.getRecordGroupId() != null) {
-			RecordGroup recordGroup = recordGroupRepository.findOne(place.getRecordGroupId());
+			RecordGroup recordGroup = recordGroupRepository.findById(place.getRecordGroupId()).orElse(null);
 			if (recordGroup != null) {
 				featureBuilder.add(recordGroup.getName());
 			} else {

@@ -151,7 +151,7 @@ public class JsonPlaceSerializer {
 				placeNode.put("recordGroupId", "none");
 		} else {
 			if (place.getRecordGroupId() != null && !place.getRecordGroupId().isEmpty()) {
-				RecordGroup group = groupDao.findOne(place.getRecordGroupId());
+				RecordGroup group = groupDao.findById(place.getRecordGroupId()).orElse(null);
 				if (group != null) {
 					ObjectNode groupNode = mapper.createObjectNode();
 					groupNode.put("id", group.getId());
@@ -429,7 +429,7 @@ public class JsonPlaceSerializer {
 						dataNode.put("text", data.getText());
 						ObjectNode groupNode = mapper.createObjectNode();
 						groupNode.put("id", data.getGroupId());
-						groupNode.put("name", groupDao.findOne(data.getGroupId()).getName());
+						groupNode.put("name", groupDao.findById(data.getGroupId()).orElse(null).getName());
 						dataNode.put("recordGroup", groupNode);
 						groupInternalDataNode.add(dataNode);
 					}
@@ -462,7 +462,7 @@ public class JsonPlaceSerializer {
 				for (PlaceChangeRecord changeRecord : changeHistory) {
 					ObjectNode changeRecordNode = mapper.createObjectNode();
 				
-					User changeRecordUser = userDao.findById(changeRecord.getUserId());
+					User changeRecordUser = userDao.findById(changeRecord.getUserId()).orElse(null);
 					if (changeRecordUser != null) {
 						changeRecordNode.put("username", changeRecordUser.getUsername());
 						changeRecordNode.put("userId", changeRecord.getUserId());

@@ -52,7 +52,7 @@ public class WidgetController {
 		
 		ArrayList<Place> places = new ArrayList<Place>();
 		for (int i = 0; i < ids.length; i++) {
-			Place place = placeDao.findOne(ids[i]);
+			Place place = placeDao.findById(ids[i]).orElse(null);
 			if(place != null) places.add(place);
 		}
 		
@@ -112,7 +112,7 @@ public class WidgetController {
 		// get places for the result ids from db
 		List<Place> places = new ArrayList<Place>();
 		for (int i = 0; i < result.length; i++) {
-			places.add(placeDao.findOne(result[i]));
+			places.add(placeDao.findById(result[i]).orElse(null));
 		}
 		
 		ModelAndView mav = new ModelAndView("widget/search");

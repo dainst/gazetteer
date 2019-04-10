@@ -74,8 +74,8 @@ public class MergeController {
 			HttpServletRequest request,
 			HttpServletResponse response) {
 				
-		Place place1 = placeDao.findOne(id1);
-		Place place2 = placeDao.findOne(id2);
+		Place place1 = placeDao.findById(id1).orElse(null);
+		Place place2 = placeDao.findById(id2).orElse(null);
 		
 		PlaceAccessService placeAccessService = new PlaceAccessService(recordGroupDao, groupRoleDao);
 		

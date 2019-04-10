@@ -58,7 +58,7 @@ public class AncestorsHelper {
 		}
 		
 		if (place.getParent() != null && !place.getParent().isEmpty()) {
-			Place parent = placeDao.findOne(place.getParent());
+			Place parent = placeDao.findById(place.getParent()).orElse(null);
 			if (parent != null) {
 				if (!firstLevel)
 					ancestorIds.add(parent.getId());

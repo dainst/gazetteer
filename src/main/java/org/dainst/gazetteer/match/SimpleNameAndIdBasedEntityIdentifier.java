@@ -27,7 +27,7 @@ public class SimpleNameAndIdBasedEntityIdentifier implements EntityIdentifier {
 		for (Identifier id : place.getIdentifiers()) {
 			Place matchedPlace = null;
 			if ("gazetteer".equals(id.getContext())) {
-				matchedPlace = placeDao.findOne(id.getValue());
+				matchedPlace = placeDao.findById(id.getValue()).orElse(null);
 			} else if (!"zenon-thesaurus".equals(id.getContext())) {
 				matchedPlace = placeDao.findByIdsAndNeedsReviewAndIdNot(
 					id, false, place.getId());
@@ -136,7 +136,7 @@ public class SimpleNameAndIdBasedEntityIdentifier implements EntityIdentifier {
 
 	private Place retrieveAdministrativeUnitFor(Place place, boolean recursive) {
 		if (place.getParent() == null) return null;
-		Place parent = placeDao.findOne(place.getParent());
+		Place parent = placeDao.findById(place.getParent()).orElse(null);
 		if (parent == null) {
 			return null;
 		} else if (parent.getTypes().contains("administrative-unit")) {

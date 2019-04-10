@@ -39,7 +39,7 @@ public class NameBasedIdGenerator implements IdGenerator {
 		}
 		int i = 0;
 		String baseId = id;
-		while (getPlaceRepository().findOne(id) != null) {
+		while (getPlaceRepository().existsById(id)) {
 			id = baseId + String.valueOf(++i);
 		}
 		
