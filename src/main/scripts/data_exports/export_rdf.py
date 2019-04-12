@@ -40,9 +40,45 @@ logging.basicConfig(format="%(asctime)s-%(levelname)s-%(name)s - %(message)s")
 parser = argparse.ArgumentParser(description="Export all publicly available Gazetteer data as one RDF file.")
 parser.add_argument('-t', '--target', type=is_writable_directory, nargs='?', default="./gazetteer_export.xml",
                     help="Specify output file.")
+parser.add_argument('-p', '--polygons', action='store_true',
+                    help="Return place shape polygons, polygon data will increase export size significantly.")
 
 
-def create_place_rdf(graph ,place):
+def create_awk_polygon(shape):
+    result = "MULTIPOLYGON("
+
+    first_multi = True
+
+    for multipolygon in shape:
+        if not first_multi:
+            result += ","
+
+        result += "("
+        first_single = True
+        for polygon in multipolygon:
+            if not first_single:
+                result += ","
+
+            result += "("
+            first_vertex = True
+            for vertex in polygon:
+                if not first_vertex:
+                    result += ","
+                result += f"{vertex[0]},{vertex[1]}"
+                first_vertex = False
+
+            result += ")"
+            first_single = False
+
+        result += ")"
+        first_multi = False
+
+    result += ")"
+
+    return result
+
+
+def create_place_rdf(graph, place):
 
     place_uri = URIRef(place['@id'])
 
@@ -101,7 +137,7 @@ def create_place_rdf(graph ,place):
         graph.add((
             blank_node,
             RDF.type,
-            GEO.Point
+            SF.Point
         ))
 
         graph.add((
@@ -109,6 +145,29 @@ def create_place_rdf(graph ,place):
             GEO.asWKT,
             Literal(
                 f"Point({place['prefLocation']['coordinates'][1]} {place['prefLocation']['coordinates'][0]})",
+                datatype=GEO.wktLiteral
+            )
+        ))
+
+        graph.add((
+            place_uri,
+            GEO.hasGeometry,
+            blank_node
+        ))
+
+    if 'prefLocation' in place and 'shape' in place['prefLocation']:
+        blank_node = BNode()
+        graph.add((
+            blank_node,
+            RDF.type,
+            SF.Polygon
+        ))
+
+        graph.add((
+            blank_node,
+            GEO.asWKT,
+            Literal(
+                create_awk_polygon(place['prefLocation']['shape']),
                 datatype=GEO.wktLiteral
             )
         ))
@@ -153,6 +212,6 @@ if __name__ == "__main__":
     g = Graph()
     g.namespace_manager = namespace_manager
 
-    harvester = Harvester(False)
+    harvester = Harvester(options['polygons'])
 
     create_rdf(options['target'], harvester.get_data())
