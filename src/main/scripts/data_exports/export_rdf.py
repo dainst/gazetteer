@@ -39,12 +39,12 @@ logging.basicConfig(format="%(asctime)s-%(levelname)s-%(name)s - %(message)s")
 
 parser = argparse.ArgumentParser(description="Export all publicly available Gazetteer data as one RDF file.")
 parser.add_argument('-t', '--target', type=is_writable_directory, nargs='?', default="./gazetteer_export.rdf",
-                    help="Specify output file.")
+                    help="specify output file, default: './gazetteer_export.rdf'")
 parser.add_argument('-f', '--format',   nargs='?', default="turtle",
                     choices={'xml', 'n3', 'turtle', 'nt', 'pretty-xml', 'trig'},
-                    help=f"RDF format for the output.")
+                    help="specify the output's RDF format, default: 'turtle'")
 parser.add_argument('-p', '--polygons', action='store_true',
-                    help="Return place shape polygons, polygon data will increase export size significantly.")
+                    help="export place shape polygons, this will increase the file size significantly")
 
 
 def create_awk_multipolygon(multipolygon):
