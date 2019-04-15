@@ -14,6 +14,7 @@ import org.dainst.gazetteer.domain.GroupRole;
 import org.dainst.gazetteer.domain.RecordGroup;
 import org.dainst.gazetteer.domain.User;
 import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.ToXContent;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -51,15 +52,14 @@ public class ElasticSearchSuggestionQuery {
 		suggestBuilder.addSuggestion(field, createSuggestionBuilder(field, text, checkRecordGroup));
 		searchSourceBuilder.suggest(suggestBuilder);
 		
-		SearchRequest request = new SearchRequest("gazetteer");
+		SearchRequest request = new SearchRequest("places");
 		request.source(searchSourceBuilder);
-		request.types("place");
 		
 		List<String> suggestions = new ArrayList<String>();
 		
 		Suggest suggest;
 		try {
-			suggest = client.search(request).getSuggest();
+			suggest = client.search(request, RequestOptions.DEFAULT).getSuggest();
 		} catch (IOException e) {
 			logger.error("Failed to execute suggestion query for text: " + text, e);
 			return suggestions;

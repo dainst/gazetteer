@@ -6,4 +6,4 @@ until $(curl -o /dev/null -s --head --fail $ELASTICSEARCH_CONTAINER_NAME:9200); 
 done
 
 echo "Pushing place template to ElasticSearch..."
-curl http://$ELASTICSEARCH_CONTAINER_NAME:9200/gazetteer/ -X PUT -H "Content-Type: application/json" -d "@/mappings/place_template.json"
+curl http://$ELASTICSEARCH_CONTAINER_NAME:9200/places/ -X PUT -H "Content-Type: application/json" -d "@/mappings/place_template.json"

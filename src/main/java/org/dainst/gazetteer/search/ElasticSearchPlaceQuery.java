@@ -7,10 +7,12 @@ import java.util.List;
 
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.geo.GeoPoint;
 import org.elasticsearch.common.geo.ShapeRelation;
-import org.elasticsearch.common.geo.builders.ShapeBuilders;
+import org.elasticsearch.common.geo.builders.CoordinatesBuilder;
+import org.elasticsearch.common.geo.builders.PolygonBuilder;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.GeoBoundingBoxQueryBuilder;
 import org.elasticsearch.index.query.GeoDistanceQueryBuilder;
@@ -152,7 +154,7 @@ public class ElasticSearchPlaceQuery {
 		
 		try {
 			GeoPolygonQueryBuilder geoPolygonQueryBuilder = QueryBuilders.geoPolygonQuery("prefLocation.coordinates", points);
-			GeoShapeQueryBuilder geoShapeQueryBuilder = QueryBuilders.geoShapeQuery("prefLocation.shape", ShapeBuilders.newPolygon(coords));
+			GeoShapeQueryBuilder geoShapeQueryBuilder = QueryBuilders.geoShapeQuery("prefLocation.shape", new PolygonBuilder(new CoordinatesBuilder().coordinates(coords)));
 			geoShapeQueryBuilder.relation(ShapeRelation.INTERSECTS);
 
 			BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
@@ -191,12 +193,11 @@ public class ElasticSearchPlaceQuery {
 			searchSourceBuilder.query(addChildrenBoostScriptFunction(queryBuilder));
 		else
 			searchSourceBuilder.query(queryBuilder);
-		SearchRequest request = new SearchRequest("gazetteer");
+		SearchRequest request = new SearchRequest("places");
 		request.source(searchSourceBuilder);
-		request.types("place");
 		logger.debug("Query: {}", queryBuilder.toString());
 		try {
-			SearchResponse response = client.search(request);
+			SearchResponse response = client.search(request, RequestOptions.DEFAULT);
 			aggregations = response.getAggregations();
 			return responseAsList(response);
 		} catch (IOException e) {
@@ -211,7 +212,7 @@ public class ElasticSearchPlaceQuery {
 
 	private String[] responseAsList(SearchResponse response) {
 		SearchHits hits = response.getHits();
-		totalHits = hits.getTotalHits();
+		totalHits = hits.getTotalHits().value;
 		String[] result = new String[hits.getHits().length];
 		for (int i = 0; i < result.length; i++) {
 			result[i] = hits.getAt(i).getId();
