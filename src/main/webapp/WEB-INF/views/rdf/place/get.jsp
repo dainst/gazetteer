@@ -33,7 +33,7 @@
 	<c:forEach var="name" items="${place.names}">
 		<c:choose>
 			<c:when test="${name.language != null}">
-	<skos:prefLabel xml:lang="${langHelper.getLocaleForISO3Language(name.language).getLanguage()}">${name.title}</skos:prefLabel>
+	<skos:altLabel xml:lang="${langHelper.getLocaleForISO3Language(name.language).getLanguage()}">${name.title}</skos:altLabel>
 			</c:when>
 			<c:otherwise>
 	<skos:altLabel>${name.title}</skos:altLabel>
