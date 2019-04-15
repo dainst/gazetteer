@@ -1,5 +1,5 @@
-from harvester import Harvester
-from cli_helper import is_writable_directory
+from lib.harvester import Harvester
+from lib.cli_helper import is_writable_directory
 
 import argparse
 import logging
