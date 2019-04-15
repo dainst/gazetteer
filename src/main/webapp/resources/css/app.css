@@ -45,11 +45,16 @@ footer {
 .navbar-search .icon-search {
 	position: absolute;
 	top: 6px;
-	left: 182px;
+	left: 167px;
 }
 
 .navbar-search input.search-query {
 	line-height: normal;
+}
+
+.navbar-inner {
+	padding-left: 0;
+	padding-right: 0;
 }
 
 .alerts {

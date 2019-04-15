@@ -148,7 +148,7 @@
 								<s:message code="ui.search.simpleSearch" text="ui.search.simpleSearch"
 									var="titleSimpleSearch" />
 								
-								<div style="width:206px; position:relative;">
+								<div style="width:191px; position:relative;">
 									<input type="text" class="search-query input-block-level" name="searchField" ng-model="q" placeholder="${titleSimpleSearch}" 
 										on-arrow-up="selectPreviousSuggestion()" on-arrow-down="selectNextSuggestion()" on-blur="lostFocus()" autocomplete="off" focus-me="isFocused"> <i class="icon-search"></i>
 										
