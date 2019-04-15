@@ -75,6 +75,14 @@ z.B. Anpassen des Speicherpfades der Logdatei, da ggfs. in template Pfad keine S
    <param name="file" value="/Users/[USERNAME]/gazetteer.log" />
 ```
 
+### Indizierung
+
+Eine Elasticsearch-Reindizierung kann bei laufendem Gazetteer über die Admin-API angestoßen werden:
+
+curl -XPOST user:password@localhost:8080/gazetteer/admin/reindex
+
+Dazu muss ein Useraccount verwendet werden, der über Adminberechtigungen verfügt.
+
 ## Architektur
 
 Backend (Java/SpringMVC) und Frontend (Javascript/AngularJS) werden im gleichen Projekt verwaltet. Der Quellcode des Backends liegt unter _src/main/java_, der des Frontends unter _src/main/webapp/resources/js_. Die AngularJS Views werden durch JSPs generiert und liegen unter _src/main/webapp/WEB-INF/views/html/partials_. Zusätzlich liegen unter _src/main/scripts_ einige in Ruby geschriebene Skripte für den Im- und Export für spezifische Projekte.
