@@ -39,7 +39,7 @@ public class PlaceController {
 		RedirectView view;
 		
 		// 301 redirect for replaced places
-		Place place = placeRepository.findOne(id);
+		Place place = placeRepository.findById(id).orElse(null);
 		if (place == null) {
 			
 			throw new ResourceNotFoundException();

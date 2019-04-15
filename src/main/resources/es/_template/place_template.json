@@ -11,10 +11,6 @@
             		"tokenizer": "keyword",
             		"filter": ["lowercase"]
             	},
-                "collation" : {
-                    "tokenizer" : "keyword",
-                    "filter" : ["collation_filter"]
-                },
                 "autocomplete": {
           			"type": "custom",
           			"tokenizer": "ngramTokenizer",
@@ -30,11 +26,6 @@
 				}
 			},
             "filter" : {
-                "collation_filter" : {
-                    "type" : "icu_collation",
-                    "language" : "de",
-                    "numeric" : true
-                },
                 "lowercase" : {
                 	"type" : "lowercase"
                 },
@@ -48,41 +39,35 @@
     "mappings" : {
 	    "place": {
 	    	"_all": {
-	    		"omit_norms": true
+	    		"enabled": false
 	    	},
 	        "properties": {
+				"all": {
+					"type": "text"
+	    		},
 	            "prefName": {
 	                "properties": {
 	                    "language": {
-	                        "type": "string",
-	                        "include_in_all": false
-	                    },
-	                    "modern": {
-	                        "type": "boolean",
-	                        "include_in_all": false
-	                    },
-	                    "ordering": {
-	                    	"type": "string",
-	                    	"include_in_all": false
+	                        "type": "keyword"
 	                    },
 	                    "title": {
-	                        "type": "string",
-							"omit_norms": true,
+	                        "type": "text",
+							"norms": false,
+							"copy_to": "all",
 							"fields": {
 								"raw": {
-									"type": "string",
+									"type": "text",
 									"analyzer": "raw"
 								},
 	                    		"sort": {
-									"type": "string",
-									"analyzer": "collation"
-								},
-								"suggest": {
-									"type": "completion",
-									"analyzer": "default"
+									"type": "icu_collation_keyword",
+									"index": "false",
+									"language": "de",
+									"country": "DE",
+									"numeric": true
 								},
 								"autocomplete": {
-									"type": "string",
+									"type": "text",
 									"analyzer": "autocomplete"
 								}
 							}   
@@ -91,82 +76,59 @@
 	            },
 	            "names": {
 	            	"type": "nested",
-					"include_in_parent": true,
+                	"include_in_parent": true,
 	                "properties": {
 	                    "language": {
-	                        "type": "string",
-							"include_in_all": false
-	                    },
-	                    "modern": {
-	                        "type": "boolean",
-							"include_in_all": false
-	                    },
-	                    "ordering": {
-	                    	"type": "string",
-	                    	"include_in_all": false
+	                        "type": "keyword"
 	                    },
 	                    "title": {
-	                        "type": "string",
-							"omit_norms": true,
+	                        "type": "text",
+							"norms": false,
+							"copy_to": "all",
 							"fields": {
 								"raw": {
-									"type": "string",
+									"type": "text",
 									"analyzer": "raw"
 								},
-	                    		"sort" : {
-									"type": "string",
-									"analyzer": "collation"
-								},
-								"suggest" : {
-									"type": "completion",
-									"analyzer": "default"
+	                    		"sort": {
+									"type": "icu_collation_keyword",
+									"index": "false",
+									"language": "de",
+									"country": "DE",
+									"numeric": true
 								},
 								"autocomplete": {
-									"type": "string",
+									"type": "text",
 									"analyzer": "autocomplete"
 								}
 							}
 	                    }
 	                }
 	            },
-	            "suggestionNames": {
-					"type": "string",
-					"fields": {
-						"raw": {
-							"type": "string",
-							"analyzer": "raw"
-						},
-						"suggest" : {
-							"type": "completion",
-							"analyzer": "default",
-							"context": {
-								"recordGroupId": {
-									"type": "category",
-									"path": "recordGroupId",
-									"default": "none"
-								}
-							}
+	            "nameSuggestions": {
+	            	"type": "completion",
+					"analyzer": "default",
+					"contexts": [
+						{
+							"name": "recordGroupId",
+							"type": "category",
+							"path": "recordGroupId"
 						}
-	            	},
-					"include_in_all": false
+					]
 	            },
 	            "prefLocation": {
 	            	"properties": {
 	                    "confidence": {
-	                        "type": "long",
-							"include_in_all": false
+	                        "type": "long"
 	                    },
 	                    "coordinates": {
-	                        "type": "geo_point",
-							"include_in_all": false
+	                        "type": "geo_point"
 						},
 						"altitude": {
-	            			"type": "double",
-	            			"include_in_all": false
+	            			"type": "double"
 	            		},
 						"shape": {
-							"type": "geo_shape",
-							"include_in_all": false
+							"type": "geo_shape"
 						}
 	                }
 	            },
@@ -174,26 +136,21 @@
 	            	"type": "nested",
 	                "properties": {
 	                    "confidence": {
-	                        "type": "long",
-							"include_in_all": false
+	                        "type": "long"
 	                    },
 	                    "coordinates": {
-	                        "type": "geo_point",
-							"include_in_all": false
+	                        "type": "geo_point"
 						},
 						"altitude": {
-	            			"type": "double",
-	            			"include_in_all": false
+	            			"type": "double"
 	            		},
 						"shape": {
-							"type": "geo_shape",
-							"include_in_all": false
+							"type": "geo_shape"
 						}
 	                }
 	            },
 	            "children": {
-	                "type": "integer",
-					"include_in_all": false
+	                "type": "integer"
 	            },
 	            "deleted": {
 	                "type": "boolean"
@@ -202,13 +159,11 @@
 	            	"type": "nested",
 	                "properties": {
 	                    "context": {
-	                        "type": "string",
-							"index": "not_analyzed",
-							"include_in_all": false
+	                        "type": "keyword"
 	                    },
 	                    "value": {
-	                        "type": "string",
-	                        "index": "not_analyzed"
+	                        "type": "keyword",
+	                        "copy_to": "all"
 	                    }
 	                }
 	            },
@@ -216,17 +171,14 @@
 	            	"type": "nested",
 	                "properties": {
 	                    "object": {
-	                        "type": "string",
-							"index": "not_analyzed"
+	                        "type": "keyword"
 	                    },
 	                    "predicate": {
-	                        "type": "string",
-							"index": "not_analyzed",
-							"include_in_all": false
+	                        "type": "keyword"
 	                    },
 	                    "description": {
-	                    	"type": "string",
-	                    	"index": "not_analyzed"
+	                    	"type": "keyword",
+	                    	"copy_to": "all"
 	                    }
 	                }
 	            },
@@ -234,103 +186,82 @@
 	                "type": "boolean"
 	            },
 	            "parent": {
-	                "type": "string",
-					"include_in_all": false
+	                "type": "keyword"
 	            },
 	            "ancestors": {
-					"type": "string",
-					"include_in_all": false
+					"type": "keyword"
 	            },
 	            "relatedPlaces": {
-	            	"type": "string"
+	            	"type": "keyword"
 	            },
 	            "types": {
-	                "type": "string",
-	                "index": "not_analyzed"
+	                "type": "keyword"
 				},
 				"tags": {
-					"type": "string",
-					"index": "not_analyzed",
+					"type": "keyword",
+					"copy_to": "all",
 					"fields": {
 	               		"suggest" : {
-							"type": "completion"
+							"type": "completion",
+							"analyzer": "raw"
 						}
 					}
 				},
 				"provenance": {
-					"type": "string",
+					"type": "keyword",
+					"copy_to": "all",
 					"fields": {
 	               		"suggest" : {
-							"type": "completion"
+							"type": "completion",
+							"analyzer": "raw"
 						}
 					}
 				},
 				"comments": {
 					"properties": {
 						"text": {
-							"type": "string",
-							"include_in_all": false
+							"type": "text",
+							"copy_to": "all"
 						},
 						"language": {
-							"type": "string",
-							"include_in_all": false
+							"type": "keyword"
 						},
 						"user": {
-							"type": "string",
-							"include_in_all": false
+							"type": "keyword"
 						}
 					}
 				},
 				"commentsReisestipendium": {
 					"properties": {
 						"text": {
-							"type": "string",
-							"include_in_all": false
+							"type": "text"
 						},
 						"language": {
-							"type": "string",
-							"include_in_all": false
+							"type": "keyword"
 						},
 						"user": {
-							"type": "string",
-							"include_in_all": false
+							"type": "keyword"
 						}
 					}
 				},
 				"noteReisestipendium": {
-					"type": "string",
-					"include_in_all": false
+					"type": "text"
 				},
 				"groupInternalData": {
 					"type": "nested",
 					"properties": {
 						"text": {
-							"type": "string",
-							"include_in_all": false
+							"type": "text"
 						},
 						"groupId": {
-							"type": "string",
-							"include_in_all": false
+							"type": "keyword"
 						}
 					}
 				},
 				"recordGroupId": {
-					"type": "string",
-					"include_in_all": false
-				},
-				"lastChangeDate": {
-					"type": "date",
-					"include_in_all": false
-				},
-	            "_class": {
-	                "type": "string",
-					"include_in_all": false
-	            }
-	        },
-			"transform" : {
-				"script": "ctx._source.suggestionNames = []; if (ctx._source['deleted'] == true) { ctx._source['prefName'] = null; ctx._source['names'] = null; ctx._source['tags'] = []; ctx._source['provenance'] = []; } else { if (ctx._source['prefName']) ctx._source['suggestionNames'] += ctx._source['prefName'].title; if (ctx._source['names']) { ctx._source['names'].each { ctx._source['suggestionNames'] += it.title; } } }",
-				"lang": "groovy"
-    		}
+					"type": "keyword"
+				}
+	        }
 	    }
     }
 }

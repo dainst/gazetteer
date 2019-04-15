@@ -16,26 +16,26 @@ services:
     networks:
     - gazetteer
 
-  mongo-connector:
-    container_name: gazetteer_mongo-connector
-    build:
-      context: ./mongo-connector
-    volumes:
-      - ./mongo-connector/docker-entrypoint.sh:/docker-entrypoint.sh
-      - ./src/main/resources/es/_template/place_template.json:/mappings/place_template.json
-    environment:
-      MONGO_CONTAINER_NAME: gazetteer_mongo
-      ELASTICSEARCH_CONTAINER_NAME: gazetteer_elasticsearch
-    networks:
-    - gazetteer
-
   elasticsearch:
     container_name: gazetteer_elasticsearch
+    command: ["elasticsearch", "-Ecluster.name=gazetteer.dainst.org"]
     build:
       context: ./elasticsearch
     ports:
       - 9200:9200
       - 9300:9300
+    networks:
+      - gazetteer
+
+  elasticsearch-init:
+    container_name: gazetteer_elasticsearch_init
+    build:
+      context: ./elasticsearch-init
+    volumes:
+      - ./elasticsearch-init/docker-entrypoint.sh:/docker-entrypoint.sh
+      - ./src/main/resources/es/_template/place_template.json:/mappings/place_template.json
+    environment:
+      ELASTICSEARCH_CONTAINER_NAME: gazetteer_elasticsearch
     networks:
       - gazetteer
 

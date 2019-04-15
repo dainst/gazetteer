@@ -20,6 +20,7 @@ import org.dainst.gazetteer.helpers.AncestorsHelper;
 import org.dainst.gazetteer.helpers.MailService;
 import org.dainst.gazetteer.helpers.Merger;
 import org.dainst.gazetteer.helpers.PlaceAccessService;
+import org.dainst.gazetteer.search.ElasticSearchIndexer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,9 @@ public class MergeController {
 	private Merger merger;
 	
 	@Autowired
+	private ElasticSearchIndexer indexer;
+	
+	@Autowired
 	private JsonPlaceSerializer jsonPlaceSerializer;
 	
 	@Autowired
@@ -70,8 +74,8 @@ public class MergeController {
 			HttpServletRequest request,
 			HttpServletResponse response) {
 				
-		Place place1 = placeDao.findOne(id1);
-		Place place2 = placeDao.findOne(id2);
+		Place place1 = placeDao.findById(id1).orElse(null);
+		Place place2 = placeDao.findById(id2).orElse(null);
 		
 		PlaceAccessService placeAccessService = new PlaceAccessService(recordGroupDao, groupRoleDao);
 		
@@ -100,6 +104,7 @@ public class MergeController {
 		try {
 			for (Place place : updatedPlaces) {
 				placeDao.save(place);
+				indexer.index(place);
 			}
 		} catch(Exception e) {
 			throw new RuntimeException("Failed to save places affected by merge", e);
@@ -112,6 +117,7 @@ public class MergeController {
 		place2.setReplacedBy(place1.getId());
 		place2.setDeleted(true);
 		placeDao.save(place2);
+		indexer.index(place2);
 
 		changeRecordDao.save(createChangeRecord(place2, "replace", place1.getId()));
 		changeRecordDao.save(createChangeRecord(place1, "merge", place2.getId()));

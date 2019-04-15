@@ -112,7 +112,7 @@ public class AppController {
 			List<RecordGroup> editRecordGroups = new ArrayList<RecordGroup>();
 			List<GroupRole> groupRoles = groupRoleDao.findByUserId(user.getId());
 			for (GroupRole groupRole : groupRoles) {
-				RecordGroup group = recordGroupDao.findOne(groupRole.getGroupId());
+				RecordGroup group = recordGroupDao.findById(groupRole.getGroupId()).orElse(null);
 				if (groupRole.getRoleType().equals("admin") || groupRole.getRoleType().equals("edit") || groupRole.getRoleType().equals("read"))
 					recordGroups.add(group);
 				if (groupRole.getRoleType().equals("admin") || groupRole.getRoleType().equals("edit"))

@@ -68,6 +68,7 @@ public class Place {
 	
 	private String replacedBy;
 	
+	@Indexed
 	private int children = 0;
 	
 	private String noteReisestipendium;

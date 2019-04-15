@@ -8,4 +8,4 @@ Map<String, PlaceAccessService.AccessStatus> parentAccessStatusMap = (Map<String
 JsonPlaceSerializer serializer = (JsonPlaceSerializer) request.getAttribute("jsonPlaceSerializer");
 String replacing = (String) request.getAttribute("replacing");
 
-%><%= serializer.serialize(place, request, parents, accessStatus, parentAccessStatusMap, replacing) %>
+%><%= serializer.serialize(place, request, parents, accessStatus, parentAccessStatusMap, replacing, false) %>

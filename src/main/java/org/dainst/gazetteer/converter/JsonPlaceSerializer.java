@@ -2,6 +2,7 @@ package org.dainst.gazetteer.converter;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -71,21 +72,25 @@ public class JsonPlaceSerializer {
 	@Autowired
 	private LanguagesHelper languagesHelper;
 	
+	public String serializeIndexSource(Place place) {
+		return serialize(place, null, null, PlaceAccessService.AccessStatus.EDIT, null, null, true);
+	}
+	
 	public String serialize(Place place, PlaceAccessService.AccessStatus accessStatus) {
-		return serialize(place, null, null, accessStatus, null, null);
+		return serialize(place, null, null, accessStatus, null, null, false);
 	}
 	
 	public String serialize(Place place, List<Place> parents, PlaceAccessService.AccessStatus accessStatus,
 			Map<String, PlaceAccessService.AccessStatus> parentAccessStatusMap) {
-		return serialize(place, null, parents, accessStatus, parentAccessStatusMap, null);
+		return serialize(place, null, parents, accessStatus, parentAccessStatusMap, null, false);
 	}
 	
 	public String serialize(Place place, HttpServletRequest request, List<Place> parents, PlaceAccessService.AccessStatus accessStatus, 
-			Map<String, PlaceAccessService.AccessStatus> parentAccessStatusMap, String replacing) {
+			Map<String, PlaceAccessService.AccessStatus> parentAccessStatusMap, String replacing, boolean asIndexSource) {
 		
 		resetMapper();
 		
-		ObjectNode placeNode = createJsonNodes(place, request, parents, accessStatus, parentAccessStatusMap, replacing);
+		ObjectNode placeNode = createJsonNodes(place, request, parents, accessStatus, parentAccessStatusMap, replacing, asIndexSource);
 		
 		try {
 			return mapper.writeValueAsString(placeNode);
@@ -101,7 +106,7 @@ public class JsonPlaceSerializer {
 		resetMapper();
 		
 		ObjectNode geoJsonPlaceNode = createGeoJsonNodes(place, accessStatus);		
-		ObjectNode placeNode = createJsonNodes(place, request, null, accessStatus, null, null);
+		ObjectNode placeNode = createJsonNodes(place, request, null, accessStatus, null, null, false);
 		geoJsonPlaceNode.put("properties", placeNode);
 		
 		try {
@@ -114,13 +119,14 @@ public class JsonPlaceSerializer {
 		
 	private ObjectNode createJsonNodes(Place place, HttpServletRequest request, List<Place> parents,
 			PlaceAccessService.AccessStatus accessStatus,
-			Map<String, PlaceAccessService.AccessStatus> parentAccessStatusMap, String replacing) { 
+			Map<String, PlaceAccessService.AccessStatus> parentAccessStatusMap, String replacing,
+			boolean asIndexSource) {
 		
 		if (place == null) return null;
 		
 		ObjectNode placeNode = mapper.createObjectNode();
 		logger.debug("serializing: {}", place);
-		if (place.getId() != null) {
+		if (!asIndexSource && place.getId() != null) {
 			placeNode.put("@id", baseUri + "place/" + place.getId());
 			placeNode.put("gazId", place.getId());
 		}
@@ -130,17 +136,29 @@ public class JsonPlaceSerializer {
 			if (place.getReplacedBy() != null && !place.getReplacedBy().isEmpty())
 				placeNode.put("replacedBy", place.getReplacedBy());
 			return placeNode;
+		} else if (asIndexSource) {
+			placeNode.put("deleted", false);
 		}
 		
+		if (asIndexSource)
+			placeNode.put("needsReview", place.isNeedsReview());
+		
 		// record group
-		if (place.getRecordGroupId() != null && !place.getRecordGroupId().isEmpty()) {
-			RecordGroup group = groupDao.findOne(place.getRecordGroupId());
-			if (group != null) {
-				ObjectNode groupNode = mapper.createObjectNode();
-				groupNode.put("id", group.getId());
-				groupNode.put("name", group.getName());
-				placeNode.put("recordGroup", groupNode);
-			}			
+		if (asIndexSource) {
+			if (place.getRecordGroupId() != null && !place.getRecordGroupId().isEmpty())
+				placeNode.put("recordGroupId", place.getRecordGroupId());
+			else
+				placeNode.put("recordGroupId", "none");
+		} else {
+			if (place.getRecordGroupId() != null && !place.getRecordGroupId().isEmpty()) {
+				RecordGroup group = groupDao.findById(place.getRecordGroupId()).orElse(null);
+				if (group != null) {
+					ObjectNode groupNode = mapper.createObjectNode();
+					groupNode.put("id", group.getId());
+					groupNode.put("name", group.getName());
+					placeNode.put("recordGroup", groupNode);
+				}
+			}
 		}
 		
 		if (!PlaceAccessService.hasReadAccess(accessStatus)) {
@@ -153,15 +171,22 @@ public class JsonPlaceSerializer {
 			placeNode.put("replacing", replacing);
 				
 		// parent
-		if (place.getParent() != null && !place.getParent().isEmpty())
-			placeNode.put("parent", baseUri + "place/" + place.getParent());
+		if (place.getParent() != null && !place.getParent().isEmpty()) {
+			if (asIndexSource)
+				placeNode.put("parent", place.getParent());
+			else
+				placeNode.put("parent", baseUri + "place/" + place.getParent());
+		}
 		
 		// related places
 		if (!place.getRelatedPlaces().isEmpty()) {
 			ArrayNode relatedPlacesNode = mapper.createArrayNode();
 			for (String relatedPlaceId : place.getRelatedPlaces()) {
 				if (relatedPlaceId != null) {
-					relatedPlacesNode.add(baseUri + "place/" + relatedPlaceId);
+					if (asIndexSource)
+						relatedPlacesNode.add(relatedPlaceId);
+					else
+						relatedPlacesNode.add(baseUri + "place/" + relatedPlaceId);
 				}
 			}
 			placeNode.put("relatedPlaces", relatedPlacesNode);
@@ -171,10 +196,16 @@ public class JsonPlaceSerializer {
 		if (place.getAncestors() != null && !place.getAncestors().isEmpty()) {
 			ArrayNode ancestorsNode = mapper.createArrayNode();
 			for (String ancestorId : place.getAncestors()) {
-				ancestorsNode.add(baseUri + "place/" + ancestorId);
+				if (asIndexSource)
+					ancestorsNode.add(ancestorId);
+				else
+					ancestorsNode.add(baseUri + "place/" + ancestorId);
 			}
 			placeNode.put("ancestors", ancestorsNode);
 		}
+		
+		if (asIndexSource)
+			placeNode.put("children", place.getChildren());
 		
 		// place types
 		if (place.getTypes() != null && !place.getTypes().isEmpty()) {
@@ -183,6 +214,8 @@ public class JsonPlaceSerializer {
 				typesNode.add(type);
 			placeNode.put("types", typesNode);
 		}
+		
+		List<String> nameSuggestions = new ArrayList<String>();
 		
 		// preferred name
 		if (place.getPrefName() != null) {
@@ -195,11 +228,12 @@ public class JsonPlaceSerializer {
 			if (place.getPrefName().isTransliterated())
 				prefNameNode.put("transliterated", true);
 			placeNode.put("prefName", prefNameNode);
+			nameSuggestions.add(place.getPrefName().getTitle());
 		}
 
 		// get sorted place names if locale is set
 		List<PlaceName> sortedPlaceNames = null;
-		if (locale != null && originalLocale != null) {
+		if (!asIndexSource && locale != null && originalLocale != null) {
 			PlaceNameHelper placeNameHelper = new PlaceNameHelper();
 			placeNameHelper.setLocale(locale);
 			placeNameHelper.setOriginalLocale(originalLocale);
@@ -222,8 +256,19 @@ public class JsonPlaceSerializer {
 				if (sortedPlaceNames != null)
 					nameNode.put("sort", sortedPlaceNames.indexOf(name));
 				namesNode.add(nameNode);
+				if (!nameSuggestions.contains(name.getTitle()))
+					nameSuggestions.add(name.getTitle());
 			}
 			placeNode.put("names", namesNode);
+		}
+		
+		// name suggestions
+		if (asIndexSource && !place.isDeleted() && !place.isNeedsReview()) {
+			ArrayNode nameSuggestionsNode = mapper.createArrayNode();
+			for (String name : nameSuggestions) {
+				nameSuggestionsNode.add(name);
+			}
+			placeNode.put("nameSuggestions", nameSuggestionsNode);
 		}
 		
 		// preferred location
@@ -236,8 +281,15 @@ public class JsonPlaceSerializer {
 				locationNode.put("coordinates", coordinatesNode);
 			}
 			if (place.getPrefLocation().getShape() != null) {
-				ArrayNode shapeNode = createPolygonCoordinatesNode(place.getPrefLocation().getShape().getCoordinates());
-				locationNode.put("shape", shapeNode);
+				ArrayNode shapeCoordinatesNode = createPolygonCoordinatesNode(place.getPrefLocation().getShape().getCoordinates());
+				if (asIndexSource) {
+					ObjectNode shapeNode = mapper.createObjectNode();
+					shapeNode.put("type", "multipolygon");
+					shapeNode.put("coordinates", shapeCoordinatesNode);
+					locationNode.put("shape", shapeNode);
+				} else {
+					locationNode.put("shape", shapeCoordinatesNode);
+				}
 			}
 			if (place.getPrefLocation().getAltitude() != null)
 				locationNode.put("altitude", place.getPrefLocation().getAltitude());
@@ -258,8 +310,15 @@ public class JsonPlaceSerializer {
 					locationNode.put("coordinates", coordinatesNode);
 				}
 				if (location.getShape() != null) {
-					ArrayNode shapeNode = createPolygonCoordinatesNode(location.getShape().getCoordinates());
-					locationNode.put("shape", shapeNode);
+					ArrayNode shapeCoordinatesNode = createPolygonCoordinatesNode(location.getShape().getCoordinates());
+					if (asIndexSource) {
+						ObjectNode shapeNode = mapper.createObjectNode();
+						shapeNode.put("type", "multipolygon");
+						shapeNode.put("coordinates", shapeCoordinatesNode);
+						locationNode.put("shape", shapeNode);
+					} else {
+						locationNode.put("shape", shapeCoordinatesNode);
+					}
 				}
 				if (location.getAltitude() != null)
 					locationNode.put("altitude", location.getAltitude());
@@ -333,7 +392,7 @@ public class JsonPlaceSerializer {
 		// reisestipendium content		
 		logger.debug("serializing reisestipendium content?");
 		User user = getUser();
-		if (user != null && user.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_REISESTIPENDIUM"))) {
+		if (asIndexSource || (user != null && user.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_REISESTIPENDIUM")))) {
 			
 			logger.debug("serializing reisestipendium note");
 			if (place.getNoteReisestipendium() != null && !place.getNoteReisestipendium().isEmpty()) {
@@ -345,6 +404,7 @@ public class JsonPlaceSerializer {
 				for (Comment comment : place.getCommentsReisestipendium()) {
 					ObjectNode commentNode = mapper.createObjectNode();
 					commentNode.put("text", comment.getText());
+					commentNode.put("language", comment.getLanguage());
 					commentNode.put("user", comment.getUser());
 					commentsNode.add(commentNode);
 				}
@@ -353,19 +413,26 @@ public class JsonPlaceSerializer {
 		}
 		
 		// record group internal data
-		if (user != null && !place.getGroupInternalData().isEmpty()) {
+		if (asIndexSource || (user != null && !place.getGroupInternalData().isEmpty())) {
 			logger.debug("serializing record group internal data");
 			ArrayNode groupInternalDataNode = mapper.createArrayNode();
 			for (GroupInternalData data : place.getGroupInternalData()) {
-				GroupRole role = groupRoleDao.findByGroupIdAndUserId(data.getGroupId(), user.getId());
-				if (role != null) {
+				if (asIndexSource) {
 					ObjectNode dataNode = mapper.createObjectNode();
 					dataNode.put("text", data.getText());
-					ObjectNode groupNode = mapper.createObjectNode();
-					groupNode.put("id", data.getGroupId());
-					groupNode.put("name", groupDao.findOne(data.getGroupId()).getName());
-					dataNode.put("recordGroup", groupNode);
+					dataNode.put("groupId", data.getGroupId());
 					groupInternalDataNode.add(dataNode);
+				} else {
+					GroupRole role = groupRoleDao.findByGroupIdAndUserId(data.getGroupId(), user.getId());
+					if (role != null) {
+						ObjectNode dataNode = mapper.createObjectNode();
+						dataNode.put("text", data.getText());
+						ObjectNode groupNode = mapper.createObjectNode();
+						groupNode.put("id", data.getGroupId());
+						groupNode.put("name", groupDao.findById(data.getGroupId()).orElse(null).getName());
+						dataNode.put("recordGroup", groupNode);
+						groupInternalDataNode.add(dataNode);
+					}
 				}
 			}
 			if (groupInternalDataNode.size() > 0)
@@ -395,7 +462,7 @@ public class JsonPlaceSerializer {
 				for (PlaceChangeRecord changeRecord : changeHistory) {
 					ObjectNode changeRecordNode = mapper.createObjectNode();
 				
-					User changeRecordUser = userDao.findById(changeRecord.getUserId());
+					User changeRecordUser = userDao.findById(changeRecord.getUserId()).orElse(null);
 					if (changeRecordUser != null) {
 						changeRecordNode.put("username", changeRecordUser.getUsername());
 						changeRecordNode.put("userId", changeRecord.getUserId());
@@ -427,7 +494,7 @@ public class JsonPlaceSerializer {
 			ArrayNode parentsNode = mapper.createArrayNode();
 			
 			for (Place parent : parents) {
-				ObjectNode parentNode = createJsonNodes(parent, request, null, parentAccessStatusMap.get(parent.getId()), null, replacing);
+				ObjectNode parentNode = createJsonNodes(parent, request, null, parentAccessStatusMap.get(parent.getId()), null, replacing, asIndexSource);
 				parentsNode.add(parentNode);
 			}
 			

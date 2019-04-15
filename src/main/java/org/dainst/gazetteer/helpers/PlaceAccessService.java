@@ -32,7 +32,7 @@ public class PlaceAccessService {
 		if (place.getRecordGroupId() == null || place.getRecordGroupId().isEmpty())
 			return AccessStatus.EDIT;
 		
-		RecordGroup group = recordGroupDao.findOne(place.getRecordGroupId());
+		RecordGroup group = recordGroupDao.findById(place.getRecordGroupId()).orElse(null);
 		
 		User user = null;
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();

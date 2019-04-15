@@ -19,11 +19,12 @@ import org.dainst.gazetteer.helpers.AncestorsHelper;
 import org.dainst.gazetteer.helpers.LanguagesHelper;
 import org.dainst.gazetteer.helpers.Merger;
 import org.dainst.gazetteer.match.AutoMatchService;
-import org.dainst.gazetteer.search.ElasticSearchService;
+import org.dainst.gazetteer.search.ElasticSearchIndexer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,9 +44,6 @@ import com.sun.jersey.api.client.config.ClientConfig;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.api.client.filter.ClientFilter;
 
-/**
- * Handles requests for the application home page.
- */
 @Controller
 public class AdminController {
 
@@ -58,10 +56,10 @@ public class AdminController {
 	private HarvesterDefinitionRepository harvesterDefinitionDao;
 	
 	@Autowired
-	private ElasticSearchService esService;
+	private Merger merger;
 	
 	@Autowired
-	private Merger merger;
+	private ElasticSearchIndexer indexer;
 	
 	@Autowired
 	private AutoMatchService autoMatchService;
@@ -76,11 +74,19 @@ public class AdminController {
 	@ResponseBody
 	public String reindex() {
 		
-		esService.reindexAllPlaces();
+		int pageSize = 1000;
+		int page = 0;
+		int pagesCount = (int) Math.ceil((float) placeDao.count() / pageSize);
 		
-		return "OK: reindexing started";
+		do {
+			List<Place> places = placeDao.findAll(new PageRequest(page, pageSize)).getContent();
+			indexer.index(places);
+			page++;
+		} while (page < pagesCount);
 		
+		return "OK: reindexing completed";
 	}
+	
 	
 	@RequestMapping(value="/admin/toggleHarvester/{name}", method=RequestMethod.POST)
 	@ResponseBody
@@ -109,7 +115,6 @@ public class AdminController {
 		
 		return String.format("OK: reset %s",
 				harvesterDefinition.getName());
-		
 	}
 	
 	@RequestMapping(value="/admin/importGeonames", method=RequestMethod.POST)
@@ -179,6 +184,7 @@ public class AdminController {
 					count++;
 					place.addProvenance("geonames");
 					placeDao.save(place);
+					indexer.index(place);
 				}
 			}
 		}
@@ -194,7 +200,6 @@ public class AdminController {
 		autoMatchService.runAutoMatch(placeDao, merger);
 		
 		return "auto matching started in separate thread.";
-		
 	}
 	
 	@RequestMapping(value="/admin/calculateChildren", method=RequestMethod.POST)
@@ -210,6 +215,7 @@ public class AdminController {
 				int size = calculatePlaceChildren(place);
 				place.setChildren(size);
 				placeDao.save(place);
+				indexer.index(place);
 			} catch (NullPointerException e) {
 				logger.warn("Could not find parent {} for {}", place.getParent(), place);
 			}
@@ -227,8 +233,6 @@ public class AdminController {
 		int size = children.size();
 		for (Place child : children)
 			size += calculatePlaceChildren(child);
-		place.setChildren(size);
-		placeDao.save(place);
 		
 		return size;
 	}
@@ -276,6 +280,7 @@ public class AdminController {
 			newLink.setPredicate(predicate);
 			place.addLink(newLink);
 			placeDao.save(place);
+			indexer.index(place);
 			logger.debug("Generated Link: {}", newLink);
 		}
 	}

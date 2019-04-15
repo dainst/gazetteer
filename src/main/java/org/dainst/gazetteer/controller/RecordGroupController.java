@@ -80,14 +80,14 @@ public class RecordGroupController {
 			
 			List<GroupRole> groupRoles = groupRoleDao.findByUserId(user.getId());			
 			for (GroupRole role : groupRoles) {
-				RecordGroup group = recordGroupDao.findOne(role.getGroupId());
+				RecordGroup group = recordGroupDao.findById(role.getGroupId()).orElse(null);
 				recordGroups.add(group);
 				groupRights.put(group.getId(), role.getRoleType());
 			}
 		}		
 		
 		if (isAdminEdit() && deleteRecordGroupId != null && !deleteRecordGroupId.isEmpty()) {
-			RecordGroup recordGroup = recordGroupDao.findOne(deleteRecordGroupId);
+			RecordGroup recordGroup = recordGroupDao.findById(deleteRecordGroupId).orElse(null);
 			long placeCount = placeDao.getCountByRecordGroupIdAndDeletedIsFalse(deleteRecordGroupId);
 			if (placeCount == 0) {
 				List<GroupRole> groupRoles = groupRoleDao.findByGroupId(deleteRecordGroupId);
@@ -150,13 +150,13 @@ public class RecordGroupController {
 		if (!checkGroupUserManagementAccess(groupId))
 			return "redirect:app/#!/home";
 		
-		RecordGroup group = recordGroupDao.findOne(groupId);		
+		RecordGroup group = recordGroupDao.findById(groupId).orElse(null);		
 		List<GroupRole> roles = groupRoleDao.findByGroupId(groupId);
 		List<User> users = new ArrayList<User>();
 		Map<String, GroupRole> roleMap = new HashMap<String, GroupRole>();
 		
 		for (GroupRole role : roles) {
-			User user = userDao.findOne(role.getUserId());
+			User user = userDao.findById(role.getUserId()).orElse(null);
 			if (user != null)
 				users.add(user);
 			else
@@ -239,7 +239,7 @@ public class RecordGroupController {
 		if (!checkGroupUserManagementAccess(groupId))
 			return "redirect:app/#!/home";
 		
-		User user = userDao.findOne(userId);
+		User user = userDao.findById(userId).orElse(null);
 		GroupRole role = groupRoleDao.findByGroupIdAndUserId(groupId, userId);
 		
 		if (role == null)
@@ -306,7 +306,7 @@ public class RecordGroupController {
 		if (!checkGroupUserManagementAccess(groupId))
 			return "redirect:app/#!/home";
 		
-		User user = userDao.findOne(userId);
+		User user = userDao.findById(userId).orElse(null);
 		GroupRole role = groupRoleDao.findByGroupIdAndUserId(groupId, userId);
 		
 		if (role == null)
@@ -327,7 +327,7 @@ public class RecordGroupController {
 		if (!checkGroupUserManagementAccess(groupId))
 			return "redirect:app/#!/home";
 		
-		RecordGroup group = recordGroupDao.findOne(groupId);
+		RecordGroup group = recordGroupDao.findById(groupId).orElse(null);
 		
 		if (group == null )
 			throw new IllegalStateException("No group with groupId " + groupId + " could be found.");
@@ -342,7 +342,7 @@ public class RecordGroupController {
 	public void sendRecordGroupContactMail(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam(required=true) String groupId) {
 		
-		RecordGroup group = recordGroupDao.findOne(groupId);
+		RecordGroup group = recordGroupDao.findById(groupId).orElse(null);
 		if (group == null)
 			throw new IllegalStateException("Record group with id " + groupId + " could not be found.");
 		
@@ -378,7 +378,7 @@ public class RecordGroupController {
 				+ message;
 		
 		for (GroupRole role : groupAdminRoles) {
-			User admin = userDao.findOne(role.getUserId());
+			User admin = userDao.findById(role.getUserId()).orElse(null);
 			try {
 				mailService.sendMail(admin.getEmail(), subject, content, user.getEmail());
 			} catch (MessagingException e) {

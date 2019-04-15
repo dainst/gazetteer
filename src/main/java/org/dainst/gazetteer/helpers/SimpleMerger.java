@@ -40,7 +40,7 @@ public class SimpleMerger implements Merger {
 		place1.setRelatedPlaces(new HashSet<String>());
 		for (String relatedPlaceId : relatedPlaces) {
 			if (relatedPlaceId != null) {
-				Place relatedPlace = placeRepository.findOne(relatedPlaceId);
+				Place relatedPlace = placeRepository.findById(relatedPlaceId).orElse(null);
 				if (relatedPlace != null && relatedPlace.getRelatedPlaces() != null
 						&& (relatedPlace.getRelatedPlaces().contains(place1.getId()) || relatedPlace.getRelatedPlaces().contains(place2.getId())
 						&& !relatedPlace.getId().equals(place1.getId()) && !relatedPlace.getId().equals(place2.getId()))) {
@@ -82,7 +82,7 @@ public class SimpleMerger implements Merger {
 		else if (place2.getParent() != null && !place1.getParent().equals(place2.getParent())) {
 			Place otherParent = getFromPlaceSet(place2.getParent(), changedPlaces);
 			if (otherParent == null)
-				otherParent = placeRepository.findOne(place2.getParent());
+				otherParent = placeRepository.findById(place2.getParent()).orElse(null);
 			if (otherParent != null) {
 				place1.getRelatedPlaces().add(otherParent.getId());
 				otherParent.getRelatedPlaces().add(place1.getId());
