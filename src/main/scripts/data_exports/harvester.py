@@ -72,6 +72,7 @@ class Harvester:
 
                 self._processed_batches_counter += 1
 
+        self.logger.info(f"Done.")
         return places
 
     def __init__(self, include_polygons):
