@@ -79,7 +79,9 @@ z.B. Anpassen des Speicherpfades der Logdatei, da ggfs. in template Pfad keine S
 
 Eine Elasticsearch-Reindizierung kann bei laufendem Gazetteer über die Admin-API angestoßen werden:
 
+```
 curl -XPOST user:password@localhost:8080/gazetteer/admin/reindex
+```
 
 Dazu muss ein Useraccount verwendet werden, der über Adminberechtigungen verfügt.
 
