@@ -50,25 +50,32 @@ parser.add_argument('-p', '--polygons', action='store_true',
 def create_awk_multipolygon(multipolygon):
     result = "MULTIPOLYGON("
 
-    result += "("
-    first_single = True
-    for polygon in multipolygon:
-        if not first_single:
-            result += ","
+    # See https://en.wikipedia.org/wiki/Well-known_text_representation_of_geometry#Geometric_objects
+    first_group = True
+    for group in multipolygon:
+        if not first_group:
+            result += ", "
 
         result += "("
-        first_vertex = True
-        for vertex in polygon:
-            if not first_vertex:
-                result += ","
-            result += f"{vertex[0]},{vertex[1]}"
-            first_vertex = False
+        first_single = True
+        for polygon in group:
+            if not first_single:
+                result += ", "
+
+            result += "("
+            first_vertex = True
+            for vertex in polygon:
+                if not first_vertex:
+                    result += ", "
+                result += f"{vertex[0]} {vertex[1]}"
+                first_vertex = False
+
+            result += ")"
+            first_single = False
 
         result += ")"
-        first_single = False
 
-    result += ")"
-    first_multi = False
+        first_group = False
 
     return result
 
@@ -151,29 +158,27 @@ def create_place_rdf(graph, place):
         ))
 
     if 'prefLocation' in place and 'shape' in place['prefLocation']:
+        blank_node = BNode()
+        graph.add((
+            blank_node,
+            RDF.type,
+            SF.Polygon
+        ))
 
-        for multipolygon in place['prefLocation']['shape']:
-            blank_node = BNode()
-            graph.add((
-                blank_node,
-                RDF.type,
-                SF.Polygon
-            ))
+        graph.add((
+            blank_node,
+            GEO.asWKT,
+            Literal(
+                create_awk_multipolygon(place['prefLocation']['shape']),
+                datatype=GEO.wktLiteral
+            )
+        ))
 
-            graph.add((
-                blank_node,
-                GEO.asWKT,
-                Literal(
-                    create_awk_multipolygon(multipolygon),
-                    datatype=GEO.wktLiteral
-                )
-            ))
-
-            graph.add((
-                place_uri,
-                GEO.hasGeometry,
-                blank_node
-            ))
+        graph.add((
+            place_uri,
+            GEO.hasGeometry,
+            blank_node
+        ))
 
     if 'identifiers' in place:
         for identifier in place['identifiers']:
@@ -193,10 +198,11 @@ def create_place_rdf(graph, place):
     return graph
 
 
-def create_rdf(output_path, output_format, places):
+def create_rdf(places):
     g = Graph()
     g.namespace_manager = namespace_manager
 
+    logger.info("Creating RDF data.")
     for place in places:
         try:
             g = create_place_rdf(g, place)
@@ -204,12 +210,19 @@ def create_rdf(output_path, output_format, places):
             logger.error(e)
             logger.error(place)
 
-    g.serialize(destination=output_path, format=output_format)
+    return g
 
 
 if __name__ == "__main__":
     options = vars(parser.parse_args())
-
     harvester = Harvester(options['polygons'])
 
-    create_rdf(options['target'], options['format'], harvester.get_data())
+    logger.info("Retrieving raw place data...")
+    data = harvester.get_data()
+
+    rdf_graph = create_rdf(data)
+
+    logger.info("Writing RDF file.")
+    rdf_graph.serialize(destination=options['target'], format=options['format'])
+
+    logger.info("Done")
