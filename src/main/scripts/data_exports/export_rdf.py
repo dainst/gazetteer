@@ -198,7 +198,11 @@ def create_rdf(output_path, output_format, places):
     g.namespace_manager = namespace_manager
 
     for place in places:
-        g = create_place_rdf(g, place)
+        try:
+            g = create_place_rdf(g, place)
+        except KeyError as e:
+            logger.error(e)
+            logger.error(place)
 
     g.serialize(destination=output_path, format=output_format)
 
