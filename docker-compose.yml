@@ -18,9 +18,11 @@ services:
 
   elasticsearch:
     container_name: gazetteer_elasticsearch
-    command: ["elasticsearch", "-Ecluster.name=gazetteer.dainst.org"]
     build:
       context: ./elasticsearch
+    environment:
+      - discovery.type=single-node
+      - cluster.name=gazetteer.dainst.org
     ports:
       - 9200:9200
       - 9300:9300
