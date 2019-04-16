@@ -18,7 +18,11 @@ services:
 
   elasticsearch:
     container_name: gazetteer_elasticsearch
-    command: ["elasticsearch", "-Ecluster.name=gazetteer.dainst.org", "-Enode.name=gazetteer", "-Ediscovery.seed_hosts=127.0.0.1, [::1]", "-Ecluster.initial_master_nodes=gazetteer"]
+    environment:
+      - cluster.name=gazetteer.dainst.org
+      - discovery.seed_hosts=127.0.0.1, [::1]
+      - node.name=gazetteer
+      - cluster.initial_master_nodes=gazetteer
     build:
       context: ./elasticsearch
     ports:
