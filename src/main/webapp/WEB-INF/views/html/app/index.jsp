@@ -154,8 +154,8 @@
 										
 									<div name="suggestionsContainer" class="suggestion-menu" ng-show="searchSuggestions">
 										<div ng-repeat="suggestion in searchSuggestions | sortAlphabetically">
-											<div class="suggestion" ng-mousedown="submit()" ng-hide="selectedSuggestionIndex == $index" ng-mouseover="setSelectedSuggestionIndex($index)"><span ng-show="suggestion.length < 30">{{suggestion}}</span><span ng-hide="suggestion.length < 30">{{suggestion.substring(0,29)}}...</span></div>
-											<div class="suggestion selected" ng-mousedown="submit()" ng-show="selectedSuggestionIndex == $index"><span ng-show="suggestion.length < 30">{{suggestion}}</span><span ng-hide="suggestion.length < 30">{{suggestion.substring(0,29)}}...</span></div>
+											<div class="suggestion" ng-mousedown="submit()" ng-hide="selectedSuggestionIndex == $index" ng-mouseover="setSelectedSuggestionIndex($index)">{{suggestion}}</div>
+											<div class="suggestion selected" ng-mousedown="submit()" ng-show="selectedSuggestionIndex == $index">{{suggestion}}</div>
 										</div>
 									</div>
 								</div>
