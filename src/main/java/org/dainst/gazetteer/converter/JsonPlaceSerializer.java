@@ -341,7 +341,10 @@ public class JsonPlaceSerializer {
 				idNode.put("context", id.getContext());
 				idsNode.add(idNode);
 			}
-			placeNode.put("identifiers", idsNode);
+			if (asIndexSource)
+				placeNode.put("ids", idsNode);
+			else
+				placeNode.put("identifiers", idsNode);
 		}
 		
 		// links
