@@ -7,10 +7,13 @@ import java.util.List;
 
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.action.search.SearchScrollRequest;
+import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.geo.GeoPoint;
 import org.elasticsearch.common.geo.ShapeRelation;
 import org.elasticsearch.common.geo.builders.ShapeBuilders;
+import org.elasticsearch.common.unit.TimeValue;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.GeoBoundingBoxQueryBuilder;
 import org.elasticsearch.index.query.GeoDistanceQueryBuilder;
@@ -45,6 +48,7 @@ public class ElasticSearchPlaceQuery {
 	private long totalHits = -1;
 	private Aggregations aggregations;
 	private boolean childrenBoost = false;
+	private String lastScrollId;
 
 	public ElasticSearchPlaceQuery(RestHighLevelClient client) {
 		this.client = client;
@@ -184,29 +188,63 @@ public class ElasticSearchPlaceQuery {
 	public long getHits() {
 		return totalHits;
 	}
-
+	
 	public String[] execute() {
 		
-		if (childrenBoost)
-			searchSourceBuilder.query(addChildrenBoostScriptFunction(queryBuilder));
-		else
-			searchSourceBuilder.query(queryBuilder);
-		SearchRequest request = new SearchRequest("gazetteer");
-		request.source(searchSourceBuilder);
-		request.types("place");
+		return execute(false);
+	}
+
+	public String[] execute(boolean startScroll) {
+		SearchRequest request = getSearchRequest();
+		if (startScroll) request.scroll(TimeValue.timeValueMinutes(1L)); 
+		
 		logger.debug("Query: {}", queryBuilder.toString());
 		try {
-			SearchResponse response = client.search(request);
+			SearchResponse response = client.search(request, RequestOptions.DEFAULT);
 			aggregations = response.getAggregations();
+			if (startScroll) lastScrollId = response.getScrollId();
 			return responseAsList(response);
 		} catch (IOException e) {
 			logger.error("Error while executing search query", e);
 			return new String[0];
 		}
 	}
+	
+	public String[] execute(String scrollId) {
+		SearchScrollRequest request = new SearchScrollRequest(scrollId);
+		request.scroll(TimeValue.timeValueMinutes(1L)); 
+		
+		try {
+			SearchResponse response = client.scroll(request, RequestOptions.DEFAULT);
+			aggregations = response.getAggregations();
+			lastScrollId = response.getScrollId();
+			return responseAsList(response);
+		} catch (IOException e) {
+			logger.error("Error while executing search query", e);
+			return new String[0];
+		}
+	}
+	
+	public String getScrollId() {
+		return lastScrollId;
+	}
 
 	public Aggregations getTermsAggregations() {
 		return aggregations;
+	}	
+	
+	private SearchRequest getSearchRequest() {
+		
+		if (childrenBoost)
+			searchSourceBuilder.query(addChildrenBoostScriptFunction(queryBuilder));
+		else
+			searchSourceBuilder.query(queryBuilder);
+		
+		SearchRequest request = new SearchRequest("gazetteer");
+		request.source(searchSourceBuilder);
+		request.types("place");
+		
+		return request;
 	}
 
 	private String[] responseAsList(SearchResponse response) {

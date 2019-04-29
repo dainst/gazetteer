@@ -108,7 +108,9 @@ public class SearchController {
 			@RequestParam(required = false) double[] polygonFilterCoordinates,
 			@RequestParam(required = false) boolean showHiddenPlaces, @RequestParam(required = false) String add,
 			@RequestParam(required = false) boolean noPolygons, @RequestParam(required = false) String queryId,
-			@RequestParam(required = false) boolean pretty, HttpServletRequest request, HttpServletResponse response) {
+			@RequestParam(required = false) boolean pretty,
+			@RequestParam(required = false) boolean scroll, @RequestParam(required = false) String scrollId,
+			HttpServletRequest request, HttpServletResponse response) {
 
 		logger.info("bbox:" + Arrays.toString(bbox));
 
@@ -128,7 +130,9 @@ public class SearchController {
 				offset, showHiddenPlaces, showInReview, user);
 
 		// get ids from elastic search
-		String[] result = query.execute();
+		String[] result = (scrollId != null) ? query.execute(scrollId) : query.execute(scroll);
+				
+		String newScrollId = (scroll || scrollId != null) ? query.getScrollId() : null;
 
 		logger.debug("Querying index returned: " + result.length + " places");
 		logger.debug("Result: {}", Arrays.toString(result));
@@ -178,6 +182,8 @@ public class SearchController {
 		mav.addObject("places", places);
 		if (parents.size() > 0)
 			mav.addObject("parents", parents);
+		if (newScrollId != null)
+			mav.addObject("scrollId", newScrollId);
 		mav.addObject("jsonPlaceSerializer", jsonPlaceSerializer);
 		mav.addObject("accessStatusMap", accessStatusMap);
 		mav.addObject("parentAccessStatusMap", parentAccessStatusMap);
