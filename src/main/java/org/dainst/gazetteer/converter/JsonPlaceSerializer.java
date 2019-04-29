@@ -45,6 +45,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 public class JsonPlaceSerializer {
 	
 	private final static Logger logger = LoggerFactory.getLogger("org.dainst.gazetteer.JsonPlaceSerializer");
+	
+	private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
 	private String baseUri;
 	
@@ -390,7 +392,7 @@ public class JsonPlaceSerializer {
 				provenanceNode.add(provenanceEntry);
 			}
 			placeNode.put("provenance", provenanceNode);
-		}		
+		}
 		
 		// reisestipendium content		
 		logger.debug("serializing reisestipendium content?");
@@ -440,6 +442,11 @@ public class JsonPlaceSerializer {
 			}
 			if (groupInternalDataNode.size() > 0)
 				placeNode.put("groupInternalData", groupInternalDataNode);
+		}
+		
+		// last change date
+		if (place.getLastChangeDate() != null && asIndexSource) {
+			placeNode.put("lastChangeDate", dateFormat.format(place.getLastChangeDate()));
 		}
 		
 		// read access

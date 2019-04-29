@@ -260,6 +260,9 @@
 				},
 				"recordGroupId": {
 					"type": "keyword"
+				},
+				"lastChangeDate": {
+					"type": "date"
 				}
 	        }
 	    }
