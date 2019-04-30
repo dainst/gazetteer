@@ -122,6 +122,11 @@ public class SearchController {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if (principal instanceof User)
 			user = (User) principal;
+		
+		if (limit + offset > 10000) {
+			limit = 10;
+			offset = 0;
+		}
 
 		logger.debug("Searching places with query: " + q + ", fq: " + fq + ", limit: " + limit + ", offset: " + offset
 				+ ", type: " + type);
