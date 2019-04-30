@@ -35,6 +35,7 @@ import org.dainst.gazetteer.helpers.ProtectLocationsService;
 import org.dainst.gazetteer.search.ElasticSearchClientProvider;
 import org.dainst.gazetteer.search.ElasticSearchPlaceQuery;
 import org.dainst.gazetteer.search.ElasticSearchSuggestionQuery;
+import org.elasticsearch.ElasticsearchStatusException;
 import org.elasticsearch.search.aggregations.Aggregation;
 import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
@@ -122,7 +123,7 @@ public class SearchController {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if (principal instanceof User)
 			user = (User) principal;
-		
+
 		if (limit + offset > 10000) {
 			limit = 0;
 			offset = 0;
@@ -135,8 +136,20 @@ public class SearchController {
 				offset, showHiddenPlaces, showInReview, user);
 
 		// get ids from elastic search
-		String[] result = (scrollId != null) ? query.execute(scrollId) : query.execute(scroll);
-				
+		String[] result = {};
+		String error = null;
+		
+		if (scrollId != null) {
+			try {
+				result = query.execute(scrollId);
+			} catch (ElasticsearchStatusException e) {
+				error = "Invalid scroll id";
+				logger.error("Failed to perform scroll search", e);
+			}
+		} else {
+			result = query.execute(scroll);
+		}
+
 		String newScrollId = (scroll || scrollId != null) ? query.getScrollId() : null;
 
 		logger.debug("Querying index returned: " + result.length + " places");
@@ -204,6 +217,7 @@ public class SearchController {
 		mav.addObject("q", q);
 		mav.addObject("googleMapsApiKey", googleMapsApiKey);
 		mav.addObject("callback", callback);
+		mav.addObject("error", error);
 
 		return mav;
 
@@ -235,7 +249,7 @@ public class SearchController {
 		query.addTermsAggregation("parent");
 		query.addTermsAggregation("types");
 		query.addTermsAggregation("tags");
-		
+
 		query.addBoostForChildren();
 
 		logger.debug("executing extended search with query: {}", jsonQuery);
@@ -416,7 +430,7 @@ public class SearchController {
 	@ResponseBody
 	public Map<String, List<String>> getSuggestions(@RequestParam String field, @RequestParam String text,
 			@RequestParam String queryId) {
-		
+
 		ElasticSearchSuggestionQuery query = new ElasticSearchSuggestionQuery(clientProvider.getClient(), groupDao,
 				groupRoleDao);
 		List<String> suggestions = query.getSuggestions(field, text, field.equals("nameSuggestions"));
@@ -504,17 +518,17 @@ public class SearchController {
 		if (polygonFilterCoordinates != null && polygonFilterCoordinates.length > 0) {
 			boolean closed = polygonFilterCoordinates[0] == polygonFilterCoordinates.length - 2
 					&& polygonFilterCoordinates[1] == polygonFilterCoordinates.length - 1;
-			
-			double[][] polygon = new double[closed ?
-					polygonFilterCoordinates.length / 2 :
-					polygonFilterCoordinates.length / 2 + 1][];
+
+			double[][] polygon = new double[closed
+					? polygonFilterCoordinates.length / 2
+					: polygonFilterCoordinates.length / 2 + 1][];
 
 			for (int i = 0; i < polygonFilterCoordinates.length / 2; i++) {
 				polygon[i] = new double[2];
 				polygon[i][0] = polygonFilterCoordinates[i * 2];
 				polygon[i][1] = polygonFilterCoordinates[i * 2 + 1];
 			}
-			
+
 			if (!closed) {
 				polygon[polygon.length - 1] = new double[2];
 				polygon[polygon.length - 1][0] = polygonFilterCoordinates[0];
@@ -523,7 +537,7 @@ public class SearchController {
 
 			query.addPolygonFilter(polygon);
 		}
-		
+
 		query.addBoostForChildren();
 
 		return query;
@@ -545,8 +559,9 @@ public class SearchController {
 	private Map<String, List<String[]>> processAggregations(ElasticSearchPlaceQuery query, Locale locale) {
 
 		Map<String, List<String[]>> result = new HashMap<String, List<String[]>>();
-		Aggregations aggregations = query.getTermsAggregations(); 
-		if (aggregations == null) return result;
+		Aggregations aggregations = query.getTermsAggregations();
+		if (aggregations == null)
+			return result;
 
 		for (Aggregation aggregation : aggregations.asList()) {
 			List<String[]> terms = new ArrayList<String[]>();
@@ -689,7 +704,7 @@ public class SearchController {
 				recordGroupFilter += " OR " + groupId;
 			}
 		}
-		
+
 		recordGroupFilter += ")";
 
 		return recordGroupFilter;

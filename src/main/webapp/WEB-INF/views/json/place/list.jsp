@@ -9,9 +9,12 @@ Map<String, PlaceAccessService.AccessStatus> parentAccessStatusMap = (Map<String
 Long hits = (Long) request.getAttribute("hits");
 String queryId = (String) request.getAttribute("queryId");
 String scrollId = (String) request.getAttribute("scrollId");
+String error = (String) request.getAttribute("error");
 JsonPlaceSerializer serializer = (JsonPlaceSerializer) request.getAttribute("jsonPlaceSerializer");
 
 StringBuilder sb = new StringBuilder("{");
+if (error != null)
+	sb.append(", \"error\": \"" + error + "\"");
 if (scrollId != null)
 	sb.append(", \"scrollId\": \"" + scrollId + "\"");
 sb.append("\n\"total\": ").append(hits);
