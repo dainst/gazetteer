@@ -24,6 +24,7 @@ messages.factory('messages', function(){
 		"ui.search.filter.no-tags": "بلا وسوم",
 		"ui.search.filter.no-provenance": "بدون ذكر المصدر",
 		"ui.search.grandchildren-search": "جميع الأماكن الفرعية",
+		"ui.search.result-limit-exceeded": "The search result size exceeds 10000 entries. Please narrow down your search.",
 		"ui.place.names.more": "أكثر",
 		"ui.place.names.less": "أقلّ",
 		"ui.place.children.search": "أظهر الأماكن في البحث",

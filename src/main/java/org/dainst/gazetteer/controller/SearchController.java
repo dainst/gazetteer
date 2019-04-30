@@ -124,7 +124,7 @@ public class SearchController {
 			user = (User) principal;
 		
 		if (limit + offset > 10000) {
-			limit = 10;
+			limit = 0;
 			offset = 0;
 		}
 

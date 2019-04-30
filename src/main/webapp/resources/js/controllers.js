@@ -547,6 +547,10 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 		for (var i in $scope.places)
 			$scope.places[i].mapType = "searchResults";
 		$rootScope.activePlaces = $scope.places;
+		
+		if ($scope.places.length == 0 && $scope.search.limit + $scope.search.offset > 10000) {
+			$rootScope.addAlert(messages["ui.search.result-limit-exceeded"], null, "warning");
+		}
 	});
 	
 	$scope.page = function() {
@@ -602,7 +606,7 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 		$location.search($scope.search);
 	};
 	
-	$scope.submit = function() {
+	$scope.submit = function() {		
 		$rootScope.loading++;
 		
 		$scope.updateFilters();
@@ -623,7 +627,7 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 			$rootScope.loading--;
 			if ($scope.total != result.total)
 				$scope.total = result.total;
-		}, function() {
+		}, function() {			
 			$rootScope.addAlert(messages["ui.contactAdmin"], messages["ui.error"], "error");
 			$rootScope.loading--;
 		});

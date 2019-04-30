@@ -24,6 +24,7 @@ messages.factory('messages', function(){
 		"ui.search.filter.no-tags": "No tags",
 		"ui.search.filter.no-provenance": "No provenance",
 		"ui.search.grandchildren-search": "All subplaces",
+		"ui.search.result-limit-exceeded": "The search result size exceeds 10000 entries. Please narrow down your search.",
 		"ui.place.names.more": "more",
 		"ui.place.names.less": "less",
 		"ui.place.children.search": "Show places in search",
