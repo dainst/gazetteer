@@ -8,6 +8,7 @@ import pycountry
 from rdflib import Graph, Literal, BNode, URIRef
 from rdflib.namespace import DC, DCTERMS, FOAF, OWL, RDF, RDFS, SKOS
 from rdflib.namespace import Namespace, NamespaceManager
+from urllib.parse import quote
 
 namespace_manager = NamespaceManager(Graph())
 
@@ -197,13 +198,13 @@ def create_place_rdf(graph, place):
                 graph.add((
                     place_uri,
                     OWL.sameAs,
-                    URIRef(link['object'])
+                    URIRef(quote(link['object'], safe=";/?:@&=+$,"))
                 ))
             elif predicate_ns == "rdfs" and predicate_value == "seeAlso":
                 graph.add((
                     place_uri,
                     RDFS.seeAlso,
-                    URIRef(link['object'])
+                    URIRef(quote(link['object'], safe=";/?:@&=+$,"))
                 ))
             else:
                 logger.warning(f"Unknown link predicate prefix: {predicate_ns}. In place:")
