@@ -13,11 +13,11 @@ String error = (String) request.getAttribute("error");
 JsonPlaceSerializer serializer = (JsonPlaceSerializer) request.getAttribute("jsonPlaceSerializer");
 
 StringBuilder sb = new StringBuilder("{");
+sb.append("\n\"total\": ").append(hits);
 if (error != null)
 	sb.append(", \"error\": \"" + error + "\"");
 if (scrollId != null)
 	sb.append(", \"scrollId\": \"" + scrollId + "\"");
-sb.append("\n\"total\": ").append(hits);
 sb.append(",\n\"result\": [\n");
 int numberOfPlaces = 0;
 List<String> accessGrantedPlaces = new ArrayList<String>();
