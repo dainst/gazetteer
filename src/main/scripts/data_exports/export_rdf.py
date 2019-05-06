@@ -188,6 +188,28 @@ def create_place_rdf(graph, place):
                 Literal(f"{identifier['context']}:{identifier['value']}")
             ))
 
+    if 'links' in place:
+        for link in place['links']:
+
+            predicate_ns, predicate_value = link['predicate'].split(':')
+
+            if predicate_ns == "owl" and predicate_value == "sameAs":
+                graph.add((
+                    place_uri,
+                    OWL.sameAs,
+                    URIRef(link['object'])
+                ))
+            elif predicate_ns == "rdfs" and predicate_value == "seeAlso":
+                graph.add((
+                    place_uri,
+                    RDFS.seeAlso,
+                    URIRef(link['object'])
+                ))
+            else:
+                logger.warning(f"Unknown link predicate prefix: {predicate_ns}. In place:")
+                logger.warning(place)
+                continue
+
     if 'parent' in place:
         graph.add((
             place_uri,
