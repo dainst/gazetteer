@@ -35,8 +35,11 @@ class Harvester:
         elif type(e) is requests.exceptions.ConnectionError:
             return self._retry_query(e.request.url, retries_left)
 
-    def _get_batch(self, scroll_id):
-        url = f"{self._base_url}/search.json?pretty=true&limit={self._batch_size}&scrollId={scroll_id}"
+    def _get_batch(self, scroll_id=None):
+        if scroll_id is None:
+            url = f"{self._base_url}/search.json?limit={self._batch_size}&scroll=true"
+        else:
+            url = f"{self._base_url}/search.json?pretty=true&limit={self._batch_size}&scrollId={scroll_id}"
 
         if not self.polygons:
             url += "&noPolygons=true"
@@ -50,18 +53,7 @@ class Harvester:
 
     def get_data(self):
 
-        url = f"{self._base_url}/search.json?limit={self._batch_size}&scroll=true"
-
-        if not self.polygons:
-            url += "&noPolygons=true"
-
-        first_query = None
-        try:
-            response = requests.get(url=url)
-            response.raise_for_status()
-            first_query = response.json()
-        except requests.exceptions.HTTPError as e:
-            self._handle_query_exception(e, 5)
+        first_query = self._get_batch()
 
         if first_query is None:
             self.logger.error("Failed to retrieve first batch")
