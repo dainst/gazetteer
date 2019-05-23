@@ -167,23 +167,7 @@
 						</div>
 						<ul class="nav pull-right">
 							<li><a href="#!/about/"><s:message code="ui.about" text="ui.about" /></a></li>
-  							<li class="dropdown">
-    							<a href="#" class="dropdown-toggle" data-toggle="dropdown">iDAI.welt <b class="caret"></b></a>
-    							<ul class="dropdown-menu">
-      								<li>
-      									<a href="http://www.dainst.org/de/forschung/forschung-digital/idai.welt" target="_blank">
-      										<s:message code="ui.idaiwelt.overview" text="ui.idaiwelt.overview" />
-      									</a>
-      								</li>
-									<li class="divider"></li>
-	   								<li><a href="http://zenon.dainst.org/" target="_blank">iDAI.bibliography / Zenon 2.0</a></li>
-      								<li><a href="http://geoserver.dainst.org/" target="_blank">iDAI.geoserver</a></li>
-      								<li><a href="http://arachne.uni-koeln.de/" target="_blank">iDAI.objects / Arachne 3</a></li>
-      								<li><a href="http://arachne.dainst.org/" target="_blank">iDAI.objects / Arachne 4</a></li>
-      								<li><a href="http://archwort.dainst.org/thesaurus/de/vocab/" target="_blank">iDAI.vocab</a></li>
-      								<li><a href="http://hellespont.dainst.org" target="_blank">Hellespont</a></li>
-    							</ul>
-  							</li>
+							<li><a href="#!/help/"><s:message code="ui.help" text="ui.help" /><i class="icon-question-sign" style="color:white; margin:0px 0px 5px 3px;"></i></a></li>
   							<li class="dropdown">
     							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
     								<s:message code="ui.language.current" text="ui.language.current" />
@@ -195,8 +179,12 @@
       								<li><a href="?lang=ar#!{{getCurrentRoute()}}">العربية</a></li>
     							</ul>
   							</li>
-							<li><a href="#!/help/"><s:message code="ui.help" text="ui.help" /><i class="icon-question-sign" style="color:white; margin:0px 0px 5px 3px;"></i></a>
-							</li>
+							<li class="dropdown">
+    							<a href="" class="dropdown-toggle" data-toggle="dropdown">iDAI.welt <b class="caret"></b></a>
+    							<div class="dropdown-menu">
+    								<iframe src="https://idai.world/config/idai-nav.html" frameborder="0" style="height: 100vh; width: 200px;"></iframe>
+      							</div>
+  							</li>
 						</ul>
 					</div>
 				</div>
