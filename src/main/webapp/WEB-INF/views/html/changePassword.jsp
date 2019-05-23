@@ -87,7 +87,7 @@
 							</div>
 							<ul class="nav pull-right">
 								<li><a href="app/#!/about/"><s:message code="ui.about" text="ui.about" /></a></li>
-								<li><a href="app/#!/help/"><s:message code="ui.help" text="ui.help" /></a></li>
+								<li><a href="app/#!/help/"><s:message code="ui.help" text="ui.help" /><i class="icon-question-sign" style="color: white; margin: 0px 0px 5px 3px;"></i></a></li>
   								<li class="dropdown">
 	    							<a href="" class="dropdown-toggle" data-toggle="dropdown">
 	    								<s:message code="ui.language.current" text="ui.language.current" />
