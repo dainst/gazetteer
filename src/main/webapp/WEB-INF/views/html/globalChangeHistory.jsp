@@ -98,7 +98,7 @@
 				<div class="affix-menu-wrapper">
 					<div id="affix-menu" style="z-index: 100000"
 						class="navbar navbar-inverse gaz-container" data-spy="affix">
-						<div class="navbar-inner">
+						<div class="navbar-inner" style="height: 43px">
 							<div id="archaeo-fixed-menu-icon"></div>
 							<a class="btn btn-navbar" data-toggle="collapse"
 								data-target=".nav-collapse"> <span class="icon-bar"></span> <span
