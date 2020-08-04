@@ -195,7 +195,7 @@ public class ElasticSearchPlaceQuery {
 
 	public String[] execute(boolean startScroll) {
 		SearchRequest request = getSearchRequest();
-		if (startScroll) request.scroll(TimeValue.timeValueMinutes(1L)); 
+		if (startScroll) request.scroll(TimeValue.timeValueMinutes(30L)); 
 		
 		logger.debug("Query: {}", queryBuilder.toString());
 		try {
@@ -211,7 +211,7 @@ public class ElasticSearchPlaceQuery {
 	
 	public String[] execute(String scrollId) {
 		SearchScrollRequest request = new SearchScrollRequest(scrollId);
-		request.scroll(TimeValue.timeValueMinutes(1L)); 
+		request.scroll(TimeValue.timeValueMinutes(30L)); 
 		
 		try {
 			SearchResponse response = client.scroll(request, RequestOptions.DEFAULT);
