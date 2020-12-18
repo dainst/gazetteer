@@ -57,6 +57,8 @@ public class MailService {
 	    try {
 	        transport.connect(mailUsername, mailPassword);
 	        transport.sendMessage(message, message.getAllRecipients());
+	    } catch (MessagingException e) {
+	    	logger.warn("Could not send mail to: " + recipientMail, e);
 	    } finally {
 	    	transport.close();
 	    }
