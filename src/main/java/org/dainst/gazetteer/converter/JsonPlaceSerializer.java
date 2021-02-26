@@ -55,6 +55,7 @@ public class JsonPlaceSerializer {
 	private boolean includeAccessInfo = false;
 	private boolean includeChangeHistory = false;
 	private boolean pretty = false;
+	private boolean useShortLanguageCodes = false;
 	private Locale locale = null;
 	private Locale originalLocale = null;
 	
@@ -224,7 +225,7 @@ public class JsonPlaceSerializer {
 			ObjectNode prefNameNode = mapper.createObjectNode();
 			prefNameNode.put("title", place.getPrefName().getTitle());
 			if (place.getPrefName().getLanguage() != null)
-				prefNameNode.put("language", place.getPrefName().getLanguage());
+				prefNameNode.put("language", getLanguageCode(place.getPrefName().getLanguage()));
 			if (place.getPrefName().isAncient())
 				prefNameNode.put("ancient", true);
 			if (place.getPrefName().isTransliterated())
@@ -250,7 +251,7 @@ public class JsonPlaceSerializer {
 				ObjectNode nameNode = mapper.createObjectNode();
 				nameNode.put("title", name.getTitle());
 				if (name.getLanguage() != null)
-					nameNode.put("language", name.getLanguage());
+					nameNode.put("language", getLanguageCode(name.getLanguage()));
 				if (name.isAncient())
 					nameNode.put("ancient", true);
 				if (name.isTransliterated())
@@ -370,7 +371,7 @@ public class JsonPlaceSerializer {
 				ObjectNode commentNode = mapper.createObjectNode();
 				commentNode.put("text", comment.getText());
 				if (comment.getLanguage() != null && !comment.getLanguage().isEmpty())
-					commentNode.put("language", comment.getLanguage());
+					commentNode.put("language", getLanguageCode(comment.getLanguage()));
 				commentsNode.add(commentNode);
 			}
 			placeNode.put("comments", commentsNode);
@@ -409,7 +410,7 @@ public class JsonPlaceSerializer {
 				for (Comment comment : place.getCommentsReisestipendium()) {
 					ObjectNode commentNode = mapper.createObjectNode();
 					commentNode.put("text", comment.getText());
-					commentNode.put("language", comment.getLanguage());
+					commentNode.put("language", getLanguageCode(comment.getLanguage()));
 					commentNode.put("user", comment.getUser());
 					commentsNode.add(commentNode);
 				}
@@ -623,6 +624,13 @@ public class JsonPlaceSerializer {
 		return coordinatesNode;
 	}
 	
+	private String getLanguageCode(String iso3LanguageCode) {
+		
+		return useShortLanguageCodes
+			? languagesHelper.getLocaleForISO3Language(iso3LanguageCode).getLanguage()
+			: iso3LanguageCode; 
+	}
+	
 	private void resetMapper() {
 		
 		mapper = new ObjectMapper();
@@ -661,6 +669,14 @@ public class JsonPlaceSerializer {
 
 	public void setPretty(boolean pretty) {
 		this.pretty = pretty;
+	}
+	
+	public boolean getUseShortLanguageCodes() {
+		return useShortLanguageCodes;
+	}
+	
+	public void setUseShortLanguageCodes(boolean useShortLanguageCodes) {
+		this.useShortLanguageCodes = useShortLanguageCodes;
 	}
 	
 	public Locale getLocale() {

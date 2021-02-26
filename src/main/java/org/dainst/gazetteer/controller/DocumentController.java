@@ -109,6 +109,7 @@ public class DocumentController {
 			@RequestParam(required=false, defaultValue="map,table") String view,
 			@RequestParam(required=false) String add,
 			@RequestParam(required=false) boolean pretty,
+			@RequestParam(required=false) boolean shortLanguageCodes,
 			@RequestParam(required=false) String replacing,
 			@RequestHeader(value="User-Agent", required=false) String userAgent,
 			@RequestHeader(value="Accept", required=false) String accept,
@@ -196,6 +197,7 @@ public class DocumentController {
 			jsonPlaceSerializer.setPretty(pretty);
 			jsonPlaceSerializer.setIncludeAccessInfo(add != null && add.contains("access"));
 			jsonPlaceSerializer.setIncludeChangeHistory(add != null && add.contains("history"));
+			jsonPlaceSerializer.setUseShortLanguageCodes(shortLanguageCodes);
 			if (add != null && add.contains("sort")) {
 				jsonPlaceSerializer.setLocale(locale);
 				jsonPlaceSerializer.setOriginalLocale(originalLocale);

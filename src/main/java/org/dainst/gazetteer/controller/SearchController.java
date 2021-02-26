@@ -109,7 +109,7 @@ public class SearchController {
 			@RequestParam(required = false) double[] polygonFilterCoordinates,
 			@RequestParam(required = false) boolean showHiddenPlaces, @RequestParam(required = false) String add,
 			@RequestParam(required = false) boolean noPolygons, @RequestParam(required = false) String queryId,
-			@RequestParam(required = false) boolean pretty,
+			@RequestParam(required = false) boolean pretty, @RequestParam(required = false) boolean shortLanguageCodes,
 			@RequestParam(required = false) boolean scroll, @RequestParam(required = false) String scrollId,
 			HttpServletRequest request, HttpServletResponse response) {
 
@@ -188,6 +188,7 @@ public class SearchController {
 		jsonPlaceSerializer.setPretty(pretty);
 		jsonPlaceSerializer.setIncludeAccessInfo(add != null && add.contains("access"));
 		jsonPlaceSerializer.setIncludeChangeHistory(false);
+		jsonPlaceSerializer.setUseShortLanguageCodes(shortLanguageCodes);
 		if (add != null && add.contains("sort")) {
 			jsonPlaceSerializer.setLocale(locale);
 			jsonPlaceSerializer.setOriginalLocale(originalLocale);
