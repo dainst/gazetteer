@@ -170,8 +170,8 @@
 				<i class="icon-external-link"></i>
 			</a>
 		</dd>
-		<dd ng-show="getIdsByContext('zenon-thesaurus') != false">
-			<a ng-href="http://zenon.dainst.org/Search/Results?lookfor={{getZenonSearchQuery()}}&type=Subject" target="_blank">
+		<dd>
+			<a ng-href="https://zenon.dainst.org/gazetteer/search?id={{place.gazId}}" target="_blank">
 				<s:message code="ui.link.zenon" text="ui.link.zenon"/>
 				<i class="icon-external-link"></i>
 			</a>
