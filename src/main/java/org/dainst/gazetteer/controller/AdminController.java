@@ -262,7 +262,7 @@ public class AdminController {
 	public String generateLinks() {
 		
 		generateLinks("pleiades", "http://pleiades.stoa.org/places/", "owl:sameAs");
-		generateLinks("geonames", "http://sws.geonames.org/", "owl:sameAs");
+		generateLinks("geonames", "https://sws.geonames.org/", "owl:sameAs");
 		
 		return "OK: finished generating Links";
 		
