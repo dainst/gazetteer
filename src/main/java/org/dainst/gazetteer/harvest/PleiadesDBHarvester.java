@@ -111,7 +111,7 @@ public class PleiadesDBHarvester implements Harvester {
 				if (geonamesId != null && !geonamesId.isEmpty() && !"0".equals(geonamesId)) {
 					place.addIdentifier(new Identifier(geonamesId, "geonames"));
 					Link link2 = new Link();
-					link2.setObject("http://sws.geonames.org/" + geonamesId);
+					link2.setObject("https://sws.geonames.org/" + geonamesId);
 					link2.setPredicate("owl:sameAs");
 					place.addLink(link2);
 				}

@@ -333,7 +333,7 @@ public class ArachneHarvester implements Harvester {
 		
 		if (geonamesId != null) {
 			Link link = new Link();
-			link.setObject("http://sws.geonames.org/" + geonamesId.getValue());
+			link.setObject("https://sws.geonames.org/" + geonamesId.getValue());
 			link.setPredicate("owl:sameAs");
 			place.addLink(link);
 		}

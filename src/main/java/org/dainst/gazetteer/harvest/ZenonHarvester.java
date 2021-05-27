@@ -241,7 +241,7 @@ public class ZenonHarvester implements Harvester {
 				if (identifier.getValue() != null && !identifier.getValue().isEmpty()) {
 					if ("geonames".equals(identifier.getContext())) {
 						Link link = new Link();
-						link.setObject("http://sws.geonames.org/" + identifier.getValue());
+						link.setObject("https://sws.geonames.org/" + identifier.getValue());
 						link.setPredicate("owl:sameAs");
 						place.addLink(link);
 					}
