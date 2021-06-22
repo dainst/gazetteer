@@ -50,6 +50,8 @@ public interface PlaceRepository extends PagingAndSortingRepository<Place, Strin
 	
 	public List<Place> findByRelatedPlaces(String id);
 
+	public List<Place> findByRelatedPlacesAndDeletedIsFalse(String id);
+
 	public List<Place> findByNamesTitleAndTypes(String title, String string);
 
 	public List<Place> findByNeedsReview(boolean b);

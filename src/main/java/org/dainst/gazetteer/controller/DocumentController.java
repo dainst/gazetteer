@@ -516,8 +516,8 @@ public class DocumentController {
 			}
 		}
 		
-		List<Place> children = placeDao.findByParent(placeId);
-		List<Place> relatedPlaces = placeDao.findByRelatedPlaces(placeId);
+		List<Place> children = placeDao.findByParentAndDeletedIsFalse(placeId);
+		List<Place> relatedPlaces = placeDao.findByRelatedPlacesAndDeletedIsFalse(placeId);
 		Place place = placeDao.findById(placeId).orElse(null);
 		
 		PlaceAccessService placeAccessService = new PlaceAccessService(groupDao, groupRoleDao);
