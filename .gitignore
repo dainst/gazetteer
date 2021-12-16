@@ -3,7 +3,6 @@
 .classpath
 .settings
 target
-src/main/resources/log4j.xml
 Gemfile.lock
 Berksfile.lock
 tmp/
@@ -15,7 +14,7 @@ src/main/webapp/WEB-INF/config.properties
 src/main/webapp/WEB-INF/elasticsearch.properties
 src/main/webapp/WEB-INF/mail.properties
 src/main/webapp/WEB-INF/web.xml
-src/main/resources/log4j.xml
+src/main/resources/log4j2.xml
 
 
 # Docker
