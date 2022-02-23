@@ -15,8 +15,5 @@
     <Logger name="org.springframework.data" level="debug">
     	<AppenderRef ref="file" />
     </Logger>
-    <Root level="debug">
-      <AppenderRef ref="file" />
-    </Root>
   </Loggers>
 </Configuration>
