@@ -100,3 +100,5 @@ Das WAR-File kann mit folgendem Befehl erstellt werden:
 `mvn clean package`
 
 Das resultierende Web-Archiv kann dann in einem beliebigen Servlet-Container deployt werden.
+
+   
