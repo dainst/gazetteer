@@ -100,6 +100,8 @@ public class UserManagementController {
 	public String checkRegisterForm(HttpServletRequest request, @RequestParam(required=false) String r,
 									RedirectAttributes redirectAttributes, ModelMap model) {
 		
+		logger.warn("Check register form...");
+		
 		String username = request.getParameter("register_username");
 		String firstname = request.getParameter("register_firstname");
 		String lastname = request.getParameter("register_lastname");
@@ -109,11 +111,15 @@ public class UserManagementController {
 		String passwordConfirmation = request.getParameter("register_password_confirmation");
 		String policy = request.getParameter("register_policy");
 		
+		logger.warn("Username: " + username);
+		
 		if (username.equals(""))
 			return returnRegisterFailure("missingUsername", request, r, model);
 
-		if (userDao.findByUsername(username) != null)
+		if (userDao.findByUsername(username) != null) {
+			logger.warn("Username already exists!");
 			return returnRegisterFailure("usernameExists", request, r, model);
+		}
 		
 		if (firstname.equals(""))
 			return returnRegisterFailure("missingFirstname", request, r, model);
@@ -136,33 +142,47 @@ public class UserManagementController {
 		if (policy == null)
 			return returnRegisterFailure("policyUnconfirmed", request, r, model);
 
+		logger.warn("Checks finished!");
+		
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 		authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 
+		logger.warn("Encoding password...");
+		
 		String encodedPassword = passwordEncoder.encode(password);
+		
+		logger.warn("Password encoded!");
 		
 		User user = new User(username, firstname, lastname, institution, email, encodedPassword, new Date(), authorities);
 		
 		userDao.save(user);
 		
+		logger.warn("Saved new user!");
+		
 		String link = baseUri + "editUser?username=" + username + "&r=userManagement";
 		RequestContext context = new RequestContext(request);
 		String subject = context.getMessageSource().getMessage("mail.adminRegistrationNotification.subject", new Object[] { username }, Locale.ENGLISH);
 		String content = context.getMessageSource().getMessage("mail.adminRegistrationNotification.content", new Object[] { username, link }, Locale.ENGLISH);
-				
+		
+		logger.warn("Sending mail to admins...");
+		
 		try {
-			sendMailToAdmins(subject, content);					
+			sendMailToAdmins(subject, content);
 		} catch (MessagingException e) {
 			logger.warn("Could not send notification mails to admins", e);
 		}
 		
+		logger.warn("Redirecting...");
+		
 		if (r != null && !r.equals("")) {
 			redirectAttributes.addFlashAttribute("successMessage", "register");
+			logger.warn("Perform attribute redirection...");
 			return "redirect:app/#!/" + r;
 		}
 		else {
 			model.addAttribute("successMessage", "register");
 			model.addAttribute("version", version);
+			logger.warn("Perform default redirection...");
 			return "redirect:app/#!/home";
 		}
 	}
