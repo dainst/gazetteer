@@ -65,7 +65,7 @@ public class MergeController {
 	@Value("${baseUri}")
 	private String baseUri;
 	
-	@Value("${mergeNotificationMail}")
+	@Value("${notificationMail}")
 	private String mergeNotificationMail;
 
 	@RequestMapping(value="/merge/{id1}/{id2}", method=RequestMethod.POST)

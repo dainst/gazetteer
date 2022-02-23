@@ -3,4 +3,4 @@ smtpPort=
 senderMail=
 mailUsername=
 mailPassword=
-mergeNotificationMail=
+notificationMail=
