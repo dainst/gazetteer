@@ -11,7 +11,7 @@
 		<java-version>1.8</java-version>
 		<org.springframework-version>5.2.4.RELEASE</org.springframework-version>
 		<org.aspectj-version>1.6.11</org.aspectj-version>
-		<org.log4j-version>2.16.0</org.log4j-version>
+		<org.log4j-version>2.17.1</org.log4j-version>
 		<org.slf4j-version>1.7.32</org.slf4j-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<geotools.version>14.5</geotools.version>
