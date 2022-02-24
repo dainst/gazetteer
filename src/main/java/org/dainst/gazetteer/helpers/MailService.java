@@ -46,6 +46,7 @@ public class MailService {
 		properties.setProperty("mail.smtp.host", smtpHost);
 		properties.setProperty("mail.smtp.auth", "true");
 		properties.setProperty("mail.smtp.port", smtpPort);
+		properties.setProperty("mail.smtp.starttls.enable", "true");
 		Session session = Session.getInstance(properties);
 		
 		MimeMessage message = new MimeMessage(session);
