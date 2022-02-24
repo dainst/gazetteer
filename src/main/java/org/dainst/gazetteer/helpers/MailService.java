@@ -40,8 +40,6 @@ public class MailService {
 			return;
 		}
 		
-		logger.warn("Sending mail to: " + recipientMail);
-		
 		Properties properties = new Properties();
 		properties.setProperty("mail.smtp.host", smtpHost);
 		properties.setProperty("mail.smtp.auth", "true");
@@ -60,7 +58,6 @@ public class MailService {
 	    try {
 	        transport.connect(mailUsername, mailPassword);
 	        transport.sendMessage(message, message.getAllRecipients());
-	        logger.warn("Finished sending mail to: " + recipientMail);
 	    } catch (MessagingException e) {
 	    	logger.warn("Could not send mail to: " + recipientMail, e);
 	    } finally {
