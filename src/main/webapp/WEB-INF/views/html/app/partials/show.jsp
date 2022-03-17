@@ -388,7 +388,7 @@
 	<span ng-hide="!place.identifiers">
 		<dt><s:message code="domain.place.identifiers" text="domain.place.identifiers" /></dt>
 		<dd ng-repeat="identifier in place.identifiers | orderBy:['context','value'] | limitTo: idsDisplayed">
-			<em>{{identifier.context}}:</em> {{identifier.value}}
+			<em>{{identifier.context}}:</em> <span style="white-space: pre-wrap">{{identifier.value}}</span>
 		</dd>
 		<dd ng-show="place.identifiers.length > 3">
 			<a href="" ng-click="changeNumberOfDisplayedIds()">
