@@ -306,7 +306,14 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages, PolygonVali
 		// all fields
 		if ($scope.meta !== null) {
 			if ($scope.fuzzy)
-				queries.push({ fuzzy: { "all": $scope.meta } });
+				queries.push({
+					bool: {
+						should: [
+							{ fuzzy: { "all": $scope.meta } },
+							{ match: { "_id": $scope.meta } }
+						]
+					}
+				});
 			else
 				queries.push({
 					bool: {
