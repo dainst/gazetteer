@@ -134,15 +134,6 @@ public class JsonPlaceSerializer {
 			placeNode.put("gazId", place.getId());
 		}
 		
-		if (place.isDeleted()) {
-			placeNode.put("deleted", true);
-			if (place.getReplacedBy() != null && !place.getReplacedBy().isEmpty())
-				placeNode.put("replacedBy", place.getReplacedBy());
-			return placeNode;
-		} else if (asIndexSource) {
-			placeNode.put("deleted", false);
-		}
-		
 		if (asIndexSource)
 			placeNode.put("needsReview", place.isNeedsReview());
 		
@@ -152,16 +143,23 @@ public class JsonPlaceSerializer {
 				placeNode.put("recordGroupId", place.getRecordGroupId());
 			else
 				placeNode.put("recordGroupId", "none");
-		} else {
-			if (place.getRecordGroupId() != null && !place.getRecordGroupId().isEmpty()) {
-				RecordGroup group = groupDao.findById(place.getRecordGroupId()).orElse(null);
-				if (group != null) {
-					ObjectNode groupNode = mapper.createObjectNode();
-					groupNode.put("id", group.getId());
-					groupNode.put("name", group.getName());
-					placeNode.put("recordGroup", groupNode);
-				}
+		} else if (place.getRecordGroupId() != null && !place.getRecordGroupId().isEmpty() && !place.isDeleted()) {
+			RecordGroup group = groupDao.findById(place.getRecordGroupId()).orElse(null);
+			if (group != null) {
+				ObjectNode groupNode = mapper.createObjectNode();
+				groupNode.put("id", group.getId());
+				groupNode.put("name", group.getName());
+				placeNode.put("recordGroup", groupNode);
 			}
+		}
+
+		if (place.isDeleted()) {
+			placeNode.put("deleted", true);
+			if (place.getReplacedBy() != null && !place.getReplacedBy().isEmpty())
+				placeNode.put("replacedBy", place.getReplacedBy());
+			return placeNode;
+		} else if (asIndexSource) {
+			placeNode.put("deleted", false);
 		}
 		
 		if (!PlaceAccessService.hasReadAccess(accessStatus)) {
