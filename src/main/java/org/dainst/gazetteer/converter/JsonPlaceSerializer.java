@@ -153,6 +153,11 @@ public class JsonPlaceSerializer {
 			}
 		}
 
+		// last change date
+		if (place.getLastChangeDate() != null && asIndexSource) {
+			placeNode.put("lastChangeDate", dateFormat.format(place.getLastChangeDate()));
+		}
+
 		if (place.isDeleted()) {
 			placeNode.put("deleted", true);
 			if (place.getReplacedBy() != null && !place.getReplacedBy().isEmpty())
@@ -441,11 +446,6 @@ public class JsonPlaceSerializer {
 			}
 			if (groupInternalDataNode.size() > 0)
 				placeNode.put("groupInternalData", groupInternalDataNode);
-		}
-		
-		// last change date
-		if (place.getLastChangeDate() != null && asIndexSource) {
-			placeNode.put("lastChangeDate", dateFormat.format(place.getLastChangeDate()));
 		}
 		
 		// read access
