@@ -46,7 +46,7 @@ public class HarvestingHandler implements Runnable {
 			
 			// prevent multiple instances of the same harvester from being executed simultaneously
 			if (!harvesterDefinition.isEnabled()) {
-				logger.info("Harvester {} is disabled. Skipping execution ...",
+				logger.debug("Harvester {} is disabled. Skipping execution ...",
 						harvesterDefinition.getName());
 				return;
 			}

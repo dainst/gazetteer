@@ -65,7 +65,7 @@ public class SimpleMerger implements Merger {
 		
 		// update parent id of children that belong to place 2
 		List<Place> children = getPlaceRepository().findByParent(place2.getId());
-		logger.info("got {} children", children.size());
+		logger.debug("got {} children", children.size());
 		for (Place child : children) {
 			Place changedChild = getFromPlaceSet(child.getId(), changedPlaces);
 			if (changedChild != null)

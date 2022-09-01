@@ -113,7 +113,7 @@ public class SearchController {
 			@RequestParam(required = false) boolean scroll, @RequestParam(required = false) String scrollId,
 			HttpServletRequest request, HttpServletResponse response) {
 
-		logger.info("bbox:" + Arrays.toString(bbox));
+		logger.debug("bbox:" + Arrays.toString(bbox));
 
 		RequestContext requestContext = new RequestContext(request);
 		Locale locale = requestContext.getLocale();
@@ -652,7 +652,6 @@ public class SearchController {
 	}
 
 	private void createParentsList(Place place, List<Place> parents, boolean includePolygons) {
-		logger.warn("create parent list for place " + place.getId());
 		if (place.getParent() != null && !place.getParent().isEmpty()) {
 			Place parent = null;
 			if (includePolygons)

@@ -83,7 +83,7 @@ public class AppController {
 		model.addAttribute("placeTypeGroups", placeTypeGroups);
 		model.addAttribute("placeTypeGroupIds", placeTypeGroupIds);
 		model.addAttribute("version", version);
-		logger.info("accept: {}", request.getHeader("Accept"));
+		logger.debug("accept: {}", request.getHeader("Accept"));
 		return "app/index";
 	}
 	
