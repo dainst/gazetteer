@@ -73,6 +73,8 @@ public class AdminController {
 	@RequestMapping(value="/admin/reindex", method=RequestMethod.POST)
 	@ResponseBody
 	public String reindex() {
+
+		logger.info("Reindexing...");
 		
 		int pageSize = 1000;
 		int page = 0;
@@ -82,7 +84,10 @@ public class AdminController {
 			List<Place> places = placeDao.findAll(new PageRequest(page, pageSize)).getContent();
 			indexer.index(places);
 			page++;
+			logger.info("Reindexing progress: " + page + "/" + pagesCount);
 		} while (page < pagesCount);
+
+		logger.info("Reindexing completed");
 		
 		return "OK: reindexing completed";
 	}
