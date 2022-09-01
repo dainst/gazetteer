@@ -69,23 +69,34 @@ public class AdminController {
 	
 	@Autowired
 	private LanguagesHelper languagesHelper;
+
+	private boolean reindexing = false;
 	
 	@RequestMapping(value="/admin/reindex", method=RequestMethod.POST)
 	@ResponseBody
 	public String reindex() {
 
+		if (reindexing) return "Reindexing process is already running";
+
 		logger.info("Reindexing...");
+		reindexing = true;
 		
-		int pageSize = 1000;
-		int page = 0;
-		int pagesCount = (int) Math.ceil((float) placeDao.count() / pageSize);
-		
-		do {
-			List<Place> places = placeDao.findAll(new PageRequest(page, pageSize)).getContent();
-			indexer.index(places);
-			page++;
-			logger.info("Reindexing progress: " + page + "/" + pagesCount);
-		} while (page < pagesCount);
+		try {
+			int pageSize = 1000;
+			int page = 0;
+			int pagesCount = (int) Math.ceil((float) placeDao.count() / pageSize);
+			
+			do {
+				List<Place> places = placeDao.findAll(new PageRequest(page, pageSize)).getContent();
+				indexer.index(places);
+				page++;
+				logger.info("Reindexing progress: " + page + "/" + pagesCount);
+			} while (page < pagesCount);
+		} catch (Exception e) {
+			logger.error("Error while reindexing", e);
+		} finally {
+			reindexing = false;
+		}
 
 		logger.info("Reindexing completed");
 		
