@@ -103,6 +103,7 @@ public class MergeController {
 		
 		try {
 			for (Place place : updatedPlaces) {
+				place.setLastChangeDate(new Date());
 				placeDao.save(place);
 				indexer.index(place);
 			}
@@ -116,6 +117,7 @@ public class MergeController {
 		// Delete place 2
 		place2.setReplacedBy(place1.getId());
 		place2.setDeleted(true);
+		place2.setLastChangeDate(new Date());
 		placeDao.save(place2);
 		indexer.index(place2);
 
