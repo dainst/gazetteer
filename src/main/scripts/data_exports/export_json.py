@@ -23,5 +23,5 @@ if __name__ == "__main__":
 
     places = harvester.get_data()
 
-    with open(options['target'], 'w') as outfile:
-        json.dump(places, outfile)
+    with open(options['target'], 'w', encoding='utf-8') as outfile:
+        json.dump(places, outfile, ensure_ascii=False)

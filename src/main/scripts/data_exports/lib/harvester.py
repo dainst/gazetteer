@@ -2,7 +2,6 @@ import requests
 import logging
 import math
 
-
 class Harvester:
     _base_url: str = "https://gazetteer.dainst.org"
     _batch_size: int = 500
@@ -39,7 +38,7 @@ class Harvester:
         if scroll_id is None:
             url = f"{self._base_url}/search.json?limit={self._batch_size}&scroll=true"
         else:
-            url = f"{self._base_url}/search.json?pretty=true&limit={self._batch_size}&scrollId={scroll_id}"
+            url = f"{self._base_url}/search.json?limit={self._batch_size}&scrollId={scroll_id}"
 
         if not self.polygons:
             url += "&noPolygons=true"
