@@ -3,5 +3,5 @@
   font-family: 'Noto Sans';
   font-style: normal;
   font-weight: 400;
-  src: local('Noto Sans'), local('NotoSans'), url(https://fonts.gstatic.com/s/notosans/v6/erE3KsIWUumgD1j_Ca-V-4X0hVgzZQUfRDuZrPvH3D8.woff2) format('woff2');
+  src: local('Noto Sans'), local('NotoSans'), url(./woff/notoSans.woff2) format('woff2');
 }
