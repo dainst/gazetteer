@@ -18,6 +18,5 @@
 </div>
 
 <div>
-	<iframe height="315" width="600" src="<s:message code="about.videoLink" text="about.videoLink" />"
-		frameborder="0" class="youtubeIframe" style="margin-top: 30px;" allowfullscreen>Connections</iframe>
+	<a href="<s:message code="about.videoLink" text="about.videoLink">Youtube Screencast</a>
 </div>

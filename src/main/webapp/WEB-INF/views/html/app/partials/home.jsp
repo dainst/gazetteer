@@ -51,11 +51,7 @@
 </div>
 		
 <div style="margin-top:-220px;">
-	<div class="span5" style="margin-left: 30px">
-		<iframe height="315" width="560"src="<s:message code="home.videoLink" text="home.videoLink" />"
-				frameborder="0" class="youtubeIframe" allowfullscreen>Introduction</iframe>
-	</div>
-	<div class="span6" style="margin-left: 80px">
+	<div class="span12" style="margin-left: 80px">
 		<c:choose>
 			<c:when test="${language eq 'ar'}">
 				<p dir="rtl" lang="ar" class="lead"><s:message code="home.info1" text="home.info1" /></p>
@@ -64,6 +60,8 @@
 				<p class="lead"><s:message code="home.info1" text="home.info1" /></p>
 			</c:otherwise>
 		</c:choose>
+		
+		<a href="<s:message code="home.videoLink" text="home.videoLink" />">Youtube Screencast</a>
 	</div>
 </div>
 
