@@ -7,9 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.dainst.gazetteer.dao.GroupRoleRepository;
 import org.dainst.gazetteer.dao.RecordGroupRepository;
@@ -63,19 +61,6 @@ public class AppController {
 	private GroupRoleRepository groupRoleDao;
 
 
-	@RequestMapping(value="/consent")
-	public String consent(
-			@RequestParam(value="redirectTo") String redirectTo,
-			HttpServletResponse response
-	) {
-		logger.debug("Setting consent cookie and redirecting to " + redirectTo);
-		Cookie consent_cookie = new Cookie("gazetteer_google_consent", "1");
-
-		response.addCookie(consent_cookie);
-		return "redirect:" + redirectTo;
-	}
-
-
 	@Autowired
 	LanguagesHelper langHelper;
 	@RequestMapping(value="/app/")
@@ -95,7 +80,7 @@ public class AppController {
 		Locale locale = new RequestContext(request).getLocale();
 		model.addAttribute("language", locale.getLanguage());
 		if (googleConsent == null) {
-			return "app/consent";
+			return "consent";
 		}
 
 		Arrays.sort(idTypes, String.CASE_INSENSITIVE_ORDER);
@@ -124,7 +109,7 @@ public class AppController {
 		Locale locale = new RequestContext(request).getLocale();
 		model.addAttribute("language", locale.getLanguage());
 		if (googleConsent == null) {
-			return "app/consent";
+			return "consent";
 		}
 		model.addAttribute("baseUri",baseUri);
 		model.addAttribute("languages", langHelper.getLocalizedLanguages(locale));
@@ -148,7 +133,7 @@ public class AppController {
 		model.addAttribute("language", locale.getLanguage());
 
 		if (googleConsent == null) {
-			return "app/consent";
+			return "consent";
 		}
 
 		User user = null;
