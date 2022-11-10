@@ -18,5 +18,5 @@
 </div>
 
 <div>
-	<a href="<s:message code="about.videoLink" text="about.videoLink">Youtube Screencast</a>
+	<a href="<s:message code="about.videoLink" text="about.videoLink"/>">Youtube Screencast</a>
 </div>
