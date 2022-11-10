@@ -55,15 +55,30 @@
 	</div>
 	<div class="container">
 		<div class="jumbotron">
-			<h1 class="display-4"><s:message code="consent.heading" text="consent.heading" /></h1>
-			<p class="lead"><s:message code="consent.text" text="consent.text" /></p>
-			<hr class="my-4">
-			<p>
-				<form action="<%=request.getContextPath()%>/consent">
-				<input type="hidden" id="location-input" name="redirectTo" /> <input
-					class="btn btn-primary" type="submit" value="<s:message code="ok" text="ok" />" />
-				</form>
-			</p>
+			<c:choose>
+				<c:when test="${language eq 'ar'}">
+					<h1 dir="rtl" lang="ar" class="display-4"><s:message code="consent.heading" text="consent.heading" /></h1>
+					<p  dir="rtl" lang="ar" class="lead"><s:message code="consent.text" text="consent.text" /></p>
+					<hr class="my-4">
+					<p dir="rtl" lang="ar">
+						<form action="<%=request.getContextPath()%>/consent">
+							<input type="hidden" id="location-input" name="redirectTo" /> 
+							<input style="float: right;" class="btn btn-primary" type="submit" value="<s:message code="ok" text="ok" />" />
+						</form>
+					</p>
+				</c:when>
+				<c:otherwise>
+					<h1 class="display-4"><s:message code="consent.heading" text="consent.heading" /></h1>
+					<p class="lead"><s:message code="consent.text" text="consent.text" /></p>
+					<hr class="my-4">
+					<p>
+						<form action="<%=request.getContextPath()%>/consent">
+							<input type="hidden" id="location-input" name="redirectTo" /> 
+							<input class="btn btn-primary" type="submit" value="<s:message code="ok" text="ok" />" />
+						</form>
+					</p>
+				</c:otherwise>
+			</c:choose>
 		</div>
 	</div>
 		

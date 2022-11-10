@@ -70,6 +70,7 @@ public class AppController {
 	) {
 		logger.debug("Setting consent cookie and redirecting to " + redirectTo);
 		Cookie consent_cookie = new Cookie("gazetteer_google_consent", "1");
+
 		response.addCookie(consent_cookie);
 		return "redirect:" + redirectTo;
 	}
@@ -90,7 +91,9 @@ public class AppController {
 			String[] split = URLDecoder.decode(fragment, "UTF-8").split("/");
 			return "forward:/doc/" + split[2] + ".html";
 		}		
-		
+
+		Locale locale = new RequestContext(request).getLocale();
+		model.addAttribute("language", locale.getLanguage());
 		if (googleConsent == null) {
 			return "app/consent";
 		}
@@ -98,8 +101,6 @@ public class AppController {
 		Arrays.sort(idTypes, String.CASE_INSENSITIVE_ORDER);
 
 		model.addAttribute("baseUri",baseUri);
-		Locale locale = new RequestContext(request).getLocale();
-		model.addAttribute("language", locale.getLanguage());
 		model.addAttribute("languages", langHelper.getLocalizedLanguages(locale));
 		model.addAttribute("googleMapsApiKey", googleMapsApiKey);
 		model.addAttribute("idTypes", idTypes);
@@ -119,9 +120,13 @@ public class AppController {
 			ModelMap model, 
 			HttpServletRequest request
 	) {		
-		model.addAttribute("baseUri",baseUri);
+
 		Locale locale = new RequestContext(request).getLocale();
 		model.addAttribute("language", locale.getLanguage());
+		if (googleConsent == null) {
+			return "app/consent";
+		}
+		model.addAttribute("baseUri",baseUri);
 		model.addAttribute("languages", langHelper.getLocalizedLanguages(locale));
 		model.addAttribute("googleMapsApiKey", googleMapsApiKey);
 		model.addAttribute("idTypes", idTypes);
@@ -138,6 +143,14 @@ public class AppController {
 			ModelMap model,
 			HttpServletRequest request
 	) {
+
+		Locale locale = new RequestContext(request).getLocale();
+		model.addAttribute("language", locale.getLanguage());
+
+		if (googleConsent == null) {
+			return "app/consent";
+		}
+
 		User user = null;
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if (principal != null && principal instanceof User) {
@@ -159,8 +172,6 @@ public class AppController {
 		}
 		
 		model.addAttribute("baseUri",baseUri);
-		Locale locale = new RequestContext(request).getLocale();
-		model.addAttribute("language", locale.getLanguage());
 		model.addAttribute("languages", langHelper.getLocalizedLanguages(locale));
 		model.addAttribute("idTypes", idTypes);
 		model.addAttribute("placeTypes", placeTypes);
