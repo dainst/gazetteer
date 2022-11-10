@@ -74,7 +74,7 @@
 					<p>
 						<form action="<%=request.getContextPath()%>/consent">
 							<input type="hidden" id="location-input" name="redirectTo" /> 
-							<input class="btn btn-primary" type="submit" value="<s:message code="ok" text="ok" />" />
+							<input class="btn btn-primary" type="submit" value="<s:message code="ui.ok" text="OK" />" />
 						</form>
 					</p>
 				</c:otherwise>
