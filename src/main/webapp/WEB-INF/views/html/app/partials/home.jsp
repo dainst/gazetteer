@@ -22,13 +22,12 @@
 	</div>
 </c:if>
 	
-<div id="home_map_canvas" style="height: 400px"></div>		
 		
 <div style="position:relative; top:-235px; z-index:10; text-align:center;">
 	<h1 style="font-size: 60px; text-shadow: 0 1px 5px #000000; color:white; margin-bottom: 150px;">
 		iDAI.gazetteer
 	</h1>
-	<form class="form-search simpleSearchForm" ng-submit="submit()" style="margin:0;">
+	<form class="form-search simpleSearchForm" ng-submit="submit()" style="padding-top:50px;">
 		<div class="well" style="display:inline-block; text-align:left;">
 			<div style="position:relative;">
 				<div class="input-append">
