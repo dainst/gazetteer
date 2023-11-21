@@ -21,7 +21,6 @@
 	<link href="../resources/archaeostrap/css/bootstrap.css" rel="stylesheet">
 	<link href="../resources/font-awesome/css/font-awesome.min.css" rel="stylesheet">
 	<link href="../resources/css/angular-ui.css" rel="stylesheet">
-	<link href="../resources/css/app.css" rel="stylesheet">
 	<script	src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
 	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular-resource.min.js"></script>
@@ -34,7 +33,7 @@
 	<script src="../resources/js/lib/ngShowdown/ng-showdown.min.js"></script>
 	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 	<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-	
+	<link href="../resources/css/app.css" rel="stylesheet">
 	
 	<!-- Piwik -->
 	<script type="text/javascript">

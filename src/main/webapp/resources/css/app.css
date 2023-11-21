@@ -65,6 +65,25 @@ footer {
 
 #leaflet_map { height: 300px; }
 
+#leaflet_map .leaflet-div-icon {
+	background: none;
+	border: none;
+}
+
+#leaflet_map .standardMarker{
+	fill: red;
+}
+#leaflet_map .standardMarker:hover {
+	fill: yellow;
+}
+
+#leaflet_map .childMarker{
+	fill: green;
+}
+#leaflet_map .childMarker:hover {
+	fill: yellow;
+}
+
 .tooltip-inner {
 	font-weight: normal;
 }

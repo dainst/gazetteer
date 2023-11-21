@@ -925,9 +925,25 @@ directives.directive('gazShapeEditor', function($document, $timeout, $http, Poly
 
 directives.directive('gazMap', function($location, Place) {
 	
+	var getMarkerSVG = function(type) {
+		return `<svg version="1.1" class="${type}" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 365 560" xml:space="preserve"><g><path d="M182.9,551.7c0,0.1,0.2,0.3,0.2,0.3S358.3,283,358.3,194.6c0-130.1-88.8-186.7-175.4-186.9   C96.3,7.9,7.5,64.5,7.5,194.6c0,88.4,175.3,357.4,175.3,357.4S182.9,551.7,182.9,551.7z M122.2,187.2c0-33.6,27.2-60.8,60.8-60.8   c33.6,0,60.8,27.2,60.8,60.8S216.5,248,182.9,248C149.4,248,122.2,220.8,122.2,187.2z"/></g></svg>`;
+	};
+
 	var highlightIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/yellow-dot.png";
-	var defaultIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/red-dot.png";
+	//var defaultIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/red-dot.png";
 	var childIcon = "//www.google.com/intl/en_us/mapfiles/ms/micons/green-dot.png";
+	
+	var defaultIcon =  L.divIcon({
+		iconSize: [12, 18],
+		iconAnchor: [6, 18],
+	    html: getMarkerSVG("standardMarker")   
+    })
+ 
+	var childIcon =  L.divIcon({
+		iconSize: [12, 18],
+		iconAnchor: [6, 18],
+	    html: getMarkerSVG("childMarker")   
+    })
 	
 	var baseUri = $location.absUrl().substring(0, $location.absUrl().indexOf("app"));
 	
@@ -945,13 +961,12 @@ directives.directive('gazMap', function($location, Place) {
 		templateUrl: 'partials/map.html',
 		controller: function($scope, $attrs, $element) {
 			
-			var map = L.map('leaflet_map').setView([0, 0], 0);
+			var map = L.map('leaflet_map').fitWorld();
 			
 			L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 			    maxZoom: 19,
 			    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 			}).addTo(map); 
-			
 			 
 			var markersAndShapeLayer = L.featureGroup([]).addTo(map);
 			
@@ -981,15 +996,11 @@ directives.directive('gazMap', function($location, Place) {
 				}
 			});
 			
-			$scope.markerClick = function(id) {
-				if (id.indexOf('+') > 0)
-					id = id.substring(0, id.indexOf('+'));
-				else if (id.indexOf('*') > 0)
-					id = id.substring(0, id.indexOf('*'));
-				$location.path("/show/" + id);
+			*/
+			$scope.markerClick = function(e) {
+				$location.path(`/show/${e.sourceTarget.options.gazId}`);
 			}; 
 			
-			*/
 			$scope.markerOver = function(id, marker) {
 				console.log("TODO: markerOver");
 				/*
@@ -1088,8 +1099,6 @@ directives.directive('gazMap', function($location, Place) {
 			// add markers/shapes for locations and auto zoom and center map
 			$scope.$watch("places", function() {
 
-				console.log("places changed")
-
 				//$scope.markerMap = {};
 				//$scope.shapeMap = {};
 //				for (var i in $scope.markers)
@@ -1113,10 +1122,11 @@ directives.directive('gazMap', function($location, Place) {
 					if (place.prefLocation) {
 						 if (place.prefLocation.coordinates && place.mapType != "polygonParent" && place.mapType != "mainPolygon"
 								&& (place.prefLocation.shape == null || place.mapType == "polygonAndMarker")) {
-
 							var marker = L.marker(
-								[place.prefLocation.coordinates[1], place.prefLocation.coordinates[0]]
-								)
+								[place.prefLocation.coordinates[1], place.prefLocation.coordinates[0]],
+								{icon: defaultIcon, gazId: place.gazId}
+								).on('click', $scope.markerClick)
+								//color: #FD7567;
 							//marker.bindTooltip(`${place.markerNumber}`, {permanent: true, direction: 'center'})
 							markersAndShapeLayer.addLayer(marker);
 						}
@@ -1137,16 +1147,16 @@ directives.directive('gazMap', function($location, Place) {
 								}
 							}
 
-							var polygon = L.polygon(shapeCoordinates);
+							var polygon = L.polygon(shapeCoordinates, {fillOpacity: 0.1,  gazId: place.gazId}).on('click', $scope.markerClick);
 							markersAndShapeLayer.addLayer(polygon);
 						}
 					}
 				}
 			
 				if(markersAndShapeLayer.getLayers().length > 0) {
-					map.fitBounds(markersAndShapeLayer.getBounds());
+					map.fitBounds(markersAndShapeLayer.getBounds(), {maxZoom: 6});
 				} else {
-					map.setView([0, 0], 1)
+					map.fitWorld()
 				}				
 			});
 							/* 
