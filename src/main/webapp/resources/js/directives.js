@@ -1147,7 +1147,7 @@ directives.directive('gazMap', function($location, Place) {
 								}
 							}
 
-							var polygon = L.polygon(shapeCoordinates, {fillOpacity: 0.1,  gazId: place.gazId}).on('click', $scope.markerClick);
+							var polygon = L.polygon(shapeCoordinates, {gazId: place.gazId, className: "gazShape"}).on('click', $scope.markerClick);
 							markersAndShapeLayer.addLayer(polygon);
 						}
 					}

@@ -77,6 +77,16 @@ footer {
 	fill: yellow;
 }
 
+#leaflet_map .gazShape{
+	stroke: blue;
+	fill: blue;
+	fill-opacity: 0.1;
+}
+#leaflet_map .gazShape:hover {
+	stroke: yellow;
+	fill: yellow;
+}
+
 #leaflet_map .childMarker{
 	fill: green;
 }
