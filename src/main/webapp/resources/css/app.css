@@ -63,7 +63,7 @@ footer {
 
 .gmap img { max-width: none; }
 
-#leaflet_map { height: 300px; }
+#leaflet_map { height: 500px; }
 
 #leaflet_map .leaflet-div-icon {
 	background: none;
@@ -73,19 +73,21 @@ footer {
 #leaflet_map .standardMarker{
 	fill: red;
 }
-#leaflet_map .standardMarker:hover {
-	fill: yellow;
-}
 
 #leaflet_map .gazShape{
-	stroke: blue;
-	fill: blue;
+	stroke: black;
+	fill: black;
 	fill-opacity: 0.1;
 }
+
+#leaflet_map .standardMarker.highlight,
+#leaflet_map .standardMarker:hover,
+#leaflet_map .gazShape.highlight,
 #leaflet_map .gazShape:hover {
-	stroke: yellow;
 	fill: yellow;
+	stroke: yellow
 }
+
 
 #leaflet_map .childMarker{
 	fill: green;

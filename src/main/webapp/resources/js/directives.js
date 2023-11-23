@@ -400,7 +400,7 @@ directives.directive('gazLocationPicker', function($document, $timeout, MapTypeS
 		}
 	};
 });
-
+/*
 directives.directive('gazShapeEditor', function($document, $timeout, $http, PolygonValidator, MapTypeService) {
 	return {
 		replace: true,
@@ -922,7 +922,7 @@ directives.directive('gazShapeEditor', function($document, $timeout, $http, Poly
 		}
 	};
 });
-
+*/
 directives.directive('gazMap', function($location, Place) {
 	
 	var getMarkerSVG = function(type) {
@@ -965,11 +965,14 @@ directives.directive('gazMap', function($location, Place) {
 			
 			L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 			    maxZoom: 19,
+			    minZoom: 2,
 			    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 			}).addTo(map); 
+			
+
 			 
 			var markersAndShapeLayer = L.featureGroup([]).addTo(map);
-			
+			var lastHighlight = null;
 
 			/*
 			$scope.markers = [];
@@ -1026,8 +1029,30 @@ directives.directive('gazMap', function($location, Place) {
 			$scope.markerOut = function() {
 				$scope.highlight = null;
 			};
-			
+			*/
 			$scope.$watch("highlight", function() {
+
+				var layers = markersAndShapeLayer.getLayers();
+				for (var i in layers){
+					if($scope.highlight !== null && layers[i].options.gazId == $scope.highlight.id) {
+						// Highlight shape or icon.
+						if(layers[i]._icon){
+							layers[i]._icon.children[0].classList.add("highlight") 
+						} else {
+							layers[i]._path.classList.add("highlight") 
+						}
+					} else {
+						// Remove highlight from every other shape or icon.
+						if(layers[i]._icon){
+							layers[i]._icon.children[0].classList.remove("highlight") 
+						} else {
+							layers[i]._path.classList.remove("highlight") 
+						}
+					}
+				}
+				
+				lastHighlight = $scope.highlight;
+				/*
 				if ($scope.highlightedShape != null) {
 					var fillOpacity = $scope.highlightedShape.get("fillOpacity") / 2;
 					var strokeOpacity = $scope.highlightedShape.get("strokeOpacity") / 2;
@@ -1093,12 +1118,12 @@ directives.directive('gazMap', function($location, Place) {
 								$scope.map.setCenter($scope.highlightedMarker.position);
 						}
 					}
-				}
-			});*/
+				}*/
+			});
 			
 			// add markers/shapes for locations and auto zoom and center map
 			$scope.$watch("places", function() {
-
+				console.log("places")
 				//$scope.markerMap = {};
 				//$scope.shapeMap = {};
 //				for (var i in $scope.markers)
@@ -1154,10 +1179,11 @@ directives.directive('gazMap', function($location, Place) {
 				}
 			
 				if(markersAndShapeLayer.getLayers().length > 0) {
-					map.fitBounds(markersAndShapeLayer.getBounds(), {maxZoom: 6});
+					map.fitBounds(markersAndShapeLayer.getBounds(), {maxZoom: 3});
 				} else {
 					map.fitWorld()
-				}				
+					map.setZoom(2)
+				}
 			});
 							/* 
 							var icon = defaultIcon;
