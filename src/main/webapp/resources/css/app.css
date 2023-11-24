@@ -74,27 +74,30 @@ footer {
 	fill: red;
 }
 
+#leaflet_map .childMarker{
+	fill: rgb(19, 255, 0);
+}
+
 #leaflet_map .gazShape{
 	stroke: black;
+	stroke-width: 1px;
 	fill: black;
+	fill-opacity: 0.3;
+}
+
+#leaflet_map .gazShape.parent{
 	fill-opacity: 0.1;
 }
 
 #leaflet_map .standardMarker.highlight,
 #leaflet_map .standardMarker:hover,
 #leaflet_map .gazShape.highlight,
-#leaflet_map .gazShape:hover {
+#leaflet_map .gazShape:hover,
+#leaflet_map .childMarker:hover {
 	fill: yellow;
 	stroke: yellow
 }
 
-
-#leaflet_map .childMarker{
-	fill: green;
-}
-#leaflet_map .childMarker:hover {
-	fill: yellow;
-}
 
 .tooltip-inner {
 	font-weight: normal;

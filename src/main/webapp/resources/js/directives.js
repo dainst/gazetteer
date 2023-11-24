@@ -1123,7 +1123,6 @@ directives.directive('gazMap', function($location, Place) {
 			
 			// add markers/shapes for locations and auto zoom and center map
 			$scope.$watch("places", function() {
-				console.log("places")
 				//$scope.markerMap = {};
 				//$scope.shapeMap = {};
 //				for (var i in $scope.markers)
@@ -1134,7 +1133,7 @@ directives.directive('gazMap', function($location, Place) {
 //					$scope.shapes[i].setMap(null);
 				//$scope.shapes = [];
 				markersAndShapeLayer.clearLayers();
-
+				console.log($scope.places);
 				//if ($scope.places.length == 0) return;
 
 				for (var i in $scope.places) {
@@ -1146,17 +1145,25 @@ directives.directive('gazMap', function($location, Place) {
 
 					if (place.prefLocation) {
 						 if (place.prefLocation.coordinates && place.mapType != "polygonParent" && place.mapType != "mainPolygon"
-								&& (place.prefLocation.shape == null || place.mapType == "polygonAndMarker")) {
+								&& (place.prefLocation.shape == null || place.mapType == "polygonAndMarker") && place.mapType !== "markerChildInvisible") {
+							var icon;
+							
+							if (place.mapType === "markerChild") {
+								icon = childIcon
+							} else {
+								icon = defaultIcon;
+							}
+							
 							var marker = L.marker(
 								[place.prefLocation.coordinates[1], place.prefLocation.coordinates[0]],
-								{icon: defaultIcon, gazId: place.gazId}
+								{icon: icon, gazId: place.gazId}
 								).on('click', $scope.markerClick)
 								//color: #FD7567;
 							//marker.bindTooltip(`${place.markerNumber}`, {permanent: true, direction: 'center'})
 							markersAndShapeLayer.addLayer(marker);
 						}
 						
-						if (place.prefLocation.shape) {
+						if (place.prefLocation.shape && place.mapType !== "markerChildInvisible") {
 							var shape = place.prefLocation.shape;
 							var shapeCoordinates = [];
 							var counter = 0;
@@ -1171,15 +1178,22 @@ directives.directive('gazMap', function($location, Place) {
 									counter++;
 								}
 							}
+							
+							var className = "gazShape";
+							if(place["mapType"] == "markerChild") 
+								className = className + " highlight";
+							else if(place["mapType"] == "polygonParent")
+								className = className + " parent";
+							
 
-							var polygon = L.polygon(shapeCoordinates, {gazId: place.gazId, className: "gazShape"}).on('click', $scope.markerClick);
+							var polygon = L.polygon(shapeCoordinates, {gazId: place.gazId, className: className}).on('click', $scope.markerClick);
 							markersAndShapeLayer.addLayer(polygon);
 						}
 					}
 				}
 			
 				if(markersAndShapeLayer.getLayers().length > 0) {
-					map.fitBounds(markersAndShapeLayer.getBounds(), {maxZoom: 3});
+					map.fitBounds(markersAndShapeLayer.getBounds());
 				} else {
 					map.fitWorld()
 					map.setZoom(2)
