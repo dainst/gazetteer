@@ -32,16 +32,15 @@ function AppCtrl($scope, $location, $rootScope, $timeout, Place, GeoSearch, Esca
 		$scope.updateSuggestions();	
 	});
 	
-	$scope.$watch("showMap", function() {
+    $scope.$watch("showMap", function() {
 		MapTypeService.addMap($rootScope.map);
-		
-		if ($rootScope.showMap) {
+       
+        if ($rootScope.showMap)
 			$scope.mapContainerStyle = {};
-			window.setTimeout(function() { google.maps.event.trigger($rootScope.map, 'resize'); }, 20);
-		}
-		else
-			$scope.mapContainerStyle = { 'position': 'absolute', 'left': '-10000px' };
+        else
+        	$scope.mapContainerStyle = { 'position': 'absolute', 'left': '-10000px' };
 	});
+
 	
 	$scope.$watch("geoSearch", function() {
 		if ($rootScope.geoSearch)
@@ -49,15 +48,7 @@ function AppCtrl($scope, $location, $rootScope, $timeout, Place, GeoSearch, Esca
 		else
 			GeoSearch.deactivate();
 	});
-	
-	$scope.setUpdateMapPropertiesTimer = function() {
-		$timeout($scope.updateMapProperties, 200);
-	};
-	
-	$scope.updateMapProperties = function() {
-		MapTypeService.setMapTypeId($rootScope.map.getMapTypeId());
-	};
-	
+
 	$scope.updateSuggestions = function() {
 		$scope.searchSuggestions = [];
 		$scope.selectedSuggestionIndex = -1;

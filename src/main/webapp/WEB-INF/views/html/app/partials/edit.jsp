@@ -420,14 +420,6 @@
 						</div>
 					</div>
 					<div class="control-group">
-						<label class="control-label">
-							<s:message code="domain.location.polygon" text="domain.location.polygon" />
-						</label>
-						<div class="controls">
-							<div gaz-shape-editor shape="place.prefLocation.shape" pos="place.prefLocation.coordinates" editor-name="'prefLocationShapeEditor'"  deactivated="place.unlocatable"></div>
-						</div>
-					</div>
-					<div class="control-group">
 						<div class="controls" ng-hide="place.unlocatable">
 							<label class="checkbox inline">
 								<input type="checkbox" ng-model="place.prefLocation.publicSite" />
@@ -478,14 +470,6 @@
 						</label>
 						<div class="controls">							
 							<input type="text" ng-model="location.altitude" ng-disabled="place.unlocatable" />
-						</div>
-					</div>
-					<div class="control-group">
-						<label class="control-label">
-							<s:message code="domain.location.polygon" text="domain.location.polygon" />
-						</label>
-						<div class="controls">
-							<div gaz-shape-editor shape="location.shape" pos="location.coordinates" editor-name="'additionalLocationsShapeEditor'" deactivated="place.unlocatable"></div>
 						</div>
 					</div>
 					<div class="control-group">
