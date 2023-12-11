@@ -74,7 +74,7 @@ public class LanguagesHelperTests {
 		assertEquals("French", localizedLanguages.get("fra"));
 		assertEquals("Greek", localizedLanguages.get("ell"));
 		assertEquals("Latin", localizedLanguages.get("lat"));
-		assertEquals("Greek, Ancient (to 1453)", localizedLanguages.get("grc"));
+		assertEquals("Ancient Greek", localizedLanguages.get("grc"));
 		assertEquals("Albanian", localizedLanguages.get("sqi"));
 		assertEquals("Polish", localizedLanguages.get("pol"));
 		assertEquals("Turkish", localizedLanguages.get("tur"));
