@@ -88,6 +88,12 @@
 			<artifactId>spring-security-taglibs</artifactId>
 			<version>5.1.5.RELEASE</version>
 		</dependency>
+		<dependency>
+			<groupId>javax.annotation</groupId>
+			<artifactId>javax.annotation-api</artifactId>
+			<version>1.3.2</version>
+		  </dependency>
+	  
 
 		<!-- JPA -->
 		<dependency>
@@ -293,6 +299,10 @@
 		<repository>
 			<id>Nuxeo</id>
 			<url>https://maven-eu.nuxeo.org/nexus/content/groups/public/</url>
+		</repository>
+		<repository>
+			<id>Jahia</id>
+			<url>https://maven.jahia.org/maven2/</url>
 		</repository>
 	</repositories>
 

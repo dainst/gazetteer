@@ -1,2 +1,2 @@
-FROM docker.elastic.co/elasticsearch/elasticsearch:6.7.1
+FROM elasticsearch:6.8.22
 RUN ./bin/elasticsearch-plugin install analysis-icu
