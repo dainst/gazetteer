@@ -92,9 +92,6 @@ public class SearchController {
 	@Value("${languages}")
 	private String[] languages;
 
-	@Value("${googleMapsApiKey}")
-	private String googleMapsApiKey;
-
 	@Autowired
 	MessageSource messageSource;
 
@@ -216,7 +213,6 @@ public class SearchController {
 		mav.addObject("placeDao", placeDao);
 		mav.addObject("view", view);
 		mav.addObject("q", q);
-		mav.addObject("googleMapsApiKey", googleMapsApiKey);
 		mav.addObject("callback", callback);
 		mav.addObject("error", error);
 
@@ -273,7 +269,6 @@ public class SearchController {
 		mav.addObject("limit", limit);
 		mav.addObject("offset", offset);
 		mav.addObject("hits", query.getHits());
-		mav.addObject("googleMapsApiKey", googleMapsApiKey);
 		return mav;
 
 	}
@@ -339,7 +334,6 @@ public class SearchController {
 		mav.addObject("limit", limit);
 		mav.addObject("offset", offset);
 		mav.addObject("hits", query.getHits());
-		mav.addObject("googleMapsApiKey", googleMapsApiKey);
 
 		return mav;
 
@@ -646,7 +640,6 @@ public class SearchController {
 		mav.addObject("placeDao", placeDao);
 		mav.addObject("view", view);
 		mav.addObject("language", locale.getISO3Language());
-		mav.addObject("googleMapsApiKey", googleMapsApiKey);
 
 		return mav;
 	}

@@ -1,5 +1,4 @@
 baseUri=http://localhost:8080/gazetteer/
-googleMapsApiKey=
 languages=deu,eng,ita,fra,ofs,frr,fry,ell,lat,grc,sqi,pol,tur,ara,spa,hsb,dsb,por,zho,rus,vie,srp,egy,xmr,eus,nld,nds,fas,cat,glg,bul,swe,hrv,srd,hun,nor,kor,jpn,heb,dan,slv,wln,ett,stq,cop,akk,fin,cze,ukr,slo,kur
 idTypes=arachne-entity,arachne-place,geonames,ISO 3166-1 alpha-2,zenon-thesaurus,zenon-systemnr,pleiades,AMS-Nr.,cadastral-id,GND-ID,Schn&auml;delbach-Catalognr.,Cairo Monument Number
 placeTypeGroups=physical-geographic,human-geographic,archaeological,building

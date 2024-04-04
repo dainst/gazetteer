@@ -95,9 +95,6 @@ public class DocumentController {
 	
 	@Value("${baseUri}")
 	private String baseUri;
-	
-	@Value("${googleMapsApiKey}")
-	private String googleMapsApiKey;
 		
 	@RequestMapping(value="/doc/{placeId}", method=RequestMethod.GET)
 	public ModelAndView getPlace(@PathVariable String placeId,
@@ -224,7 +221,6 @@ public class DocumentController {
 			mav.addObject("view", view);
 			mav.addObject("q", q);
 			mav.addObject("nativePlaceName", place.getNameMap().get(locale.getISO3Language()));
-			mav.addObject("googleMapsApiKey", googleMapsApiKey);
 			mav.addObject("languages", langHelper.getLocalizedLanguages(locale));
 			mav.addObject("langHelper", langHelper);
 			mav.addObject("baseUri", baseUri);

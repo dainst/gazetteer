@@ -24,9 +24,6 @@ public class WidgetController {
 	@Value("${baseUri}")
 	private String baseUri;
 	
-	@Value("${googleMapsApiKey}")
-	private String googleMapsApiKey;
-	
 	@Autowired
 	private PlaceRepository placeDao;
 	
@@ -64,7 +61,6 @@ public class WidgetController {
 		mav.addObject("baseUri", baseUri);
 		mav.addObject("mapHeight", mapHeight);
 		mav.addObject("showInfo", showInfo);
-		mav.addObject("googleMapsApiKey", googleMapsApiKey);
 		
 		return mav;
 		

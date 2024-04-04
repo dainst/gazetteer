@@ -36,9 +36,6 @@ public class AppController {
 	@Value("${baseUri}")
 	private String baseUri;
 	
-	@Value("${googleMapsApiKey}")
-	private String googleMapsApiKey;
-	
 	@Value("${idTypes}")
 	private String[] idTypes;
 	
@@ -87,7 +84,6 @@ public class AppController {
 
 		model.addAttribute("baseUri",baseUri);
 		model.addAttribute("languages", langHelper.getLocalizedLanguages(locale));
-		model.addAttribute("googleMapsApiKey", googleMapsApiKey);
 		model.addAttribute("idTypes", idTypes);
 		model.addAttribute("placeTypes", placeTypes);
 		model.addAttribute("placeTypeGroups", placeTypeGroups);
@@ -113,7 +109,6 @@ public class AppController {
 		}
 		model.addAttribute("baseUri",baseUri);
 		model.addAttribute("languages", langHelper.getLocalizedLanguages(locale));
-		model.addAttribute("googleMapsApiKey", googleMapsApiKey);
 		model.addAttribute("idTypes", idTypes);
 		model.addAttribute("placeTypes", placeTypes);
 		model.addAttribute("placeTypeGroups", placeTypeGroups);
