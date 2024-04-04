@@ -64,8 +64,7 @@ public class AppController {
 	public String app(
 			ModelMap model, 
 			HttpServletRequest request, 
-			@RequestParam(value="_escaped_fragment_", required=false) String fragment,
-			@CookieValue(value="gazetteer_google_consent", required=false) String googleConsent
+			@RequestParam(value="_escaped_fragment_", required=false) String fragment
 			) throws UnsupportedEncodingException {
 
 		// render static html for crawlers
@@ -76,9 +75,6 @@ public class AppController {
 
 		Locale locale = new RequestContext(request).getLocale();
 		model.addAttribute("language", locale.getLanguage());
-		if (googleConsent == null) {
-			return "consent";
-		}
 
 		Arrays.sort(idTypes, String.CASE_INSENSITIVE_ORDER);
 
@@ -96,7 +92,6 @@ public class AppController {
 
 	@RequestMapping(value="/app/{view}.html")
 	public String app(
-			@CookieValue(value="gazetteer_google_consent", required=false) String googleConsent, 
 			@PathVariable String view, 
 			ModelMap model, 
 			HttpServletRequest request
@@ -104,9 +99,6 @@ public class AppController {
 
 		Locale locale = new RequestContext(request).getLocale();
 		model.addAttribute("language", locale.getLanguage());
-		if (googleConsent == null) {
-			return "consent";
-		}
 		model.addAttribute("baseUri",baseUri);
 		model.addAttribute("languages", langHelper.getLocalizedLanguages(locale));
 		model.addAttribute("idTypes", idTypes);
@@ -118,7 +110,6 @@ public class AppController {
 	
 	@RequestMapping(value="/app/partials/{view}.html")
 	public String appPartials(
-			@CookieValue(value="gazetteer_google_consent", required=false) String googleConsent,
 			@PathVariable String view,
 			ModelMap model,
 			HttpServletRequest request
@@ -126,11 +117,6 @@ public class AppController {
 
 		Locale locale = new RequestContext(request).getLocale();
 		model.addAttribute("language", locale.getLanguage());
-
-		if (googleConsent == null) {
-			return "consent";
-		}
-
 		User user = null;
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if (principal != null && principal instanceof User) {
