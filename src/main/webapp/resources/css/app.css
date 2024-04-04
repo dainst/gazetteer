@@ -61,8 +61,6 @@ footer {
 	margin-top: 10px;
 }
 
-.gmap img { max-width: none; }
-
 #leaflet_map { height: 500px; }
 
 #leaflet_map .leaflet-div-icon {
