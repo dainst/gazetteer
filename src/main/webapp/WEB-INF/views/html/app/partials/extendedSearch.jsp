@@ -217,15 +217,6 @@
 		</div>
 		
 		<div class="control-group">
-			<label class="control-label" style="padding-top: 0";> <s:message
-					code="ui.extendedSearch.polygonFilter" text="ui.extendedSearch.polygonFilter" />
-			</label>
-			<div class="controls">
-				<label><s:message code="ui.extendedSearch.polygonFilterInfo" text="ui.extendedSearch.polygonFilterInfo" /></label>
-			</div>
-		</div>
-		
-		<div class="control-group">
 			<div class="controls">
 				<button type="button" class="btn" ng-click="reset()">
 					<s:message code="ui.reset" text="ui.reset" />
