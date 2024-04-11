@@ -20,43 +20,6 @@ Einbinden von Tomcat:
 Unter "Preferences -> Build, Execution, Deployment -> Application Servers -> Add Apllication Server -> Tomcat Server"
 kann das Verzeichnis einer binären Distribution von Tomcat angegeben werden.  
 
-### Konfiguration: MongoDB und Elasticsearch
-
-MongoDB und Elasticsearch können mit Docker bzw. docker-compose automatisch erstellt werden.
-
-Vorraussetzungen
-* [Docker](https://www.docker.com/)
-* [docker-compose](https://docs.docker.com/compose/)
-
-Die Docker Images bauen mit:
-
-```bash
-docker-compose build
-```
-
-Um aus den gebauten Images dann Docker Container zu erstellen und zu starten:
-```bash
-docker-compose up
-```
-
-Um die Container zu stoppen:
-CTRL + C oder
-```bash
-docker-compose stop
-```
-
-Wieder starten mit:
-```bash
-docker-compose start
-```
-
-Erstellte Container löschen (inklusive ElasticSearch Index und MongoDB Daten):
-```bash
-docker-compose down -v
-```
-
-Anschließend muss "127.0.0.1 gazetteer_mongo" noch als host auf dem System angelegt werden. Unter Linux/Mac OSX 
-findet sich die Konfigurationsdatei unter `/etc/hosts`. Siehe auch: https://de.wikipedia.org/wiki/Hosts_(Datei).
 
 ### Konfiguration: Hauptanwendung (Java/Tomcat)
 
