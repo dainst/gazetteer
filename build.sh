@@ -2,6 +2,8 @@
 # This script builds two .war artifacts for production and test respectively.
 #
 # Prerequisites:
+# * Java: Successfully built with: java-11-openjdk.
+# * Apache Maven: Successfully built with Apache Maven: 3.9.9.
 # * Make sure the user running the build can write in '/var/log/gazetteeer'.
 # * Make sure that the `gazetteer-configs` directory is put next to the `gazetteer` repository directory.
 #
