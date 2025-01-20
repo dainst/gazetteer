@@ -1,6 +1,6 @@
 'use strict';
 
-function AppCtrl($scope, $location, $rootScope, $timeout, Place, GeoSearch, EscapingService, MapTypeService) {
+function AppCtrl($scope, $location, $rootScope, $timeout, Place, EscapingService, MapTypeService) {
 
 	$scope.q = null;
 	$scope.type = "";
@@ -666,24 +666,6 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages
 				}
 			}
 		}
-
-		if ($scope.search.polygonFilterCoordinates) {
-			$rootScope.geoSearch = true;
-			GeoSearch.activate($rootScope.map);
-			GeoSearch.setPolygon($scope.search.polygonFilterCoordinates);
-
-			google.maps.event.addListener(GeoSearch.getPolygon().getPaths().getAt(0), 'insert_at', function () {
-				updatePolygonFilterSearch();
-			});
-
-			google.maps.event.addListener(GeoSearch.getPolygon().getPaths().getAt(0), 'set_at', function () {
-				updatePolygonFilterSearch();
-			});
-		}
-		else {
-			$rootScope.geoSearch = false;
-			GeoSearch.deactivate();
-		}
 	};
 }
 
@@ -699,7 +681,6 @@ function CreateCtrl($scope, $rootScope, $routeParams, $location, Place, messages
 	$rootScope.viewClass = "span6";
 	$rootScope.activePlaces = [];
 	$rootScope.isFocused = true;
-	$rootScope.geoSearch = false;
 	$rootScope.mapMode = "standard";
 
 	$scope.addPlaceType = function (placeType) {
