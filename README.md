@@ -58,10 +58,4 @@ Backend (Java/SpringMVC) und Frontend (Javascript/AngularJS) werden im gleichen 
 
 ## Deployment
 
-Das WAR-File kann mit folgendem Befehl erstellt werden:
-
-`mvn clean package`
-
-Das resultierende Web-Archiv kann dann in einem beliebigen Servlet-Container deployt werden.
-
-   
+For creating the production and test `.war` packages see the comments in [build.sh](./build.sh).

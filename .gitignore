@@ -15,7 +15,4 @@ src/main/webapp/WEB-INF/mail.properties
 src/main/webapp/WEB-INF/web.xml
 src/main/resources/log4j2.xml
 
-
-# Docker
-
-.env
+builds/
