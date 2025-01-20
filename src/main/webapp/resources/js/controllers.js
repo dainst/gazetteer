@@ -41,14 +41,6 @@ function AppCtrl($scope, $location, $rootScope, $timeout, Place, GeoSearch, Esca
 			$scope.mapContainerStyle = { 'position': 'absolute', 'left': '-10000px' };
 	});
 
-
-	$scope.$watch("geoSearch", function () {
-		if ($rootScope.geoSearch)
-			GeoSearch.activate($rootScope.map);
-		else
-			GeoSearch.deactivate();
-	});
-
 	$scope.updateSuggestions = function () {
 		$scope.searchSuggestions = [];
 		$scope.selectedSuggestionIndex = -1;
@@ -188,7 +180,7 @@ function HomeCtrl($scope, $location, $rootScope, Place, EscapingService) {
 	};
 }
 
-function ExtendedSearchCtrl($scope, $rootScope, $location, messages, PolygonValidator, GeoSearch) {
+function ExtendedSearchCtrl($scope, $rootScope, $location, messages, PolygonValidator) {
 
 	$rootScope.pageTitle = messages["ui.extendedSearch"] + " | iDAI.gazetteer";
 	$rootScope.title = messages["ui.extendedSearch"];
@@ -199,10 +191,8 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages, PolygonVali
 	$rootScope.viewClass = "span6";
 	$rootScope.activePlaces = [];
 	$rootScope.isFocused = false;
-	$rootScope.geoSearch = true;
 	$rootScope.mapMode = "standard";
 
-	GeoSearch.setCreateMode(true);
 
 	$scope.reset = function () {
 		$scope.meta = null;
@@ -222,7 +212,6 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages, PolygonVali
 			noPolygonFilter: false,
 			unlocatableFilter: false
 		};
-		GeoSearch.deletePolygon();
 	};
 
 	$scope.reset();
@@ -415,19 +404,11 @@ function ExtendedSearchCtrl($scope, $rootScope, $location, messages, PolygonVali
 
 		var query = { "bool": { "must": queries } };
 
-		var geoSearchCoordinates = [];
-		if (GeoSearch.getPolygon() != null && GeoSearch.getPolygon().getMap() != null) {
-			for (var i = 0; i < GeoSearch.getPolygon().getPath().getLength(); i++) {
-				geoSearchCoordinates[i * 2] = GeoSearch.getPolygon().getPath().getAt(i).lng();
-				geoSearchCoordinates[i * 2 + 1] = GeoSearch.getPolygon().getPath().getAt(i).lat();
-			}
-		}
-		$location.path('/search').search({ q: angular.toJson(query), polygonFilterCoordinates: geoSearchCoordinates, fq: filterQuery, type: "extended" });
-
+		$location.path('/search').search({ q: angular.toJson(query), fq: filterQuery, type: "extended" });
 	};
 }
 
-function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearch, messages) {
+function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, messages) {
 
 	$rootScope.pageTitle = messages["ui.search.results"] + " | iDAI.gazetteer";
 	$rootScope.title = messages["ui.search.results"];
@@ -453,14 +434,6 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 	$scope.zoom = 2;
 	$scope.facets = null;
 	$scope.facetOffsets = {};
-
-	GeoSearch.setCreateMode(false);
-
-	$scope.$on("$destroy", function () {
-		if (GeoSearch.getPolygon() != null) {
-		}
-	});
-
 	// search while zooming
 	$scope.$watch(function () { return $scope.bbox.join(","); }, function () {
 		if ($scope.bbox.length == 4) {
@@ -639,20 +612,6 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 		else
 			$scope.search.fq = filterQuery;
 	};
-
-	$scope.updatePolygonFilterCoordinates = function () {
-		var polygonFilterCoordinates = [];
-		if (GeoSearch.getPolygon() != null && GeoSearch.getPolygon().getMap() != null) {
-			for (var i = 0; i < GeoSearch.getPolygon().getPath().getLength(); i++) {
-				polygonFilterCoordinates[i * 2] = GeoSearch.getPolygon().getPath().getAt(i).lng();
-				polygonFilterCoordinates[i * 2 + 1] = GeoSearch.getPolygon().getPath().getAt(i).lat();
-			}
-		}
-
-		$scope.search.polygonFilterCoordinates = polygonFilterCoordinates;
-		updatePolygonFilterCoordinatesString();
-	};
-
 	// needed to keep $scope.search and $location.search() in sync
 	// because reloadOnSearch is turned off for this controller
 	$scope.$watch(
@@ -683,9 +642,6 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 		if ($location.search().bbox) $scope.search.bbox = $location.search().bbox;
 		if ($location.search().polygonFilterCoordinates) $scope.search.polygonFilterCoordinates = $location.search().polygonFilterCoordinates;
 		if ($location.search().showInReview) $scope.search.showInReview = $location.search().showInReview;
-
-		updatePolygonFilterCoordinatesString();
-
 		$scope.filters.coordinatesFilter = false;
 		$scope.filters.noCoordinatesFilter = false;
 		$scope.filters.polygonFilter = false;
@@ -715,28 +671,19 @@ function SearchCtrl($scope, $rootScope, $location, $routeParams, Place, GeoSearc
 			$rootScope.geoSearch = true;
 			GeoSearch.activate($rootScope.map);
 			GeoSearch.setPolygon($scope.search.polygonFilterCoordinates);
+
+			google.maps.event.addListener(GeoSearch.getPolygon().getPaths().getAt(0), 'insert_at', function () {
+				updatePolygonFilterSearch();
+			});
+
+			google.maps.event.addListener(GeoSearch.getPolygon().getPaths().getAt(0), 'set_at', function () {
+				updatePolygonFilterSearch();
+			});
 		}
 		else {
 			$rootScope.geoSearch = false;
 			GeoSearch.deactivate();
 		}
-	};
-
-	function updatePolygonFilterCoordinatesString() {
-		$scope.polygonFilterCoordinatesString = "";
-		if ($scope.search.polygonFilterCoordinates && $scope.search.polygonFilterCoordinates.length > 0) {
-			for (var i in $scope.search.polygonFilterCoordinates) {
-				$scope.polygonFilterCoordinatesString += "&polygonFilterCoordinates=";
-				$scope.polygonFilterCoordinatesString += $scope.search.polygonFilterCoordinates[i];
-			}
-		}
-	};
-
-	function updatePolygonFilterSearch() {
-		$scope.search.offset = 0;
-		$scope.updatePolygonFilterCoordinates();
-		$location.path('/search').search($scope.search);
-		$scope.submit();
 	};
 }
 
