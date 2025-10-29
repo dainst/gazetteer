@@ -8,10 +8,13 @@ import org.dainst.gazetteer.domain.Place;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
 
-public interface PlaceRepository extends PagingAndSortingRepository<Place, String> {
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface PlaceRepository extends MongoRepository<Place, String> {
 
 	public Place getByLinksObjectAndLinksPredicate(String object, String predicate);
 	

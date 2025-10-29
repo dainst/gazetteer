@@ -4,9 +4,9 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Set;
 
-import javax.mail.MessagingException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.dainst.gazetteer.converter.JsonPlaceSerializer;
 import org.dainst.gazetteer.dao.GroupRoleRepository;
@@ -69,10 +69,12 @@ public class MergeController {
 	private String mergeNotificationMail;
 
 	@RequestMapping(value="/merge/{id1}/{id2}", method=RequestMethod.POST)
-	public ModelAndView getPlace(@PathVariable String id1,
-			@PathVariable String id2,
+	public ModelAndView getPlace(
+            @PathVariable("id1") String id1,
+			@PathVariable("id2") String id2,
 			HttpServletRequest request,
-			HttpServletResponse response) {
+			HttpServletResponse response
+    ) {
 				
 		Place place1 = placeDao.findById(id1).orElse(null);
 		Place place2 = placeDao.findById(id2).orElse(null);

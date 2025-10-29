@@ -17,8 +17,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.dainst.gazetteer.converter.JsonPlaceSerializer;
@@ -96,20 +96,30 @@ public class SearchController {
 	MessageSource messageSource;
 
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
-	public ModelAndView simpleSearch(@RequestParam(defaultValue = "10") int limit,
-			@RequestParam(defaultValue = "0") int offset, @RequestParam(required = false) String q,
-			@RequestParam(required = false) String fq, @RequestParam(required = false) String sort,
-			@RequestParam(defaultValue = "asc") String order, @RequestParam(required = false) String type,
-			@RequestParam(required = false, defaultValue = "map,table") String view,
-			@RequestParam(required = false) String callback, @RequestParam(required = false) String showInReview,
-			@RequestParam(required = false) double[] bbox,
-			@RequestParam(required = false) double[] polygonFilterCoordinates,
-			@RequestParam(required = false) boolean showHiddenPlaces, @RequestParam(required = false) String add,
-			@RequestParam(required = false) boolean noPolygons, @RequestParam(required = false) String queryId,
-			@RequestParam(required = false) boolean pretty, @RequestParam(required = false) boolean shortLanguageCodes,
-			@RequestParam(required = false) boolean scroll, @RequestParam(required = false) String scrollId,
-			HttpServletRequest request, HttpServletResponse response) {
-
+	public ModelAndView simpleSearch(
+            @RequestParam(name="limit", defaultValue = "10") int limit,
+			@RequestParam(name="offset", defaultValue = "0") int offset,
+            @RequestParam(name="q", required = false) String q,
+			@RequestParam(name="fq", required = false) String fq,
+            @RequestParam(name="sort", required = false) String sort,
+			@RequestParam(name="asc", defaultValue = "asc") String order,
+            @RequestParam(name="type", required = false) String type,
+			@RequestParam(name="view", required = false, defaultValue = "map,table") String view,
+			@RequestParam(name="callback", required = false) String callback,
+            @RequestParam(name="showInReview", required = false) String showInReview,
+			@RequestParam(name="bbox", required = false) double[] bbox,
+			@RequestParam(name="polygonFilterCoordinates", required = false) double[] polygonFilterCoordinates,
+			@RequestParam(name="showHiddenPlaces", required = false) boolean showHiddenPlaces,
+            @RequestParam(name="add", required = false) String add,
+			@RequestParam(name="noPolygons", required = false) boolean noPolygons,
+            @RequestParam(name="queryId", required = false) String queryId,
+			@RequestParam(name="pretty", required = false) boolean pretty,
+            @RequestParam(name="shortLanguagecodes", required = false) boolean shortLanguageCodes,
+			@RequestParam(name="scroll", required = false) boolean scroll,
+            @RequestParam(name="scrollId", required = false) String scrollId,
+			HttpServletRequest request,
+            HttpServletResponse response
+    ) {
 		logger.debug("bbox:" + Arrays.toString(bbox));
 
 		RequestContext requestContext = new RequestContext(request);
@@ -221,10 +231,13 @@ public class SearchController {
 	}
 
 	@RequestMapping(value = "/search", method = RequestMethod.POST)
-	public ModelAndView extendedSearch(@RequestParam(defaultValue = "10") int limit,
-			@RequestParam(defaultValue = "0") int offset, @RequestParam(required = false) String showInReview,
-			@RequestBody String jsonQuery, HttpServletRequest request) {
-
+	public ModelAndView extendedSearch(
+            @RequestParam(name="limit", defaultValue = "10") int limit,
+			@RequestParam(name="offset", defaultValue = "0") int offset,
+            @RequestParam(name="showInReview", required = false) String showInReview,
+			@RequestBody String jsonQuery,
+            HttpServletRequest request
+    ) {
 		RequestContext requestContext = new RequestContext(request);
 		Locale locale = requestContext.getLocale();
 
@@ -274,12 +287,17 @@ public class SearchController {
 	}
 
 	@RequestMapping(value = "/geoSearch", method = RequestMethod.GET)
-	public ModelAndView geoList(@RequestParam(defaultValue = "10") int limit,
-			@RequestParam(defaultValue = "0") int offset, @RequestParam double lat, @RequestParam double lon,
-			@RequestParam(defaultValue = "50") int distance, @RequestParam(required = false) String filter,
-			@RequestParam(required = false) String showInReview, HttpServletRequest request,
-			HttpServletResponse response) {
-
+	public ModelAndView geoList(
+            @RequestParam(name="limit", defaultValue = "10") int limit,
+			@RequestParam(name="offset", defaultValue = "0") int offset,
+            @RequestParam(name="lat") double lat,
+            @RequestParam(name="lon") double lon,
+			@RequestParam(name="distance", defaultValue = "50") int distance,
+            @RequestParam(name="filter", required = false) String filter,
+			@RequestParam(name="showInReview", required = false) String showInReview,
+            HttpServletRequest request,
+			HttpServletResponse response
+    ) {
 		RequestContext requestContext = new RequestContext(request);
 		Locale locale = requestContext.getLocale();
 		Locale originalLocale = request.getLocale();
@@ -340,14 +358,19 @@ public class SearchController {
 	}
 
 	@RequestMapping(value = "/search/shapefile", method = RequestMethod.GET)
-	public void getShapefile(@RequestParam(defaultValue = "10000") int limit,
-			@RequestParam(defaultValue = "0") int offset, @RequestParam(required = false) String q,
-			@RequestParam(required = false) String fq, @RequestParam(required = false) String sort,
-			@RequestParam(defaultValue = "asc") String order, @RequestParam(required = false) String type,
-			@RequestParam(required = false) double[] bbox,
-			@RequestParam(required = false) double[] polygonFilterCoordinates, HttpServletRequest request,
-			HttpServletResponse response) {
-
+	public void getShapefile(
+            @RequestParam(name="limit", defaultValue = "10000") int limit,
+			@RequestParam(name="offset", defaultValue = "0") int offset,
+            @RequestParam(name="q", required = false) String q,
+			@RequestParam(name="fq", required = false) String fq,
+            @RequestParam(name="sort", required = false) String sort,
+			@RequestParam(name="order", defaultValue = "asc") String order,
+            @RequestParam(name="type", required = false) String type,
+			@RequestParam(name="bbox", required = false) double[] bbox,
+			@RequestParam(name="polygonFilterCoordinates", required = false) double[] polygonFilterCoordinates,
+            HttpServletRequest request,
+			HttpServletResponse response
+    ) {
 		String pointsFq = fq;
 		String multipolygonsFq = fq;
 
@@ -423,9 +446,11 @@ public class SearchController {
 
 	@RequestMapping(value = "/suggestions", method = RequestMethod.GET)
 	@ResponseBody
-	public Map<String, List<String>> getSuggestions(@RequestParam String field, @RequestParam String text,
-			@RequestParam String queryId) {
-
+	public Map<String, List<String>> getSuggestions(
+            @RequestParam(name="field") String field,
+            @RequestParam(name="text") String text,
+			@RequestParam(name="queryId") String queryId
+    ) {
 		ElasticSearchSuggestionQuery query = new ElasticSearchSuggestionQuery(clientProvider.getClient(), groupDao,
 				groupRoleDao);
 		List<String> suggestions = query.getSuggestions(field, text, field.equals("nameSuggestions"));
@@ -445,7 +470,7 @@ public class SearchController {
 	public Map<String, List<String>> getHeatmapCoordinates() {
 
 		List<Place> places = placeDao.findHeatmapPlaces(0,
-				new PageRequest(0, 5000, new Sort(Direction.DESC, "children")));
+				PageRequest.of(0, 5000, Sort.by(Direction.DESC, "children")));
 
 		List<String> heatmapCoordinates = new ArrayList<String>();
 
@@ -606,9 +631,12 @@ public class SearchController {
 	}
 
 	@RequestMapping(value = "/children/{id}", method = RequestMethod.GET)
-	public ModelAndView childrenSearch(@PathVariable String id,
-			@RequestParam(required = false, defaultValue = "map,table") String view, HttpServletRequest request,
-			HttpServletResponse response) {
+	public ModelAndView childrenSearch(
+            @PathVariable(name="id") String id,
+			@RequestParam(name="view", required = false, defaultValue = "map,table") String view,
+            HttpServletRequest request,
+			HttpServletResponse response
+    ) {
 		ElasticSearchPlaceQuery query = new ElasticSearchPlaceQuery(clientProvider.getClient());
 		query.metaSearch("parent: " + id);
 		query.addSort("prefName.title.sort", "asc");

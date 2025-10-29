@@ -27,7 +27,10 @@ public class ImageController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/markerImage/{color}/{number}", method = RequestMethod.GET, produces = MediaType.IMAGE_PNG_VALUE)
-	public byte[] numberedMarkerImage(@PathVariable String color, @PathVariable int number) throws Exception {
+	public byte[] numberedMarkerImage(
+            @PathVariable("color") String color,
+            @PathVariable("number") int number
+    ) throws Exception {
 		String fileName;
 		switch (color) {
 		case "lightred":

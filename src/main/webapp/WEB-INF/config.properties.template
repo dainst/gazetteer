@@ -8,4 +8,6 @@ protectionDecimalPlaces=1
 geonamesSolrUri=
 tempDirectoryPath=
 version=@project.version@
-mongoReplicaSet=localhost:27017
+mongoReplicaSet=mongodb:27017
+spring.mvc.view.prefix=/WEB-INF/views/
+spring.mvc.view.suffix=.jsp

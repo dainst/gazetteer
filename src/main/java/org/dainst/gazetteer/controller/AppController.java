@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.dainst.gazetteer.dao.GroupRoleRepository;
 import org.dainst.gazetteer.dao.RecordGroupRepository;
@@ -62,11 +62,10 @@ public class AppController {
 	LanguagesHelper langHelper;
 	@RequestMapping(value="/app/")
 	public String app(
-			ModelMap model, 
-			HttpServletRequest request, 
+			ModelMap model,
+			HttpServletRequest request,
 			@RequestParam(value="_escaped_fragment_", required=false) String fragment
-			) throws UnsupportedEncodingException {
-
+    ) throws UnsupportedEncodingException {
 		// render static html for crawlers
 		if (fragment != null && !fragment.isEmpty() && fragment.startsWith("/show")) {
 			String[] split = URLDecoder.decode(fragment, "UTF-8").split("/");
@@ -92,7 +91,7 @@ public class AppController {
 
 	@RequestMapping(value="/app/{view}.html")
 	public String app(
-			@PathVariable String view, 
+			@PathVariable("view") String view,
 			ModelMap model, 
 			HttpServletRequest request
 	) {		
@@ -110,7 +109,7 @@ public class AppController {
 	
 	@RequestMapping(value="/app/partials/{view}.html")
 	public String appPartials(
-			@PathVariable String view,
+			@PathVariable("view") String view,
 			ModelMap model,
 			HttpServletRequest request
 	) {

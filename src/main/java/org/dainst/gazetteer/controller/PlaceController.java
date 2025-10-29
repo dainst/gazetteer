@@ -3,9 +3,8 @@ package org.dainst.gazetteer.controller;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.dainst.gazetteer.dao.PlaceRepository;
 import org.dainst.gazetteer.domain.Place;
@@ -20,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.view.RedirectView;
 
+import jakarta.annotation.Resource;
+
 @Controller
 public class PlaceController {
 
@@ -32,10 +33,11 @@ public class PlaceController {
 	PlaceRepository placeRepository;
 
 	@RequestMapping(value="/place/{id}", method=RequestMethod.GET)
-	public View getPlace(@PathVariable String id,
+	public View getPlace(
+            @PathVariable("id") String id,
 			HttpServletRequest request,
-			HttpServletResponse response) {
-		
+			HttpServletResponse response
+    ) {
 		RedirectView view;
 		
 		// 301 redirect for replaced places

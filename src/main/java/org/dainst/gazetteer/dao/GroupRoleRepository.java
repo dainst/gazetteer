@@ -3,10 +3,13 @@ package org.dainst.gazetteer.dao;
 import java.util.List;
 
 import org.dainst.gazetteer.domain.GroupRole;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
 
-public interface GroupRoleRepository extends PagingAndSortingRepository<GroupRole, String> {
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface GroupRoleRepository extends MongoRepository<GroupRole, String> {
 	
 	public List<GroupRole> findByGroupId(String groupId);
 	

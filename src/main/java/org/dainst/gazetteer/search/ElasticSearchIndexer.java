@@ -7,11 +7,14 @@ import org.dainst.gazetteer.converter.JsonPlaceSerializer;
 import org.dainst.gazetteer.domain.Place;
 import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ElasticSearchIndexer {
 	
 	private final static Logger logger = LoggerFactory.getLogger("org.dainst.gazetteer.ElasticSearchIndexer");
@@ -30,7 +33,7 @@ public class ElasticSearchIndexer {
 		}
 		
 		try {
-			clientProvider.getClient().bulk(request);
+			clientProvider.getClient().bulk(request, RequestOptions.DEFAULT);
 		} catch (IOException e) {
 			logger.error("Failed to index places", e);
 		}
@@ -41,7 +44,7 @@ public class ElasticSearchIndexer {
 		IndexRequest request = createIndexRequest(place);
 		
 		try {
-			clientProvider.getClient().index(request);
+			clientProvider.getClient().index(request, RequestOptions.DEFAULT);
 		} catch (IOException e) {
 			logger.error("Failed to index place " + place.getId(), e);
 		}

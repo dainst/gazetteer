@@ -1,0 +1,82 @@
+{
+  "template": "gazetteer*",
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "default": {
+          "tokenizer": "standard",
+          "filter": ["lowercase", "asciifolding"]
+        },
+        "raw": {
+          "tokenizer": "keyword",
+          "filter": ["lowercase"]
+        },
+        "autocomplete": {
+          "type": "custom",
+          "tokenizer": "ngramTokenizer",
+          "filter": ["lowercase", "asciifolding"]
+        }
+      },
+      "tokenizer": {
+        "ngramTokenizer": {
+          "type": "edge_ngram",
+          "min_gram": 2,
+          "max_gram": 50
+        }
+      }
+    }
+  },
+  "mappings": {
+    "place": {
+      "properties": {
+        "all": { "type": "text" },
+        "prefName": {
+          "properties": {
+            "language": { "type": "keyword" },
+            "title": {
+              "type": "text",
+              "copy_to": "all",
+              "fields": {
+                "raw": { "type": "text", "analyzer": "raw" },
+                "sort": { "type": "keyword" },
+                "autocomplete": { "type": "text", "analyzer": "autocomplete" }
+              }
+            }
+          }
+        },
+        "names": {
+          "type": "nested",
+          "include_in_parent": true,
+          "properties": {
+            "language": { "type": "keyword" },
+            "title": {
+              "type": "text",
+              "copy_to": "all",
+              "fields": {
+                "raw": { "type": "text", "analyzer": "raw" },
+                "sort": { "type": "keyword" },
+                "autocomplete": { "type": "text", "analyzer": "autocomplete" }
+              }
+            }
+          }
+        },
+        "nameSuggestions": { "type": "completion", "analyzer": "default" },
+        "prefLocation": {
+          "properties": {
+            "confidence": { "type": "long" },
+            "coordinates": { "type": "geo_point" },
+            "altitude": { "type": "double" },
+            "shape": { "type": "geo_shape" }
+          }
+        },
+        "types": { "type": "keyword" },
+        "deleted": { "type": "boolean" },
+        "needsReview": { "type": "boolean" },
+        "parent": { "type": "keyword" },
+        "ancestors": { "type": "keyword" },
+        "recordGroupId": { "type": "keyword" },
+        "lastChangeDate": { "type": "date" }
+      }
+    }
+  }
+}

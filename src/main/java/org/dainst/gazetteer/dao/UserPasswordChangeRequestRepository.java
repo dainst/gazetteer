@@ -1,9 +1,12 @@
 package org.dainst.gazetteer.dao;
 
 import org.dainst.gazetteer.domain.UserPasswordChangeRequest;
-import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface UserPasswordChangeRequestRepository extends PagingAndSortingRepository<UserPasswordChangeRequest, String> {
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface UserPasswordChangeRequestRepository extends MongoRepository<UserPasswordChangeRequest, String> {
 
 	public UserPasswordChangeRequest findByUserId(String userId);
 }

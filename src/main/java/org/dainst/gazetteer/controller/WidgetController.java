@@ -42,10 +42,10 @@ public class WidgetController {
 	
 	@RequestMapping(value="/widget/show.js")
 	public ModelAndView showPlace(
-			@RequestParam String callback,
+			@RequestParam(name="callback") String callback,
 			@RequestParam(required=false, value="id") String[] ids,
-			@RequestParam(defaultValue="150") int mapHeight,
-			@RequestParam(defaultValue="false") boolean showInfo) {
+			@RequestParam(name="mapHeight", defaultValue="150") int mapHeight,
+			@RequestParam(name="showInfo", defaultValue="false") boolean showInfo) {
 		
 		ArrayList<Place> places = new ArrayList<Place>();
 		for (int i = 0; i < ids.length; i++) {
@@ -68,12 +68,12 @@ public class WidgetController {
 	
 	@RequestMapping(value="/widget/pick.js")
 	public ModelAndView pickPlace(
-			@RequestParam String callback,
-			@RequestParam(required=false) String name,
-			@RequestParam(required=false) String id,
+			@RequestParam(name="callback") String callback,
+			@RequestParam(name="name", required=false) String name,
+			@RequestParam(name="id", required=false) String id,
 			@RequestParam(required=false, value="class") String cssClass,
-			@RequestParam(required=false) String value,
-			@RequestParam(defaultValue="false") boolean disabled) {
+			@RequestParam(name="value", required=false) String value,
+			@RequestParam(name="disabled", defaultValue="false") boolean disabled) {
 		
 		ModelAndView mav = new ModelAndView("widget/pick");		
 		mav.addObject("callback", callback);
@@ -88,11 +88,11 @@ public class WidgetController {
 	
 	@RequestMapping(value="/widget/search.js")
 	public ModelAndView searchPlaces(
-			@RequestParam String callback,
-			@RequestParam(defaultValue="*") String q,
-			@RequestParam(defaultValue="10") int limit,
-			@RequestParam(defaultValue="0") int offset) {
-		
+			@RequestParam(name="callback") String callback,
+			@RequestParam(name="q", defaultValue="*") String q,
+			@RequestParam(name="limit", defaultValue="10") int limit,
+			@RequestParam(name="offset", defaultValue="0") int offset
+    ) {
 		ElasticSearchPlaceQuery query = new ElasticSearchPlaceQuery(clientProvider.getClient());
 		if (q != null) {
 			query.queryStringSearch(q);

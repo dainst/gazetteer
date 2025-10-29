@@ -12,8 +12,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import javax.mail.MessagingException;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.dainst.gazetteer.dao.GroupRoleRepository;
 import org.dainst.gazetteer.dao.RecordGroupRepository;
@@ -33,7 +33,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -57,7 +57,7 @@ public class UserManagementController {
 	private GroupRoleRepository groupRoleDao;
 
 	@Autowired
-	private BCryptPasswordEncoder passwordEncoder;
+	private PasswordEncoder passwordEncoder;
 
 	@Autowired
 	private MailService mailService;
@@ -76,7 +76,7 @@ public class UserManagementController {
 	private int usersPerPage = 15;
 
 	@RequestMapping(value="/login")
-	public String getLogin(@RequestParam(required=false) String r, ModelMap model) {
+	public String getLogin(@RequestParam(name="r", required=false) String r, ModelMap model) {
 		if (r != null) model.addAttribute("r", r);
 		model.addAttribute("version", version);
 		return "login";
@@ -90,7 +90,10 @@ public class UserManagementController {
 	}
 
 	@RequestMapping(value="/register")
-	public String register(@RequestParam(required=false) String r, ModelMap model, HttpServletRequest request) {
+	public String register(
+            @RequestParam(name="r", required=false) String r,
+            ModelMap model, HttpServletRequest request
+    ) {
 		Locale locale = new RequestContext(request).getLocale();
 		model.addAttribute("language", locale.getLanguage());
 		if (r != null) model.addAttribute("r", r);
@@ -99,9 +102,11 @@ public class UserManagementController {
 	}
 
 	@RequestMapping(value="/checkRegisterForm")
-	public String checkRegisterForm(HttpServletRequest request, @RequestParam(required=false) String r,
-			RedirectAttributes redirectAttributes, ModelMap model) {
-
+	public String checkRegisterForm(
+            HttpServletRequest request,
+            @RequestParam(name="r", required=false) String r,
+			RedirectAttributes redirectAttributes, ModelMap model
+    ) {
 		String username = request.getParameter("register_username");
 		String firstname = request.getParameter("register_firstname");
 		String lastname = request.getParameter("register_lastname");
@@ -173,7 +178,7 @@ public class UserManagementController {
 	}
 
 	@RequestMapping(value = "/redirect")
-	public String redirect(@RequestParam(required = false) String r) {
+	public String redirect(@RequestParam(name="r", required = false) String r) {
 
 		if (r == null || r.equals(""))
 			r = "home";
@@ -182,11 +187,16 @@ public class UserManagementController {
 	}
 
 	@RequestMapping(value = "/userManagement")
-	public String getUserManagement(@RequestParam(required = false) String sort,
-			@RequestParam(required = false) boolean isDescending, @RequestParam(required = false) Integer page,
-			@RequestParam(required = false) String showUser, @RequestParam(required = false) boolean deleteUser,
-			@RequestParam(required = false) String deleteUserId, ModelMap model, HttpServletRequest request) {
-
+	public String getUserManagement(
+            @RequestParam(name="sort", required = false) String sort,
+			@RequestParam(name="isDescending", required = false) boolean isDescending,
+            @RequestParam(name="page", required = false) Integer page,
+			@RequestParam(name="showUser", required = false) String showUser,
+            @RequestParam(name="deleteUser", required = false) boolean deleteUser,
+			@RequestParam(name="deleteUserId", required = false) String deleteUserId,
+            ModelMap model,
+            HttpServletRequest request
+    ) {
 		if (deleteUser) {
 			User user = userDao.findById(deleteUserId).orElse(null);
 			if (user != null && !user.isEnabled()) {
@@ -239,78 +249,78 @@ public class UserManagementController {
 
 			if (sort == null || sort.equals("")) {
 				if (isDescending)
-					users = (List<User>) userDao.findAll(new Sort(Sort.Direction.DESC, "enabled"));
+					users = (List<User>) userDao.findAll(Sort.by(Sort.Direction.DESC, "enabled"));
 				else
-					users = (List<User>) userDao.findAll(new Sort(Sort.Direction.ASC, "enabled"));
+					users = (List<User>) userDao.findAll(Sort.by(Sort.Direction.ASC, "enabled"));
 			} else {
 				switch (sort) {
 				case "username":
-					users = (List<User>) userDao.findAll();
+					users = (List<User>) userDao.findAll(Sort.unsorted());
 					if (isDescending)
-						Collections.sort(users, Collections.reverseOrder(new User.UsernameComparator()));
+						users.sort(Collections.reverseOrder(new User.UsernameComparator()));
 					else
-						Collections.sort(users, new User.UsernameComparator());
+						users.sort(new User.UsernameComparator());
 					break;
 				case "firstname":
-					users = (List<User>) userDao.findAll();
+					users = (List<User>) userDao.findAll(Sort.unsorted());
 					if (isDescending)
-						Collections.sort(users, Collections.reverseOrder(new User.FirstnameComparator()));
+						users.sort(Collections.reverseOrder(new User.FirstnameComparator()));
 					else
-						Collections.sort(users, new User.FirstnameComparator());
+						users.sort(new User.FirstnameComparator());
 					break;
 				case "lastname":
-					users = (List<User>) userDao.findAll();
+					users = (List<User>) userDao.findAll(Sort.unsorted());
 					if (isDescending)
-						Collections.sort(users, Collections.reverseOrder(new User.LastnameComparator()));
+						users.sort(Collections.reverseOrder(new User.LastnameComparator()));
 					else
-						Collections.sort(users, new User.LastnameComparator());
+						users.sort(new User.LastnameComparator());
 					break;
 				case "institution":
-					users = (List<User>) userDao.findAll();
+					users = (List<User>) userDao.findAll(Sort.unsorted());
 					if (isDescending)
-						Collections.sort(users, Collections.reverseOrder(new User.InstitutionComparator()));
+						users.sort(Collections.reverseOrder(new User.InstitutionComparator()));
 					else
-						Collections.sort(users, new User.InstitutionComparator());
+						users.sort(new User.InstitutionComparator());
 					break;
 				case "email":
-					users = (List<User>) userDao.findAll();
+					users = (List<User>) userDao.findAll(Sort.unsorted());
 					if (isDescending)
-						Collections.sort(users, Collections.reverseOrder(new User.EmailComparator()));
+						users.sort(Collections.reverseOrder(new User.EmailComparator()));
 					else
-						Collections.sort(users, new User.EmailComparator());
+						users.sort(new User.EmailComparator());
 					break;
 				case "lastLogin":
 					if (isDescending)
-						users = (List<User>) userDao.findAll(new Sort(Sort.Direction.ASC, "lastLogin"));
+						users = (List<User>) userDao.findAll(Sort.by(Sort.Direction.ASC, "lastLogin"));
 					else
-						users = (List<User>) userDao.findAll(new Sort(Sort.Direction.DESC, "lastLogin"));
+						users = (List<User>) userDao.findAll(Sort.by(Sort.Direction.DESC, "lastLogin"));
 					break;
 				case "registrationDate":
 					if (isDescending)
-						users = (List<User>) userDao.findAll(new Sort(Sort.Direction.ASC, "registrationDate"));
+						users = (List<User>) userDao.findAll(Sort.by(Sort.Direction.ASC, "registrationDate"));
 					else
-						users = (List<User>) userDao.findAll(new Sort(Sort.Direction.DESC, "registrationDate"));
+						users = (List<User>) userDao.findAll(Sort.by(Sort.Direction.DESC, "registrationDate"));
 					break;
 				case "admin":
 					users = (List<User>) userDao.findAll();
 					if (isDescending)
-						Collections.sort(users, Collections.reverseOrder(new User.AdminComparator()));
+						users.sort(Collections.reverseOrder(new User.AdminComparator()));
 					else
-						Collections.sort(users, new User.AdminComparator());
+						users.sort(new User.AdminComparator());
 					break;
 				case "editor":
 					users = (List<User>) userDao.findAll();
 					if (isDescending)
-						Collections.sort(users, Collections.reverseOrder(new User.EditorComparator()));
+						users.sort(Collections.reverseOrder(new User.EditorComparator()));
 					else
-						Collections.sort(users, new User.EditorComparator());
+						users.sort(new User.EditorComparator());
 					break;
 				case "reisestipendium":
 					users = (List<User>) userDao.findAll();
 					if (isDescending)
-						Collections.sort(users, Collections.reverseOrder(new User.ReisestipendiumComparator()));
+						users.sort(Collections.reverseOrder(new User.ReisestipendiumComparator()));
 					else
-						Collections.sort(users, new User.ReisestipendiumComparator());
+						users.sort(new User.ReisestipendiumComparator());
 					break;
 				}
 			}
@@ -346,8 +356,12 @@ public class UserManagementController {
 	}
 
 	@RequestMapping(value = "/editUser")
-	public String getEditUser(@RequestParam(required = true) String username, @RequestParam(required = false) String r,
-			ModelMap model, HttpServletRequest request) {
+	public String getEditUser(
+            @RequestParam(name="username") String username,
+            @RequestParam(name="r", required = false) String r,
+			ModelMap model,
+            HttpServletRequest request
+    ) {
 
 		boolean adminEdit = isAdminEdit();
 		boolean userEdit = isUserEdit(username);
@@ -405,8 +419,12 @@ public class UserManagementController {
 	}
 
 	@RequestMapping(value = "/checkEditUserForm")
-	public String checkEditUserForm(HttpServletRequest request, @RequestParam(required = true) String username,
-			@RequestParam(required = false) String r, ModelMap model) {
+	public String checkEditUserForm(
+            HttpServletRequest request,
+            @RequestParam(name="username", required = true) String username,
+			@RequestParam(name="r", required = false) String r,
+            ModelMap model
+    ) {
 
 		User user = userDao.findByUsername(username);
 		if (user == null)
@@ -557,7 +575,10 @@ public class UserManagementController {
 	}
 
 	@RequestMapping(value = "/passwordChangeRequest")
-	public String getPasswordChangeRequest(@RequestParam(required = false) String r, ModelMap model) {
+	public String getPasswordChangeRequest(
+            @RequestParam(name="r", required = false) String r,
+            ModelMap model
+    ) {
 		if (r != null)
 			model.addAttribute("r", r);
 		model.addAttribute("version", version);
@@ -565,9 +586,12 @@ public class UserManagementController {
 	}
 
 	@RequestMapping(value = "/checkPasswordChangeRequestForm")
-	public String checkPasswordChangeRequestForm(HttpServletRequest request, @RequestParam(required = false) String r,
-			RedirectAttributes redirectAttributes, ModelMap model) {
-
+	public String checkPasswordChangeRequestForm(
+            HttpServletRequest request,
+            @RequestParam(name="r", required = false) String r,
+			RedirectAttributes redirectAttributes,
+            ModelMap model
+    ) {
 		String username = request.getParameter("password_change_request_username");
 
 		if (username.equals(""))
@@ -618,9 +642,11 @@ public class UserManagementController {
 	}
 
 	@RequestMapping(value = "/changePassword")
-	public String getChangePassword(@RequestParam(required = true) String userid,
-			@RequestParam(required = true) String key, ModelMap model) {
-
+	public String getChangePassword(
+            @RequestParam(name="userid") String userid,
+			@RequestParam(name="key") String key,
+            ModelMap model
+    ) {
 		UserPasswordChangeRequest changeRequest = userPasswordChangeRequestDao.findByUserId(userid);
 		User user = userDao.findById(userid).orElse(null);
 
@@ -640,9 +666,11 @@ public class UserManagementController {
 	}
 
 	@RequestMapping(value = "/checkChangePasswordForm")
-	public String checkChangePasswordForm(HttpServletRequest request, @RequestParam(required = true) String userid,
-			ModelMap model) {
-
+	public String checkChangePasswordForm(
+            HttpServletRequest request,
+            @RequestParam(name="userid") String userid,
+			ModelMap model
+    ) {
 		String newPassword = request.getParameter("change_password_password");
 		String newPasswordConfirmation = request.getParameter("change_password_password_confirmation");
 

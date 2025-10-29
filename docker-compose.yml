@@ -1,0 +1,86 @@
+services:
+  gazetteer:
+    image: maven:3.9.11-eclipse-temurin-21
+    container_name: gazetteer
+    depends_on:
+      mongodb:
+        condition: service_started
+      elasticsearch:
+        condition: service_healthy
+    volumes:
+      - ~/.m2/:/root/.m2/
+      - ./:/src/
+    working_dir: /src
+    command: /src/mvnw spring-boot:run
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-o", "/dev/null", "-s", "--head", "--fail", "localhost:8080"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    #user: 1000:1000
+    networks:
+      - gazetteer
+
+  mongodb:
+    container_name: mongodb
+    image: mongo:4.0
+    volumes:
+      - ./.mongo-data/:/data/
+      - ./docker/mongo/setup.sh:/docker-entrypoint-initdb.d/setup.sh
+      - ./src/test/resources:/docker-entrypoint-initdb.d/data
+    environment:
+      MONGO_INITDB_DATABASE: gazetteer
+    ports:
+      - 27017:27017
+    networks:
+      - gazetteer
+
+  elasticsearch:
+    container_name: elasticsearch
+    build:
+      dockerfile: ./docker/elasticsearch/Dockerfile
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+      - xpack.security.enabled=false
+      - cluster.name=gazetteer.dainst.org
+    ports:
+      - 9200:9200
+    healthcheck:
+      test: ["CMD", "curl", "-o", "/dev/null", "-s", "--head", "--fail", "localhost:9200"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    user: 1000:1000
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    networks:
+      - gazetteer
+
+  elasticsearch-init:
+    container_name: gazetteer_elasticsearch_init
+    image: elasticsearch:6.7.1
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+      gazetteer:
+        condition: service_healthy
+    volumes:
+      - ./docker/elasticsearch-init/docker-entrypoint.sh:/docker-entrypoint.sh
+      - ./src/main/resources/es/_template/place_template.json:/mappings/place_template.json
+    entrypoint: /docker-entrypoint.sh
+    environment:
+      - ELASTICSEARCH_CONTAINER_NAME=elasticsearch
+      - TOMCAT_CONTAINER_NAME=gazetteer
+    user: 1000:1000
+    networks:
+      - gazetteer
+
+volumes:
+  esdata:
+    driver: local
+
+networks:
+  gazetteer:
