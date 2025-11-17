@@ -1,0 +1,23 @@
+meta {
+  name: Document API GeoJson
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://localhost:8080/doc/2042601.geojson
+  body: none
+  auth: inherit
+}
+
+assert {
+  res.status: eq 200
+  res.body.type: eq "Feature"
+  res.body.properties: isNotEmpty
+  res.body.properties.gazId: eq "2042601"
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

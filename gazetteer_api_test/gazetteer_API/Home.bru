@@ -1,0 +1,24 @@
+meta {
+  name: Home
+  type: http
+  seq: 1
+}
+
+get {
+  url: http://localhost:8080/
+  body: none
+  auth: inherit
+}
+
+headers {
+  Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+}
+
+assert {
+  res.status: eq 200
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

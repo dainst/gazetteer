@@ -1,0 +1,28 @@
+meta {
+  name: GeoSearch API
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://localhost:8080/geoSearch?lat=50.0&lon=50.0&distance=2000&limit=10
+  body: none
+  auth: inherit
+}
+
+params:query {
+  lat: 50.0
+  lon: 50.0
+  distance: 2000
+  limit: 10
+}
+
+assert {
+  res.status: eq 200
+  res.body.total: eq 45
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -1,0 +1,28 @@
+meta {
+  name: Document API RDF
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://localhost:8080/doc/2042601
+  body: none
+  auth: inherit
+}
+
+headers {
+  Accept: application/rdf+xml
+}
+
+assert {
+  res.status: eq 200
+  res.body: isNotEmpty
+  res.body: startsWith <?xml version="1.0" encoding="UTF-8"?>
+  res.body: contains xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
+  res.body: contains <dc:identifier>gazetteer:2042601</dc:identifier>
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
