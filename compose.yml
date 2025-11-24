@@ -12,10 +12,24 @@ services:
       - ./:/src/
     working_dir: /src
     command: /src/mvnw spring-boot:run
+    environment:
+      CLUSTER_NAME: elasticsearch
+      CLUSTER_PORT: 9200
+      MONGOREPLICASET: mongodb
     ports:
       - "8080:8080"
     healthcheck:
-      test: ["CMD", "curl", "-o", "/dev/null", "-s", "--head", "--fail", "localhost:8080"]
+      test:
+        [
+          "CMD",
+          "curl",
+          "-o",
+          "/dev/null",
+          "-s",
+          "--head",
+          "--fail",
+          "localhost:8080",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -49,7 +63,17 @@ services:
     ports:
       - 9200:9200
     healthcheck:
-      test: ["CMD", "curl", "-o", "/dev/null", "-s", "--head", "--fail", "localhost:9200"]
+      test:
+        [
+          "CMD",
+          "curl",
+          "-o",
+          "/dev/null",
+          "-s",
+          "--head",
+          "--fail",
+          "localhost:9200",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -61,7 +85,7 @@ services:
 
   elasticsearch-init:
     container_name: gazetteer_elasticsearch_init
-    image: elasticsearch:6.7.1
+    image: elasticsearch:8.18.8
     depends_on:
       elasticsearch:
         condition: service_healthy

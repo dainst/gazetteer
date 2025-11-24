@@ -1,0 +1,7 @@
+   ___             _   _
+  / __|__ _ ______| |_| |_ ___ ___ _ _
+ | (_ / _` |_ / -_)  _|  _/ -_) -_) '_|
+  \___\__,_/__\___|\__|\__\___\___|_|
+
+Gazetteer ${version}
+Powered by Spring Boot ${spring-boot.version}

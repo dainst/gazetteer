@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchScrollRequest;
@@ -12,15 +11,12 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.geo.GeoPoint;
 import org.elasticsearch.common.geo.ShapeRelation;
-import org.elasticsearch.common.geo.builders.ShapeBuilders;
-import org.elasticsearch.common.unit.TimeValue;
+import org.elasticsearch.core.TimeValue;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.GeoBoundingBoxQueryBuilder;
 import org.elasticsearch.index.query.GeoDistanceQueryBuilder;
-import org.elasticsearch.index.query.GeoPolygonQueryBuilder;
-import org.elasticsearch.index.query.GeoShapeQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.Operator;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder;
 import org.elasticsearch.index.query.functionscore.FunctionScoreQueryBuilder.FilterFunctionBuilder;
 import org.elasticsearch.index.query.functionscore.ScriptScoreFunctionBuilder;
@@ -40,232 +36,295 @@ import org.slf4j.LoggerFactory;
 
 public class ElasticSearchPlaceQuery {
 
-	private static final Logger logger = LoggerFactory.getLogger(ElasticSearchPlaceQuery.class);
+    private static final Logger logger = LoggerFactory.getLogger(
+        ElasticSearchPlaceQuery.class
+    );
 
-	private RestHighLevelClient client;
-	private SearchSourceBuilder searchSourceBuilder;
-	private BoolQueryBuilder queryBuilder;
-	private long totalHits = -1;
-	private Aggregations aggregations;
-	private boolean childrenBoost = false;
-	private String lastScrollId;
+    private final RestHighLevelClient client;
+    private final SearchSourceBuilder searchSourceBuilder;
+    private final BoolQueryBuilder queryBuilder;
+    private long totalHits = -1;
+    private Aggregations aggregations;
+    private boolean childrenBoost = false;
+    private String lastScrollId;
 
-	public ElasticSearchPlaceQuery(RestHighLevelClient client) {
-		this.client = client;
-		this.searchSourceBuilder = new SearchSourceBuilder();
-		this.queryBuilder = QueryBuilders.boolQuery();
-	}
+    // TODO: Better have a factory than pass around the client reference
+    public ElasticSearchPlaceQuery(final RestHighLevelClient client) {
+        this.client = client;
+        this.searchSourceBuilder = new SearchSourceBuilder();
+        this.queryBuilder = QueryBuilders.boolQuery();
+    }
 
-	public ElasticSearchPlaceQuery metaSearch(String query) {
-		if (query == null || "".equals(query) || "*".equals(query))
-			listAll();
-		// _id can't be added to all, so it's appended here, titles are
-		// added in order to boost them and prevent their score from being
-		// diminished by norms when occurring together with other fields in all
-		else {
-			String queryString = "(" + query + ")";
-			queryString += " OR _id:\"" + query + "\"";
-			if (!query.contains(":")) {
-				queryString += " OR prefName.title:\"" + query + "\"^2";
-				queryString += " OR names.title:\"" + query + "\"";
-			}
-			queryBuilder.must(QueryBuilders.queryStringQuery(queryString).defaultField("all")
-					.defaultOperator(Operator.AND));
-		}
+    public ElasticSearchPlaceQuery metaSearch(final String query) {
+        if (query == null || "".equals(query) || "*".equals(query)) listAll();
+        // _id can't be added to all, so it's appended here, titles are
+        // added in order to boost them and prevent their score from being
+        // diminished by norms when occurring together with other fields in all
+        else {
+            String queryString = "(" + query + ")";
+            queryString += " OR _id:\"" + query + "\"";
+            if (!query.contains(":")) {
+                queryString += " OR prefName.title:\"" + query + "\"^2";
+                queryString += " OR names.title:\"" + query + "\"";
+            }
+            queryBuilder.must(
+                QueryBuilders.queryStringQuery(queryString)
+                    .defaultField("all")
+                    .defaultOperator(Operator.AND)
+            );
+        }
 
-		return this;
+        return this;
+    }
 
-	}
+    public ElasticSearchPlaceQuery extendedSearch(final String jsonQuery) {
+        queryBuilder.must(QueryBuilders.wrapperQuery(jsonQuery));
+        return this;
+    }
 
-	public ElasticSearchPlaceQuery extendedSearch(String jsonQuery) {
-		queryBuilder.must(QueryBuilders.wrapperQuery(jsonQuery));
-		return this;
-	}
+    public ElasticSearchPlaceQuery queryStringSearch(final String query) {
+        queryBuilder.must(
+            QueryBuilders.queryStringQuery(query).defaultField("all")
+        );
+        return this;
+    }
 
-	public ElasticSearchPlaceQuery queryStringSearch(String query) {
-		queryBuilder.must(QueryBuilders.queryStringQuery(query).defaultField("all"));
-		return this;
-	}
+    public ElasticSearchPlaceQuery fuzzySearch(final String query) {
+        queryBuilder.must(QueryBuilders.fuzzyQuery("all", query));
+        return this;
+    }
 
-	public ElasticSearchPlaceQuery fuzzySearch(String query) {
-		queryBuilder.must(QueryBuilders.fuzzyQuery("all", query));
-		return this;
-	}
+    public ElasticSearchPlaceQuery prefixSearch(String query) {
+        query = query.toLowerCase();
+        queryBuilder.must(
+            QueryBuilders.boolQuery()
+                .should(
+                    QueryBuilders.termQuery(
+                        "prefName.title.autocomplete",
+                        query
+                    )
+                )
+                .should(
+                    QueryBuilders.termQuery("names.title.autocomplete", query)
+                )
+        );
+        return this;
+    }
 
-	public ElasticSearchPlaceQuery prefixSearch(String query) {
-		query = query.toLowerCase();
-		queryBuilder.must(QueryBuilders.boolQuery().should(QueryBuilders.termQuery("prefName.title.autocomplete", query))
-			.should(QueryBuilders.termQuery("names.title.autocomplete", query)));
-		return this;
-	}
+    public ElasticSearchPlaceQuery geoDistanceSearch(
+        final double lon,
+        final double lat,
+        final int distance
+    ) {
+        final GeoDistanceQueryBuilder geoDistanceQueryBuilder =
+            QueryBuilders.geoDistanceQuery("prefLocation.coordinates");
+        geoDistanceQueryBuilder.distance(Integer.toString(distance) + "km");
+        geoDistanceQueryBuilder.point(lat, lon);
+        queryBuilder.must(geoDistanceQueryBuilder);
+        return this;
+    }
 
-	public ElasticSearchPlaceQuery geoDistanceSearch(double lon, double lat, int distance) {
-		GeoDistanceQueryBuilder geoDistanceQueryBuilder = QueryBuilders.geoDistanceQuery("prefLocation.coordinates");
-		geoDistanceQueryBuilder.distance(Integer.toString(distance) + "km");
-		geoDistanceQueryBuilder.point(lat, lon);
-		queryBuilder.must(geoDistanceQueryBuilder);
-		return this;
-	}
+    public void addBoostForChildren() {
+        childrenBoost = true;
+    }
 
-	public void addBoostForChildren() {		
-		childrenBoost = true;
-	}
+    public ElasticSearchPlaceQuery addSort(
+        final String field,
+        final String order
+    ) {
+        if ("asc".equals(order)) searchSourceBuilder.sort(field, SortOrder.ASC);
+        else searchSourceBuilder.sort(field, SortOrder.DESC);
+        return this;
+    }
 
-	public ElasticSearchPlaceQuery addSort(String field, String order) {
-		if ("asc".equals(order))
-			searchSourceBuilder.sort(field, SortOrder.ASC);
-		else
-			searchSourceBuilder.sort(field, SortOrder.DESC);
-		return this;
-	}
+    public ElasticSearchPlaceQuery addTermsAggregation(final String field) {
+        final TermsAggregationBuilder aggregation = AggregationBuilders.terms(
+            field
+        )
+            .field(field + ".keyword")
+            .size(50);
+        searchSourceBuilder.aggregation(aggregation);
+        return this;
+    }
 
-	public ElasticSearchPlaceQuery addTermsAggregation(String field) {
-		TermsAggregationBuilder aggregation = AggregationBuilders.terms(field).field(field).size(50);
-		searchSourceBuilder.aggregation(aggregation);
-		return this;
-	}
+    public ElasticSearchPlaceQuery addGeoDistanceSort(
+        final double lon,
+        final double lat
+    ) {
+        final GeoDistanceSortBuilder sortBuilder = SortBuilders.geoDistanceSort(
+            "prefLocation.coordinates",
+            new GeoPoint(lat, lon)
+        );
+        sortBuilder.order(SortOrder.ASC);
+        searchSourceBuilder.sort(sortBuilder);
+        return this;
+    }
 
-	public ElasticSearchPlaceQuery addGeoDistanceSort(double lon, double lat) {
-		GeoDistanceSortBuilder sortBuilder = SortBuilders.geoDistanceSort("prefLocation.coordinates", new GeoPoint(lat, lon));
-		sortBuilder.order(SortOrder.ASC);
-		searchSourceBuilder.sort(sortBuilder);
-		return this;
-	}
+    public ElasticSearchPlaceQuery addFilter(final String filterQuery) {
+        queryBuilder.filter(QueryBuilders.queryStringQuery(filterQuery));
+        return this;
+    }
 
-	public ElasticSearchPlaceQuery addFilter(String filterQuery) {
-		queryBuilder.filter(QueryBuilders.queryStringQuery(filterQuery));
-		return this;
-	}
+    public ElasticSearchPlaceQuery addBBoxFilter(
+        final double northLat,
+        final double eastLon,
+        final double southLat,
+        final double westLon
+    ) {
+        final GeoBoundingBoxQueryBuilder boundingBoxQueryBuilder =
+            QueryBuilders.geoBoundingBoxQuery(
+                "prefLocation.coordinates"
+            ).setCorners(northLat, westLon, southLat, eastLon);
+        queryBuilder.filter(boundingBoxQueryBuilder);
+        return this;
+    }
 
-	public ElasticSearchPlaceQuery addBBoxFilter(double northLat, double eastLon, double southLat, double westLon) {
-		GeoBoundingBoxQueryBuilder boundingBoxQueryBuilder = QueryBuilders
-				.geoBoundingBoxQuery("prefLocation.coordinates")
-				.setCorners(northLat, westLon, southLat, eastLon);
-		queryBuilder.filter(boundingBoxQueryBuilder);
-		return this;
-	}
+    public ElasticSearchPlaceQuery addPolygonFilter(
+        final double[][] coordinates
+    ) {
+        final List<GeoPoint> points = new ArrayList<>();
+        final List<Coordinate> coords = new ArrayList<>();
 
-	public ElasticSearchPlaceQuery addPolygonFilter(double[][] coordinates) {
-		List<GeoPoint> points = new ArrayList<GeoPoint>();
-		List<Coordinate> coords = new ArrayList<Coordinate>();
-		
-		for (double[] lngLat : coordinates) {
-			points.add(new GeoPoint(lngLat[1], lngLat[0]));
-			coords.add(new Coordinate(lngLat[0], lngLat[1]));
-		}
-		
-		try {
-			GeoPolygonQueryBuilder geoPolygonQueryBuilder = QueryBuilders.geoPolygonQuery("prefLocation.coordinates", points);
-			GeoShapeQueryBuilder geoShapeQueryBuilder = QueryBuilders.geoShapeQuery("prefLocation.shape", ShapeBuilders.newPolygon(coords));
-			geoShapeQueryBuilder.relation(ShapeRelation.INTERSECTS);
+        for (final double[] lngLat : coordinates) {
+            points.add(new GeoPoint(lngLat[1], lngLat[0]));
+            coords.add(new Coordinate(lngLat[0], lngLat[1]));
+        }
 
-			BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
-			boolQueryBuilder.should(geoPolygonQueryBuilder).should(geoShapeQueryBuilder);
-			
-			queryBuilder.filter(boolQueryBuilder);
-		} catch (IOException e) {
-			logger.error("Failed to create polygon filter query for coordinates: " + coordinates, e);
-		}
-		
-		return this;
-	};
+        try {
+            final var geoPolygonQueryBuilder = QueryBuilders.geoPolygonQuery(
+                "prefLocation.coordinates",
+                points
+            );
+            final var geoShapeQueryBuilder = QueryBuilders.geoShapeQuery(
+                "prefLocation.shape",
+                Queries.polygonFromCoordinates(coordinates)
+            );
+            geoShapeQueryBuilder.relation(ShapeRelation.INTERSECTS);
 
-	public void listAll() {
-		queryBuilder.must(QueryBuilders.matchAllQuery());
-	}
+            final BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+            boolQueryBuilder
+                .should(geoPolygonQueryBuilder)
+                .should(geoShapeQueryBuilder);
 
-	public ElasticSearchPlaceQuery offset(int offset) {
-		searchSourceBuilder.from(offset);
-		return this;
-	}
+            queryBuilder.filter(boolQueryBuilder);
+        } catch (final IOException e) {
+            logger.error(
+                "Failed to create polygon filter query for coordinates: " +
+                    coordinates,
+                e
+            );
+        }
 
-	public ElasticSearchPlaceQuery limit(int limit) {
-		searchSourceBuilder.size(limit);
-		return this;
-	}
+        return this;
+    }
 
-	public long getHits() {
-		return totalHits;
-	}
-	
-	public String[] execute() {
-		
-		return execute(false);
-	}
+    public void listAll() {
+        queryBuilder.must(QueryBuilders.matchAllQuery());
+    }
 
-	public String[] execute(boolean startScroll) {
-		SearchRequest request = getSearchRequest();
-		if (startScroll) request.scroll(TimeValue.timeValueMinutes(30L)); 
-		
-		logger.debug("Query: {}", queryBuilder.toString());
-		try {
-			SearchResponse response = client.search(request, RequestOptions.DEFAULT);
-			aggregations = response.getAggregations();
-			if (startScroll) lastScrollId = response.getScrollId();
-			return responseAsList(response);
-		} catch (IOException e) {
-			logger.error("Error while executing search query", e);
-			return new String[0];
-		}
-	}
-	
-	public String[] execute(String scrollId) {
-		SearchScrollRequest request = new SearchScrollRequest(scrollId);
-		request.scroll(TimeValue.timeValueMinutes(30L)); 
-		
-		try {
-			SearchResponse response = client.scroll(request, RequestOptions.DEFAULT);
-			aggregations = response.getAggregations();
-			lastScrollId = response.getScrollId();
-			return responseAsList(response);
-		} catch (IOException e) {
-			logger.error("Error while executing search query", e);
-			return new String[0];
-		}
-	}
-	
-	public String getScrollId() {
-		return lastScrollId;
-	}
+    public ElasticSearchPlaceQuery offset(final int offset) {
+        searchSourceBuilder.from(offset);
+        return this;
+    }
 
-	public Aggregations getTermsAggregations() {
-		return aggregations;
-	}	
-	
-	private SearchRequest getSearchRequest() {
-		
-		if (childrenBoost)
-			searchSourceBuilder.query(addChildrenBoostScriptFunction(queryBuilder));
-		else
-			searchSourceBuilder.query(queryBuilder);
-		
-		SearchRequest request = new SearchRequest("gazetteer");
-		request.source(searchSourceBuilder);
-		request.types("place");
-		
-		return request;
-	}
+    public ElasticSearchPlaceQuery limit(final int limit) {
+        searchSourceBuilder.size(limit);
+        return this;
+    }
 
-	private String[] responseAsList(SearchResponse response) {
-		SearchHits hits = response.getHits();
-		totalHits = hits.getTotalHits();
-		String[] result = new String[hits.getHits().length];
-		for (int i = 0; i < result.length; i++) {
-			result[i] = hits.getAt(i).getId();
-		}
-		return result;
-	}
-	
-	private FunctionScoreQueryBuilder addChildrenBoostScriptFunction(BoolQueryBuilder query) {
-		// places with many children should get a higher score
-		Script script = new Script(ScriptType.INLINE, "painless",
-				"_score + (1.0 - 1.0 / ( 0.001 * doc['children'].value + 1.0 ) )",
-				new HashMap<String, Object>());
-		
-		FilterFunctionBuilder[] functions = {
-		        new FunctionScoreQueryBuilder.FilterFunctionBuilder(new ScriptScoreFunctionBuilder(script))
-		};
-		
-		return QueryBuilders.functionScoreQuery(query, functions);
-	}
+    public long getHits() {
+        return totalHits;
+    }
+
+    public String[] execute() {
+        return execute(false);
+    }
+
+    public String[] execute(final boolean startScroll) {
+        final SearchRequest request = getSearchRequest();
+        if (startScroll) request.scroll(TimeValue.timeValueMinutes(30L));
+
+        logger.debug("Query: {}", queryBuilder.toString());
+        try {
+            final SearchResponse response = client.search(
+                request,
+                RequestOptions.DEFAULT
+            );
+            aggregations = response.getAggregations();
+            if (startScroll) lastScrollId = response.getScrollId();
+            return responseAsList(response);
+        } catch (final IOException e) {
+            logger.error("Error while executing search query", e);
+            return new String[0];
+        }
+    }
+
+    public String[] execute(final String scrollId) {
+        final SearchScrollRequest request = new SearchScrollRequest(scrollId);
+        request.scroll(TimeValue.timeValueMinutes(30L));
+
+        try {
+            final SearchResponse response = client.scroll(
+                request,
+                RequestOptions.DEFAULT
+            );
+            aggregations = response.getAggregations();
+            lastScrollId = response.getScrollId();
+            return responseAsList(response);
+        } catch (final IOException e) {
+            logger.error("Error while executing search query", e);
+            return new String[0];
+        }
+    }
+
+    public String getScrollId() {
+        return lastScrollId;
+    }
+
+    public Aggregations getTermsAggregations() {
+        return aggregations;
+    }
+
+    private SearchRequest getSearchRequest() {
+        if (childrenBoost) searchSourceBuilder.query(
+            addChildrenBoostScriptFunction(queryBuilder)
+        );
+        else searchSourceBuilder.query(queryBuilder);
+
+        final SearchRequest request = new SearchRequest("gazetteer");
+        request.source(searchSourceBuilder);
+        request.types("place");
+
+        return request;
+    }
+
+    private String[] responseAsList(final SearchResponse response) {
+        final SearchHits hits = response.getHits();
+        totalHits = hits.getTotalHits().value;
+        final String[] result = new String[hits.getHits().length];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = hits.getAt(i).getId();
+        }
+        return result;
+    }
+
+    private FunctionScoreQueryBuilder addChildrenBoostScriptFunction(
+        final BoolQueryBuilder query
+    ) {
+        // places with many children should get a higher score
+        final Script script = new Script(
+            ScriptType.INLINE,
+            "painless",
+            "_score + (1.0 - 1.0 / ( 0.001 * doc['children'].value + 1.0 ) )",
+            new HashMap<String, Object>()
+        );
+
+        final FilterFunctionBuilder[] functions = {
+            new FunctionScoreQueryBuilder.FilterFunctionBuilder(
+                new ScriptScoreFunctionBuilder(script)
+            ),
+        };
+
+        return QueryBuilders.functionScoreQuery(query, functions);
+    }
 }

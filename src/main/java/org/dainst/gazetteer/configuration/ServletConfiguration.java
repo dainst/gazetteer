@@ -2,9 +2,18 @@ package org.dainst.gazetteer.configuration;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.stream.Collectors;
+import org.apache.catalina.Context;
+import org.apache.tomcat.util.scan.StandardJarScanner;
 import org.dainst.gazetteer.converter.JsonPlaceMessageConverter;
 import org.dainst.gazetteer.converter.KmlPlaceMessageConverter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,13 +41,6 @@ import org.springframework.web.servlet.view.AbstractUrlBasedView;
 import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 @Configuration
 @EnableWebMvc
 @EnableMethodSecurity(securedEnabled = true, jsr250Enabled = true)
@@ -46,7 +48,8 @@ import java.util.stream.Collectors;
 public class ServletConfiguration implements WebMvcConfigurer {
 
     private final String CONTENT_TYPE_HTML = "text/html";
-    private final String CONTENT_TYPE_KML = "application/vnd.google-earth.kml+xml";
+    private final String CONTENT_TYPE_KML =
+        "application/vnd.google-earth.kml+xml";
     private final String CONTENT_TYPE_JSON = "application/json";
     private final String CONTENT_TYPE_GEOJSON = "application/vnd.geo+json";
     private final String CONTENT_TYPE_JS = "application/javascript";
@@ -55,27 +58,40 @@ public class ServletConfiguration implements WebMvcConfigurer {
     @Bean
     public Map<String, String> mediaTypes() {
         return Map.of(
-                "html", CONTENT_TYPE_HTML,
-                "kml", CONTENT_TYPE_KML,
-                "json", CONTENT_TYPE_JSON,
-                "geojson", CONTENT_TYPE_GEOJSON,
-                "js", CONTENT_TYPE_JS,
-                "rdf", CONTENT_TYPE_RDF
+            "html",
+            CONTENT_TYPE_HTML,
+            "kml",
+            CONTENT_TYPE_KML,
+            "json",
+            CONTENT_TYPE_JSON,
+            "geojson",
+            CONTENT_TYPE_GEOJSON,
+            "js",
+            CONTENT_TYPE_JS,
+            "rdf",
+            CONTENT_TYPE_RDF
         );
     }
 
     public Map<String, MediaType> mediaTypeMap() {
-        return mediaTypes().entrySet().stream().collect(
-                Collectors.toMap(Map.Entry::getKey, entry -> MediaType.parseMediaType(entry.getValue()))
-        );
+        return mediaTypes()
+            .entrySet()
+            .stream()
+            .collect(
+                Collectors.toMap(Map.Entry::getKey, entry ->
+                    MediaType.parseMediaType(entry.getValue())
+                )
+            );
     }
 
     @Override
-    public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+    public void configureContentNegotiation(
+        ContentNegotiationConfigurer configurer
+    ) {
         configurer
-                .mediaTypes(mediaTypeMap())
-                .favorPathExtension(true)
-                .defaultContentType(mediaTypeMap().get("html"));
+            .mediaTypes(mediaTypeMap())
+            .favorPathExtension(true)
+            .defaultContentType(mediaTypeMap().get("html"));
     }
 
     /**
@@ -83,8 +99,11 @@ public class ServletConfiguration implements WebMvcConfigurer {
      * created by the configurer (see previous method).
      */
     @Bean
-    public ViewResolver contentNegotiatingViewResolver(ContentNegotiationManager manager) {
-        ContentNegotiatingViewResolver resolver = new ContentNegotiatingViewResolver();
+    public ViewResolver contentNegotiatingViewResolver(
+        ContentNegotiationManager manager
+    ) {
+        ContentNegotiatingViewResolver resolver =
+            new ContentNegotiatingViewResolver();
         resolver.setContentNegotiationManager(manager);
         resolver.setViewResolvers(viewResolvers());
         return resolver;
@@ -94,8 +113,11 @@ public class ServletConfiguration implements WebMvcConfigurer {
     JsonPlaceMessageConverter jsonPlaceMessageConverter;
 
     @Override
-    public void configureMessageConverters(List<HttpMessageConverter<?>> messageConverters) {
-        messageConverters.addAll(List.of(
+    public void configureMessageConverters(
+        List<HttpMessageConverter<?>> messageConverters
+    ) {
+        messageConverters.addAll(
+            List.of(
                 new KmlPlaceMessageConverter(),
                 jsonPlaceMessageConverter,
                 new ByteArrayHttpMessageConverter(),
@@ -105,57 +127,62 @@ public class ServletConfiguration implements WebMvcConfigurer {
                 new ResourceHttpMessageConverter(),
                 new SourceHttpMessageConverter<>(),
                 new AllEncompassingFormHttpMessageConverter()
-        ));
+            )
+        );
     }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
+        registry
+            .addResourceHandler("/resources/**")
+            .addResourceLocations("/resources/");
     }
 
     public List<ViewResolver> viewResolvers() {
-        ChainableInternalResourceViewResolver htmlResolver = new ChainableInternalResourceViewResolver(
+        ChainableInternalResourceViewResolver htmlResolver =
+            new ChainableInternalResourceViewResolver(
                 "/WEB-INF/views/html/",
                 ".jsp"
-        );
+            );
         htmlResolver.setContentType(CONTENT_TYPE_HTML);
 
-        ChainableInternalResourceViewResolver jsonResolver = new ChainableInternalResourceViewResolver(
+        ChainableInternalResourceViewResolver jsonResolver =
+            new ChainableInternalResourceViewResolver(
                 "/WEB-INF/views/json/",
                 ".jsp"
-        );
+            );
         jsonResolver.setContentType(CONTENT_TYPE_JSON);
 
-        ChainableInternalResourceViewResolver geoJsonResolver = new ChainableInternalResourceViewResolver(
+        ChainableInternalResourceViewResolver geoJsonResolver =
+            new ChainableInternalResourceViewResolver(
                 "/WEB-INF/views/geojson/",
                 ".jsp"
-        );
+            );
         geoJsonResolver.setContentType(CONTENT_TYPE_GEOJSON);
 
-        ChainableInternalResourceViewResolver kmlResolver = new ChainableInternalResourceViewResolver(
+        ChainableInternalResourceViewResolver kmlResolver =
+            new ChainableInternalResourceViewResolver(
                 "/WEB-INF/views/kml/",
                 ".jsp"
-        );
+            );
         kmlResolver.setContentType(CONTENT_TYPE_KML);
 
-        ChainableInternalResourceViewResolver jsResolver = new ChainableInternalResourceViewResolver(
+        ChainableInternalResourceViewResolver jsResolver =
+            new ChainableInternalResourceViewResolver(
                 "/WEB-INF/views/javascript/",
                 ".jsp"
-        );
+            );
         jsResolver.setContentType(CONTENT_TYPE_JS);
 
-        ChainableInternalResourceViewResolver rdfResolver = new ChainableInternalResourceViewResolver(
+        ChainableInternalResourceViewResolver rdfResolver =
+            new ChainableInternalResourceViewResolver(
                 "/WEB-INF/views/rdf/",
                 ".jsp"
-        );
+            );
         rdfResolver.setContentType(CONTENT_TYPE_RDF);
 
-        ChainableInternalResourceViewResolver jspResolver = new ChainableInternalResourceViewResolver(
-                "/WEB-INF/views/",
-                ".jsp"
-        );
-
-        return new ArrayList<>(List.of(
+        return new ArrayList<>(
+            List.of(
                 jsonResolver,
                 geoJsonResolver,
                 kmlResolver,
@@ -163,7 +190,8 @@ public class ServletConfiguration implements WebMvcConfigurer {
                 rdfResolver,
                 jsonResolver,
                 htmlResolver
-        ));
+            )
+        );
     }
 
     LocaleResolver localeResolver() {
@@ -175,9 +203,16 @@ public class ServletConfiguration implements WebMvcConfigurer {
     HandlerInterceptor localeResolverInterceptor() {
         return new HandlerInterceptor() {
             @Override
-            public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+            public boolean preHandle(
+                HttpServletRequest request,
+                HttpServletResponse response,
+                Object handler
+            ) {
                 if (handler instanceof HandlerMethod) {
-                    request.setAttribute(DispatcherServlet.LOCALE_RESOLVER_ATTRIBUTE, localeResolver());
+                    request.setAttribute(
+                        DispatcherServlet.LOCALE_RESOLVER_ATTRIBUTE,
+                        localeResolver()
+                    );
                 }
                 return true;
             }
@@ -190,7 +225,6 @@ public class ServletConfiguration implements WebMvcConfigurer {
         return lci;
     }
 
-
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(localeResolverInterceptor());
@@ -202,14 +236,19 @@ public class ServletConfiguration implements WebMvcConfigurer {
         return new CharacterEncodingFilter("UTF-8", true);
     }
 
-    private static class ChainableInternalResourceViewResolver extends InternalResourceViewResolver {
+    private static class ChainableInternalResourceViewResolver
+        extends InternalResourceViewResolver {
 
-        public ChainableInternalResourceViewResolver(String prefix, String suffix) {
+        public ChainableInternalResourceViewResolver(
+            String prefix,
+            String suffix
+        ) {
             super(prefix, suffix);
         }
 
         @Override
-        protected AbstractUrlBasedView buildView(String viewName) throws Exception {
+        protected AbstractUrlBasedView buildView(String viewName)
+            throws Exception {
             String url = getPrefix() + viewName + getSuffix();
             InputStream stream = getServletContext().getResourceAsStream(url);
             if (stream == null) {
@@ -231,10 +270,25 @@ public class ServletConfiguration implements WebMvcConfigurer {
             }
 
             @Override
-            protected void renderMergedOutputModel(Map<String, Object> model,
-                                                   HttpServletRequest request, HttpServletResponse response) throws Exception {
+            protected void renderMergedOutputModel(
+                Map<String, Object> model,
+                HttpServletRequest request,
+                HttpServletResponse response
+            ) throws Exception {
                 // Purposely empty, it should never get called
             }
         }
+    }
+
+    @Bean
+    public TomcatServletWebServerFactory tomcatFactory() {
+        return new TomcatServletWebServerFactory() {
+            @Override
+            protected void postProcessContext(Context context) {
+                ((StandardJarScanner) context.getJarScanner()).setScanManifest(
+                    false
+                );
+            }
+        };
     }
 }
