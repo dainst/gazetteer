@@ -25,7 +25,7 @@ services:
 
   mongodb:
     container_name: mongodb
-    image: mongo:4.0
+    image: mongo:8
     volumes:
       - ./.mongo-data/:/data/
       - ./docker/mongo/setup.sh:/docker-entrypoint-initdb.d/setup.sh

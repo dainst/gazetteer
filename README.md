@@ -59,3 +59,32 @@ Backend (Java/SpringMVC) und Frontend (Javascript/AngularJS) werden im gleichen 
 ## Deployment
 
 For creating the production and test `.war` packages see the comments in [build.sh](./build.sh).
+
+# MongoDB Migration from 4 to 8
+
+
+## In Development (if you want to keep data)
+
+```bash
+# Temporarily set version tag in docker-compose to '4.0'
+docker compose exec mongodb mongodump --out /data/dump
+docker compose rm mongodb
+# Set version tag back to '8'
+docker compose exec mongodb mongorestore /data/dump
+rm -rf .mongo-data/dump
+```
+
+## In Development (if you dont care about your data)
+
+```bash
+docker compose rm mongodb
+rm -rf .mongo-data
+```
+
+## In Production on-metal MongoDB
+
+```bash
+mongodump --out ./dump
+mongorestore ./dump
+# Verify that data is migrated and make a backup of dump
+ ```
