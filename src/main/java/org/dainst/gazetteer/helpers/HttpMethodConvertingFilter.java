@@ -2,12 +2,8 @@ package org.dainst.gazetteer.helpers;
 
 import java.io.IOException;
 
-import jakarta.servlet.Filter;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.FilterConfig;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
+import jakarta.servlet.*;
+import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
 
@@ -15,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequestWrapper;
  * Converts all http messages on FORWARD to GET in order to prevent problems with
  * PUT/DELETE messages on JSP pages
  */
+@WebFilter(urlPatterns = "/*", dispatcherTypes = DispatcherType.FORWARD)
 public class HttpMethodConvertingFilter implements Filter {
 
 	@Override

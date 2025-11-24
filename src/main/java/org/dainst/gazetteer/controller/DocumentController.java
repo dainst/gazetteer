@@ -96,7 +96,7 @@ public class DocumentController {
 	@Value("${baseUri}")
 	private String baseUri;
 		
-	@RequestMapping(value="/doc/{placeId}", method=RequestMethod.GET)
+	@RequestMapping(value={"/doc/{placeId}.*", "/doc/{placeId}"}, method=RequestMethod.GET)
 	public ModelAndView getPlace(
             @PathVariable("placeId") String placeId,
 			@RequestParam(name="layout", required=false) String layout,

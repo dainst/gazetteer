@@ -1,6 +1,5 @@
 package org.dainst.gazetteer.configuration;
 
-import org.dainst.gazetteer.harvest.HarvestingManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.TaskExecutor;
@@ -11,8 +10,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import java.util.concurrent.ThreadPoolExecutor;
 
 @Configuration
-public class HarvestingConfiguration {
-    /* TODO
+public class TaskSchedulingConfiguration {
     @Bean
     TaskExecutor taskExecutor() {
         ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();
@@ -28,11 +26,4 @@ public class HarvestingConfiguration {
         taskScheduler.setPoolSize(20);
         return taskScheduler;
     }
-
-    @Bean
-    public HarvestingManager harvestingManager() {
-        HarvestingManager harvestingManager = new HarvestingManager();
-        harvestingManager.initialize();
-        return harvestingManager;
-    }*/
 }

@@ -31,9 +31,9 @@ public class WebSecurityConfiguration {
         return authenticationSuccessHandler;
     }
 
-    @Bean 
-    public PasswordEncoder passwordEncoder() { 
-        return new BCryptPasswordEncoder(); 
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
