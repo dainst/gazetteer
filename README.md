@@ -12,7 +12,6 @@ Vor dem Start muss sichergestellt werden, dass die nötigen Konfigurationsdateie
 TODO CHECK LIST AND LOCATION
 
 - src/main/resources/log4j.xml
-- src/main/webapp/WEB-INF/web.xml
 - src/main/webapp/WEB-INF/config.properties
 - src/main/webapp/WEB-INF/elasticsearch.properties
 - src/main/webapp/WEB-INF/mail.properties (optional, bei fehlender Mail-Konfiguration werden keine Mails versandt)

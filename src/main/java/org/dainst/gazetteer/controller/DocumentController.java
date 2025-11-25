@@ -300,7 +300,7 @@ public class DocumentController {
 		
 	}
 	
-	@RequestMapping(value="/doc", method={RequestMethod.POST, RequestMethod.PUT})
+	@RequestMapping(value = { "/doc.*", "/doc" }, method={RequestMethod.POST, RequestMethod.PUT})
 	public ModelAndView createPlace(@RequestBody Place place,
 			HttpServletRequest request,
 			HttpServletResponse response) throws Exception {

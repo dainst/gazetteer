@@ -98,7 +98,10 @@ public class SearchController {
         this.client = client;
     }
 
-    @RequestMapping(value = "/search", method = RequestMethod.GET)
+    @RequestMapping(
+        value = { "/search.*", "/search" },
+        method = RequestMethod.GET
+    )
     public ModelAndView simpleSearch(
         @RequestParam(name = "limit", defaultValue = "10") int limit,
         @RequestParam(name = "offset", defaultValue = "0") int offset,
@@ -287,7 +290,10 @@ public class SearchController {
         return mav;
     }
 
-    @RequestMapping(value = "/search", method = RequestMethod.POST)
+    @RequestMapping(
+        value = { "/search.*", "/search" },
+        method = RequestMethod.POST
+    )
     public ModelAndView extendedSearch(
         @RequestParam(name = "limit", defaultValue = "10") int limit,
         @RequestParam(name = "offset", defaultValue = "0") int offset,
@@ -346,7 +352,10 @@ public class SearchController {
         return mav;
     }
 
-    @RequestMapping(value = "/geoSearch", method = RequestMethod.GET)
+    @RequestMapping(
+        value = { "/geoSearch.*", "/geoSearch" },
+        method = RequestMethod.GET
+    )
     public ModelAndView geoList(
         @RequestParam(name = "limit", defaultValue = "10") int limit,
         @RequestParam(name = "offset", defaultValue = "0") int offset,
