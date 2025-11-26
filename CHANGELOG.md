@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Upgrade dependencies: MongoDB 4 -> MongoDB 8
 - Updated README
 - Server now listens on `/` not `/gazetteer`
-- Building with Java 21 instead of 8
+- Building with Java 25 instead of 8
 - Updated geotools 14.5 -> 34.0
 - Migrated `xml` configuration to Java `@Configuration` 
 - Migrated javax to jakartax

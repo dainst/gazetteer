@@ -1,6 +1,6 @@
 services:
   gazetteer:
-    image: maven:3.9.11-eclipse-temurin-21
+    image: maven:3.9.11-eclipse-temurin-25
     container_name: gazetteer
     depends_on:
       mongodb:

@@ -15,7 +15,7 @@
 	<packaging>war</packaging>
 	<version>3.0.0</version>
 	<properties>
-		<java-version>21</java-version>
+		<java-version>25</java-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<geotools.version>34.0</geotools.version>
 	</properties>
