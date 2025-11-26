@@ -12,8 +12,5 @@
     <Logger name="org.dainst.gazetteer" level="debug">
     	<AppenderRef ref="file" />
     </Logger>
-    <Logger name="org.springframework.data" level="debug">
-    	<AppenderRef ref="file" />
-    </Logger>
   </Loggers>
 </Configuration>

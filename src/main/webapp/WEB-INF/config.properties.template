@@ -9,5 +9,3 @@ geonamesSolrUri=
 tempDirectoryPath=
 version=@project.version@
 mongoReplicaSet=mongodb:27017
-spring.mvc.view.prefix=/WEB-INF/views/
-spring.mvc.view.suffix=.jsp

@@ -18,6 +18,8 @@ src/main/resources/log4j2.xml
 
 builds/
 
+.factorypath
+
 # docker dev
 .m2
 .mongo-data
