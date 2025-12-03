@@ -3,9 +3,12 @@ package org.dainst.gazetteer.dao;
 import java.util.List;
 
 import org.dainst.gazetteer.domain.RecordGroup;
-import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface RecordGroupRepository extends PagingAndSortingRepository<RecordGroup, String> {
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface RecordGroupRepository extends MongoRepository<RecordGroup, String> {
 	
 	public RecordGroup findByName(String name);
 	

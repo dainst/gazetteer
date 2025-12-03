@@ -1,0 +1,22 @@
+meta {
+  name: HeatMap API
+  type: http
+  seq: 5
+}
+
+get {
+  url: http://localhost:8080/heatmapCoordinates
+  body: none
+  auth: inherit
+}
+
+assert {
+  res.status: eq 200
+  res.body.coordinates: isArray
+  res.body.coordinates: isNotEmpty
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

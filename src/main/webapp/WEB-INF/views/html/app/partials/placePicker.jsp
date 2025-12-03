@@ -3,7 +3,7 @@
 
 <span>
 	<span>
-	
+
 		<div class="place-picker-field">
 			<span ng-hide="place.gazId">
 				<em><s:message code="ui.picker.pickAPlace" text="ui.picker.pickAPlace"/></em>
@@ -12,9 +12,9 @@
 		</div><button class="btn gaz-pick-button place-picker-btn" type="button" ng-click="openOverlay()">
 			<i class="icon-search"></i><i class="icon-globe"></i>
 		</button>
-	
+
 	</span>
-	
+
 	<div modal="showOverlay" close="closeOverlay()">
 		<div class='modal-header'>
 			<button type='button' class='close' data-dismiss='modal' ng-click="closeOverlay()">×</button>
@@ -32,7 +32,7 @@
 					<td>
 						<span>
 							<a href="">
-								{{place.prefName.title}}<em><small ng-repeat="name in place.names | orderBy: ['sort'] | limitTo: 3">, 
+								{{place.prefName.title}}<em><small ng-repeat="name in place.names | orderBy: ['sort'] | limitTo: 3">,
 									{{name.title}}</small><small ng-show="place.names.length > 3">, ...</small></em>
 							</a>
 						</span>
@@ -43,24 +43,4 @@
 			</table>
  		</div>
 	</div>
-	
-<!-- 	<div class="gaz-pick-overlay-inner" ng-show="showOverlay"> -->
-<!-- 		<div class="navbar navbar-inverse"> -->
-<!-- 			<div class="navbar-inner"> -->
-<!-- 				<a href="" ng-click="closeOverlay()" class="pull-left icon-large" style="color:black"> -->
-<!-- 					<i class="icon-remove-sign"></i> -->
-<!-- 				</a> -->
-<!-- 				<form class="navbar-search pull-left" action="/gazetteer/place" autocomplete="off"> -->
-<!-- 	 				<input type="text" class="search-query" placeholder="Suche" ng-model="search.q" autocomplete="off"> -->
-<!-- 	 				<i class="icon-search icon-white"></i> -->
-<!-- 				</form> -->
-<!-- 			</div> -->
-<!-- 		</div> -->
-<!-- 		<div class="gaz-pick-results"> -->
-<!-- 			<div class="gaz-pick-result-row" ng-repeat="place in places"> -->
-<!-- 				<a ng-click="selectPlace(place)">{{place.prefName.title}} <em><small>&#35;{{place.gazId}}</small></em></a> -->
-<!-- 			</div> -->
-<!-- 		</div> -->
-<!-- 	</div> -->
-
 </span>

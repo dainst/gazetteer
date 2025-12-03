@@ -1,0 +1,25 @@
+meta {
+  name: Document API JSON
+  type: http
+  seq: 4
+}
+
+get {
+  url: http://localhost:8080/doc/2042601
+  body: none
+  auth: inherit
+}
+
+headers {
+  Accept: application/json
+}
+
+assert {
+  res.status: eq 200
+  res.body.gazId: eq "2042601"
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.dainst.gazetteer.dao.PlaceChangeRecordRepository;
 import org.dainst.gazetteer.dao.PlaceRepository;
@@ -50,11 +50,16 @@ public class ChangeHistoryController {
 
 	
 	@RequestMapping(value="/globalChangeHistory")
-	public String getGlobalChangeHistory(HttpServletRequest request, @RequestParam(required=false) String sort, @RequestParam(required=false) boolean isDescending,
-										 @RequestParam(required=false) Integer page, @RequestParam(required=false) String startDate,
-										 @RequestParam(required=false) String endDate, ModelMap model) {
-		
-		boolean isAdmin = false;		
+	public String getGlobalChangeHistory(
+            HttpServletRequest request,
+            @RequestParam(name="sort", required=false) String sort,
+            @RequestParam(name="isDescending", required=false) boolean isDescending,
+			@RequestParam(name="page", required=false) Integer page,
+            @RequestParam(name="startDate", required=false) String startDate,
+			@RequestParam(name="endDate", required=false) String endDate,
+            ModelMap model
+    ) {
+		boolean isAdmin = false;
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 	
 		for (GrantedAuthority authority : authentication.getAuthorities()) {
@@ -87,9 +92,9 @@ public class ChangeHistoryController {
 		List<PlaceChangeRecord> changeHistory;
 		
 		if (isAdmin)
-			changeHistory = (List<PlaceChangeRecord>) changeRecordRepository.findAll();
+			changeHistory = changeRecordRepository.findAll();
 		else
-			changeHistory = (List<PlaceChangeRecord>) changeRecordRepository.findByUserId(user.getId());
+			changeHistory = changeRecordRepository.findByUserId(user.getId());
 		
 		List<PresentablePlaceChangeRecord> presChangeHistory = new ArrayList<PresentablePlaceChangeRecord>();
 		

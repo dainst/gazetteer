@@ -1,0 +1,25 @@
+meta {
+  name: Search API
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://localhost:8080/search?q=rotes+meer
+  body: none
+  auth: inherit
+}
+
+params:query {
+  q: rotes+meer
+}
+
+assert {
+  res.status: eq 200
+  res.body.total: eq 3
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

@@ -10,9 +10,21 @@ tmp/
 .kitchen.local.yml
 .DS_Store
 gazetteer.iml
-src/main/webapp/WEB-INF/config.properties
-src/main/webapp/WEB-INF/mail.properties
+logs/
+src/main/resources/application.properties
+src/main/resources/mail.properties
 src/main/webapp/WEB-INF/web.xml
 src/main/resources/log4j2.xml
 
 builds/
+
+.factorypath
+
+# docker dev
+.m2
+.mongo-data
+.tomcat
+
+# development environments
+.idea/
+.vscode/

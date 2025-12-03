@@ -1,0 +1,27 @@
+meta {
+  name: Suggestions API
+  type: http
+  seq: 4
+}
+
+get {
+  url: http://localhost:8080/suggestions?field=nameSuggestions&queryId=2&text=rotes
+  body: none
+  auth: inherit
+}
+
+params:query {
+  field: nameSuggestions
+  queryId: 2
+  text: rotes
+}
+
+assert {
+  res.status: eq 200
+  res.body.suggestions[0]: eq "Rotes Meer"
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
