@@ -1,0 +1,26 @@
+meta {
+  name: Search API Geojson
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://localhost:8080/search.geojson?q=rotes+meer
+  body: none
+  auth: inherit
+}
+
+params:query {
+  q: rotes+meer
+}
+
+assert {
+  res.status: eq 200
+  res.body.type: eq "FeatureCollection"
+  res.body.features: isNotEmpty
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

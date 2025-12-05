@@ -3,8 +3,8 @@ package org.dainst.gazetteer.helpers;
 import java.io.IOException;
 import java.util.Date;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.dainst.gazetteer.dao.UserPasswordChangeRequestRepository;
 import org.dainst.gazetteer.dao.UserRepository;
@@ -20,7 +20,7 @@ public class AuthenticationSuccessHandler extends
 	private UserPasswordChangeRequestRepository userPasswordChangeRequestRepository;
 	
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-            Authentication authentication) throws javax.servlet.ServletException, IOException {
+            Authentication authentication) throws jakarta.servlet.ServletException, IOException {
 		
 		User user = (User) authentication.getPrincipal();
 		user.setLastLogin(new Date());

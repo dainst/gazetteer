@@ -16,8 +16,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.dainst.gazetteer.converter.JsonPlaceSerializer;
@@ -96,22 +96,24 @@ public class DocumentController {
 	@Value("${baseUri}")
 	private String baseUri;
 		
-	@RequestMapping(value="/doc/{placeId}", method=RequestMethod.GET)
-	public ModelAndView getPlace(@PathVariable String placeId,
-			@RequestParam(required=false) String layout,
-			@RequestParam(defaultValue="10") int limit,
-			@RequestParam(defaultValue="0") int offset,
-			@RequestParam(required=false) String q,
-			@RequestParam(required=false) String fuzzy,
-			@RequestParam(required=false, defaultValue="map,table") String view,
-			@RequestParam(required=false) String add,
-			@RequestParam(required=false) boolean pretty,
-			@RequestParam(required=false) boolean shortLanguageCodes,
-			@RequestParam(required=false) String replacing,
+	@RequestMapping(value={"/doc/{placeId}.*", "/doc/{placeId}"}, method=RequestMethod.GET)
+	public ModelAndView getPlace(
+            @PathVariable("placeId") String placeId,
+			@RequestParam(name="layout", required=false) String layout,
+			@RequestParam(name="limit", defaultValue="10") int limit,
+			@RequestParam(name="offset", defaultValue="0") int offset,
+			@RequestParam(name="q", required=false) String q,
+			@RequestParam(name="fuzzy", required=false) String fuzzy,
+			@RequestParam(name="view", required=false, defaultValue="map,table") String view,
+			@RequestParam(name="add", required=false) String add,
+			@RequestParam(name="pretty", required=false) boolean pretty,
+			@RequestParam(name="shortLanguageCodes", required=false) boolean shortLanguageCodes,
+			@RequestParam(name="replacing", required=false) String replacing,
 			@RequestHeader(value="User-Agent", required=false) String userAgent,
 			@RequestHeader(value="Accept", required=false) String accept,
 			HttpServletRequest request,
-			HttpServletResponse response) {
+			HttpServletResponse response
+    ) {
 		
 		RequestContext requestContext = new RequestContext(request);
 		Locale locale = requestContext.getLocale();
@@ -231,9 +233,11 @@ public class DocumentController {
 	}
 	
 	@RequestMapping(value="/doc/shapefile/{placeId}", method=RequestMethod.GET)
-	public void getShapefile(@PathVariable String placeId,
+	public void getShapefile(
+            @PathVariable("placeId") String placeId,
 			HttpServletRequest request,
-			HttpServletResponse response) {
+			HttpServletResponse response
+    ) {
 		
 		Place place = placeDao.findById(placeId).orElse(null);
 		
@@ -296,7 +300,7 @@ public class DocumentController {
 		
 	}
 	
-	@RequestMapping(value="/doc", method={RequestMethod.POST, RequestMethod.PUT})
+	@RequestMapping(value = { "/doc.*", "/doc" }, method={RequestMethod.POST, RequestMethod.PUT})
 	public ModelAndView createPlace(@RequestBody Place place,
 			HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
@@ -404,7 +408,7 @@ public class DocumentController {
 
 	@RequestMapping(value="/doc/{placeId}", method={RequestMethod.POST, RequestMethod.PUT})
 	public ModelAndView updateOrCreatePlace(@RequestBody Place place, 
-			@PathVariable String placeId,
+			@PathVariable("placeId") String placeId,
 			HttpServletResponse response) throws Exception {
 		
 		place.setId(placeId);
@@ -497,8 +501,10 @@ public class DocumentController {
 	}
 	
 	@RequestMapping(value="/doc/{placeId}", method=RequestMethod.DELETE)
-	public void deletePlace(@PathVariable String placeId,
-			HttpServletResponse response) {
+	public void deletePlace(
+            @PathVariable("placeId") String placeId,
+			HttpServletResponse response
+    ) {
 		
 		logger.debug("Deleting place " + placeId + "...");
 		

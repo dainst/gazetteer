@@ -1,270 +1,265 @@
 {
-    "template" : "gazetteer*",
-    "settings" : {
+    "index_patterns": ["gazetteer*"],
+    "settings": {
         "analysis": {
-            "analyzer" : {
-            	"default": {
-            		"tokenizer" : "standard",
-                    "filter" : ["lowercase", "folding"]
-            	},
-            	"raw": {
-            		"tokenizer": "keyword",
-            		"filter": ["lowercase"]
-            	},
+            "analyzer": {
+                "default": {
+                    "tokenizer": "standard",
+                    "filter": ["lowercase", "folding"]
+                },
+                "raw": {
+                    "tokenizer": "keyword",
+                    "filter": ["lowercase"]
+                },
                 "autocomplete": {
-          			"type": "custom",
-          			"tokenizer": "ngramTokenizer",
-          			"filter" :["lowercase", "folding"]
-          		} 
+                    "type": "custom",
+                    "tokenizer": "ngramTokenizer",
+                    "filter": ["lowercase", "folding"]
+                }
             },
-            "tokenizer" : {
-            	"ngramTokenizer" : {
-                	"type" : "edgeNGram",
-                    "min_gram" : "2",
-                    "max_gram" : "50",
+            "tokenizer": {
+                "ngramTokenizer": {
+                    "type": "edge_ngram",
+                    "min_gram": "2",
+                    "max_gram": "50",
                     "token_chars": []
-				}
-			},
-            "filter" : {
-                "lowercase" : {
-                	"type" : "lowercase"
+                }
+            },
+            "filter": {
+                "lowercase": {
+                    "type": "lowercase"
                 },
                 "folding": {
-                	"type": "icu_folding",
-                	"unicodeSetFilter": "[^äöüÄÖÜß]"
+                    "type": "icu_folding",
+                    "unicodeSetFilter": "[^äöüÄÖÜß]"
                 }
             }
         }
     },
-    "mappings" : {
-	    "place": {
-	    	"_all": {
-	    		"enabled": false
-	    	},
-	        "properties": {
-				"all": {
-					"type": "text"
-	    		},
-	            "prefName": {
-	                "properties": {
-	                    "language": {
-	                        "type": "keyword"
-	                    },
-	                    "title": {
-	                        "type": "text",
-							"norms": false,
-							"copy_to": "all",
-							"fields": {
-								"raw": {
-									"type": "text",
-									"analyzer": "raw"
-								},
-	                    		"sort": {
-									"type": "icu_collation_keyword",
-									"index": "false",
-									"language": "de",
-									"country": "DE",
-									"numeric": true
-								},
-								"autocomplete": {
-									"type": "text",
-									"analyzer": "autocomplete"
-								}
-							}   
-						}
-	                }
-	            },
-	            "names": {
-	            	"type": "nested",
-                	"include_in_parent": true,
-	                "properties": {
-	                    "language": {
-	                        "type": "keyword"
-	                    },
-	                    "title": {
-	                        "type": "text",
-							"norms": false,
-							"copy_to": "all",
-							"fields": {
-								"raw": {
-									"type": "text",
-									"analyzer": "raw"
-								},
-	                    		"sort": {
-									"type": "icu_collation_keyword",
-									"index": "false",
-									"language": "de",
-									"country": "DE",
-									"numeric": true
-								},
-								"autocomplete": {
-									"type": "text",
-									"analyzer": "autocomplete"
-								}
-							}
-	                    }
-	                }
-	            },
-	            "nameSuggestions": {
-	            	"type": "completion",
-					"analyzer": "default",
-					"contexts": [
-						{
-							"name": "recordGroupId",
-							"type": "category",
-							"path": "recordGroupId"
-						}
-					]
-	            },
-	            "prefLocation": {
-	            	"properties": {
-	                    "confidence": {
-	                        "type": "long"
-	                    },
-	                    "coordinates": {
-	                        "type": "geo_point"
-						},
-						"altitude": {
-	            			"type": "double"
-	            		},
-						"shape": {
-							"type": "geo_shape"
-						}
-	                }
-	            },
-	            "locations": {
-	            	"type": "nested",
-	                "properties": {
-	                    "confidence": {
-	                        "type": "long"
-	                    },
-	                    "coordinates": {
-	                        "type": "geo_point"
-						},
-						"altitude": {
-	            			"type": "double"
-	            		},
-						"shape": {
-							"type": "geo_shape"
-						}
-	                }
-	            },
-	            "children": {
-	                "type": "integer"
-	            },
-	            "deleted": {
-	                "type": "boolean"
-	            },
-	            "ids": {
-	            	"type": "nested",
-	                "properties": {
-	                    "context": {
-	                        "type": "keyword"
-	                    },
-	                    "value": {
-	                        "type": "keyword",
-	                        "copy_to": "all"
-	                    }
-	                }
-	            },
-	            "links": {
-	            	"type": "nested",
-	                "properties": {
-	                    "object": {
-	                        "type": "keyword"
-	                    },
-	                    "predicate": {
-	                        "type": "keyword"
-	                    },
-	                    "description": {
-	                    	"type": "keyword",
-	                    	"copy_to": "all"
-	                    }
-	                }
-	            },
-	            "needsReview": {
-	                "type": "boolean"
-	            },
-	            "parent": {
-	                "type": "keyword"
-	            },
-	            "ancestors": {
-					"type": "keyword"
-	            },
-	            "relatedPlaces": {
-	            	"type": "keyword"
-	            },
-	            "types": {
-	                "type": "keyword"
-				},
-				"tags": {
-					"type": "keyword",
-					"copy_to": "all",
-					"fields": {
-	               		"suggest" : {
-							"type": "completion",
-							"analyzer": "raw"
-						}
-					}
-				},
-				"provenance": {
-					"type": "keyword",
-					"copy_to": "all",
-					"fields": {
-	               		"suggest" : {
-							"type": "completion",
-							"analyzer": "raw"
-						}
-					}
-				},
-				"comments": {
-					"properties": {
-						"text": {
-							"type": "text",
-							"copy_to": "all"
-						},
-						"language": {
-							"type": "keyword"
-						},
-						"user": {
-							"type": "keyword"
-						}
-					}
-				},
-				"commentsReisestipendium": {
-					"properties": {
-						"text": {
-							"type": "text"
-						},
-						"language": {
-							"type": "keyword"
-						},
-						"user": {
-							"type": "keyword"
-						}
-					}
-				},
-				"noteReisestipendium": {
-					"type": "text"
-				},
-				"groupInternalData": {
-					"type": "nested",
-					"properties": {
-						"text": {
-							"type": "text"
-						},
-						"groupId": {
-							"type": "keyword"
-						}
-					}
-				},
-				"recordGroupId": {
-					"type": "keyword"
-				},
-				"lastChangeDate": {
-					"type": "date"
-				}
-	        }
-	    }
+    "mappings": {
+        "properties": {
+            "all": {
+                "type": "text"
+            },
+            "prefName": {
+                "properties": {
+                    "language": {
+                        "type": "keyword"
+                    },
+                    "title": {
+                        "type": "text",
+                        "norms": false,
+                        "copy_to": "all",
+                        "fields": {
+                            "raw": {
+                                "type": "text",
+                                "analyzer": "raw"
+                            },
+                            "sort": {
+                                "type": "icu_collation_keyword",
+                                "index": "false",
+                                "language": "de",
+                                "country": "DE",
+                                "numeric": true
+                            },
+                            "autocomplete": {
+                                "type": "text",
+                                "analyzer": "autocomplete"
+                            }
+                        }
+                    }
+                }
+            },
+            "names": {
+                "type": "nested",
+                "include_in_parent": true,
+                "properties": {
+                    "language": {
+                        "type": "keyword"
+                    },
+                    "title": {
+                        "type": "text",
+                        "norms": false,
+                        "copy_to": "all",
+                        "fields": {
+                            "raw": {
+                                "type": "text",
+                                "analyzer": "raw"
+                            },
+                            "sort": {
+                                "type": "icu_collation_keyword",
+                                "index": "false",
+                                "language": "de",
+                                "country": "DE",
+                                "numeric": true
+                            },
+                            "autocomplete": {
+                                "type": "text",
+                                "analyzer": "autocomplete"
+                            }
+                        }
+                    }
+                }
+            },
+            "nameSuggestions": {
+                "type": "completion",
+                "analyzer": "default",
+                "contexts": [
+                    {
+                        "name": "recordGroupId",
+                        "type": "category",
+                        "path": "recordGroupId"
+                    }
+                ]
+            },
+            "prefLocation": {
+                "properties": {
+                    "confidence": {
+                        "type": "long"
+                    },
+                    "coordinates": {
+                        "type": "geo_point"
+                    },
+                    "altitude": {
+                        "type": "double"
+                    },
+                    "shape": {
+                        "type": "geo_shape"
+                    }
+                }
+            },
+            "locations": {
+                "type": "nested",
+                "properties": {
+                    "confidence": {
+                        "type": "long"
+                    },
+                    "coordinates": {
+                        "type": "geo_point"
+                    },
+                    "altitude": {
+                        "type": "double"
+                    },
+                    "shape": {
+                        "type": "geo_shape"
+                    }
+                }
+            },
+            "children": {
+                "type": "integer"
+            },
+            "deleted": {
+                "type": "boolean"
+            },
+            "ids": {
+                "type": "nested",
+                "properties": {
+                    "context": {
+                        "type": "keyword"
+                    },
+                    "value": {
+                        "type": "keyword",
+                        "copy_to": "all"
+                    }
+                }
+            },
+            "links": {
+                "type": "nested",
+                "properties": {
+                    "object": {
+                        "type": "keyword"
+                    },
+                    "predicate": {
+                        "type": "keyword"
+                    },
+                    "description": {
+                        "type": "keyword",
+                        "copy_to": "all"
+                    }
+                }
+            },
+            "needsReview": {
+                "type": "boolean"
+            },
+            "parent": {
+                "type": "keyword"
+            },
+            "ancestors": {
+                "type": "keyword"
+            },
+            "relatedPlaces": {
+                "type": "keyword"
+            },
+            "types": {
+                "type": "keyword"
+            },
+            "tags": {
+                "type": "keyword",
+                "copy_to": "all",
+                "fields": {
+                    "suggest": {
+                        "type": "completion",
+                        "analyzer": "raw"
+                    }
+                }
+            },
+            "provenance": {
+                "type": "keyword",
+                "copy_to": "all",
+                "fields": {
+                    "suggest": {
+                        "type": "completion",
+                        "analyzer": "raw"
+                    }
+                }
+            },
+            "comments": {
+                "properties": {
+                    "text": {
+                        "type": "text",
+                        "copy_to": "all"
+                    },
+                    "language": {
+                        "type": "keyword"
+                    },
+                    "user": {
+                        "type": "keyword"
+                    }
+                }
+            },
+            "commentsReisestipendium": {
+                "properties": {
+                    "text": {
+                        "type": "text"
+                    },
+                    "language": {
+                        "type": "keyword"
+                    },
+                    "user": {
+                        "type": "keyword"
+                    }
+                }
+            },
+            "noteReisestipendium": {
+                "type": "text"
+            },
+            "groupInternalData": {
+                "type": "nested",
+                "properties": {
+                    "text": {
+                        "type": "text"
+                    },
+                    "groupId": {
+                        "type": "keyword"
+                    }
+                }
+            },
+            "recordGroupId": {
+                "type": "keyword"
+            },
+            "lastChangeDate": {
+                "type": "date"
+            }
+        }
     }
 }

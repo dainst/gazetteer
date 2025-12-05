@@ -1,0 +1,20 @@
+meta {
+  name: elastic_search is up
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://localhost:9200
+  body: none
+  auth: inherit
+}
+
+assert {
+  res.body.cluster_name: eq "gazetteer.dainst.org"
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

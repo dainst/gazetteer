@@ -7,7 +7,9 @@ import org.dainst.gazetteer.domain.Place;
 import org.dainst.gazetteer.domain.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ProtectLocationsService {
 
 	@Value("${protectionDecimalPlaces}")

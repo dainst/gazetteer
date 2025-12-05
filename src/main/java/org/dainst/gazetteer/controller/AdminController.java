@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.MissingResourceException;
 
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.MediaType;
 
 import org.dainst.gazetteer.dao.HarvesterDefinitionRepository;
 import org.dainst.gazetteer.dao.PlaceRepository;
@@ -87,7 +87,7 @@ public class AdminController {
 			int pagesCount = (int) Math.ceil((float) placeDao.count() / pageSize);
 			
 			do {
-				List<Place> places = placeDao.findAll(new PageRequest(page, pageSize)).getContent();
+				List<Place> places = placeDao.findAll(PageRequest.of(page, pageSize)).getContent();
 				indexer.index(places);
 				page++;
 				logger.info("Reindexing progress: " + page + "/" + pagesCount);
@@ -106,7 +106,7 @@ public class AdminController {
 	
 	@RequestMapping(value="/admin/toggleHarvester/{name}", method=RequestMethod.POST)
 	@ResponseBody
-	public String toggleHarvester(@PathVariable String name) {
+	public String toggleHarvester(@PathVariable("name") String name) {
 		
 		HarvesterDefinition harvesterDefinition = harvesterDefinitionDao
 				.getByName(name);
@@ -121,7 +121,7 @@ public class AdminController {
 	
 	@RequestMapping(value="/admin/resetHarvester/{name}", method=RequestMethod.POST)
 	@ResponseBody
-	public String resetHarvester(@PathVariable String name) {
+	public String resetHarvester(@PathVariable("name") String name) {
 		
 		HarvesterDefinition harvesterDefinition = harvesterDefinitionDao
 				.getByName(name);
@@ -224,7 +224,7 @@ public class AdminController {
 		
 		long time = System.currentTimeMillis();
 		
-		List<Place> places = placeDao.findByTypesAndDeletedIsFalse("continent",new Sort("prefName"));
+		List<Place> places = placeDao.findByTypesAndDeletedIsFalse("continent",Sort.by("prefName"));
 		
 		for (Place place : places) {
 			try {

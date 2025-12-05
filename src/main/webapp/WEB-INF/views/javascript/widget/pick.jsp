@@ -27,7 +27,7 @@
 			<div class="gaz-pick-overlay-inner">
 				<div class="navbar navbar-inverse">
 					<div class="navbar-inner">
-						<form class="navbar-search pull-left" action="/gazetteer/place" autocomplete="off">
+						<form class="navbar-search pull-left" action="/place" autocomplete="off">
 							<s:message code="ui.pick.search" text="Suche" var="titleSearch"/>
 			 				<input type="text" class="search-query" placeholder="${titleSearch}" name="q" autocomplete="off">
 			 				<i class="icon-search icon-white"></i>
@@ -35,7 +35,7 @@
 					</div>
 				</div>
 				<div class="gaz-pick-results">
-				
+
 				</div>
 			</div>
 		</div>

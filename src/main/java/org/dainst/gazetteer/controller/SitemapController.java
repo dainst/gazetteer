@@ -45,9 +45,9 @@ public class SitemapController {
 	}
 	
 	@RequestMapping(value="/sitemap{no}.xml", method=RequestMethod.GET)
-	public ModelAndView sitemap(@PathVariable int no) {
+	public ModelAndView sitemap(@PathVariable("no") int no) {
 		ModelAndView mav = new ModelAndView("sitemap/sitemap");
-		Page<Place> places = placeDao.findAll(new PageRequest(no-1, SITEMAP_SIZE));
+		Page<Place> places = placeDao.findAll(PageRequest.of(no-1, SITEMAP_SIZE));
 		
 		Map<String, Boolean> accessMap = new HashMap<String, Boolean>();
 		

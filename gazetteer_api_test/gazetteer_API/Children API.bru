@@ -1,0 +1,22 @@
+meta {
+  name: Children API
+  type: http
+  seq: 6
+}
+
+get {
+  url: http://localhost:8080/children/2042601
+  body: none
+  auth: inherit
+}
+
+assert {
+  res.status: eq 200
+  res.body.result: isArray
+  res.body.result: isNotEmpty
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
