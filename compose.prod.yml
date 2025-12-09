@@ -1,0 +1,82 @@
+services:
+  gazetteer:
+    image: ghcr.io/dainst/gazetteer:latest
+    container_name: gazetteer
+    depends_on:
+      mongodb:
+        condition: service_started
+      elasticsearch:
+        condition: service_healthy
+    environment:
+      CLUSTER_NAME: elasticsearch
+      CLUSTER_PORT: 9200
+      MONGOREPLICASET: mongodb
+    ports:
+      - "80:8080"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "curl",
+          "-o",
+          "/dev/null",
+          "-s",
+          "--head",
+          "--fail",
+          "localhost:8080",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    #user: 1000:1000
+    networks:
+      - gazetteer
+    restart: always
+
+  mongodb:
+    container_name: mongodb
+    image: mongo:8
+    volumes:
+      - ./.mongo-data/:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: gazetteer
+    ports:
+      - 27017:27017
+    networks:
+      - gazetteer
+    restart: always
+
+  elasticsearch:
+    container_name: elasticsearch
+    image: ghcr.io/dainst/gazetteer-elasticsearch:latest
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms1g -Xmx1g
+      - xpack.security.enabled=false
+      - cluster.name=gazetteer.test.dainst.org
+    ports:
+      - 9200:9200
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "curl",
+          "-o",
+          "/dev/null",
+          "-s",
+          "--head",
+          "--fail",
+          "localhost:9200",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    user: 1000:1000
+    volumes:
+      - ./.es-data:/usr/share/elasticsearch/data
+    networks:
+      - gazetteer
+    restart: always
+
+networks:
+  gazetteer:
