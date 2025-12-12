@@ -11,27 +11,14 @@ services:
       CLUSTER_NAME: elasticsearch
       CLUSTER_PORT: 9200
       MONGOREPLICASET: mongodb
-    ports:
-      - "80:8080"
-    healthcheck:
-      test:
-        [
-          "CMD",
-          "curl",
-          "-o",
-          "/dev/null",
-          "-s",
-          "--head",
-          "--fail",
-          "localhost:8080",
-        ]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    #user: 1000:1000
     networks:
       - gazetteer
     restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.gazetteer-router.rule=Host(`${HOST}`)"
+      - "traefik.http.routers.gazetteer-router.entrypoints=web"
+      - "traefik.http.services.gazetteer-service.loadbalancer.server.port=8080"
 
   mongodb:
     container_name: mongodb
@@ -45,6 +32,8 @@ services:
     networks:
       - gazetteer
     restart: always
+    labels:
+      - "traefik.enable=false"
 
   elasticsearch:
     container_name: elasticsearch
@@ -54,8 +43,6 @@ services:
       - ES_JAVA_OPTS=-Xms1g -Xmx1g
       - xpack.security.enabled=false
       - cluster.name=gazetteer.test.dainst.org
-    ports:
-      - 9200:9200
     healthcheck:
       test:
         [
@@ -77,6 +64,26 @@ services:
     networks:
       - gazetteer
     restart: always
+    labels:
+      - "traefik.enable=false"
+
+  traefik:
+    image: traefik:v3.6
+    container_name: traefik
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    command:
+      - "--entrypoints.web.address=:80"
+      - "--providers.docker"
+      - "--providers.docker.network=gazetteer"
+      - "--log.level=INFO"
+      - "--accesslog=true"
+    networks:
+      - gazetteer
+    restart: always
 
 networks:
   gazetteer:
+    name: gazetteer
