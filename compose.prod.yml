@@ -1,6 +1,6 @@
 services:
   gazetteer:
-    image: ghcr.io/dainst/gazetteer:latest
+    image: ghcr.io/dainst/gazetteer:${IMAGE}
     container_name: gazetteer
     depends_on:
       mongodb:
@@ -17,7 +17,9 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.gazetteer-router.rule=Host(`${HOST}`)"
-      - "traefik.http.routers.gazetteer-router.entrypoints=web"
+      - "traefik.http.routers.gazetteer-router.entrypoints=websecure"
+      - "traefik.http.routers.gazetteer-router.tls=true"
+      - "traefik.http.routers.gazetteer-router.tls.certresolver=dfn"
       - "traefik.http.services.gazetteer-service.loadbalancer.server.port=8080"
 
   mongodb:
@@ -42,7 +44,7 @@ services:
       - discovery.type=single-node
       - ES_JAVA_OPTS=-Xms1g -Xmx1g
       - xpack.security.enabled=false
-      - cluster.name=gazetteer.test.dainst.org
+      - cluster.name=gazetteer
     healthcheck:
       test:
         [
@@ -72,14 +74,11 @@ services:
     container_name: traefik
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-    command:
-      - "--entrypoints.web.address=:80"
-      - "--providers.docker"
-      - "--providers.docker.network=gazetteer"
-      - "--log.level=INFO"
-      - "--accesslog=true"
+      - ./acme.json:/acme.json
+      - ./traefik/config.yml:/etc/traefik/traefik.yml
     networks:
       - gazetteer
     restart: always
