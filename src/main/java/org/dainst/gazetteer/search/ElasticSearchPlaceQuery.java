@@ -141,7 +141,7 @@ public class ElasticSearchPlaceQuery {
         final TermsAggregationBuilder aggregation = AggregationBuilders.terms(
             field
         )
-            .field(field + ".keyword")
+            .field(field)
             .size(50);
         searchSourceBuilder.aggregation(aggregation);
         return this;
