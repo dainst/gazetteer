@@ -8,9 +8,16 @@ services:
       elasticsearch:
         condition: service_healthy
     environment:
-      CLUSTER_NAME: elasticsearch
-      CLUSTER_PORT: 9200
-      MONGOREPLICASET: mongodb
+      - CLUSTER_NAME=elasticsearch
+      - CLUSTER_PORT=9200
+      - MONGOREPLICASET=mongodb
+      - SMTPHOST
+      - SMTPPORT
+      - SENDERMAIL
+      - MAILUSERNAME
+      - MAILPASSWORD
+      - NOTIFICATIONMAIL
+      - BASEURI=https://${HOST}/
     networks:
       - gazetteer
     restart: always
