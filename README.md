@@ -36,17 +36,6 @@ Frontend als auch Backend-Code. Das Frontend wird vom Backend geservt. Es werden
   </li>
   <li>
     <a href="#Deployment">Deployment</a>
-    <ul>
-      <li><a href="#Maven-Wrapper">Maven Wrapper</a></li>
-      <li><a href="#Docker">Docker</a></li>
-    </ul>
-  </li>
-  <li>
-    <a href="#Migration-von-299-nach-300">Migration von 2.9.9 nach 3.0.0</a>
-    <ul>
-      <li><a href="#properties">.properties</a></li>
-      <li><a href="#MongoDB-Migration-von-4-nach-8">MongoDB Migration von 4 nach 8</a></li>
-    </ul>
   </li>
 </ol>
 
@@ -147,59 +136,25 @@ UI-Texte werden in zwei Dateisets eingepflegt.
 
 ## Deployment
 
-### Maven Wrapper
+The gazetteer uses [Maven Wrapper](https://maven.apache.org/tools/wrapper/) to build the docker images.
 
-Um die Applikation direkt von der Shell aus zu starten:
-
-```shell
-./mvnw spring-boot:run
-```
-
-### Docker
-
-Zur Erstellung eines Docker-Images:
+To build a new image run locally:
 
 ```shell
-./mvnw spring-boot:build-image -Dspring-boot.build-image.imageName=org.dainst/gazetteer
+./mvnw spring-boot:build-image -Dspring-boot.build-image.imageName=gazetteer:latest
 ```
 
-<p align="right">(<a href="#Inhaltsverzeichnis">Zum Inhaltsverzeichnis</a>)</p>
-
-## Migration von 2.9.9 nach 3.0.0
-
-### .properties
-
-Die Konfigurationsdateien `config.properties`, `mail.properties` und `elasticsearch.properties` werden nicht mehr geladen. Siehe [Konfiguration](#Konfiguration).
-
-### MongoDB Migration von 4 nach 8
-
-#### Entwicklungs-Datenbank
-
-Falls Daten nicht mehr benötigt werden:
-
-```bash
-docker compose rm mongodb
-rm -rf .mongo-data
+Alternatively, you may want to tag a new release version:
+```shell
+./mvnw spring-boot:build-image -Dspring-boot.build-image.imageName=gazetteer:<MAJOR>.<MINOR>.<PATCH>
 ```
 
-Falls Daten behalten werden sollen:
-
-```bash
-# Temporarily set version tag in docker-compose to '4.0'
-docker compose exec mongodb mongodump --out /data/dump
-docker compose rm mongodb
-# Set version tag back to '8'
-docker compose exec mongodb mongorestore /data/dump
-rm -rf .mongo-data/dump
+Finally you have to push the new or updated image to the registry:
+```
+docker push ghcr.io/dainst/gazetteer:<version>
 ```
 
-#### In Produktion (ohne Docker)
+In order to push images, you have to authenticate your local machine with the registry, see: [Github Container Registry](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry).
 
-```bash
-mongodump --out ./dump
-# Update your MongoDB installation after mongodump
-mongorestore ./dump
-# Afterwards, verify that data is migrated and make a backup of dump
-```
 
 <p align="right">(<a href="#Inhaltsverzeichnis">Zum Inhaltsverzeichnis</a>)</p>
