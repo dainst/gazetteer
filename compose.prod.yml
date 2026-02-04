@@ -23,10 +23,15 @@ services:
     restart: always
     labels:
       - "traefik.enable=true"
+      - "traefik.http.middlewares.gazetteer-header.headers.accesscontrolallowmethods=GET,OPTIONS,PUT"
+      - "traefik.http.middlewares.gazetteer-header.headers.accesscontrolallowheaders=*"
+      - "traefik.http.middlewares.gazetteer-header.headers.accesscontrolalloworiginlist=*"
+      - "traefik.http.middlewares.gazetteer-header.headers.accesscontrolmaxage=100"
       - "traefik.http.routers.gazetteer-router.rule=Host(`${HOST}`)"
       - "traefik.http.routers.gazetteer-router.entrypoints=websecure"
       - "traefik.http.routers.gazetteer-router.tls=true"
       - "traefik.http.routers.gazetteer-router.tls.certresolver=dfn"
+      - "traefik.http.routers.gazetteer-router.middlewares=gazetteer-header"
       - "traefik.http.services.gazetteer-service.loadbalancer.server.port=8080"
 
   mongodb:
