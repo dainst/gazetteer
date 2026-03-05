@@ -141,12 +141,12 @@ The gazetteer uses [Maven Wrapper](https://maven.apache.org/tools/wrapper/) to b
 To build a new image run locally:
 
 ```shell
-./mvnw spring-boot:build-image -Dspring-boot.build-image.imageName=gazetteer:latest
+./mvnw spring-boot:build-image -Dspring-boot.build-image.imageName=ghcr.io/dainst/gazetteer:latest
 ```
 
 Alternatively, you may want to tag a new release version:
 ```shell
-./mvnw spring-boot:build-image -Dspring-boot.build-image.imageName=gazetteer:<MAJOR>.<MINOR>.<PATCH>
+./mvnw spring-boot:build-image -Dspring-boot.build-image.imageName=ghcr.io/dainst/gazetteer:<MAJOR>.<MINOR>.<PATCH>
 ```
 
 Finally you have to push the new or updated image to the registry:
