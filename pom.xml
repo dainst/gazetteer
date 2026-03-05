@@ -13,7 +13,7 @@
 	<artifactId>gazetteer</artifactId>
 	<name>gazetteer</name>
 	<packaging>war</packaging>
-	<version>3.0.0</version>
+	<version>3.0.1</version>
 	<properties>
 		<java-version>25</java-version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
