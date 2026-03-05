@@ -315,7 +315,7 @@ public class ElasticSearchPlaceQuery {
         final Script script = new Script(
             ScriptType.INLINE,
             "painless",
-            "_score + (1.0 - 1.0 / ( 0.001 * doc['children'].value + 1.0 ) )",
+            "if (doc['children'].size()!=0) {_score + (1.0 - 1.0 / ( 0.001 * doc['children'].value + 1.0 ))}",
             new HashMap<String, Object>()
         );
 
