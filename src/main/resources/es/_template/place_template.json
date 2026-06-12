@@ -70,6 +70,9 @@
                     }
                 }
             },
+            "gazId": {
+                "type": "integer"
+            },
             "names": {
                 "type": "nested",
                 "include_in_parent": true,
