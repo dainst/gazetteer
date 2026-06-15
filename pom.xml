@@ -5,7 +5,7 @@
     <parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.5.8</version>
+		<version>3.5.15</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
@@ -163,15 +163,6 @@
 			<id>Sonatype OSS Releases</id>
 			<url>http://oss.sonatype.org/content/repositories/releases/</url>
 		</repository>
-		<repository>
-			<id>Nuxeo</id>
-			<url>https://maven-eu.nuxeo.org/nexus/content/groups/public/</url>
-		</repository>
-		<repository>
-			<id>Jahia</id>
-			<url>https://maven.jahia.org/maven2/</url>
-		</repository>
-
 		<repository>
 			<id>osgeo</id>
 			<name>OSGeo Release Repository</name>
