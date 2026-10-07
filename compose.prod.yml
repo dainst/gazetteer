@@ -27,6 +27,7 @@ services:
       - "traefik.http.middlewares.gazetteer-header.headers.accesscontrolallowheaders=*"
       - "traefik.http.middlewares.gazetteer-header.headers.accesscontrolalloworiginlist=*"
       - "traefik.http.middlewares.gazetteer-header.headers.accesscontrolmaxage=100"
+      - "traefik.http.middlewares.gazetteer-allowlist.IPAllowList.sourcerange=${CIDR_WHITELIST}"
       - "traefik.http.routers.gazetteer-router.rule=Host(`${HOST}`)"
       - "traefik.http.routers.gazetteer-router.entrypoints=websecure"
       - "traefik.http.routers.gazetteer-router.tls=true"
