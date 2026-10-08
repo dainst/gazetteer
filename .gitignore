@@ -30,3 +30,4 @@ builds/
 # development environments
 .idea/
 .vscode/
+.env
