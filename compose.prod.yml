@@ -32,7 +32,7 @@ services:
       - "traefik.http.routers.gazetteer-router.entrypoints=websecure"
       - "traefik.http.routers.gazetteer-router.tls=true"
       - "traefik.http.routers.gazetteer-router.tls.certresolver=dfn"
-      - "traefik.http.routers.gazetteer-router.middlewares=gazetteer-header"
+      - "traefik.http.routers.gazetteer-router.middlewares=gazetteer-header,gazetteer-allowlist"
       - "traefik.http.services.gazetteer-service.loadbalancer.server.port=8080"
 
   mongodb:
