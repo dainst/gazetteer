@@ -34,6 +34,8 @@ services:
       - "traefik.http.routers.gazetteer-router.tls.certresolver=dfn"
       - "traefik.http.routers.gazetteer-router.middlewares=gazetteer-header,gazetteer-allowlist"
       - "traefik.http.services.gazetteer-service.loadbalancer.server.port=8080"
+      - traefik.http.middlewares.anubis.forwardauth.address=http://anubis:8080/.within.website/x/cmd/anubis/api/check
+      - traefik.http.middlewares.realip.headers.customRequestHeaders.X-Forwarded-For=>CF-Connecting-IP
 
   mongodb:
     container_name: mongodb
@@ -81,6 +83,28 @@ services:
     restart: always
     labels:
       - "traefik.enable=false"
+
+  anubis:
+    image: ghcr.io/techarohq/anubis:v1.28.2
+    restart: unless-stopped
+    environment:
+    TARGET: " "
+    BIND: ":8080"
+    REDIRECT_DOMAINS: ${HOST}
+    PUBLIC_URL: "https://anubis.${HOST}"
+    COOKIE_DOMAIN: ${HOST}
+    POLICY_FNAME: "/data/cfg/botPolicy.yaml"
+    volumes:
+    - "./botPolicy.yaml:/data/cfg/botPolicy.yaml:ro"
+    networks:
+    - publications_dev_network
+    labels:
+    - traefik.enable=true
+    - traefik.http.routers.anubis.rule=Host(`anubis.${HOST}`)
+    - traefik.http.routers.anubis.entrypoints=websecure
+    - traefik.http.routers.anubis.tls.certresolver=letsencrypt
+    - traefik.http.services.anubis.loadbalancer.server.port=8080 
+    - traefik.http.routers.anubis.service=anubis
 
   traefik:
     image: traefik:v3.6
